@@ -1,3 +1,5 @@
+loadUnderscore();
+
 /**
  * <odoc>
  * <key>nattrmon.nInput_DB(aMap) : nInput</key>
@@ -46,17 +48,19 @@ nInput_DB.prototype.input = function(scope, args) {
         		var atr = scope.getAttributes().getAttributeByName(i);
                         var lastcheck;
                         var useparam = true;
-                        if (isDef(atr) && isDef(atr.lastcheck)) lastcheck = new Date(atr.lastcheck); else lastcheck = new Date();
-                        lastcheck = ow.format.fromDate(lastcheck, 'yyyyMMddHHmmss');
 
+                        if (isDef(atr) && isDef(atr.lastcheck)) 
+                           lastcheck = new Date(String(atr.lastcheck)); 
+                        else 
+                           lastcheck = ow.format.toDate("20000101000000", "yyyyMMddHHmmss"); 
+                        lastcheck = (_.isDate(lastcheck) && !isNaN(lastcheck.getTime())) ? ow.format.fromDate(lastcheck, 'yyyyMMddHHmmss') : "20000101000000";
                         if (!aSQL.match(/:__lastdate/)) useparam = false; 
  			aSQL = aSQL.replace(/:__lastdate/g, "to_date(?, 'YYYYMMDDHH24MISS')");
-
 			// Get result for monitoredObject or object pool
 			if (isDefined(parent.objectPoolKey)) {
 				nattrmon.useObject(parent.objectPoolKey, function(aDb) {
 					try {
-						res = (useparam) ? aDb.qs(aSQL, [lastcheck], true).results : aDb.q(aSQL).results;
+						res = (useparam) ? aDb.qs(aSQL, [String(lastcheck)], true).results : aDb.q(aSQL).results;
 					} catch(e) {
 						logErr("Error while retriving DB query ' " + aSQL + "' from '" + parent2.objectPoolKey + "': " + e.message);
 						throw e;
@@ -65,7 +69,7 @@ nInput_DB.prototype.input = function(scope, args) {
 				});
 			} else {
 				sync(function() {
-					res = (useparam) ? parent2.db.qs(aSQL, [lastcheck], true).results : parent2.db.q(aSQL).results;
+					res = (useparam) ? parent2.db.qs(aSQL, [String(lastcheck)], true).results : parent2.db.q(aSQL).results;
 				}, this.db);
 			}
 

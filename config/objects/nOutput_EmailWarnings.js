@@ -99,13 +99,14 @@ nOutput_EmailWarnings.prototype.output = function(scope, args, meta) {
 	else
 		this.addDuplicatePrevent(mhash);
 
-        email.setFrom(this.from);
+        /*email.setFrom(this.from);
         email.addTo(this.addresses);
         email.setSubject(this.subject);
-        email.setMessage(message);
-        email.send();
+        email.setMessage(message);*/
+ 	    email.setHTML(message);
+        email.send(this.subject, message, this.addresses, [], [], this.from);
 
-	log("Email sent to " + this.addresses[i].join(","));
+	log("Email sent to " + this.addresses.join(","));
 }
 
 nOutput_EmailWarnings.htmlTemplate = "<html><style type=\"text/css\">\
