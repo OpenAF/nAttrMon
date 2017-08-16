@@ -1,0 +1,8 @@
+input: 	
+   name         : Ping servers
+   timeInterval : 1000
+   waitForFinish: true
+   onlyOnEvent  : true
+   execFrom     : nInput_AFPing
+   execArgs     : 
+      chKeys: raidServers

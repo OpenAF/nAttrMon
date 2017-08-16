@@ -1,0 +1,43 @@
+input: 	
+   name         : RAID connections 
+   timeInterval : 5000
+   waitForFinish: true
+   onlyOnEvent  : true
+   exec         : >
+      var ret = {};
+      ow.loadFormat();
+
+      nattrmon.useObject("PRDFMS", function(aAF) {
+         var o = aAF.exec("StatusReport").Services; 
+
+         ret["RAID/DB connections"] = $from(ow.obj.fromObj2Array(o["wedo.jaf.services.connector.registry.ConnectorInfoRegistryManagerBase"]["AF.ConnectorInfoRegistry"].Database , 'Name')).sort("Name").select(function(r) { 
+            return { 
+               Name: r.Name, 
+               Connections: r.Connections, 
+               Active: r.Active, 
+               "Average Time for Conns": r.AverageTimeForConns, 
+               "Max Connections" : r.MaxConnections, 
+               Fetches: r.Fetches, 
+               "Average Wait": r.AverageWait, 
+               "Pool out of conns" : r["N.PoolOutOfConns"], 
+               "Wait list": r.WaitList.length, 
+               "In use": r.InUse.length 
+            }
+        });
+        ret["RAID/CMF"] = $from(ow.obj.fromObj2Array(o["wedo.wdk.cmf.services.ConnectionManagerFactory"]["CMF.Service"] , 'Name')).sort("Name").select(function(r) { 
+            return { 
+               Name: r.Name, 
+               Connections: r.Connections, 
+               Active: r.Active, 
+               "Average Time for Conns": r.AverageTimeForConns, 
+               "Max Connections" : r.MaxConnections, 
+               Fetches: r.Fetches, 
+               "Average Wait": r.AverageWait, 
+               "Pool out of conns" : r["N.PoolOutOfConns"], 
+               "Wait list": r.WaitList.length, 
+               "In use": r.InUse.length 
+            }
+        })
+      });
+
+      return ret;

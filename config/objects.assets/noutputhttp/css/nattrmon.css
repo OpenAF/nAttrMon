@@ -1,0 +1,44 @@
+.animate-show {
+opacity: 1;
+}
+.animate-show.ng-hide-add, .animate-show.ng-hide-remove {
+transition: all linear 0.5s;
+}
+.animate-show.ng-hide {
+opacity: 0;
+}
+.nattributevalue {
+color: #0000AA;
+font-size: small;
+}
+.nattributevalueNA {
+color: #AAAAAA;
+font-size: small;
+}
+.nattributedesc {
+font-size: 95%;
+font-style: italic;
+white-space: normal;
+}
+.nattributetable {
+border: 1px solid lightgray;
+}
+.nattributetablecell, .nattributetablehead {
+padding: 3px;
+border: 1px solid lightgray;
+font-size: small;
+text-align: center;
+}
+.nwarning_High {
+	background-color: red;
+	white-space: normal;
+}
+.nwarning_Medium {
+	background-color: yellow;
+	white-space: nowrap;
+	width: 1%;
+}
+.nwarning_Low {
+	white-space: nowrap;
+	width: 1%;
+}

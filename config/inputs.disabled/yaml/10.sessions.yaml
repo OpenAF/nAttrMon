@@ -1,0 +1,8 @@
+input: 	
+   name         : Sessions
+   timeInterval : 2000
+   waitForFinish: true
+   onlyOnEvent  : true
+   execFrom     : nInput_Sessions
+   execArgs     : 
+      chKeys      : raidServers

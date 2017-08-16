@@ -1,0 +1,8 @@
+input: 	
+   name         : RAID Memory
+   timeInterval : 2000
+   waitForFinish: true
+   onlyOnEvent  : true
+   execFrom     : nInput_RAIDMemory
+   execArgs     : 
+      chKeys      : raidServers

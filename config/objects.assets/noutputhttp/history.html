@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="nattrmonApp">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <script src="js/jquery.min.js"></script>
+        <script src="js/angular.min.js"></script>
+        <script src="js/angular-animate.min.js"></script>
+        <script src="js/nattrmon_js.js"></script>
+        <!-- Bootstrap core CSS -->
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="/f/css/font-awesome.min.css">
+        <link href="css/nattrmon.css" rel="stylesheet">
+        <!-- Custom styles for this template -->
+        <link href="dashboard.css" rel="stylesheet">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+        <script>
+            var nattrmonApp = angular.module('nattrmonApp', ['ngAnimate']);
+            
+            nattrmonApp.service('MetaService', function($http) {
+                this.getMeta = function() {
+                    return $http.get('/meta').then(function(result) {
+                        return result;
+                    });
+                };
+            });
+            
+			nattrmonApp.service('JsonService', function($http) {
+                this.getJson = function() {
+                    return $http.get('/json').then(function(result) {
+                        return result;
+                    });
+                };
+            });
+            
+            nattrmonApp.controller('ctl_nattrmon', function($scope, $sce, $http, $interval, MetaService, JsonService) {
+                var reftime = MetaService.getMeta();
+                
+                $scope.eventValues = [5, 10, 20, 100, 200, 500, 1000, 2000, 5000, 10000];
+                $scope.loading = true;
+                
+                reftime.then(function(data) {
+                    $scope.get = function(name) {
+                        var ret;
+                        var oname = name;
+                        
+               			if(name=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search))
+                  			ret = decodeURIComponent(name[1]);
+
+                        if (oname == 'events' && typeof ret == 'undefined') ret = "5";
+                        
+                        return ret +"";
+            		}
+                     
+                    $scope.getAttr = function(aAttr) {
+                        return nattrmonAttrsOrig[aAttr];
+                    }
+                    
+                    $scope.selectAttribute = function(aAttr, numberOfEvents) {
+                        if (typeof aAttr === 'undefined') aAttr = $scope.selectAttr;
+                        if (typeof numberOfEvents === 'undefined') numberOfEvents = $scope.selectEvents;
+                        $scope.loading = true;
+                        $http.get('/json?op=histevent&attr=' + aAttr + '&events=' + numberOfEvents).then(function(result) {
+                            $scope.history = [];
+                            for(i in result.data.history) {
+                                $scope.history.push({
+                                    "val": result.data.history[i].val,
+                                    "type": result.data.history[i].type,
+                                    "date": result.data.history[i].date,
+                                    "checkedAt": result.data.history[i].checkedAt
+                                });
+                            };
+                            $scope.loading = false;
+                        });
+                    }
+       					
+                    $scope.loading = true;                
+                    MetaService.getMeta().then(function(d) {
+                        $scope.title = d.data.title;
+                        $scope.refresh = d.data.refresh;
+                        document.title = d.data.title + " nAttrMon";
+                        $scope.loading = false;
+                    });
+                    
+                    $scope.loading = true;  
+                    JsonService.getJson().then(function(d) {
+                        refresh(d.data);
+                        $scope.attrs = nattrmonAttrs;
+                        $scope.selectAttr = $scope.get('attr');
+                        $scope.selectEvents = $scope.get('events');	
+                        $scope.selectAttribute($scope.selectAttr, $scope.selectEvents);
+                        $scope.loading = false;
+                    });
+
+                    $scope.render = function(aValue, aType) {
+                        console.log(aValue + " - " + aType);
+                        return render($sce, aValue, aType);
+            		}
+                   
+                });
+            });
+        </script>
+        <title>nAttrMon</title>
+    </head>
+    <body ng-controller="ctl_nattrmon">
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="index.html">{{title}} - nAttrMon report</a>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="index.html">Warnings</a>
+                        </li>
+                        <li>
+                            <a href="now.html">Now</a>
+                        </li>
+                        <li>
+                            <a href="history.html">History</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="main">
+                    Attribute:
+                    <select name="attrSelect" id="attrSelect" ng-model="selectAttr" ng-change="selectAttribute(selectAttr, selectEvents)" ng-init="selectAttr = get('attr')">
+                        <option ng-repeat="a in attrs | orderBy: 'name'" value="{{a.name}}">{{a.name}}</option>
+                    </select>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                &nbsp;
+                    # of events: 
+                    <select name="attrEvents" id="attrEvents" ng-model="selectEvents" ng-change="selectAttribute(selectAttr, selectEvents)" ng-init="selectEvents = get('events')">
+                        <option ng-repeat="a in eventValues" value="{{a}}">{{a}}</option>
+                    </select>
+                    &nbsp;
+                    <button type="button" ng-click="selectAttribute(selectAttr, selectEvents)">
+                        <i class="fa fa-refresh"></i>&nbsp;&nbsp;Refresh
+                    </button>
+                    <br>
+                    Description: 
+                    <span ng-bind-html="render(getAttr(selectAttr).description, 'desc')"></span>
+                    <hr>
+                    <div>
+                        <table class="table table-striped" ng-hide="loading">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="i in history | orderBy: '-date'">
+                                    <td style="white-space: nowrap; width: 1%">
+                                        <small ng-bind-html="render(i.date, 'date')"></small>
+                                    </td>
+                                    <td>
+                                        <small ng-bind-html="render(i.val, i.type)"></small>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div ng-show="loading">
+                            <i class="fa fa-spinner fa-pulse"></i> Loading...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="js/bootstrap.min.js"></script>
+        <!-- Bootstrap core JavaScript
+    ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+        <script src="js/ie10-viewport-bug-workaround.js"></script>
+    </body>
+</html>

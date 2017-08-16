@@ -1,0 +1,39 @@
+input: 	
+   name         : AppAdm database queries
+   timeInterval : 30000
+   waitForFinish: true
+   onlyOnEvent  : true
+   execFrom     : nInput_DB
+   execArgs     : 
+      key : APPADM
+      sqls:
+
+         Database/Tablespaces       : >
+            SELECT tablespace_name "Tablespace name", 
+                   ROUND((tablespace_size - used_space) * (SELECT value FROM v$parameter WHERE name = 'db_block_size') / (1024*1024*1024)) "Free GB", 
+                   ROUND(tablespace_size * (SELECT value FROM v$parameter WHERE name = 'db_block_size') / (1024*1024*1024)) "Total GB", 
+                   ROUND((100 - used_percent)) "Percentage" 
+            FROM DBA_TABLESPACE_USAGE_METRICS 
+            WHERE (tablespace_name LIKE '%IND' OR tablespace_name LIKE '%TAB') and 
+                  (tablespace_name like 'RDTSTT%') 
+
+         Database/Sessions          : >
+            SELECT username "Username", count(1) "# sessions"
+            FROM gv$session 
+            WHERE username IS NOT NULL AND 
+                  NVL(osuser,'x') <> 'SYSTEM' AND 
+                  type <> 'BACKGROUND' 
+            GROUP BY username 
+            ORDER BY username
+
+         Database/Sessions activity : >
+            select username "DB username",
+                   floor(last_call_et / 60) "Minutes since active",
+                   count(1) "How many db sessions"
+            from v$session
+            where upper(program) like 'JDBC%'
+                  and status = 'INACTIVE' and type='USER'
+                  and floor(last_call_et / 60) > 0
+            group by username, UPPER(program), floor(last_call_et / 60)
+            order by username,floor(last_call_et / 60) desc, "How many db sessions" desc
+
