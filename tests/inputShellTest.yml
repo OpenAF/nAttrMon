@@ -1,0 +1,10 @@
+input:
+  name         : Test input
+  timeInterval : 10000
+  waitForFinish: true
+  onlyOnEvent  : true
+  execFrom     : nInput_Shell
+  execArgs     : 
+     name     : a1
+     cmd      : "echo { \\\"a\\\": 1 }"
+     parseJson: true

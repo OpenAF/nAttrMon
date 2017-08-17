@@ -655,6 +655,31 @@ nAttrMon.prototype.loadPlugs = function() {
 }
 
 /**
+ * Creates the necessary internal objects (nInput, nOutput and nValidation) given an yaml definition.
+ * 
+ * yy   = object;
+ * type = [input, output, validation]
+ */
+nAttrMon.prototype.loadObject = function(yy, type) {
+	if (isUnDef(yy.args)) yy.args = {};
+	if (isDef(yy.exec))
+		switch (type) {
+			case "input": yy.exec = new nInput(new Function("var scope = arguments[0]; var args = arguments[1]; " + yy.exec)); break;
+			case "output": yy.exec = new nOutput(new Function("var scope = arguments[0]; var args = arguments[1]; " + yy.exec)); break;
+			case "validation": yy.exec = new nValidation(new Function("var warns = arguments[0]; var scope = arguments[1]; var args = arguments[2]; " + yy.exec)); break;
+		}
+	if (isUnDef(yy.execArgs)) yy.execArgs = [{}];
+	if (!(isArray(yy.execArgs))) yy.execArgs = [yy.execArgs];
+	if (isDef(yy.execFrom)) {
+		var o = eval(yy.execFrom);
+		yy.exec = Object.create(o.prototype);
+		o.apply(yy.exec, yy.execArgs);
+	}
+
+	return yy;
+}
+
+/**
  * [loadPlug description]
  * @param  {[type]} aPlugDir  [description]
  * @param  {[type]} aPlugDesc [description]
@@ -691,52 +716,40 @@ nAttrMon.prototype.loadPlug = function(aPlugDir, aPlugDesc) {
 	        }
     	}
         if(plugsjs[i].match(/\.yaml$/)) {
-		log("Loading " + aPlugDesc + ": " + plugsjs[i]);
- 		try {
-			var y = io.readFileYAML(plugsjs[i]);
-			var parent = this;
+			log("Loading " + aPlugDesc + ": " + plugsjs[i]);
+			try {
+				var y = io.readFileYAML(plugsjs[i]);
+				var parent = this;
 
- 			function __handlePlug(yy, type) {
- 				if (isUnDef(yy.args)) yy.args = {}; 
-       				if (isDef(yy.exec)) 
-					switch(type) {
-					case "input"     : yy.exec = new nInput(new Function("var scope = arguments[0]; var args = arguments[1]; " + yy.exec)); break;
-					case "output"    : yy.exec = new nOutput(new Function("var scope = arguments[0]; var args = arguments[1]; " + yy.exec)); break;
-					case "validation": yy.exec = new nValidation(new Function("var warns = arguments[0]; var scope = arguments[1]; var args = arguments[2]; " + yy.exec)); break;
- 					}
-     				if (isUnDef(yy.execArgs)) yy.execArgs = [{}];
-				if (!(isArray(yy.execArgs))) yy.execArgs = [ yy.execArgs ];
-				if (isDef(yy.execFrom)) { 
- 					var o = eval(yy.execFrom);
- 					yy.exec = Object.create(o.prototype);
-					o.apply(yy.exec, yy.execArgs);
- 				}
-				switch(type) {
-				case "input"      : parent.addInput(yy, yy.exec); break;
-				case "output"     : parent.addOutput(yy, yy.exec); break;
-				case "validation" : parent.addValidation(yy, yy.exec); break;
+				function __handlePlug(yyy, type, parent) {
+					var yy = parent.loadObject(yyy, type);
+					
+					switch (type) {
+						case "input": parent.addInput(yy, yy.exec); break;
+						case "output": parent.addOutput(yy, yy.exec); break;
+						case "validation": parent.addValidation(yy, yy.exec); break;
+					}
 				}
- 			}
 
-                        if (isDef(y.input)) 
-				if (isArray(y.input))
-					y.input.forEach(function(yo) { __handlePlug(yo, "input") });
-				else	
-					__handlePlug(y.input, "input");
-			if (isDef(y.output)) 
-				if (isArray(y.output))
-					y.output.forEach(function(yo) { __handlePlug(yo, "output") });
-				else	
-					__handlePlug(y.output, "output");
-			if (isDef(y.validation))
-				if (isArray(y.validation))
-					y.validation.forEach(function(yo) { __handlePlug(yo, "validation") });
-				else	
-					__handlePlug(y.validation, "validation");
-		} catch(e) {
-			logErr("Error loading " + aPlugDesc + " (" + plugsjs[i] + "): " + e);
- 		}
-        }
+				if (isDef(y.input)) 
+					if (isArray(y.input))
+						y.input.forEach(function(yo) { __handlePlug(yo, "input") });
+					else	
+						__handlePlug(y.input, "input");
+				if (isDef(y.output)) 
+					if (isArray(y.output))
+						y.output.forEach(function(yo) { __handlePlug(yo, "output") });
+					else	
+						__handlePlug(y.output, "output");
+				if (isDef(y.validation))
+					if (isArray(y.validation))
+						y.validation.forEach(function(yo) { __handlePlug(yo, "validation") });
+					else	
+						__handlePlug(y.validation, "validation");
+			} catch(e) {
+				logErr("Error loading " + aPlugDesc + " (" + plugsjs[i] + "): " + e);
+			}
+			}
     }
 }
 

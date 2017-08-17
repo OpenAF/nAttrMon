@@ -1,7 +1,7 @@
 // check version
 af.getVersion() >= "20170101" || (print("Version " + af.getVersion() + ". You need OpenAF version 20170101 to run.")) || exit(-1);
 
-var NATTRMON_HOME = getOPackPath("nAttrMon") || ".";
+var NATTRMON_HOME = getOPackPath("nAttrMon") || "..";
 
 // Auxiliary objects
 load(NATTRMON_HOME + "/lib/nattribute.js");
@@ -189,3 +189,27 @@ nAttrMon.prototype.useObject = function(aKey, aFunction) {
 	return this.objPools[aKey].use(aFunction);
 }
 
+/**
+ * Creates the necessary internal objects (nInput, nOutput and nValidation) given an yaml definition.
+ * 
+ * yy   = object;
+ * type = [input, output, validation]
+ */
+nAttrMon.prototype.loadObject = function(yy, type) {
+	if (isUnDef(yy.args)) yy.args = {};
+	if (isDef(yy.exec))
+		switch (type) {
+			case "input": yy.exec = new nInput(new Function("var scope = arguments[0]; var args = arguments[1]; " + yy.exec)); break;
+			case "output": yy.exec = new nOutput(new Function("var scope = arguments[0]; var args = arguments[1]; " + yy.exec)); break;
+			case "validation": yy.exec = new nValidation(new Function("var warns = arguments[0]; var scope = arguments[1]; var args = arguments[2]; " + yy.exec)); break;
+		}
+	if (isUnDef(yy.execArgs)) yy.execArgs = [{}];
+	if (!(isArray(yy.execArgs))) yy.execArgs = [yy.execArgs];
+	if (isDef(yy.execFrom)) {
+		var o = eval(yy.execFrom);
+		yy.exec = Object.create(o.prototype);
+		o.apply(yy.exec, yy.execArgs);
+	}
+
+	return yy;
+}

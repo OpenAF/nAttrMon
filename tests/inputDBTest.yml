@@ -1,0 +1,15 @@
+input:
+  name         : Test input
+  timeInterval : 10000
+  waitForFinish: true
+  onlyOnEvent  : false 
+  execFrom     : nInput_DB
+  execArgs     : 
+     key: some_DAT
+     sqls:
+        Database/Test 1  : >
+           SELECT user FROM dual
+ 
+        Database/Test 2  : >
+           SELECT level "My level"
+           FROM dual connect by level <= 5

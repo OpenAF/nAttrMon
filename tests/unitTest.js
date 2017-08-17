@@ -6,9 +6,9 @@ let NATTRMON_CHS_PORT  = "17878";
 // -----
 var nattrmon = new nAttrMon("http://nattrmon:nattrmon@" + NATTRMON_SERVER_IP + ":" + NATTRMON_CHS_PORT);
 
-$ch("pres").createRemote("http://nattrmon:nattrmon@" + NATTRMON_SERVER_IP + ":" + NATTRMON_CHS_PORT + "/chs/pres");
-$ch("pros").createRemote("http://nattrmon:nattrmon@" + NATTRMON_SERVER_IP + ":" + NATTRMON_CHS_PORT + "/chs/pros");
-$ch("ldap").createRemote("http://nattrmon:nattrmon@" + NATTRMON_SERVER_IP + ":" + NATTRMON_CHS_PORT + "/chs/ldap");
+//$ch("pres").createRemote("http://nattrmon:nattrmon@" + NATTRMON_SERVER_IP + ":" + NATTRMON_CHS_PORT + "/chs/pres");
+//$ch("pros").createRemote("http://nattrmon:nattrmon@" + NATTRMON_SERVER_IP + ":" + NATTRMON_CHS_PORT + "/chs/pros");
+//$ch("ldap").createRemote("http://nattrmon:nattrmon@" + NATTRMON_SERVER_IP + ":" + NATTRMON_CHS_PORT + "/chs/ldap");
 
 // TEST VALIDATIONS
 // ================
@@ -59,3 +59,14 @@ sprint(nattrmon.getWarnings());
 // sprint(i.exec(nattrmon, {}));
 
 
+// TEST OUTPUTS
+// ============
+
+// Output function
+// ---------------
+
+// var o = new nOutput(function(scope, args, meta) {
+//    var vals  = scope.getCurrentValues();
+//    var warns = scope.getWarnings();
+//    // ....
+// });

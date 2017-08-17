@@ -1,0 +1,9 @@
+output:
+  name         : Test output
+  timeInterval : 10000
+  waitForFinish: true
+  onlyOnEvent  : true
+  exec         : |
+     print("test!"); 
+     sprint(nattrmon.getCurrentValues());
+     print("End!");
