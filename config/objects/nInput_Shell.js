@@ -34,7 +34,7 @@ nInput_Shell.prototype.input = function(scope, args) {
     var attrname = templify(this.attrTemplate, { name: this.name });
 
     if (this.parseJson) 
-		ret[attrname] = JSON.parse(sh(this.cmd));
+		ret[attrname] = jsonParse(sh(this.cmd));
     else
     	ret[attrname] = sh(this.cmd);
 
