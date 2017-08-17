@@ -6,6 +6,7 @@
  *    - chKeys (a channel name for the keys of AF objects)
  *    - attrTemplate (a template for the name of the attribute))
  *    - single (boolean when false display the corresponding key)
+ *    - extra (an array of extra map values to include from the chKeys channel values)
  * </odoc>
  */
 var nInput_RAIDMemory = function(anMonitoredAFObjectKey, attributePrefix) {
@@ -23,6 +24,8 @@ var nInput_RAIDMemory = function(anMonitoredAFObjectKey, attributePrefix) {
 		if (isUnDef(this.params.attrTemplate)) 
 			this.params.attrTemplate = "Server status/Memory";
 	
+		if (isUnDef(this.params.extra)) this.params.extra = [];
+
 	} else {
 		if (nattrmon.isObjectPool(anMonitoredAFObjectKey)) {
 			this.params.keys = anMonitoredAFObjectKey;
@@ -36,13 +39,14 @@ var nInput_RAIDMemory = function(anMonitoredAFObjectKey, attributePrefix) {
 			this.params.attrTemplate = "Server status/Memory";
 		}
 		//this.attributePrefix = (isUndefined(attributePrefix)) ? "Server status/Memory " : attributePrefix;
+		this.params.extra = [];
 	}
 
 	nInput.call(this, this.input);
 }
 inherit(nInput_RAIDMemory, nInput);
 
-nInput_RAIDMemory.prototype.__getMemory = function(aKey) {
+nInput_RAIDMemory.prototype.__getMemory = function(aKey, aExtra) {
 	var ret = {};
 	var freemem  = -1;
 	var usedmem  = -1;
@@ -73,6 +77,7 @@ nInput_RAIDMemory.prototype.__getMemory = function(aKey) {
 		ret = {"Free heap (MB)": freemem, "Used heap (MB)": usedmem, "Total heap (MB)": totalmem, "Max memory (MB)": maxmem};
 	} else {
 		ret = {"Name": aKey, "Free heap (MB)": freemem, "Used heap (MB)": usedmem, "Total heap (MB)": totalmem, "Max memory (MB)": maxmem};
+		ret = merge(ret, aExtra);
 	}
 
 	return ret;
@@ -85,7 +90,16 @@ nInput_RAIDMemory.prototype.input = function(scope, args) {
 	if (isDef(this.params.chKeys)) this.params.keys = $stream($ch(this.params.chKeys).getKeys()).map("key").toArray();
 
 	for(var i in this.params.keys) {
-		arr.push(this.__getMemory(this.params.keys[i]));
+		var extra = {};
+		if (isDef(this.params.chKeys)) {
+			var value = $ch(this.params.chKeys).get({ key: this.params.keys[i] });
+			if (isDef(value)) {
+				for(var j in this.params.extra) {
+					if (isDef(value[this.params.extra[j]])) extra[this.params.extra[j]] = value[this.params.extra[j]];
+				}
+			}
+		}
+		arr.push(this.__getMemory(this.params.keys[i], extra));
 	}
 
 	res[templify(this.params.attrTemplate)] = arr;
