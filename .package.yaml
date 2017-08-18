@@ -20,9 +20,9 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: WeDo internal only
-version: '20170723'
+version: '20170817'
 dependencies:
-  openaf: '>=20170601'
+  openaf: '>=20170701'
 files:
   - .package.yaml
   - config/inputs/add_files_from_inputs_disabled.dummy
@@ -151,11 +151,16 @@ files:
   - lib/nwarning.js
   - lib/nwarnings.js
   - nattrmon.js
-  - nattrmonTester.js
-  - unitTest.js
+  - README.md
+  - tests/inputDBTest.yml
+  - tests/inputShellTest.yml
+  - tests/nattrmonTester.js
+  - tests/outputTest.yml
+  - tests/unitTest.js
+  - tests/unitTestYAML.js
   - util/loadDB2Elastic.js
 filesHash:
-  .package.yaml: 40b077a8897bb767ecf74e75e2fba5ea6116327e
+  .package.yaml: 4e3761f5736fe320ea0e2b59ac70395461780e88
   config/inputs/add_files_from_inputs_disabled.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
   config/inputs.disabled/js/0.init.js: 2563ccfc0a37d3be85f7485be88a08576fbb7f05
   config/inputs.disabled/js/00.doc.js: f03eb7b9bd36452d412d3668b0a4ef9c7605de65
@@ -204,19 +209,19 @@ filesHash:
   config/move_files_from_the_disabled_folders.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
   config/objects/nInput_AFPing.js: cb7b9bec10f4544a70799d86bcb1cc0d0c5d7b4b
   config/objects/nInput_CBPMSemaphores.js: 26b196dca733d8aed04b2f82ccb88ffd41583c97
-  config/objects/nInput_DB.js: 240e1712f71af9b2c8ccf21b6dbcaf710e3acfa6
+  config/objects/nInput_DB.js: d769641efd352f4e28dbe7368fce95e082763974
   config/objects/nInput_Filesystem.js: c6f903bc4e7bee38bb948459abf60370a8e59ca0
   config/objects/nInput_FilesystemCount.js: d778859c05d909be5486933285ddce69f4e84ae2
   config/objects/nInput_FMSRuleStatus.js: 08faa5d4850734d896bae0970bb6834f8112d0b4
   config/objects/nInput_IMMemory.js: c5d709b7c0d2ff303412fc0bd0576c45e6933a52
   config/objects/nInput_LogErrorAgg.js: a609f966f5019420296f7c80fd3767442f60946e
   config/objects/nInput_OSInfo.js: b9405d7c3590bf6e31a3f4dd6fbfec95c2937f72
-  config/objects/nInput_RAIDMemory.js: 3d97d2a8c6db24f88dc374f933e95f3e28a29c17
+  config/objects/nInput_RAIDMemory.js: 4596222db4d95b5ec19f15447ed99871d4775374
   config/objects/nInput_RunningFlows.js: e6d04f533b3ad5c29182140985ebfaf28b05bfe0
   config/objects/nInput_Semaphores.js: 89e32953514a3251138c99f0b026581790522375
   config/objects/nInput_Sessions.js: 7beaca413ff50d4527371a980fe37ffc2bae6454
-  config/objects/nInput_Shell.js: 3d343ca36519ff6c53e5d069e1df2aa7d4e23649
-  config/objects/nOutput_EmailWarnings.js: 3415c8bd2f4783be6af8c33f80ee734f94d63b55
+  config/objects/nInput_Shell.js: 38715894d7e6d5f01a9ad32c3dc0e9bbbb1fca0f
+  config/objects/nOutput_EmailWarnings.js: d2e1754680e03fa60f517ec4b9f3a6a5ca442031
   config/objects/nOutput_H2.js: bdafc9cc58ea636d5afce850865f6317e44bf7f4
   config/objects/nOutput_HTTP.js: abb0f38277c693eeede3b4e5504eb7f5e4c229df
   config/objects/nOutput_HTTP_JSON.js: de4a4981164c43c2ed53b71a608ede5495cf93ba
@@ -279,9 +284,14 @@ filesHash:
   lib/noutput.js: 80983cb56a35eac3726a88e56cac9ea5d51cb39a
   lib/nplug.js: 5295a76feed0d3f437e858e014f512db9de29d84
   lib/nvalidation.js: 8dc0019e337c4c0f12890b09ac5864b74175fd6c
-  lib/nwarning.js: 50dc4a7d91f6e7250e4cf0dcbe7f7cfd42fbce90
-  lib/nwarnings.js: 84bf5a39461cab02af078b5b1b5280b44193d91e
-  nattrmon.js: 5513c4313d6df7545cadcda5962bb4142b52ad23
-  nattrmonTester.js: 53b576717634e50ed86c94237fff173a31d92cb1
-  unitTest.js: 468283d6637ba981a89e81b99fd5c05f1c814143
+  lib/nwarning.js: b6ab4c67c583f878c95bbf19ee11b7099c132136
+  lib/nwarnings.js: a4ee099079507c78c2610504171bff1ab6a5056e
+  nattrmon.js: ff0604b8fd981dc93ff01f0b891340d112db36ef
+  README.md: 577a767a71b1dd79d120204da1bc18b0f2b18d25
+  tests/inputDBTest.yml: c38616606dc5956e449189d11f8e661170f94dfb
+  tests/inputShellTest.yml: ce643955982cb16b53a8843acd3549466e5cddf5
+  tests/nattrmonTester.js: 228472c2b83fbc11688a6d25a0d97165f78b4883
+  tests/outputTest.yml: 0c4ba4176163e4aa9ff7fd4ae4128339d8384581
+  tests/unitTest.js: 54033b5beed0e7db52afe5449758cea3e969a6be
+  tests/unitTestYAML.js: 215400bf5e21fbb27f507c2e10b1e75f290e8ff2
   util/loadDB2Elastic.js: caecf39b3afa1430c089ff57a9974d5bb10a06d9
