@@ -510,7 +510,7 @@ nAttrMon.prototype.addValues = function(onlyOnEvent, aValues) {
 
 	for(var key in aValues) {
 		if (key.length > 0) {
-			aValues[key].name = key;
+			//aValues[key].name = key;
 
 			if (!this.listOfAttributes.exists(key)) {
 				this.setAttribute(key, key + " description");
