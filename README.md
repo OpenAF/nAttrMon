@@ -1,5 +1,9 @@
 # nAttrMon
 
+## Wiki
+
+Please check the [wiki](https://github.com/nmaguiar/openaf-nattrmon/wiki) for more info.
+
 ## How to create a nattrmon.opack
 
 1. Clone this repository https://github.com/nmaguiar/openaf-nattrmon.git
