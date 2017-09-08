@@ -159,7 +159,7 @@ files:
   - tests/unitTestYAML.js
   - util/loadDB2Elastic.js
 filesHash:
-  .package.yaml: e3f7c544f9bfc5034132578e386cfe7fa4e37465
+  .package.yaml: 0b4bfb706288de2e5c0997184388469be9b78ed3
   config/inputs/add_files_from_inputs_disabled.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
   config/inputs.disabled/js/0.init.js: 2563ccfc0a37d3be85f7485be88a08576fbb7f05
   config/inputs.disabled/js/00.doc.js: f03eb7b9bd36452d412d3668b0a4ef9c7605de65
