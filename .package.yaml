@@ -10,19 +10,18 @@ keywords:
   - monitor
   - attrmon
 bugs:
-  url: 'http://192.168.40.110:8080/projects/nattrmon'
+  url: 'https://github.com/OpenAF/nAttrMon/issues'
 repository:
   type: http
-  backupurl: 'http://172.25.1.32/svn/nAttrMon/trunk'
-  url: 'http://192.168.40.110/svn/nAttrMon/trunk'
+  url: 'https://raw.githubusercontent.com/OpenAF/nAttrMon/master'
 description: Tool for RAID and solution functional monitoring.
 name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: WeDo internal only
-version: '20170817'
+version: '20170908'
 dependencies:
-  openaf: '>=20170701'
+  openaf: '>=20170901'
 files:
   - .package.yaml
   - config/inputs/add_files_from_inputs_disabled.dummy
@@ -160,7 +159,7 @@ files:
   - tests/unitTestYAML.js
   - util/loadDB2Elastic.js
 filesHash:
-  .package.yaml: 4e3761f5736fe320ea0e2b59ac70395461780e88
+  .package.yaml: e3f7c544f9bfc5034132578e386cfe7fa4e37465
   config/inputs/add_files_from_inputs_disabled.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
   config/inputs.disabled/js/0.init.js: 2563ccfc0a37d3be85f7485be88a08576fbb7f05
   config/inputs.disabled/js/00.doc.js: f03eb7b9bd36452d412d3668b0a4ef9c7605de65
@@ -277,7 +276,7 @@ filesHash:
   config/validations.disabled/4.validateErrorFlows.js: 9b7ff4c1cd03fe47082107d2c22250be1d45a2b4
   config/validations.disabled/yaml/01.somebodyTouched.yaml: 2d6a2c34c39aec49d9126c6304e04e66b978a26a
   lib/nattribute.js: 4be29e971b5c0c23e1fc89f33d7ed6479d075809
-  lib/nattributes.js: dd6a45d31c59dc82099f3f4a79694d719dc8b207
+  lib/nattributes.js: 4dc41e0d6fc25c1bdf16608ef41cad8d5df3506d
   lib/nattributevalue.js: f42b29f8b225a391cef31d7f3f22d41033aa3b96
   lib/ninput.js: af91b970f35098a561a187e93b7ec260d08ad934
   lib/nmonitoredobject.js: 24814b7ea819508162cac91a3dd7c14be801be96
@@ -285,9 +284,9 @@ filesHash:
   lib/nplug.js: 5295a76feed0d3f437e858e014f512db9de29d84
   lib/nvalidation.js: 8dc0019e337c4c0f12890b09ac5864b74175fd6c
   lib/nwarning.js: b6ab4c67c583f878c95bbf19ee11b7099c132136
-  lib/nwarnings.js: a4ee099079507c78c2610504171bff1ab6a5056e
-  nattrmon.js: ff0604b8fd981dc93ff01f0b891340d112db36ef
-  README.md: 577a767a71b1dd79d120204da1bc18b0f2b18d25
+  lib/nwarnings.js: 939a814f4eb4d114ef22785ed877eb2ffb165e8e
+  nattrmon.js: 1bb33a8d06ee9d99d4a007fe3cfe310ef74927da
+  README.md: b2a7dc80a439d865bd03d49960dbd6c96d02c254
   tests/inputDBTest.yml: c38616606dc5956e449189d11f8e661170f94dfb
   tests/inputShellTest.yml: ce643955982cb16b53a8843acd3549466e5cddf5
   tests/nattrmonTester.js: 228472c2b83fbc11688a6d25a0d97165f78b4883
