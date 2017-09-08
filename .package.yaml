@@ -18,7 +18,7 @@ description: Tool for RAID and solution functional monitoring.
 name: nAttrMon
 main: nattrmon.js
 mainJob: ''
-license: WeDo internal only
+license: Apache 2.0 license
 version: '20170908'
 dependencies:
   openaf: '>=20170901'
