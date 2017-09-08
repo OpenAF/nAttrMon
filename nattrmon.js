@@ -45,7 +45,7 @@ var nAttrMon = function(aConfigPath, debugFlag) {
 	this.listOfAttributes = new nAttributes();
 	this.listOfWarnings   = new nWarnings();
 	this.count            = now();
-	this.countCheck       = 5000;
+	this.countCheck       = 30000; // shouldn't be very aggresive
 	this.debugFlag        = (isUnDef(debugFlag)) ? false : debugFlag;
 
 	this.plugs = {};
@@ -63,7 +63,12 @@ var nAttrMon = function(aConfigPath, debugFlag) {
 	this.objPoolsCat = {};
 	this.indexPlugThread = {};
 
-	this.restoreSnapshot();
+	//this.restoreSnapshot();
+	var nattrmon = this;
+	this.currentValues.storeAdd(this.getConfigPath() + "/nattrmon.cvals.snapshot", "name", true);
+	this.lastValues.storeAdd(this.getConfigPath() + "/nattrmon.lvals.snapshot", "name", true);
+	this.listOfAttributes.getCh().storeAdd(this.getConfigPath() + "/nattrmon.attrs.snapshot", "name", true);
+	this.listOfWarnings.getCh().storeAdd(this.getConfigPath() + "/nattrmon.warns.snapshot", "name", true);
 }
 
 nAttrMon.prototype.genSnapshot = function() {
@@ -314,7 +319,7 @@ nAttrMon.prototype.start = function() {
 		         {"name": "system monitor", "timeInterval": this.countCheck, "waitForFinish": false, "onlyOnEvent": false}, 
 		         new nValidation(function() {
 		         	nattrmon.count = now();
-		         	nattrmon.genSnapshot();
+		         	//nattrmon.genSnapshot();
 		         }),
 		         {});
 	this.execPlugs(this.PLUGSYSTEM);
@@ -344,7 +349,7 @@ nAttrMon.prototype.stop = function() {
 		this.threads[i].waitForThreads(1000);
 	}
 
-	this.genSnapshot();
+	//this.genSnapshot();
 	this.stopObjects();
 }
 
@@ -767,7 +772,7 @@ if (isUnDef(params.withDirectory)) {
 	nattrmon = new nAttrMon(params.withDirectory);
 }
 
-var __sleepperiod = 5000;
+var __sleepperiod = 60000; // less aggressive
 var __stuckfactor = 500;
 
 
