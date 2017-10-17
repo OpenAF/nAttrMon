@@ -159,13 +159,12 @@ files:
   - tests/unitTestYAML.js
   - util/loadDB2Elastic.js
 filesHash:
-  .package.yaml: 0b4bfb706288de2e5c0997184388469be9b78ed3
   config/inputs/add_files_from_inputs_disabled.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
   config/inputs.disabled/js/0.init.js: 2563ccfc0a37d3be85f7485be88a08576fbb7f05
-  config/inputs.disabled/js/00.doc.js: f03eb7b9bd36452d412d3668b0a4ef9c7605de65
+  config/inputs.disabled/js/00.doc.js: 30076a2c9808fdf32de2c23dc5dcf3a995467e21
   config/inputs.disabled/js/00.init.js: c6ff344e66b6621b75ff2bf138d4388d4ee38958
-  config/inputs.disabled/js/01.ping.js: afdc4af84eb5b31611f285b6687d07574db321de
-  config/inputs.disabled/js/02.filesystem.js: 25f17531a412ab24ecead4c50baec078f71f396b
+  config/inputs.disabled/js/01.ping.js: bb588a56552e5f1a6932bb140c93a187f06d4294
+  config/inputs.disabled/js/02.filesystem.js: 6dc15d354bbef8b517b4ac7d9970e68167c8c32e
   config/inputs.disabled/js/03.cbpm.semaphores.js: 5ef636830d4e64b3019fd03a8b7c5a0053943fe1
   config/inputs.disabled/js/03.semaphores.js: 4b237c7885f0797c99c15befb7afdf0f88f7ab63
   config/inputs.disabled/js/04.db.js: 827989c091e4f4fd9766c5c1e8fc7dff7c79b359
@@ -174,15 +173,15 @@ filesHash:
   config/inputs.disabled/js/06.runningFlows.js: 1f0aab01ac36a49775378f240e61b2ade7a8c8c8
   config/inputs.disabled/js/07.logErrorAgg.js: 46f522e3079ae9ba1fd6095bd44d53e602142282
   config/inputs.disabled/js/08.RAIDmemory.js: cf3694b307c1f0222e339e614ef43ac47a77b62c
-  config/inputs.disabled/js/09.filesystemcount.js: 21ae3c36036bfaa0f786e73e9e862978727401df
+  config/inputs.disabled/js/09.filesystemcount.js: e351abf60bf37268bd90a59ec6ad21ddcaa65796
   config/inputs.disabled/js/09.IMmemory.js: ae4ce8a4258c48ee4b9654a39d237fca73787fee
-  config/inputs.disabled/js/1.ping.js: 504de317d9ad05c40bb3f0263f0896b19cba7a54
-  config/inputs.disabled/js/10.filesystem.js: 23a492c93be89b7be4163169f581c28dd85ab502
-  config/inputs.disabled/js/10.filesystemcount.js: a1ae5183c585f082779e403c5f4b87dcc2c3a0f6
-  config/inputs.disabled/js/11.OSInfo.js: ff6d21332af1722b09a3cce062876a1b5e5b0eef
-  config/inputs.disabled/js/12.ShellCmd.js: 9c5c85fa3b66d8dd760542683967efdd9b621d07
+  config/inputs.disabled/js/1.ping.js: aea9bf826a16ec47b2431f2103ed0c355bbab931
+  config/inputs.disabled/js/10.filesystem.js: 61d300a2961308a1bf3da2d763018469e632a5b8
+  config/inputs.disabled/js/10.filesystemcount.js: a3031f5321f2ba20402093eeceebfd10d3474730
+  config/inputs.disabled/js/11.OSInfo.js: a8cda4de91897cfe29485df98c472d13e0612b5c
+  config/inputs.disabled/js/12.ShellCmd.js: a34d7727bfcd51819fc96e9f0c53ce91e02be613
   config/inputs.disabled/js/13.ListDirFiles.js: 2f997bc8695f76471c17f828d9d5a39708009510
-  config/inputs.disabled/js/2.filesystem.js: 25f17531a412ab24ecead4c50baec078f71f396b
+  config/inputs.disabled/js/2.filesystem.js: 6dc15d354bbef8b517b4ac7d9970e68167c8c32e
   config/inputs.disabled/js/22.fraud.snapshots.js: f7c00b5410c107193734e4639c13a48a553edbc4
   config/inputs.disabled/js/3.semaphores.js: 4b237c7885f0797c99c15befb7afdf0f88f7ab63
   config/inputs.disabled/js/4.db.js: 827989c091e4f4fd9766c5c1e8fc7dff7c79b359
@@ -192,7 +191,7 @@ filesHash:
   config/inputs.disabled/js/6.runningFlows.js: 1f0aab01ac36a49775378f240e61b2ade7a8c8c8
   config/inputs.disabled/js/7.logErrorAgg.js: a4a39f1d07cc83af964d4b1068be91a74387a493
   config/inputs.disabled/js/8.RAIDmemory.js: cf3694b307c1f0222e339e614ef43ac47a77b62c
-  config/inputs.disabled/js/9.filesystemcount.js: 21ae3c36036bfaa0f786e73e9e862978727401df
+  config/inputs.disabled/js/9.filesystemcount.js: e351abf60bf37268bd90a59ec6ad21ddcaa65796
   config/inputs.disabled/js/9.IMmemory.js: ae4ce8a4258c48ee4b9654a39d237fca73787fee
   config/inputs.disabled/yaml/01.ping.yaml: 4099ba54ccf9a1cf7468b832205a97c77de01065
   config/inputs.disabled/yaml/01.test.yaml: dff4e9f6b3fe72619b6f360901e8d2d76f93c6b0
@@ -200,16 +199,16 @@ filesHash:
   config/inputs.disabled/yaml/03.semaphores.yaml: 9b2b96bf067585976ea84a805e528fd796331782
   config/inputs.disabled/yaml/04.db.appadm.yaml: 21473f76bd120810c87adc6bc9c7f25b74c51261
   config/inputs.disabled/yaml/09.memory.yaml: abd00277facadf9fa16f230fcb92dfee48bcd527
-  config/inputs.disabled/yaml/10.filesystemcount.mobsubscribers.yaml: 1395ee8fc9596f2335090227af8c8abe743614c4
-  config/inputs.disabled/yaml/10.filesystemcount.nortel.yaml: 41eeea5593b8bfe45b2f695111ce1e9006d1c81a
+  config/inputs.disabled/yaml/10.filesystemcount.mobsubscribers.yaml: e375d9c5dcd2fe4360efcd6e6e9ceeff64432129
+  config/inputs.disabled/yaml/10.filesystemcount.nortel.yaml: 2de6bb88b450f2d3578c3f72e775f9efedb42013
   config/inputs.disabled/yaml/10.sessions.yaml: 5a1724db9eca8b90a6bb6310948a00d7909fc555
   config/inputs.disabled/yaml/11.times.yaml: f437adf46690615e0b52b7cd36eba2ba0eb1cff2
   config/inputs.disabled/yaml/12.connections.yaml: 72579273a36487c4fb05b546f49bec649d8f245f
   config/move_files_from_the_disabled_folders.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
   config/objects/nInput_AFPing.js: cb7b9bec10f4544a70799d86bcb1cc0d0c5d7b4b
-  config/objects/nInput_CBPMSemaphores.js: 26b196dca733d8aed04b2f82ccb88ffd41583c97
+  config/objects/nInput_CBPMSemaphores.js: e00ac4b176370dbd9ef0955d95580e7f167663a3
   config/objects/nInput_DB.js: d769641efd352f4e28dbe7368fce95e082763974
-  config/objects/nInput_Filesystem.js: c6f903bc4e7bee38bb948459abf60370a8e59ca0
+  config/objects/nInput_Filesystem.js: 12847a5ccb3d55915e9c40e6079db271788d4b46
   config/objects/nInput_FilesystemCount.js: d778859c05d909be5486933285ddce69f4e84ae2
   config/objects/nInput_FMSRuleStatus.js: 08faa5d4850734d896bae0970bb6834f8112d0b4
   config/objects/nInput_IMMemory.js: c5d709b7c0d2ff303412fc0bd0576c45e6933a52
@@ -218,7 +217,7 @@ filesHash:
   config/objects/nInput_RAIDMemory.js: 4596222db4d95b5ec19f15447ed99871d4775374
   config/objects/nInput_RunningFlows.js: e6d04f533b3ad5c29182140985ebfaf28b05bfe0
   config/objects/nInput_Semaphores.js: 89e32953514a3251138c99f0b026581790522375
-  config/objects/nInput_Sessions.js: 7beaca413ff50d4527371a980fe37ffc2bae6454
+  config/objects/nInput_Sessions.js: ab2ae9a2312285e87a3dc1cb834885857ddf6c89
   config/objects/nInput_Shell.js: 38715894d7e6d5f01a9ad32c3dc0e9bbbb1fca0f
   config/objects/nOutput_EmailWarnings.js: d2e1754680e03fa60f517ec4b9f3a6a5ca442031
   config/objects/nOutput_H2.js: bdafc9cc58ea636d5afce850865f6317e44bf7f4
@@ -228,34 +227,34 @@ filesHash:
   config/objects/nOutput_Oracle.js: 93fa7228120945b1f1f6a7ecd8cf17853a4c6966
   config/objects/nOutput_Stdout.js: dadf1277ab262072e1154bc337db37006307f858
   config/objects/nValidation_AFPing.js: 305bee440a0f89855cc70d9fdaa90abfa39ec746
-  config/objects/nValidation_Semaphores.js: 97b6c1850b80d95cc92c1c50b05fdfa26467fd94
-  config/objects/nValidation_Yellows.js: 942478fcd710e392add0b6ef6349ef51a895b764
-  config/objects.assets/noutputhttp/css/bootstrap-theme.min.css: fc6b4268fbd57ad95d2b41a1d4d6866f222fbdb2
-  config/objects.assets/noutputhttp/css/bootstrap.min.css: ed29315e0ffb3f14382431f2724235bf67f44eb3
-  config/objects.assets/noutputhttp/css/font-awesome.min.css: 05ea25bc9b3ac48993e1fee322d3bc94b49a6e22
+  config/objects/nValidation_Semaphores.js: 92ef1de7d2b1383594bab817723e8518650a45eb
+  config/objects/nValidation_Yellows.js: 701c3ee77ca42d1853142c589e6a09bdd822108d
+  config/objects.assets/noutputhttp/css/bootstrap-theme.min.css: c277f5dc2e08fa885e401ee367ac6c0eefa7a6dc
+  config/objects.assets/noutputhttp/css/bootstrap.min.css: 12028adaae10f0c43445362df5481aeec8bb1153
+  config/objects.assets/noutputhttp/css/font-awesome.min.css: 4c2c5f5f6cc86d775a44b944661e038b7be98149
   config/objects.assets/noutputhttp/css/nattrmon.css: f8a1827d3d8fd490023b8b472e3f8018af7e1d5a
-  config/objects.assets/noutputhttp/dashboard.css: 96d9d77e456868b0797afe0ce344be026315d535
+  config/objects.assets/noutputhttp/dashboard.css: 9bab6b06cc427f9bd2908387e49e65f542c99764
   config/objects.assets/noutputhttp/fonts/fontawesome-webfont.eot: b3c2f08e73320135b69c23a3908b87a12053a2f6
-  config/objects.assets/noutputhttp/fonts/fontawesome-webfont.svg: 2b3c8ba7008cc014d8fb37abc6f9f49aeda83824
+  config/objects.assets/noutputhttp/fonts/fontawesome-webfont.svg: f346b8b3df147e4059e1a7d66c52c9a6e1cec3e8
   config/objects.assets/noutputhttp/fonts/fontawesome-webfont.ttf: 27cf1f2ec59aece6938c7bb2feb0e287ea778ff9
   config/objects.assets/noutputhttp/fonts/fontawesome-webfont.woff: 507970402e328b2baeb05bde73bf9ded4e2c3a2d
   config/objects.assets/noutputhttp/fonts/fontawesome-webfont.woff2: 574ea2698c03ae9477db2ea3baf460ee32f1a7ea
   config/objects.assets/noutputhttp/fonts/FontAwesome.otf: 0112e96f327d413938d37c1693806f468ffdbace
   config/objects.assets/noutputhttp/fonts/glyphicons-halflings-regular.eot: 86b6f62b7853e67d3e635f6512a5a5efc58ea3c3
-  config/objects.assets/noutputhttp/fonts/glyphicons-halflings-regular.svg: de51a8494180a6db074af2dee2383f0a363c5b08
+  config/objects.assets/noutputhttp/fonts/glyphicons-halflings-regular.svg: 4dcf0ab896f5417047f881de91bad10dcbda48c6
   config/objects.assets/noutputhttp/fonts/glyphicons-halflings-regular.ttf: 44bc1850f570972267b169ae18f1cb06b611ffa2
   config/objects.assets/noutputhttp/fonts/glyphicons-halflings-regular.woff: 278e49a86e634da6f2a02f3b47dd9d2a8f26210f
-  config/objects.assets/noutputhttp/history.html: aac6be153b65c31424a2b0e33b772b2e129fe76b
-  config/objects.assets/noutputhttp/index.html: c454af426dc25960d1a2992b6cac99e11881ea48
-  config/objects.assets/noutputhttp/js/angular-animate.min.js: 648e2ca79c0c074b2b61042e91d31b353ad290d3
-  config/objects.assets/noutputhttp/js/angular.min.js: d0e3fccc46957eeaaf5611075a2015b410b64725
-  config/objects.assets/noutputhttp/js/bootstrap.min.js: 253711c6d825de55a8360552573be950da180614
+  config/objects.assets/noutputhttp/history.html: 2bac092a0b8be121592109c148cd35599bf0c083
+  config/objects.assets/noutputhttp/index.html: 0f2297867ba6ea919039fe44864148973b6af819
+  config/objects.assets/noutputhttp/js/angular-animate.min.js: 48ceb01a73169491d532151456b4004cb13446d8
+  config/objects.assets/noutputhttp/js/angular.min.js: d2e5e39be85f51c828be35b20d877f6b4c101add
+  config/objects.assets/noutputhttp/js/bootstrap.min.js: e2ddfe5a574c29f39b511aada1bd85e0ba60fa70
   config/objects.assets/noutputhttp/js/holder.min.js: c1ad1dcfebf4c1770d40fc5d7bc46ca692d12822
-  config/objects.assets/noutputhttp/js/ie10-viewport-bug-workaround.js: b133cb4aaff8f32026190281d8a27456eace82b1
-  config/objects.assets/noutputhttp/js/jquery.min.js: 7ed710bf2b3a08cee23950790208683b0346fb1c
+  config/objects.assets/noutputhttp/js/ie10-viewport-bug-workaround.js: f580bb4a182612f728cdef6ab2fd5e417879980b
+  config/objects.assets/noutputhttp/js/jquery.min.js: b63bd0a78caf8effb1061adcde124376de49c607
   config/objects.assets/noutputhttp/js/nattrmon_js.js: fc1858030689c16e07f73c8ae255b9c81e855215
-  config/objects.assets/noutputhttp/js/retina.min.js: da44a409a0907960a6526cf35807ecaf61059223
-  config/objects.assets/noutputhttp/now.html: 8dc28c8f998a319561567c342aa46fc16974e459
+  config/objects.assets/noutputhttp/js/retina.min.js: db4bf8404dbd9900faada058ba0fdfeaf6aab23b
+  config/objects.assets/noutputhttp/now.html: 85a1c9e3b010fde950f3c21b5d99e428f1b296f7
   config/outputs/add_files_from_outputs_disabled.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
   config/outputs.disabled/0.init.js: c7c7eed14977e210cd6973eed53cb42b1697a732
   config/outputs.disabled/1.h2output.js: 0bc642dce946dc17d6b0561d671e5030c0a89333
@@ -263,18 +262,18 @@ filesHash:
   config/outputs.disabled/2.httpjson.js: a5b47b16c4e6340a6bba1aedb344871f4e7289e4
   config/outputs.disabled/3.http.js: 35414c5895053e18788420e2ff17c9aa71c94eed
   config/outputs.disabled/4.logFile.js: 002c15afe1e2035dc77e626113bb6c935c2ecf57
-  config/outputs.disabled/5.emailWarnings.js: 4a0139aabd64a3c56c1842499dd6d2203f607550
+  config/outputs.disabled/5.emailWarnings.js: ea8400db37cddda42ed276b75c94467e3239359a
   config/outputs.disabled/9.channels.js: fd411e585f542586b77d61afcce668980f8c0207
   config/validations/add_files_from_validations_disabled.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
-  config/validations.disabled/0.validatePing.js: cc572c157971ebdccd0a40a261f199cb9e509b5c
-  config/validations.disabled/01.somebodyTouched.yaml: 2d6a2c34c39aec49d9126c6304e04e66b978a26a
-  config/validations.disabled/01.validatePing.js: cc572c157971ebdccd0a40a261f199cb9e509b5c
-  config/validations.disabled/03.validateSemaphores.js: 6ded3ea530db8b5d4621fa8bad510e281ebd632d
-  config/validations.disabled/04.validateErrorFlows.js: 9b7ff4c1cd03fe47082107d2c22250be1d45a2b4
-  config/validations.disabled/3.validateSemaphores.js: c7559585a324bcb41a9d809446b8a448178d947c
-  config/validations.disabled/30.validateYellows.js: 7a99fcd5e3728805783c5c18aff97488f3aed5d7
-  config/validations.disabled/4.validateErrorFlows.js: 9b7ff4c1cd03fe47082107d2c22250be1d45a2b4
-  config/validations.disabled/yaml/01.somebodyTouched.yaml: 2d6a2c34c39aec49d9126c6304e04e66b978a26a
+  config/validations.disabled/0.validatePing.js: 43b32c9c22d2285f0e14999956b45d07bc6d87b7
+  config/validations.disabled/01.somebodyTouched.yaml: 18654e1a81a2af19e4c3cadb4dc086ca3f609f2e
+  config/validations.disabled/01.validatePing.js: 43b32c9c22d2285f0e14999956b45d07bc6d87b7
+  config/validations.disabled/03.validateSemaphores.js: 1e8465015b49313b926cc58874def52b09fc59aa
+  config/validations.disabled/04.validateErrorFlows.js: e56a93520e28d3f9b174264e3a199f9c2411d08b
+  config/validations.disabled/3.validateSemaphores.js: 854e501b5ca7d5c1ca047fc6840547d746a78a72
+  config/validations.disabled/30.validateYellows.js: e6f3ab2e0e870a0c7ac02e6d38603c187035f9e9
+  config/validations.disabled/4.validateErrorFlows.js: e56a93520e28d3f9b174264e3a199f9c2411d08b
+  config/validations.disabled/yaml/01.somebodyTouched.yaml: 18654e1a81a2af19e4c3cadb4dc086ca3f609f2e
   lib/nattribute.js: 4be29e971b5c0c23e1fc89f33d7ed6479d075809
   lib/nattributes.js: 4dc41e0d6fc25c1bdf16608ef41cad8d5df3506d
   lib/nattributevalue.js: f42b29f8b225a391cef31d7f3f22d41033aa3b96
@@ -287,10 +286,10 @@ filesHash:
   lib/nwarnings.js: 939a814f4eb4d114ef22785ed877eb2ffb165e8e
   nattrmon.js: 1bb33a8d06ee9d99d4a007fe3cfe310ef74927da
   README.md: b2a7dc80a439d865bd03d49960dbd6c96d02c254
-  tests/inputDBTest.yml: c38616606dc5956e449189d11f8e661170f94dfb
-  tests/inputShellTest.yml: ce643955982cb16b53a8843acd3549466e5cddf5
-  tests/nattrmonTester.js: 228472c2b83fbc11688a6d25a0d97165f78b4883
-  tests/outputTest.yml: 0c4ba4176163e4aa9ff7fd4ae4128339d8384581
+  tests/inputDBTest.yml: acafbfa4233802897e81e9ee5457b06b76787303
+  tests/inputShellTest.yml: 795c8479c1bfa93454b077d141f58161af5cae08
+  tests/nattrmonTester.js: 0dc31695465dd13d73929a117e4d09a37be8d5fd
+  tests/outputTest.yml: dade7c804e9f967eeb9016fcc045b943888b2ef0
   tests/unitTest.js: 54033b5beed0e7db52afe5449758cea3e969a6be
-  tests/unitTestYAML.js: 215400bf5e21fbb27f507c2e10b1e75f290e8ff2
+  tests/unitTestYAML.js: 891879cd3b71d0d6351ae09af0886f981937c6bf
   util/loadDB2Elastic.js: caecf39b3afa1430c089ff57a9974d5bb10a06d9
