@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20170908'
+version: '20171019'
 dependencies:
   openaf: '>=20170901'
 files:
@@ -284,7 +284,7 @@ filesHash:
   lib/nvalidation.js: 8dc0019e337c4c0f12890b09ac5864b74175fd6c
   lib/nwarning.js: b6ab4c67c583f878c95bbf19ee11b7099c132136
   lib/nwarnings.js: 939a814f4eb4d114ef22785ed877eb2ffb165e8e
-  nattrmon.js: 1bb33a8d06ee9d99d4a007fe3cfe310ef74927da
+  nattrmon.js: cd8e6e7ffdf15d4b115b5d9d9e97465a5aabfa5b
   README.md: b2a7dc80a439d865bd03d49960dbd6c96d02c254
   tests/inputDBTest.yml: acafbfa4233802897e81e9ee5457b06b76787303
   tests/inputShellTest.yml: 795c8479c1bfa93454b077d141f58161af5cae08
