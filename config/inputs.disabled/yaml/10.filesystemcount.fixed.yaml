@@ -1,5 +1,5 @@
 input: 	
-   name         : Test Filesystem check 
+   name         : Fixed Subscribers Filesystem check 
    timeInterval : 60000
    waitForFinish: true
    onlyOnEvent  : true

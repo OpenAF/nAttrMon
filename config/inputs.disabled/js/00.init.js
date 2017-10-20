@@ -1,47 +1,35 @@
-// INSTRUCTIONS
-// ------------
-// 1. Change by adding or removing servers from the raidServers array. 
-// 2. Add DB objects from raidServers if needed on the end of the file.
-// 3. Fill out also the 0.doc.js file to add descriptions and links to attributes.
-
-var raidServers = { 
-  "Some_CM": {
-     "name": "Some CM",
-     "url" : "http://adm:9ADE26D7D93535B95E71B107A4D8B4FCD9CBF33999315F853F9771C4C2F853E4@1.2.3.4:1234/xdt"
-  }, 
-  "Some_RAS": {
-     "name": "Some RAS",
-     "url" : "http://adm:9ADE26D7D93535B95E71B107A4D8B4FCD9CBF33999315F853F9771C4C2F853E4@1.2.3.4:1234/xdt"
-  }
-};
-
-
-// Don't change BEGIN --------------------------------------------------
-// ---------------------------------------------------------------------
-
-// Creating objects to access each server
-for(var i in raidServers) {
-  nattrmon.addObjectPool(i, ow.obj.pool.AF(raidServers[i].url));
-}
-
-// Creating objects to access databases
+// Set attributes descriptions
+// 
 /*
-nattrmon.addMonitoredObject("Some_DAT", function() {
-  return getRAIDDB(nattrmon.getMonitoredObject("Some_CM"), 'Dat');
-});
-
-nattrmon.addMonitoredObject("Some_ADMAPP", function() {
-  return new DB(getRAIDDBURL(nattrmon.getMonitoredObject("Some_RAS"), 'Dat'), 'some', '9ADE26D7D93535B95E71B107A4D8B4FCD9CBF33999315F853F9771C4C2F853E4');
+nattrmon.setAttributes({
+	"Database/Tablespaces"         : "This table provides the current usage for RAID tablespaces. A small amount of space in one of them might become the reason for issues."
 });
 */
 
-// Add, remove or change as many DB connections you need following the example (Some_CM is the server you
-// define on raidServers. APPADM (the first argument) will by the name of this DB connection.
-nattrmon.useObject("Some_CM", function(aAF) {
-   nattrmon.addObjectPool("APPADM", ow.obj.pool.DB(getRAIDDBURL(aAF, "Adm"), "APPADM", "APPADM"));
+// Set the RAID servers to monitor
+$ch("raidServers").create();
+$ch("raidServers").set("PRDFMS", {
+   key: "PRDFMS",
+   url: "http://adm:F1DF06B3904@127.0.0.1:7100/xdt"
 });
 
-//Don't change END ----------------------------------------------------
-//---------------------------------------------------------------------
 
+// ---------------------------------------------------------------------
+// ---------------------------------------------------------------------
 
+// Creating objects to access each server
+$ch("raidServers").forEach(function(aK, aV) {
+   nattrmon.addObjectPool(aV.key, ow.obj.pool.AF(aV.url));
+});
+
+// Creating objects to access databases
+nattrmon.useObject("PRDFMS", function(aAF) {
+   var pool = ow.obj.pool.RAIDDB(aAF, "App");
+   pool.setMax(3);   // A max of 3 connections
+   //pool.setTimeout(30000);
+   nattrmon.addObjectPool("FMSAPP", pool);
+
+   var poolAA = ow.obj.pool.DB(getRAIDDBURL(aAF, 'Adm'), 'APPADM', '10B98CD0337F4ECBB41');
+   poolAA.setMax(3);   // A max of 3 connections
+   nattrmon.addObjectPool("APPADM", poolAA);
+});

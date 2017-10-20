@@ -19,53 +19,32 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20171019'
+version: '20171020'
 dependencies:
   openaf: '>=20170901'
 files:
   - .package.yaml
   - config/inputs/add_files_from_inputs_disabled.dummy
-  - config/inputs.disabled/js/0.init.js
   - config/inputs.disabled/js/00.doc.js
   - config/inputs.disabled/js/00.init.js
-  - config/inputs.disabled/js/01.ping.js
-  - config/inputs.disabled/js/02.filesystem.js
-  - config/inputs.disabled/js/03.cbpm.semaphores.js
-  - config/inputs.disabled/js/03.semaphores.js
-  - config/inputs.disabled/js/04.db.js
   - config/inputs.disabled/js/05.filesystemCount.js
-  - config/inputs.disabled/js/06.errorFlows.js
-  - config/inputs.disabled/js/06.runningFlows.js
   - config/inputs.disabled/js/07.logErrorAgg.js
-  - config/inputs.disabled/js/08.RAIDmemory.js
   - config/inputs.disabled/js/09.filesystemcount.js
-  - config/inputs.disabled/js/09.IMmemory.js
-  - config/inputs.disabled/js/1.ping.js
   - config/inputs.disabled/js/10.filesystem.js
   - config/inputs.disabled/js/10.filesystemcount.js
   - config/inputs.disabled/js/11.OSInfo.js
   - config/inputs.disabled/js/12.ShellCmd.js
   - config/inputs.disabled/js/13.ListDirFiles.js
-  - config/inputs.disabled/js/2.filesystem.js
   - config/inputs.disabled/js/22.fraud.snapshots.js
-  - config/inputs.disabled/js/3.semaphores.js
-  - config/inputs.disabled/js/4.db.js
   - config/inputs.disabled/js/41.fms.rulestatus.js
-  - config/inputs.disabled/js/5.filesystemCount.js
-  - config/inputs.disabled/js/6.errorFlows.js
-  - config/inputs.disabled/js/6.runningFlows.js
-  - config/inputs.disabled/js/7.logErrorAgg.js
-  - config/inputs.disabled/js/8.RAIDmemory.js
-  - config/inputs.disabled/js/9.filesystemcount.js
-  - config/inputs.disabled/js/9.IMmemory.js
   - config/inputs.disabled/yaml/01.ping.yaml
   - config/inputs.disabled/yaml/01.test.yaml
   - config/inputs.disabled/yaml/02.test.yaml
   - config/inputs.disabled/yaml/03.semaphores.yaml
   - config/inputs.disabled/yaml/04.db.appadm.yaml
   - config/inputs.disabled/yaml/09.memory.yaml
+  - config/inputs.disabled/yaml/10.filesystemcount.fixed.yaml
   - config/inputs.disabled/yaml/10.filesystemcount.mobsubscribers.yaml
-  - config/inputs.disabled/yaml/10.filesystemcount.nortel.yaml
   - config/inputs.disabled/yaml/10.sessions.yaml
   - config/inputs.disabled/yaml/11.times.yaml
   - config/inputs.disabled/yaml/12.connections.yaml
@@ -130,14 +109,11 @@ files:
   - config/outputs.disabled/5.emailWarnings.js
   - config/outputs.disabled/9.channels.js
   - config/validations/add_files_from_validations_disabled.dummy
-  - config/validations.disabled/0.validatePing.js
-  - config/validations.disabled/01.somebodyTouched.yaml
-  - config/validations.disabled/01.validatePing.js
-  - config/validations.disabled/03.validateSemaphores.js
-  - config/validations.disabled/04.validateErrorFlows.js
-  - config/validations.disabled/3.validateSemaphores.js
-  - config/validations.disabled/30.validateYellows.js
-  - config/validations.disabled/4.validateErrorFlows.js
+  - config/validations.disabled/js/0.validatePing.js
+  - config/validations.disabled/js/01.validatePing.js
+  - config/validations.disabled/js/03.validateSemaphores.js
+  - config/validations.disabled/js/04.validateErrorFlows.js
+  - config/validations.disabled/js/30.validateYellows.js
   - config/validations.disabled/yaml/01.somebodyTouched.yaml
   - lib/nattribute.js
   - lib/nattributes.js
@@ -160,47 +136,26 @@ files:
   - util/loadDB2Elastic.js
 filesHash:
   config/inputs/add_files_from_inputs_disabled.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
-  config/inputs.disabled/js/0.init.js: 2563ccfc0a37d3be85f7485be88a08576fbb7f05
   config/inputs.disabled/js/00.doc.js: 30076a2c9808fdf32de2c23dc5dcf3a995467e21
-  config/inputs.disabled/js/00.init.js: c6ff344e66b6621b75ff2bf138d4388d4ee38958
-  config/inputs.disabled/js/01.ping.js: bb588a56552e5f1a6932bb140c93a187f06d4294
-  config/inputs.disabled/js/02.filesystem.js: 6dc15d354bbef8b517b4ac7d9970e68167c8c32e
-  config/inputs.disabled/js/03.cbpm.semaphores.js: 5ef636830d4e64b3019fd03a8b7c5a0053943fe1
-  config/inputs.disabled/js/03.semaphores.js: 4b237c7885f0797c99c15befb7afdf0f88f7ab63
-  config/inputs.disabled/js/04.db.js: 827989c091e4f4fd9766c5c1e8fc7dff7c79b359
+  config/inputs.disabled/js/00.init.js: 9b136327af5c67351b02e1d5b253f1ce0d9952a3
   config/inputs.disabled/js/05.filesystemCount.js: b63236a0fa5a2ed14930f8a2b359c5d1439fc195
-  config/inputs.disabled/js/06.errorFlows.js: b6f370568fc578b55c8f1bfcc13235f05c9b8228
-  config/inputs.disabled/js/06.runningFlows.js: 1f0aab01ac36a49775378f240e61b2ade7a8c8c8
   config/inputs.disabled/js/07.logErrorAgg.js: 46f522e3079ae9ba1fd6095bd44d53e602142282
-  config/inputs.disabled/js/08.RAIDmemory.js: cf3694b307c1f0222e339e614ef43ac47a77b62c
   config/inputs.disabled/js/09.filesystemcount.js: e351abf60bf37268bd90a59ec6ad21ddcaa65796
-  config/inputs.disabled/js/09.IMmemory.js: ae4ce8a4258c48ee4b9654a39d237fca73787fee
-  config/inputs.disabled/js/1.ping.js: aea9bf826a16ec47b2431f2103ed0c355bbab931
   config/inputs.disabled/js/10.filesystem.js: 61d300a2961308a1bf3da2d763018469e632a5b8
   config/inputs.disabled/js/10.filesystemcount.js: a3031f5321f2ba20402093eeceebfd10d3474730
   config/inputs.disabled/js/11.OSInfo.js: a8cda4de91897cfe29485df98c472d13e0612b5c
   config/inputs.disabled/js/12.ShellCmd.js: a34d7727bfcd51819fc96e9f0c53ce91e02be613
   config/inputs.disabled/js/13.ListDirFiles.js: 2f997bc8695f76471c17f828d9d5a39708009510
-  config/inputs.disabled/js/2.filesystem.js: 6dc15d354bbef8b517b4ac7d9970e68167c8c32e
   config/inputs.disabled/js/22.fraud.snapshots.js: f7c00b5410c107193734e4639c13a48a553edbc4
-  config/inputs.disabled/js/3.semaphores.js: 4b237c7885f0797c99c15befb7afdf0f88f7ab63
-  config/inputs.disabled/js/4.db.js: 827989c091e4f4fd9766c5c1e8fc7dff7c79b359
   config/inputs.disabled/js/41.fms.rulestatus.js: e0ea98c869241157591215a4b091858b1a651f9d
-  config/inputs.disabled/js/5.filesystemCount.js: ad40ecfd93e56de59ae5014febc683b97f870386
-  config/inputs.disabled/js/6.errorFlows.js: b6f370568fc578b55c8f1bfcc13235f05c9b8228
-  config/inputs.disabled/js/6.runningFlows.js: 1f0aab01ac36a49775378f240e61b2ade7a8c8c8
-  config/inputs.disabled/js/7.logErrorAgg.js: a4a39f1d07cc83af964d4b1068be91a74387a493
-  config/inputs.disabled/js/8.RAIDmemory.js: cf3694b307c1f0222e339e614ef43ac47a77b62c
-  config/inputs.disabled/js/9.filesystemcount.js: e351abf60bf37268bd90a59ec6ad21ddcaa65796
-  config/inputs.disabled/js/9.IMmemory.js: ae4ce8a4258c48ee4b9654a39d237fca73787fee
   config/inputs.disabled/yaml/01.ping.yaml: 4099ba54ccf9a1cf7468b832205a97c77de01065
   config/inputs.disabled/yaml/01.test.yaml: dff4e9f6b3fe72619b6f360901e8d2d76f93c6b0
   config/inputs.disabled/yaml/02.test.yaml: f933560ac567b06c6b08327ff54e1bf1da5ca093
   config/inputs.disabled/yaml/03.semaphores.yaml: 9b2b96bf067585976ea84a805e528fd796331782
   config/inputs.disabled/yaml/04.db.appadm.yaml: 21473f76bd120810c87adc6bc9c7f25b74c51261
   config/inputs.disabled/yaml/09.memory.yaml: abd00277facadf9fa16f230fcb92dfee48bcd527
+  config/inputs.disabled/yaml/10.filesystemcount.fixed.yaml: 46d00308be67f3404eded27a536ae918d7f8c766
   config/inputs.disabled/yaml/10.filesystemcount.mobsubscribers.yaml: e375d9c5dcd2fe4360efcd6e6e9ceeff64432129
-  config/inputs.disabled/yaml/10.filesystemcount.nortel.yaml: 2de6bb88b450f2d3578c3f72e775f9efedb42013
   config/inputs.disabled/yaml/10.sessions.yaml: 5a1724db9eca8b90a6bb6310948a00d7909fc555
   config/inputs.disabled/yaml/11.times.yaml: f437adf46690615e0b52b7cd36eba2ba0eb1cff2
   config/inputs.disabled/yaml/12.connections.yaml: 72579273a36487c4fb05b546f49bec649d8f245f
@@ -265,14 +220,11 @@ filesHash:
   config/outputs.disabled/5.emailWarnings.js: ea8400db37cddda42ed276b75c94467e3239359a
   config/outputs.disabled/9.channels.js: fd411e585f542586b77d61afcce668980f8c0207
   config/validations/add_files_from_validations_disabled.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
-  config/validations.disabled/0.validatePing.js: 43b32c9c22d2285f0e14999956b45d07bc6d87b7
-  config/validations.disabled/01.somebodyTouched.yaml: 18654e1a81a2af19e4c3cadb4dc086ca3f609f2e
-  config/validations.disabled/01.validatePing.js: 43b32c9c22d2285f0e14999956b45d07bc6d87b7
-  config/validations.disabled/03.validateSemaphores.js: 1e8465015b49313b926cc58874def52b09fc59aa
-  config/validations.disabled/04.validateErrorFlows.js: e56a93520e28d3f9b174264e3a199f9c2411d08b
-  config/validations.disabled/3.validateSemaphores.js: 854e501b5ca7d5c1ca047fc6840547d746a78a72
-  config/validations.disabled/30.validateYellows.js: e6f3ab2e0e870a0c7ac02e6d38603c187035f9e9
-  config/validations.disabled/4.validateErrorFlows.js: e56a93520e28d3f9b174264e3a199f9c2411d08b
+  config/validations.disabled/js/0.validatePing.js: 43b32c9c22d2285f0e14999956b45d07bc6d87b7
+  config/validations.disabled/js/01.validatePing.js: 43b32c9c22d2285f0e14999956b45d07bc6d87b7
+  config/validations.disabled/js/03.validateSemaphores.js: 1e8465015b49313b926cc58874def52b09fc59aa
+  config/validations.disabled/js/04.validateErrorFlows.js: e56a93520e28d3f9b174264e3a199f9c2411d08b
+  config/validations.disabled/js/30.validateYellows.js: e6f3ab2e0e870a0c7ac02e6d38603c187035f9e9
   config/validations.disabled/yaml/01.somebodyTouched.yaml: 18654e1a81a2af19e4c3cadb4dc086ca3f609f2e
   lib/nattribute.js: 4be29e971b5c0c23e1fc89f33d7ed6479d075809
   lib/nattributes.js: 4dc41e0d6fc25c1bdf16608ef41cad8d5df3506d
