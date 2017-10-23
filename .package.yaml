@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20171020'
+version: '20171023'
 dependencies:
   openaf: '>=20170901'
 files:
