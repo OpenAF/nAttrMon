@@ -20,16 +20,11 @@ ow.loadServer();
 ow.loadObj(); 
 ow.loadFormat(); 
 ow.loadTemplate();
-loadUnderscore(); 
+loadLodash(); 
 
 // ----------------------------------------------------------------------------------------------
 // ----------------------------------------------------------------------------------------------
 
-/**
- * [nAttrMon description]
- * @param  {[type]} aConfigPath [description]
- * @return {[type]}             [description]
- */
 var nAttrMon = function(aConfigPath, debugFlag) {
 	plugin("Threads");
 
@@ -63,13 +58,19 @@ var nAttrMon = function(aConfigPath, debugFlag) {
 	this.objPoolsCat = {};
 	this.indexPlugThread = {};
 
-	//this.restoreSnapshot();
 	var nattrmon = this;
 	this.currentValues.storeAdd(this.getConfigPath() + "/nattrmon.cvals.snapshot", [ "name" ], true);
 	this.lastValues.storeAdd(this.getConfigPath() + "/nattrmon.lvals.snapshot", [ "name" ], true);
 	this.listOfAttributes.getCh().storeAdd(this.getConfigPath() + "/nattrmon.attrs.snapshot", [ "name" ], true);
 	this.listOfWarnings.getCh().storeAdd(this.getConfigPath() + "/nattrmon.warns.snapshot", [ "title" ], true);
 }
+
+nAttrMon.prototype.getConfigPath = function() {
+	return this.configPath;
+}
+
+// Snapshot functions
+// ------------------
 
 nAttrMon.prototype.genSnapshot = function() {
 	var mainpath = this.getConfigPath();
@@ -82,62 +83,17 @@ nAttrMon.prototype.genSnapshot = function() {
 	io.writeFileBytes(mainpath + "/nattrmon.snapshot", compress(snapshot));
 }
 
-nAttrMon.prototype.restoreSnapshot = function() {
-	// Use JMix
-	var mainpath = this.getConfigPath();
-	try {
-		var snapshot = uncompress(io.readFileBytes(mainpath + "/nattrmon.snapshot"));
-		this.currentValues.setAll([ "name" ], ow.obj.fromObj2Array(snapshot.currentValues, "name"));
-		this.lastValues.setAll([ "name" ], ow.obj.fromObj2Array(snapshot.lastValues, "name"));
-		/*this.listOfAttributes = ow.obj.fromJson(snapshot.listOfAttributes)
-		                          .withObject(nAttributes.prototype)
-		                          .withObject(nAttribute.prototype, "attributes.*").build();*/
-		this.listOfAttributes.addAttributes(snapshot.listOfAttributes);
-		this.listOfWarnings.addWarnings(_.flatten(ow.loadObj().fromObj2Array(snapshot.listOfWarnings)));
+// Session function
+// ----------------
 
-		/*this.listOfWarnings = ow.obj.fromJson(snapshot.listOfWarnings)
-		                          .withObject(nWarnings.prototype).build();	*7
-
-		/*for (var i in this.listOfWarnings.warnings) {
-			this.listOfWarnings.warnings[i] = ow.obj.fromJson(snapshot.listOfWarnings.warnings[i]).withObject(nWarning.prototype, "*").build();
-		}*/
-
-	} catch(e) {
-		this.debug("Exception while restoring snapshot: " + e);
-	}
-}
-
-/**
- * [getConfigPath description]
- * @return {[type]} [description]
- */
-nAttrMon.prototype.getConfigPath = function() {
-	return this.configPath;
-}
-
-/**
- * [setSessionData description]
- * @param {[type]} aKey    [description]
- * @param {[type]} aObject [description]
- */
 nAttrMon.prototype.setSessionData = function(aKey, aObject) {
 	this.sessionData[aKey] = aObject;
 }
 
-/**
- * [getSessionData description]
- * @param  {[type]} aKey [description]
- * @return {[type]}      [description]
- */
 nAttrMon.prototype.getSessionData = function(aKey) {
 	return this.sessionData[aKey];
 }
 
-/**
- * [hasSessionData description]
- * @param  {[type]}  aKey [description]
- * @return {Boolean}      [description]
- */
 nAttrMon.prototype.hasSessionData = function(aKey) {
 	if(isUnDef(this.getSessionData(aKey))) {
 		return false;
@@ -146,31 +102,25 @@ nAttrMon.prototype.hasSessionData = function(aKey) {
 	}
 }
 
-/**
- * [addMonitoredObject description]
- * @param {[type]} aKey     [description]
- * @param {[type]} anObject [description]
- */
+// Debug functions
+// ---------------
+nAttrMon.prototype.setDebug = function(aDebugFlag) {
+	this.debugFlag = aDebugFlag;
+}
+
+// Monitored objects
+// -----------------
+
 nAttrMon.prototype.addMonitoredObject = function(aKey, anObject) {
 	this.monitoredObjects[aKey] = new nMonitoredObject(aKey, anObject);
 	return this.getMonitoredObject(aKey);
 }
 
-/**
- * [getMonitoredObject description]
- * @param  {[type]} aKey [description]
- * @return {[type]}      [description]
- */
 nAttrMon.prototype.getMonitoredObject = function(aKey) {
   	if (this.hasMonitoredObject(aKey))
 		return this.monitoredObjects[aKey].getObject();
 }
 
-/**
- * [hasMonitoredObject description]
- * @param  {[type]}  aKey [description]
- * @return {Boolean}      [description]
- */
 nAttrMon.prototype.hasMonitoredObject = function(aKey) {
 	if(isUnDef(this.monitoredObjects[aKey])) {
 		return false;
@@ -179,10 +129,6 @@ nAttrMon.prototype.hasMonitoredObject = function(aKey) {
 	}
 }
 
-/**
- * [monitoredObjectsTest description]
- * @return {[type]} [description]
- */
 nAttrMon.prototype.monitoredObjectsTest = function() {
 	for(var o in this.monitoredObjects) {
 		this.monitoredObjects[o].test();
@@ -198,6 +144,9 @@ nAttrMon.prototype.declareMonitoredObjectDirty = function(aKey) {
 	this.monitoredObjects[aKey].setDirty();
 	this.monitoredObjects[aKey].test();
 }
+
+// Object pools
+// ------------
 
 /**
  * <odoc>
@@ -297,21 +246,15 @@ nAttrMon.prototype.useObject = function(aKey, aFunction) {
 	return this.objPools[aKey].use(aFunction);
 }
 
-/**
- * [debug description]
- * @param  {[type]} aMessage [description]
- * @return {[type]}          [description]
- */
+// System functions
+// ----------------
+
 nAttrMon.prototype.debug = function(aMessage) {
 	if(this.debugFlag) {
 		log("DEBUG | " + aMessage);
 	}
 }
 
-/**
- * [start description]
- * @return {[type]} [description]
- */
 nAttrMon.prototype.start = function() {
 	this.debug("nAttrMon monitor plug");
 
@@ -335,10 +278,6 @@ nAttrMon.prototype.start = function() {
 	this.debug("nAttrMon restoring snapshot");
 }
 
-/**
- * [stop description]
- * @return {[type]} [description]
- */
 nAttrMon.prototype.stop = function() {
 	this.debug("nAttrMon stoping.");
 	for(var i in this.threads) {
@@ -376,20 +315,15 @@ nAttrMon.prototype.stopObjects = function() {
 	}
 }
 
-/**
- * [restart description]
- * @return {[type]} [description]
- */
 nAttrMon.prototype.restart = function() {
 	this.debug("nAttrMon restarting");
 	this.stop();
 	restartOpenAF();
 }
 
-/**
- * [getAttributes description]
- * @return {[type]} [description]
- */
+// Attribute management
+// --------------------
+
 nAttrMon.prototype.getAttributes = function(justData) {
 	if (justData)
 		return this.listOfAttributes.getAttributes(justData);
@@ -397,24 +331,18 @@ nAttrMon.prototype.getAttributes = function(justData) {
 		return this.listOfAttributes;
 }
 
-/**
- * [setAttribute description]
- * @param {[type]} aName        [description]
- * @param {[type]} aDescription [description]
- */
 nAttrMon.prototype.setAttribute = function(aName, aDescription, aType) {
 	this.listOfAttributes.setAttribute(new nAttribute(aName, aDescription, aType));
 }
 
-/**
- * [setAttributes description]
- * @param {[type]} aStruct [description]
- */
 nAttrMon.prototype.setAttributes = function(aStruct) {
 	for(var attr in aStruct) {
 		this.listOfAttributes.setAttribute(new nAttribute(attr, aStruct[attr]));
 	}
 }
+
+// Warning management
+// ------------------
 
 nAttrMon.prototype.setWarnings = function(anArrayofWarnings) {
 	for(var i in anArrayofWarnings) {
@@ -430,18 +358,9 @@ nAttrMon.prototype.getWarnings = function(full) {
         }
 }
 
-/**
- * [getPlugs description]
- * @return {[type]}       [description]
- */
-nAttrMon.prototype.getPlugs = function() {
-	return this.plugs;
-}
+// Attribute values management
+// ---------------------------
 
-/**
- * [getCurrentValues description]
- * @return {[type]} [description]
- */
 nAttrMon.prototype.getCurrentValues = function(full) {
 	if (full) {
 		return this.currentValues;
@@ -450,10 +369,6 @@ nAttrMon.prototype.getCurrentValues = function(full) {
 	}
 }
 
-/**
- * [getLastValues description]
- * @return {[type]} [description]
- */
 nAttrMon.prototype.getLastValues = function(full) {
 	if (full) {
 		return this.lastValues;
@@ -462,12 +377,6 @@ nAttrMon.prototype.getLastValues = function(full) {
 	}
 }
 
-/**
- * [getHistoryValuesByTime description]
- * @param  {[type]} anAttributeName   [description]
- * @param  {[type]} howManySecondsAgo [description]
- * @return {[type]}                   [description]
- */
 nAttrMon.prototype.getHistoryValuesByTime = function(anAttributeName, howManySecondsAgo) {
 	var attrHist = this.getSessionData("attribute.history");
 	if (isUnDef(attrHist)) {
@@ -483,12 +392,6 @@ nAttrMon.prototype.getHistoryValuesByTime = function(anAttributeName, howManySec
 	}
 }
 
-/**
- * [getHistoryValuesByEvents description]
- * @param  {[type]} anAttributeName  [description]
- * @param  {[type]} howManyEventsAgo [description]
- * @return {[type]}                  [description]
- */
 nAttrMon.prototype.getHistoryValuesByEvents = function(anAttributeName, howManyEventsAgo) {
 	var attrHist = this.getSessionData("attribute.history");
 	if (isUnDef(attrHist)) {
@@ -504,10 +407,6 @@ nAttrMon.prototype.getHistoryValuesByEvents = function(anAttributeName, howManyE
  	}
 }
 
-/**
- * [addValues description]
- * @param {[type]} aValues [description]
- */
 nAttrMon.prototype.addValues = function(onlyOnEvent, aValues) {
 	var count;
 
@@ -545,11 +444,20 @@ nAttrMon.prototype.addValues = function(onlyOnEvent, aValues) {
 	}
 }
 
+// --------------------------------------------------------------------------------------------
+// Plugs
+// --------------------------------------------------------------------------------------------
+
 /**
- * [execPlugs description]
- * @param  {[type]} aPlugType [description]
- * @return {[type]}           [description]
+ * <odoc>
+ * <key>nattrmon.getPlugs() : Array</key>
+ * Get the current array of plugs on nattrmon.
+ * </odoc>
  */
+nAttrMon.prototype.getPlugs = function() {
+	return this.plugs;
+}
+
 nAttrMon.prototype.execPlugs = function(aPlugType) {
     for(var iPlug in this.plugs[aPlugType]) {
     	var entry = this.plugs[aPlugType][iPlug];
@@ -582,32 +490,33 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
     	};
     	parent.indexPlugThread[entry.getCategory() + "/" + entry.getName()] = uuid;
 
-    	try {
-	     	if (entry.waitForFinish) {
-	     		this.debug("Starting with fixed rate for " + entry.getName() + " - " + entry.aTime);
-	     		thread.startWithFixedRate(entry.aTime);
-	     	} else {
-	     		this.debug("Starting at fixed rate for " + entry.getName() + " - " + entry.aTime);
-	     		thread.startAtFixedRate(entry.aTime);
-	     	}
-     	} catch(e) {
-     		logErr("Problem starting thread for '" + entry.getName() + "' (uuid " + uuid + ") ");
-     	}
+		if (entry.aTime > 0) {
+			try {
+				if (entry.waitForFinish) {
+					this.debug("Starting with fixed rate for " + entry.getName() + " - " + entry.aTime);
+					thread.startWithFixedRate(entry.aTime);
+				} else {
+					this.debug("Starting at fixed rate for " + entry.getName() + " - " + entry.aTime);
+					thread.startAtFixedRate(entry.aTime);
+				}
+			} catch(e) {
+				logErr("Problem starting thread for '" + entry.getName() + "' (uuid " + uuid + ") ");
+			}
+		} else {
+			this.debug("Muting " + entry.getName() + "' (uuid + " + uuid + ") ");
+		}
 
      	this.threads.push(thread);
      	this.debug("Number of threads: " + this.threads.length);
     }
 }
 
-/**
- * [addPlug description]
- * @param {[type]} aPlugType [description]
- * @param {[type]} aFunction [description]
- */
 nAttrMon.prototype.addPlug = function(aPlugType, aInputMeta, aObject, args) {
     if (isUnDef(this.plugs[aPlugType])) {
         this.plugs[aPlugType] = [];
     }
+
+	if (isUnDef(aInputMeta.type)) aInputMeta.type = aPlugType;
 
     var plug = new nPlug(aInputMeta, args, aObject);
 
@@ -623,23 +532,10 @@ nAttrMon.prototype.addPlug = function(aPlugType, aInputMeta, aObject, args) {
     this.debug("Added plug " + plug.getName());
 }
 
-/**
- * [addInput description]
- * @param {[type]} aInputMeta   [description]
- * @param {[type]} aInputObject [description]
- * @param {[type]} args         [description]
- */
 nAttrMon.prototype.addInput = function(aInputMeta, aInputObject, args) {
 	this.addPlug(this.PLUGINPUTS, aInputMeta, aInputObject, args);
 }
 
-/**
- * [addOutput description]
- * @param {[type]} aTime         [description]
- * @param {[type]} waitForFinish [description]
- * @param {[type]} onlyOnEvent   [description]
- * @param {[type]} aFunction     [description]
- */
 nAttrMon.prototype.addOutput = function(aOutputMeta, aOutputObject, args) {
 	this.addPlug(this.PLUGOUTPUTS, aOutputMeta, aOutputObject, args);
 }
@@ -648,10 +544,6 @@ nAttrMon.prototype.addValidation = function(aValidationMeta, aValidationObject, 
 	this.addPlug(this.PLUGVALIDATIONS, aValidationMeta, aValidationObject, args);
 }
 
-/**
- * [loadPlugs description]
- * @return {[type]} [description]
- */
 nAttrMon.prototype.loadPlugs = function() {
 	this.loadPlug(this.configPath + "/objects", "objects");
 	this.loadPlug(this.configPath + "/inputs", "inputs");
@@ -684,12 +576,6 @@ nAttrMon.prototype.loadObject = function(yy, type) {
 	return yy;
 }
 
-/**
- * [loadPlug description]
- * @param  {[type]} aPlugDir  [description]
- * @param  {[type]} aPlugDesc [description]
- * @return {[type]}           [description]
- */
 nAttrMon.prototype.loadPlug = function(aPlugDir, aPlugDesc) {
     var files = io.listFiles(aPlugDir).files;
 
@@ -738,19 +624,19 @@ nAttrMon.prototype.loadPlug = function(aPlugDir, aPlugDesc) {
 
 				if (isDef(y.input)) 
 					if (isArray(y.input))
-						y.input.forEach(function(yo) { __handlePlug(yo, "input") });
+						y.input.forEach(function(yo) { __handlePlug(yo, "input", parent) });
 					else	
-						__handlePlug(y.input, "input");
+						__handlePlug(y.input, "input", parent);
 				if (isDef(y.output)) 
 					if (isArray(y.output))
-						y.output.forEach(function(yo) { __handlePlug(yo, "output") });
+						y.output.forEach(function(yo) { __handlePlug(yo, "output", parent) });
 					else	
-						__handlePlug(y.output, "output");
+						__handlePlug(y.output, "output", parent);
 				if (isDef(y.validation))
 					if (isArray(y.validation))
-						y.validation.forEach(function(yo) { __handlePlug(yo, "validation") });
+						y.validation.forEach(function(yo) { __handlePlug(yo, "validation", parent) });
 					else	
-						__handlePlug(y.validation, "validation");
+						__handlePlug(y.validation, "validation", parent);
 			} catch(e) {
 				logErr("Error loading " + aPlugDesc + " (" + plugsjs[i] + "): " + e);
 			}
@@ -767,19 +653,13 @@ var params = processExpr();
 var nattrmon;
 
 if (isUnDef(params.withDirectory)) {
-	nattrmon = new nAttrMon(NATTRMON_HOME + "/config");
+	nattrmon = new nAttrMon(NATTRMON_HOME + "/config", params.debug);
 } else {
-	nattrmon = new nAttrMon(params.withDirectory);
+	nattrmon = new nAttrMon(params.withDirectory, params.debug);
 }
 
 var __sleepperiod = 60000; // less aggressive
 var __stuckfactor = 500;
-
-
-// Option start
-//if (isDef(params.start)) {
-//        restartOpenAF(["--script", NATTRMON_HOME + "/nattrmon.js"]);
-//}
 
 // Option stop
 if (isDef(params.stop)) {
@@ -827,7 +707,7 @@ ow.server.daemon(__sleepperiod, function() {
 
 	// Check all threads
 	for(var uuid in nattrmon.threadsSessions) {
-		if ( (now() - nattrmon.threadsSessions[uuid].count) >= (nattrmon.threadsSessions[uuid].entry.aTime * __stuckfactor) ) {
+		if ( nattrmon.threadsSessions[uuid].entry.aTime > 0 && (now() - nattrmon.threadsSessions[uuid].count) >= (nattrmon.threadsSessions[uuid].entry.aTime * __stuckfactor) ) {
 			log("nAttrmon found a stuck thread (" + uuid + " for '" + nattrmon.threadsSessions[uuid].entry.getName() + "')");
 			log("nAttrMon restarting process!!");
 			nattrmon.stop();

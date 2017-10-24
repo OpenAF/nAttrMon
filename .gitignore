@@ -1,0 +1,4 @@
+nattrmon.pid
+config/inputs/*
+config/outputs/*
+config/validations/*
