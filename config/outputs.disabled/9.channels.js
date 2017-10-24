@@ -31,7 +31,8 @@ if (isDef(httpd)) {
 	nattrmon.lastValues.expose(httpd, "/chs/lvals", chAuth);
 	$ch("nattrmon::attributes").expose(httpd, "/chs/attrs", chAuth);
 	$ch("nattrmon::warnings").expose(httpd, "/chs/warns", chAuth);
-        //httpd.setDefault("/f");
+	$ch("nattrmon::plugs").expose(httpd, "/chs/plugs", chAuth);
+    //httpd.setDefault("/f");
 
 } else {
 	throw "Need a http output defined.";

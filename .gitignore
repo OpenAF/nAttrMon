@@ -2,3 +2,4 @@ nattrmon.pid
 config/inputs/*
 config/outputs/*
 config/validations/*
+config/*.snapshot

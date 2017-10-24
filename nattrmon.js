@@ -251,7 +251,9 @@ nAttrMon.prototype.useObject = function(aKey, aFunction) {
 
 nAttrMon.prototype.debug = function(aMessage) {
 	if(this.debugFlag) {
-		log("DEBUG | " + aMessage);
+		ansiStart();
+		log(ansiColor("BG_YELLOW,BLACK", "DEBUG | " + aMessage));
+		ansiStop();
 	}
 }
 
@@ -476,7 +478,8 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
         		parent.debug("Executing '" + etry.getName() + "' (" + uuid + ")");
         		var res = etry.exec(parent);
     			parent.addValues(etry.onlyOnEvent, res);
-    			parent.threadsSessions[uuid].count = now();
+				parent.threadsSessions[uuid].count = now();
+				etry.touch();
     		} catch(e) {
     			logErr(etry.getName() + " | " + e);
     		}
@@ -599,7 +602,7 @@ nAttrMon.prototype.loadPlug = function(aPlugDir, aPlugDesc) {
 
     for (var i in plugsjs) {
     	if(plugsjs[i].match(/\.js$/)) {
-	    	log("Loading " + aPlugDesc + ": " + plugsjs[i]);
+	    	if (aPlugDesc != "objects") log("Loading " + aPlugDesc + ": " + plugsjs[i]);
 	    	try {
 	        	af.load(plugsjs[i]);
 	        } catch(e) {
@@ -607,7 +610,7 @@ nAttrMon.prototype.loadPlug = function(aPlugDir, aPlugDesc) {
 	        }
     	}
         if(plugsjs[i].match(/\.yaml$/)) {
-			log("Loading " + aPlugDesc + ": " + plugsjs[i]);
+			if (aPlugDesc != "objects") log("Loading " + aPlugDesc + ": " + plugsjs[i]);
 			try {
 				var y = io.readFileYAML(plugsjs[i]);
 				var parent = this;
