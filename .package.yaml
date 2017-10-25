@@ -19,10 +19,11 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20171023'
+version: '20171024'
 dependencies:
   openaf: '>=20170901'
 files:
+  - .gitignore
   - .package.yaml
   - config/inputs/add_files_from_inputs_disabled.dummy
   - config/inputs.disabled/js/00.doc.js
@@ -63,6 +64,7 @@ files:
   - config/objects/nInput_Semaphores.js
   - config/objects/nInput_Sessions.js
   - config/objects/nInput_Shell.js
+  - config/objects/nOutput_Channels.js
   - config/objects/nOutput_EmailWarnings.js
   - config/objects/nOutput_H2.js
   - config/objects/nOutput_HTTP.js
@@ -108,6 +110,8 @@ files:
   - config/outputs.disabled/4.logFile.js
   - config/outputs.disabled/5.emailWarnings.js
   - config/outputs.disabled/9.channels.js
+  - config/outputs.disabled/yaml/02.httpjson.yaml
+  - config/outputs.disabled/yaml/09.channels.yaml
   - config/validations/add_files_from_validations_disabled.dummy
   - config/validations.disabled/js/0.validatePing.js
   - config/validations.disabled/js/01.validatePing.js
@@ -135,6 +139,7 @@ files:
   - tests/unitTestYAML.js
   - util/loadDB2Elastic.js
 filesHash:
+  .gitignore: 29b26ba4329e135fb85887607d2fe04c2f7c0b66
   config/inputs/add_files_from_inputs_disabled.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
   config/inputs.disabled/js/00.doc.js: 30076a2c9808fdf32de2c23dc5dcf3a995467e21
   config/inputs.disabled/js/00.init.js: 9b136327af5c67351b02e1d5b253f1ce0d9952a3
@@ -174,10 +179,11 @@ filesHash:
   config/objects/nInput_Semaphores.js: 89e32953514a3251138c99f0b026581790522375
   config/objects/nInput_Sessions.js: ab2ae9a2312285e87a3dc1cb834885857ddf6c89
   config/objects/nInput_Shell.js: 38715894d7e6d5f01a9ad32c3dc0e9bbbb1fca0f
+  config/objects/nOutput_Channels.js: d1ce6dcf85b7f889462b2b29bb3ad461ea5f028e
   config/objects/nOutput_EmailWarnings.js: d2e1754680e03fa60f517ec4b9f3a6a5ca442031
   config/objects/nOutput_H2.js: bdafc9cc58ea636d5afce850865f6317e44bf7f4
   config/objects/nOutput_HTTP.js: abb0f38277c693eeede3b4e5504eb7f5e4c229df
-  config/objects/nOutput_HTTP_JSON.js: de4a4981164c43c2ed53b71a608ede5495cf93ba
+  config/objects/nOutput_HTTP_JSON.js: 86190db61678aa740bec0fa290fbb4bb8927debb
   config/objects/nOutput_Log.js: 5d319788dde09672659137eee86998a53dfde382
   config/objects/nOutput_Oracle.js: 93fa7228120945b1f1f6a7ecd8cf17853a4c6966
   config/objects/nOutput_Stdout.js: dadf1277ab262072e1154bc337db37006307f858
@@ -218,7 +224,9 @@ filesHash:
   config/outputs.disabled/3.http.js: 35414c5895053e18788420e2ff17c9aa71c94eed
   config/outputs.disabled/4.logFile.js: 002c15afe1e2035dc77e626113bb6c935c2ecf57
   config/outputs.disabled/5.emailWarnings.js: ea8400db37cddda42ed276b75c94467e3239359a
-  config/outputs.disabled/9.channels.js: fd411e585f542586b77d61afcce668980f8c0207
+  config/outputs.disabled/9.channels.js: 525092466a98774e9a5e3a184dde6f26953c46b9
+  config/outputs.disabled/yaml/02.httpjson.yaml: 7c47a8c640dc9d8b8de10089ff2b90785d4eab9a
+  config/outputs.disabled/yaml/09.channels.yaml: 5149e2ecb9fbb0884fe37dbb6e8ff6a0bd05243d
   config/validations/add_files_from_validations_disabled.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
   config/validations.disabled/js/0.validatePing.js: 43b32c9c22d2285f0e14999956b45d07bc6d87b7
   config/validations.disabled/js/01.validatePing.js: 43b32c9c22d2285f0e14999956b45d07bc6d87b7
@@ -232,11 +240,11 @@ filesHash:
   lib/ninput.js: af91b970f35098a561a187e93b7ec260d08ad934
   lib/nmonitoredobject.js: 24814b7ea819508162cac91a3dd7c14be801be96
   lib/noutput.js: 80983cb56a35eac3726a88e56cac9ea5d51cb39a
-  lib/nplug.js: 5295a76feed0d3f437e858e014f512db9de29d84
+  lib/nplug.js: a1ad7aea1d686d49f9a59c4ed20fe39aed49a95e
   lib/nvalidation.js: 8dc0019e337c4c0f12890b09ac5864b74175fd6c
   lib/nwarning.js: b6ab4c67c583f878c95bbf19ee11b7099c132136
   lib/nwarnings.js: 939a814f4eb4d114ef22785ed877eb2ffb165e8e
-  nattrmon.js: cd8e6e7ffdf15d4b115b5d9d9e97465a5aabfa5b
+  nattrmon.js: a68a3d1cffbdb0e71c80072d6fa9ea7c143c45be
   README.md: b2a7dc80a439d865bd03d49960dbd6c96d02c254
   tests/inputDBTest.yml: acafbfa4233802897e81e9ee5457b06b76787303
   tests/inputShellTest.yml: 795c8479c1bfa93454b077d141f58161af5cae08
