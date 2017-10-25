@@ -467,7 +467,6 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
     	var parent = this;
     	parent.thread = thread;
 
-    	this.debug("Creating a thread for " + entry.getName());
         var uuid = thread.addThread(function(uuid) {
         	try {
         		var etry = parent.threadsSessions[uuid].entry;
@@ -485,7 +484,8 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
     		}
 
     		return true;
-    	});
+		});
+		this.debug("Creating a thread for " + entry.getName() + " with uuid = " + uuid);
 
         parent.threadsSessions[uuid] = {
     		"entry": this.plugs[aPlugType][iPlug],
@@ -506,7 +506,33 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 				logErr("Problem starting thread for '" + entry.getName() + "' (uuid " + uuid + ") ");
 			}
 		} else {
-			this.debug("Muting " + entry.getName() + "' (uuid + " + uuid + ") ");
+			if (isDef(entry.chSubscribe)) {
+				var subs = function(aUUID) { 
+					return function(aCh, aOp, aK, aV) {					
+						try {
+							var etry = parent.threadsSessions[aUUID].entry;
+							parent.debug("Subscriber " + aCh + " on '" + etry.getName() + "' (uuid " + aUUID + ") ");
+							var res = etry.exec(parent, { ch: aCh, op: aOp, k: aK, v: aV });
+							parent.addValues(etry.onlyOnEvent, res);
+							parent.threadsSessions[aUUID].count = now();
+							etry.touch();
+						} catch(e) {
+							logErr(etry.getName() + " | " + e);
+						}
+					};
+				};
+				if (isArray(entry.chSubscribe)) {
+					for(var i in entry.chSubscribe) {
+						this.debug("Subscribing " + entry.chSubscribe + " for " + entry.getName() + "...");
+						$ch(entry.chSubscribe).subscribe(subs(uuid));
+					}
+				} else {
+					this.debug("Subscribing " + entry.chSubscribe + " for " + entry.getName() + "...");
+					$ch(entry.chSubscribe).subscribe(subs(uuid));
+				}
+			} else {
+				this.debug("Muting " + entry.getName() + "' (uuid + " + uuid + ") ");
+			}
 		}
 
      	this.threads.push(thread);

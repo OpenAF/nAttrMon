@@ -240,11 +240,11 @@ filesHash:
   lib/ninput.js: af91b970f35098a561a187e93b7ec260d08ad934
   lib/nmonitoredobject.js: 24814b7ea819508162cac91a3dd7c14be801be96
   lib/noutput.js: 80983cb56a35eac3726a88e56cac9ea5d51cb39a
-  lib/nplug.js: a1ad7aea1d686d49f9a59c4ed20fe39aed49a95e
+  lib/nplug.js: 5e5effd7342fdbc7600c2b283afcec01306d58fc
   lib/nvalidation.js: 8dc0019e337c4c0f12890b09ac5864b74175fd6c
   lib/nwarning.js: b6ab4c67c583f878c95bbf19ee11b7099c132136
   lib/nwarnings.js: 939a814f4eb4d114ef22785ed877eb2ffb165e8e
-  nattrmon.js: a68a3d1cffbdb0e71c80072d6fa9ea7c143c45be
+  nattrmon.js: 137ad8342b193e1888b64ad3ae84c95de68237b4
   README.md: b2a7dc80a439d865bd03d49960dbd6c96d02c254
   tests/inputDBTest.yml: acafbfa4233802897e81e9ee5457b06b76787303
   tests/inputShellTest.yml: 795c8479c1bfa93454b077d141f58161af5cae08
