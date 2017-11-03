@@ -1,0 +1,95 @@
+ojob:
+   sequential: true
+
+jobs:
+   # Set all global variables
+   #
+   - name: Init
+     exec: >-
+        global.packPath = getOPackPath("nAttrMon") || "..";
+        global.configZIP = (isDef(params.filename)) ? params.filename : "config.zip";
+        log("Scanning " + global.packPath);
+
+   # Prepare a ZIP object to be used
+   #
+   - name: Prepare ZIP
+     deps:
+        - Init
+     exec: >-
+        plugin("ZIP");
+        global.zip = new ZIP();
+
+   # Job to backup a plug given args.folder
+   #
+   - name: Backup plug
+     deps:
+        - Init
+        - Prepare ZIP
+     exec: >-
+        if (isDef(args.folder)) {
+           var files = listFilesRecursive(global.packPath + args.folder);
+           for(var file in files) {
+              if (files[file].isFile) {
+                var f = files[file].filepath.replace(args.folder, "").replace(/\\+/g, "/").replace(/^\//, "");
+                log("Including " + f + "...");
+                global.zip.putFile(f.replace(global.packPath + "/", ""), io.readFileBytes(files[file].filepath));
+              }
+           }
+        }
+
+   # Backup all nattrmon snapshots
+   #
+   - name: Backup snapshots
+     deps:
+        - Init
+        - Prepare ZIP
+     exec: >-
+        var f = [ 
+           global.packPath + "/config/nattrmon.attrs.snapshot", 
+           global.packPath + "/config/nattrmon.cvals.snapshot",
+           global.packPath + "/config/nattrmon.lvals.snapshot"
+        ];
+        for (var i in f) {
+          log("Including " + f[i] + "...");
+          global.zip.putFile(f[i].replace(global.packPath + "/", ""), io.readFileBytes(f[i]));
+        }
+
+   # Write the final ZIP file
+   #
+   - name: Write ZIP
+     deps:
+        - Init
+        - Prepare ZIP
+        - Backup plug
+        - Backup snapshots
+     exec: >-
+        log("Writing " + global.configZIP + "...");
+        global.zip.generate2File(global.configZIP, { compressionLevel: 9 }, true);
+        global.zip.close();      
+
+   # Everything done
+   # 
+   - name: Done
+     deps: 
+        - Init
+        - Prepare ZIP
+        - Backup plug
+        - Backup snapshots
+        - Write ZIP
+     exec: >-
+        log("Done");
+
+todo:
+   - Init
+   - Prepare ZIP
+   - Backup snapshots
+   - name: Backup plug
+     args: 
+       - folder: /config/inputs
+       - folder: /config/outputs
+       - folder: /config/validations  
+       - folder: /config/inputs.disabled
+       - folder: /config/outputs.disabled
+       - folder: /config/validations.disabled
+   - Write ZIP
+   - Done
