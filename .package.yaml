@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20171024'
+version: '20171102'
 dependencies:
   openaf: '>=20170901'
 files:
@@ -137,9 +137,10 @@ files:
   - tests/outputTest.yml
   - tests/unitTest.js
   - tests/unitTestYAML.js
+  - util/backupConfig.yaml
   - util/loadDB2Elastic.js
 filesHash:
-  .gitignore: 29b26ba4329e135fb85887607d2fe04c2f7c0b66
+  .gitignore: 54e8786fc3ba63214d7f78bc82af2a0af2c00a57
   config/inputs/add_files_from_inputs_disabled.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
   config/inputs.disabled/js/00.doc.js: 30076a2c9808fdf32de2c23dc5dcf3a995467e21
   config/inputs.disabled/js/00.init.js: 9b136327af5c67351b02e1d5b253f1ce0d9952a3
@@ -252,4 +253,5 @@ filesHash:
   tests/outputTest.yml: dade7c804e9f967eeb9016fcc045b943888b2ef0
   tests/unitTest.js: 54033b5beed0e7db52afe5449758cea3e969a6be
   tests/unitTestYAML.js: 891879cd3b71d0d6351ae09af0886f981937c6bf
+  util/backupConfig.yaml: 3d34ced62d44180d2b95d075c68b31ce58f8e612
   util/loadDB2Elastic.js: caecf39b3afa1430c089ff57a9974d5bb10a06d9
