@@ -7,7 +7,7 @@ jobs:
    - name: Init
      exec: >-
         global.packPath = getOPackPath("nAttrMon") || "..";
-        global.configZIP = (isDef(params.filename)) ? params.filename : "config.zip";
+        global.configZIP = (isDef(params.filename)) ? params.filename : "nattrmonConfig.zip";
         log("Scanning " + global.packPath);
 
    # Prepare a ZIP object to be used
