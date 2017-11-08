@@ -49,7 +49,7 @@ sprint(nattrmon.getWarnings());
 // nattrmon.addObjectPool("DAT", ow.obj.pool.DB("jdbc:oracle:thin:@1.2.3.4:1521:abc", "USER", "PASS"));
 
 // var i = new nInput(function(scope, args) {
-// 	var ret = [];
+// 	var ret = {};
 
 // 	// ....
 	
