@@ -1,0 +1,60 @@
+jobs:
+   # Set all global variables
+   #
+   - name: Init
+     exec: >
+        global.packPath = getOPackPath("nAttrMon") || "..";
+        log("Scanning " + global.packPath);
+
+   # Cleaning function
+   # 
+   - name: Clean functions
+     exec: >
+        var clean = (aFile) => { log("Removing " + aFile); af.rm(aFile); };
+
+   # Cleaning all snapshots files
+   #
+   - name: Clean snapshots
+     from: Clean functions
+     deps:
+        - Init
+     exec: >
+        clean(global.packPath + "/config/nattrmon.attrs.snapshot");
+        clean(global.packPath + "/config/nattrmon.cvals.snapshot");
+        clean(global.packPath + "/config/nattrmon.lvals.snapshot");
+
+   # Cleaning H2 database files
+   #
+   - name: Clean H2 database
+     from: Clean functions
+     deps:
+        - Init
+     exec: >
+        clean(global.packPath + "/config/nattrmon_db");
+        // TO BE COMPLETED
+
+   # Cleaning pid file
+   # 
+   - name: Clean pid file
+     from: Clean functions
+     deps:
+        - Init
+     exec: >
+        clean 
+
+   # Everything done
+   # 
+   - name: Done
+     deps: 
+        - Init
+        - Clean snapshots
+        #- Clean H2 database
+        - Clean pid file
+     exec: >-
+        log("Done");
+todo:
+   - Init
+   - Clean snapshots
+   #- Clean H2 database
+   - Clean pid file
+   - Done

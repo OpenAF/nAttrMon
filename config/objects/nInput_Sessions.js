@@ -20,7 +20,7 @@ var nInput_Sessions = function(aMap) {
 		this.params.attrTemplate = this.attributePrefix;
 	}
     if (isUnDef(this.params.attrTemplate)) {        
-		this.params.attrTemplate = "Server {{key}}/Sessions {{semNameOrDesc}}";
+		this.params.attrTemplate = "RAID Server status/Sessions";
 	}
 
 	nInput.call(this, this.input);

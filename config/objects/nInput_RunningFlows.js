@@ -26,7 +26,7 @@ var nInput_RunningFlows = function(anMonitoredAFObjectKey, attributePrefix, anRu
 		this.params = anMonitoredAFObjectKey;
 
 		// If keys is not an array make it an array.
-		if (isUnDef(this.params.keys) || isUnDef(this.params.chKeys)) {
+		if (isUnDef(this.params.keys) && isUnDef(this.params.chKeys)) {
 			var e = "nInput_RunningFlows: You need to provide keys or chKeys";
 			logErr(e);
 			throw e;
@@ -117,7 +117,8 @@ nInput_RunningFlows.prototype.input = function(scope, args) {
 						return true;
 					});
 				}
-				if (isDef(pm) && pm.getInt("result") < 1) {
+
+				if (pm != null && pm.getInt("result") < 1) {
 					try {
 						var xml = new XMLList(pm.getAsString("payload"));
 						for(var ii in xml.item) {
@@ -125,7 +126,7 @@ nInput_RunningFlows.prototype.input = function(scope, args) {
 							if (isDef(aKey)) {
 								var parent = this;
 								nattrmon.useObject(aKey, function(s) {
-									try {
+									try {										
 										xml2 = new XMLList(s.exec2Raw("BPM.TreeFlowsExecutions", {"category_id": Number(j), "flow_status": parent.runningstatus, "flow_name": xml.item[ii].label.toString()}).getAsString("payload"));
 
 										var line = (xml2.item[0].tip+"").replace(/[^=]+=([^;]+)/g, "$1|").split(/\|/);
