@@ -113,7 +113,6 @@ files:
   - config/outputs.disabled/yaml/02.httpjson.yaml
   - config/outputs.disabled/yaml/09.channels.yaml
   - config/validations/add_files_from_validations_disabled.dummy
-  - config/validations.disabled/js/0.validatePing.js
   - config/validations.disabled/js/01.validatePing.js
   - config/validations.disabled/js/03.validateSemaphores.js
   - config/validations.disabled/js/04.validateErrorFlows.js
@@ -230,12 +229,11 @@ filesHash:
   config/outputs.disabled/yaml/02.httpjson.yaml: 7c47a8c640dc9d8b8de10089ff2b90785d4eab9a
   config/outputs.disabled/yaml/09.channels.yaml: 5149e2ecb9fbb0884fe37dbb6e8ff6a0bd05243d
   config/validations/add_files_from_validations_disabled.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
-  config/validations.disabled/js/0.validatePing.js: 43b32c9c22d2285f0e14999956b45d07bc6d87b7
-  config/validations.disabled/js/01.validatePing.js: 43b32c9c22d2285f0e14999956b45d07bc6d87b7
-  config/validations.disabled/js/03.validateSemaphores.js: 1e8465015b49313b926cc58874def52b09fc59aa
-  config/validations.disabled/js/04.validateErrorFlows.js: e56a93520e28d3f9b174264e3a199f9c2411d08b
-  config/validations.disabled/js/30.validateYellows.js: e6f3ab2e0e870a0c7ac02e6d38603c187035f9e9
-  config/validations.disabled/yaml/01.somebodyTouched.yaml: 18654e1a81a2af19e4c3cadb4dc086ca3f609f2e
+  config/validations.disabled/js/01.validatePing.js: cc572c157971ebdccd0a40a261f199cb9e509b5c
+  config/validations.disabled/js/03.validateSemaphores.js: 6ded3ea530db8b5d4621fa8bad510e281ebd632d
+  config/validations.disabled/js/04.validateErrorFlows.js: 9b7ff4c1cd03fe47082107d2c22250be1d45a2b4
+  config/validations.disabled/js/30.validateYellows.js: 7a99fcd5e3728805783c5c18aff97488f3aed5d7
+  config/validations.disabled/yaml/01.somebodyTouched.yaml: 2d6a2c34c39aec49d9126c6304e04e66b978a26a
   lib/nattribute.js: 4be29e971b5c0c23e1fc89f33d7ed6479d075809
   lib/nattributes.js: 4dc41e0d6fc25c1bdf16608ef41cad8d5df3506d
   lib/nattributevalue.js: f42b29f8b225a391cef31d7f3f22d41033aa3b96
