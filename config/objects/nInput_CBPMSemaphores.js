@@ -50,7 +50,7 @@ nInput_CBPMSemaphores.prototype.getTemplate = function() {
 
 nInput_CBPMSemaphores.prototype.__getSems = function(aKey, scope) {
 	var retSems = {};
-        var sems;
+	var sems;
 
 	try {
 		if (isDefined(aKey)) {
@@ -67,7 +67,7 @@ nInput_CBPMSemaphores.prototype.__getSems = function(aKey, scope) {
 			sems = { "entry_list": ow.obj.fromOrderedObj2Array(this.server.exec("CBPM.SemaphoreListAll", {}).entry_list) };
 		}
 
-		if(!isUndefined(sems.entry_list)) {
+		if(isDef(sems) && isDef(sems.entry_list)) {
 			for(var i in sems.entry_list) {
 				if (isDefined(sems.entry_list[i].description) && 
 					isDefined(sems.entry_list[i].name) && 

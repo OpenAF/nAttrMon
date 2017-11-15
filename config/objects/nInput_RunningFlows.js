@@ -11,44 +11,56 @@ Values for running status:
 	 "6": "Suspended"
 
  */
-
+/**
+ * <odoc>
+ * <key>nattrmon.nInput_RunningFlows(aMap)</key>
+ * You can create an input to get a list of running flows by running status using a map compose of:\
+ *    - keys (a key string or an array of keys for an AF object)\
+ *    - chKeys (a channel name for the keys of AF objects)\
+ *    - attrTemplate (a string template for the name of the attribute using {{key}})\
+ * \
+ * </odoc>
+ */
 var nInput_RunningFlows = function(anMonitoredAFObjectKey, attributePrefix, anRunningStatus) {
-	// Set server if doesn't exist
-	if (nattrmon.isObjectPool(anMonitoredAFObjectKey)) {
-		this.objectPoolKey = anMonitoredAFObjectKey;
-		this.monitoredObjectKey = anMonitoredAFObjectKey; // just for reference
-		var parent = this;
-		nattrmon.useObject(this.objectPoolKey, function(s) { parent.admdb = getRAIDDB(s, 'Adm'); });
+	if (isObject(anMonitoredAFObjectKey)) {
+		this.params = anMonitoredAFObjectKey;
+
+		// If keys is not an array make it an array.
+		if (isUnDef(this.params.keys) || isUnDef(this.params.chKeys)) {
+			var e = "nInput_RunningFlows: You need to provide keys or chKeys";
+			logErr(e);
+			throw e;
+		}
+        if (!(isArray(this.params.keys))) this.params.keys = [ this.params.keys ];
 	} else {
-		this.monitoredObjectKey = anMonitoredAFObjectKey;
-		if (nattrmon.hasMonitoredObject(anMonitoredAFObjectKey)) {
-	  		this.server = nattrmon.getMonitoredObject(anMonitoredAFObjectKey);
-   			this.admdb = getRAIDDB(this.server, 'Adm');
-   		} else {
-	  		throw "Key " + anMonitoredAFObjectKey + " not found.";
-   		}
+		if (isDef(attributePrefix)) {
+			this.params.attrTemplate = attributePrefix + " {{key}}";
+		}
+		if (isDef(anRunningStatus)) {
+			this.params.runningStatus = anRunningStatus;
+		}
 	}
 
-	var parent = this;
+	if (isUnDef(this.params.attrTemplate)) {        
+		this.params.attrTemplate = "Server status/{{key}} flows";
+	}
 
-
-	this.attributePrefix = (isUndefined(attributePrefix)) ? "Flows/Flows " : attributePrefix;
-	this.runningstatus = (isUndefined(anRunningStatus)) ? 2 : anRunningStatus;
+	this.runningstatus = (isUnDef(this.params.runningStatus)) ? 2 : this.params.runningStatus;
 	this.semsList = {};
 
 	nInput.call(this, this.input);
-}
+};
 inherit(nInput_RunningFlows, nInput);
 
-nInput_RunningFlows.prototype.getPrefix = function() {
-	return this.attributePrefix;
-}
-
-nInput_RunningFlows.prototype.getCategories = function() {
+/**
+ * Given aKey return the available list of flow categories.
+ * 
+ */
+nInput_RunningFlows.prototype.getCategories = function(aKey) {
 	var bpmFlowList;
-    if (isUndefined(this.bpmFlowCtgs)) {
-    	if (isDefined(this.objectPoolKey)) {
-			nattrmon.useObject(this.objectPoolKey, function(s) {
+    if (isUnDef(this.bpmFlowCtgs)) {
+    	if (isDef(aKey)) {
+			nattrmon.useObject(aKey, function(s) {
 				try {
 					bpmFlowList = s.exec("BPM.FlowList", {});
 				} catch(e) {
@@ -56,9 +68,7 @@ nInput_RunningFlows.prototype.getCategories = function() {
 					throw e;
 				}
 				return true;
-			})
-		} else {
-			bpmFlowList = this.server.exec("BPM.FlowList", {});
+			});
 		}
 		
  	    var tempFlowCtgs = {};
@@ -72,22 +82,32 @@ nInput_RunningFlows.prototype.getCategories = function() {
         } else {
 		return this.bpmFlowCtgs;
     }
-}
+};
 
 nInput_RunningFlows.prototype.convertRAIDDates = function(aRAIDDate) {
 	return new Date(aRAIDDate.substr(7,4), Number(aRAIDDate.substr(4,2)) -1, aRAIDDate.substr(1,2), aRAIDDate.substr(12,2), aRAIDDate.substr(15,2), aRAIDDate.substr(18,2));
-}
+};
 
 nInput_RunningFlows.prototype.input = function(scope, args) {
-        var res = [];
-        var parent = this;
-		try {
-	        var flowCtgs = this.getCategories();
+	var res = {};
+	var parent = this;
+	
+	if (isDef(this.params.chKeys)) this.params.keys = $stream($ch(this.params.chKeys).getKeys()).map("key").toArray();
 
+	for (let i in this.params.keys) {
+		var arr = [];
+		var aKey = this.params.keys[i];
+
+		try {
+			// Get flow categories
+			var flowCtgs = this.getCategories(aKey);
+
+			// For each flow category iterate to find status
 			for(var j in flowCtgs) {
 				var pm;
-				if (isDefined(this.objectPoolKey)) {
-					nattrmon.useObject(this.objectPoolKey, function(s) {
+				if (isDef(aKey)) {
+					var parent = this;
+					nattrmon.useObject(aKey, function(s) {
 						try {
 							pm = s.exec2Raw("BPM.TreeFlowExecutionNames", {"category_id": Number(j), "flow_status": parent.runningstatus}, "post");
 						} catch(e) {
@@ -95,64 +115,67 @@ nInput_RunningFlows.prototype.input = function(scope, args) {
 							throw e;
 						}
 						return true;
-					})
-				} else {
-					pm = this.server.exec2Raw("BPM.TreeFlowExecutionNames", {"category_id": Number(j), "flow_status": this.runningstatus}, "post");
+					});
 				}
-				if (pm.getInt("result") < 1) {
+				if (isDef(pm) && pm.getInt("result") < 1) {
 					try {
 						var xml = new XMLList(pm.getAsString("payload"));
 						for(var ii in xml.item) {
 							var xml2;
-							if (isDefined(this.objectPoolKey)) {
-								nattrmon.useObject(this.objectPoolKey, function(s) {
+							if (isDef(aKey)) {
+								var parent = this;
+								nattrmon.useObject(aKey, function(s) {
 									try {
 										xml2 = new XMLList(s.exec2Raw("BPM.TreeFlowsExecutions", {"category_id": Number(j), "flow_status": parent.runningstatus, "flow_name": xml.item[ii].label.toString()}).getAsString("payload"));
+
+										var line = (xml2.item[0].tip+"").replace(/[^=]+=([^;]+)/g, "$1|").split(/\|/);
+										var map2 = { "version": line[0], "runId": line[1].replace(/,/g, ""), "user": line[2], "date": line[3] };
+										if (this.runningstatus == 3) {
+											// Try app if fails try adm
+											var dbKey = nattrmon.getAssociatedObjectPool(parent.aKey, "db.app");
+											if (isUnDef(dbKey)) dbKey = nattrmon.getAssociatedObjectPool(parent.aKey, "db.adm");
+
+											var admres;
+											nattrmon.useObject(dbKey, function(db) {
+												admres = db.q("select exception from bpm_c_running_flows where flow_run_id = " + map2.runId).results;
+											});
+											if (isUnDef(admres)) {
+												var e = "Couldn't retrieve info from database '" + dbKey + "' for server '" + aKey + "'";
+												logErr(e);
+												throw e;
+											}
+											arr.push({ "Category": flowCtgs[j], "Flow": xml.item[ii].label.toString(), "Version": map2.version, "Run ID": map2.runId, "User": map2.user, "Date": this.convertRAIDDates(map2.date), "Exception": admres[0].EXCEPTION});
+										} else {
+											arr.push({ "Category": flowCtgs[j], "Flow": xml.item[ii].label.toString(), "Version": map2.version, "Run ID": map2.runId, "User": map2.user, "Date": this.convertRAIDDates(map2.date)});
+										}
 									} catch(e) {
 										logErr("Error while retrieving flow executions using '" + parent.monitoredObjectKey + "': " + e.message);
 										throw e;
 									}
 									return true;
-								})
-							} else {
-								xml2 = new XMLList(this.server.exec2Raw("BPM.TreeFlowsExecutions", {"category_id": Number(j), "flow_status": this.runningstatus, "flow_name": xml.item[ii].label.toString()}).getAsString("payload"));
-							}
-							var line = (xml2.item[0].tip+"").replace(/[^=]+=([^;]+)/g, "$1|").split(/\|/);
-							var map2 = { "version": line[0], "runId": line[1].replace(/,/g, ""), "user": line[2], "date": line[3] };
-							if (this.runningstatus == 3) {
-								var admres = this.admdb.q("select exception from bpm_c_running_flows where flow_run_id = " + map2.runId).results;
-								admres[0].EXCEPTION
-								res.push({ "Category": flowCtgs[j], "Flow": xml.item[ii].label.toString(), "Version": map2.version, "Run ID": map2.runId, "User": map2.user, "Date": this.convertRAIDDates(map2.date), "Exception": admres[0].EXCEPTION});
-				  			} else {
-								res.push({ "Category": flowCtgs[j], "Flow": xml.item[ii].label.toString(), "Version": map2.version, "Run ID": map2.runId, "User": map2.user, "Date": this.convertRAIDDates(map2.date)});
+								});
 							}
 						}
 					} catch(e) {
 						logErr(e.message);
 					}
-	 			}
-	        }
-		} catch(e) {
-			logErr("Error while retriving flows using '" + this.monitoredObjectKey + "': " + e.message);
-			try { this.admdb.close(); } catch(e) {}
-			if (isUndefined(this.objectPoolKey)) {
-				nattrmon.declareMonitoredObjectDirty(this.monitoredObjectKey);
-				this.server = nattrmon.getMonitoredObject(this.monitoredObjectKey);
+				}
 			}
-            this.admdb = getRAIDDB(this.server, 'Adm');
+		} catch(e) {
+			logErr("Error while retriving flows using '" + aKey + "': " + e.message);
 		}
-
-		var finalRes = {};
-		finalRes[this.attributePrefix] = [];
 
 		// Order output by date
 		var today = new Date();
 		var aWeekAgo = new Date(today.setDate(today.getDate() - 7));
-		for(var i in res.sort(function(a,b) { return b.Date - a.Date; } )) {
+		for(let i in arr.sort(function(a,b) { return b.Date - a.Date; } )) {
 			// If older than a week, ignore
-			if (res[i].Date < aWeekAgo) continue;
-			finalRes[this.attributePrefix][i] = res[i];
-		}
+			if (arr[i].Date < aWeekAgo) continue;
+			res[templify(this.params.attrTemplate, { 
+				key: aKey
+			})] = arr[i];
+		}				
+	}
 
-	return finalRes;
-}
+	return res;
+};
