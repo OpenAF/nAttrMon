@@ -2,11 +2,12 @@
  * <odoc>
  * <key>nattrmon.nInput_RAIDMemory(aMap) : nInput</key>
  * aMap is composed of:\
- *    - keys (a key string or an array of keys for an AF object)
- *    - chKeys (a channel name for the keys of AF objects)
- *    - attrTemplate (a template for the name of the attribute))
- *    - single (boolean when false display the corresponding key)
- *    - extra (an array of extra map values to include from the chKeys channel values)
+ *    - keys (a key string or an array of keys for an AF object)\
+ *    - chKeys (a channel name for the keys of AF objects)\
+ *    - attrTemplate (a template for the name of the attribute)\
+ *    - single (boolean when false display the corresponding key)\
+ *    - extra (an array of extra map values to include from the chKeys channel values)\
+ * \
  * </odoc>
  */
 var nInput_RAIDMemory = function(anMonitoredAFObjectKey, attributePrefix) {

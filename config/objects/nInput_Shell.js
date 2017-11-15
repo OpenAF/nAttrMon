@@ -1,12 +1,13 @@
 /**
  * <odoc>
- * <key>nattrmon.nInput_Shell(aCommand, isJson, attributeName)</key>
- * Creates a nattrmon input to execute a given aCommand. The stdout result is directly assign as the attribute value
- * or parsed as json if isJson = true. Optionally you can provide an attributeName otherwise the default will be:
- * "Server status/[aCommand]".\
+ * <key>nattrmon.nInput_Shell(aMap)</key>
+ * Creates a nattrmon input to execute a given command (cmd). The stdout result is directly assign as the attribute value
+ * or parsed as json if parseJson = true. Optionally you can provide an attrTemplate otherwise the default will be:
+ * "Server status/[aCommand]". The parameter aMap can have the following values:\
  * \
- * nattrmon.addInput({ "name": "an unique name", "timeInterval": 30000 },\
- *    new nInput_Shell("/my/shellCommand2JSON.sh", true, "Commands/Script"));\
+ *    - cmd (the command-line to execute)\
+ *    - parseJson (boolean to indicate if the cmd output is json parsable)\
+ *    - attrTemplate (a string template for the name of the attribute)\
  * \
  * </odoc>
  */

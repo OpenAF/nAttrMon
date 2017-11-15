@@ -1,38 +1,62 @@
-nInput_Filesystem = function(volumeNames, attributePrefix) {
-	this.volumenames = volumeNames;
-        this.attributePrefix = (isUndefined(attributePrefix)) ? "Server status/Filesystem" : attributePrefix;
-	
+/**
+ * <odoc>
+ * <key>nattrmon.nInput_Filesystem(aMap)</key>
+ * Gathers filesystem information (total, used and free storage space + total, used, free inode usage) per operating system volume using
+ * the unix "df" command. On can provide on aMap:\
+ * \
+ *    - volumeNames (an array of strings with the device volumes on the unix operating system)\
+ * \
+ * </odoc>
+ */
+nInput_Filesystem = function (aMap) {
+	if (isObject(aMap)) {
+		this.params = aMap;
+		if (isUnDef(this.params.attrTemplate)) this.params.attrTemplate = "Server status/Filesystem";
+	} else {
+		this.params = {};
+	}
+
 	nInput.call(this, this.input);
-}
+};
 inherit(nInput_Filesystem, nInput);
 
-nInput_Filesystem.prototype.input = function(scope, args) {
+nInput_Filesystem.prototype.input = function (scope, args) {
 	var dfs = [];
 	var ret = {};
 
 	try {
 		var resSpace = af.sh("df -P");
-                var resINode = af.sh("df -i -P");
+		var resINode = af.sh("df -i -P");
 
 		var linesSpace = resSpace.split(/\n/);
 		var linesINode = resINode.split(/\n/);
 
-		for(j in this.volumenames) {
-			var vname = this.volumenames[j];
+		for (let j in this.params.volumeNames) {
+			var vname = this.params.volumeNames[j];
 			var space;
 			var inode;
 
-			for(i in linesSpace) {
+			for (let i in linesSpace) {
 				if (linesSpace[i].match(new RegExp("^" + vname))) {
-					var line = linesSpace[i].split(/\s+/);
-					space = { "total": line[1], "free": line[2], "used": line[3], "perc": line[4] };
+					let line = linesSpace[i].split(/\s+/);
+					space = {
+						"total": line[1],
+						"free": line[2],
+						"used": line[3],
+						"perc": line[4]
+					};
 				}
 			}
 
-			for(i in linesINode) {
+			for (let i in linesINode) {
 				if (linesINode[i].match(new RegExp("^" + vname))) {
-					var line = linesINode[i].split(/\s+/);
-					inode = { "total": line[1], "free": line[2], "used": line[3], "perc": line[4] };
+					let line = linesINode[i].split(/\s+/);
+					inode = {
+						"total": line[1],
+						"free": line[2],
+						"used": line[3],
+						"perc": line[4]
+					};
 				}
 			}
 
@@ -48,15 +72,12 @@ nInput_Filesystem.prototype.input = function(scope, args) {
 				"% Used inode": inode.perc
 			});
 		}
-		
-	} catch(e) {
+
+	} catch (e) {
 		logErr("Error executing command: " + e.message);
 	}
 
-	ret[this.attributePrefix] = dfs;
+	ret[templify(this.params.attrTemplate)] = dfs;
 
 	return ret;
-}
-
-//var nnn = new nInput_Filesystem(["/dev/mapper/vg_rd8tnsapp01-lv_root"]);
-//print(beautifier(nnn.input()));
+};
