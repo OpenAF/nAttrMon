@@ -28,8 +28,10 @@ nattrmon.useObject("PRDFMS", function(aAF) {
    pool.setMax(3);   // A max of 3 connections
    //pool.setTimeout(30000);
    nattrmon.addObjectPool("FMSAPP", pool);
+   nattrmon.associateObjectPool("PRDFMS", "FMSAPP", "db.app");
 
    var poolAA = ow.obj.pool.DB(getRAIDDBURL(aAF, 'Adm'), 'APPADM', '10B98CD0337F4ECBB41');
    poolAA.setMax(3);   // A max of 3 connections
    nattrmon.addObjectPool("APPADM", poolAA);
+   nattrmon.associateObjectPool("PRDFMS", "APPADM", "db.appadm");
 });

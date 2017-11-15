@@ -56,6 +56,7 @@ var nAttrMon = function(aConfigPath, debugFlag) {
 	this.monitoredObjects = {};
 	this.objPools = {};
 	this.objPoolsCat = {};
+	this.objPoolsAssociations = {};
 	this.indexPlugThread = {};
 
 	var nattrmon = this;
@@ -172,6 +173,7 @@ nAttrMon.prototype.isObjectPool = function(aKey) {
 nAttrMon.prototype.addObjectPool = function(aKey, aOWObjPool, aCat) {
 	this.objPools[aKey] = aOWObjPool.start();
 	this.objPoolsCat[aKey] = aCat;
+	this.objPoolsAssociations[aKey] = {};
 }
 
 /**
@@ -189,6 +191,7 @@ nAttrMon.prototype.delObjectPool = function(aKey) {
 	//deleteFromArray(this.objPools, this.objPools.indexOf(aKey));
 	delete this.objPools[aKey];
 	delete this.objPoolsCat[aKey];
+	delete this.objPoolsAssociations[aKey];
 }
 
 /**
@@ -245,6 +248,34 @@ nAttrMon.prototype.returnObject = function(aKey, anObj, aStatus) {
 nAttrMon.prototype.useObject = function(aKey, aFunction) {
 	return this.objPools[aKey].use(aFunction);
 }
+
+/**
+ * <odoc>
+ * <key>nattrmon.associateObjectPool(aParentKey, aChildKey, aPathAssociation)</key>
+ * Associates aChildKey to aParentKey for aPathAssociation. For example:\
+ * \
+ * nattrmon.associateObjectPool("FMS", "FMSAPP", "db.app");\
+ * \
+ * This will associate the db object pool FMSAPP to the af object pool FMS. Specifically for "db.app".\
+ * \
+ * </odoc>
+ */
+nAttrMon.prototype.associateObjectPool = function(aParentKey, aChildKey, aPath) {
+	this.objPoolsAssociations[aParentKey][aPath] = aChildKey;
+};
+
+/**
+ * <odoc>
+ * <key>nattrmon.getAssociatedObjectPool(aParentKey, aPath) : String</key>
+ * Returns the associated object pool to aParentKey given aPath. Example:\
+ * \
+ * var dbPoolName = nattrmon.getAssociatedObjectPool("FMS", "db.app");\
+ * \
+ * </odoc>
+ */
+nAttrMon.prototype.getAssociatedObjectPool = function(aParentKey, aPath) {
+	return this.objPoolsAssociations[aParentKey][aPath];
+};
 
 // System functions
 // ----------------
@@ -559,26 +590,26 @@ nAttrMon.prototype.addPlug = function(aPlugType, aInputMeta, aObject, args) {
     	this.plugs[aPlugType].push(plug);
     }
     this.debug("Added plug " + plug.getName());
-}
+};
 
 nAttrMon.prototype.addInput = function(aInputMeta, aInputObject, args) {
 	this.addPlug(this.PLUGINPUTS, aInputMeta, aInputObject, args);
-}
+};
 
 nAttrMon.prototype.addOutput = function(aOutputMeta, aOutputObject, args) {
 	this.addPlug(this.PLUGOUTPUTS, aOutputMeta, aOutputObject, args);
-}
+};
 
 nAttrMon.prototype.addValidation = function(aValidationMeta, aValidationObject, args) {
 	this.addPlug(this.PLUGVALIDATIONS, aValidationMeta, aValidationObject, args);
-}
+};
 
 nAttrMon.prototype.loadPlugs = function() {
 	this.loadPlug(this.configPath + "/objects", "objects");
 	this.loadPlug(this.configPath + "/inputs", "inputs");
 	this.loadPlug(this.configPath + "/validations", "validations");
 	this.loadPlug(this.configPath + "/outputs", "outputs");
-}
+};
 
 /**
  * Creates the necessary internal objects (nInput, nOutput and nValidation) given an yaml definition.
