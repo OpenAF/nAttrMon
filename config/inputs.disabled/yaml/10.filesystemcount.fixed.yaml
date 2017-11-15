@@ -8,11 +8,11 @@ input:
      attrTemplate: Filesystem/Test
      folders     :
       - name   : Input
-        folder : /opt/wedo/data/loading/test/in
+        folder : /data/loading/test/in
         pattern: .*\.csv
       - name   : Error
-        folder : /opt/wedo/data/loading/test/err
+        folder : /data/loading/test/err
         pattern: .*
       - name   : Done
-        folder : /opt/wedo/data/loading/test/done
+        folder : /data/loading/test/done
         pattern: .*\.csv

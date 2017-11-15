@@ -1,0 +1,10 @@
+input: 	
+   name         : Shell Command
+   timeInterval : 60000
+   waitForFinish: true
+   onlyOnEvent  : true
+   execFrom     : nInput_ShellCmd
+   execArgs     : 
+     attrTemplate: Commands/Script
+     cmd         : /some/shell/command
+     jsonParse   : true

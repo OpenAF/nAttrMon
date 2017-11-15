@@ -4,5 +4,9 @@ nattrmon.addInput({
 	"waitForFinish": true,
 	"onlyOnEvent": true
   },
-  new nInput_Shell("/some/shell/command", true, "Commands/Script")
+  new nInput_Shell({
+		cmd: "/some/shell/command", 
+		jsonParse: true, 
+		attrTemplate: "Commands/Script"
+	})
 );

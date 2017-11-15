@@ -8,14 +8,14 @@ input:
      attrTemplate: Filesystem/Mobile Subscribers
      folders     :
       - name   : Received
-        folder : /opt/wedo/data/loading/reference/mobile_subscribers/subscriber/received
+        folder : /data/loading/reference/mobile_subscribers/subscriber/received
         pattern: .*
       - name   : Input
-        folder : /opt/wedo/data/loading/reference/mobile_subscribers/subscriber/in
+        folder : /data/loading/reference/mobile_subscribers/subscriber/in
         pattern: .*
       - name   : Error
-        folder : /opt/wedo/data/loading/reference/mobile_subscribers/subscriber/err
+        folder : /data/loading/reference/mobile_subscribers/subscriber/err
         pattern: .*
       - name   : Done
-        folder : /opt/wedo/data/loading/reference/mobile_subscribers/subscriber/done
+        folder : /data/loading/reference/mobile_subscribers/subscriber/done
         pattern: .*

@@ -1,0 +1,8 @@
+input: 	
+   name         : OS Info
+   timeInterval : 60000
+   waitForFinish: true
+   onlyOnEvent  : true
+   execFrom     : nInput_OSInfo
+   execArgs     : 
+     attrTemplate: Server status/OS

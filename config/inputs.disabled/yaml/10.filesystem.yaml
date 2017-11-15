@@ -1,0 +1,11 @@
+input: 	
+   name         : Filesystem volumes check
+   timeInterval : 60000
+   waitForFinish: true
+   onlyOnEvent  : true
+   execFrom     : nInput_Filesystem
+   execArgs     : 
+     attrTemplate: Filesystem/Volumes
+     volumeNames :
+      - /some/path/1
+      - /some/path/2
