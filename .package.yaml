@@ -44,11 +44,14 @@ files:
   - config/inputs.disabled/yaml/03.semaphores.yaml
   - config/inputs.disabled/yaml/04.db.appadm.yaml
   - config/inputs.disabled/yaml/09.memory.yaml
+  - config/inputs.disabled/yaml/10.filesystem.yaml
   - config/inputs.disabled/yaml/10.filesystemcount.fixed.yaml
   - config/inputs.disabled/yaml/10.filesystemcount.mobsubscribers.yaml
+  - config/inputs.disabled/yaml/10.osinfo.yaml
   - config/inputs.disabled/yaml/10.sessions.yaml
   - config/inputs.disabled/yaml/11.times.yaml
   - config/inputs.disabled/yaml/12.connections.yaml
+  - config/inputs.disabled/yaml/12.shellCmd.yaml
   - config/move_files_from_the_disabled_folders.dummy
   - config/objects/nInput_AFPing.js
   - config/objects/nInput_CBPMSemaphores.js
@@ -102,7 +105,7 @@ files:
   - config/objects.assets/noutputhttp/js/retina.min.js
   - config/objects.assets/noutputhttp/now.html
   - config/outputs/add_files_from_outputs_disabled.dummy
-  - config/outputs.disabled/0.init.js
+  - config/outputs.disabled/00.init.js
   - config/outputs.disabled/1.h2output.js
   - config/outputs.disabled/1.oracleoutput.js
   - config/outputs.disabled/2.httpjson.js
@@ -150,7 +153,7 @@ filesHash:
   config/inputs.disabled/js/10.filesystem.js: 23a492c93be89b7be4163169f581c28dd85ab502
   config/inputs.disabled/js/10.filesystemcount.js: a1ae5183c585f082779e403c5f4b87dcc2c3a0f6
   config/inputs.disabled/js/11.OSInfo.js: ff6d21332af1722b09a3cce062876a1b5e5b0eef
-  config/inputs.disabled/js/12.ShellCmd.js: 9c5c85fa3b66d8dd760542683967efdd9b621d07
+  config/inputs.disabled/js/12.ShellCmd.js: eba2f60ed7c7e14a7340bd25fa8720eb1d12c026
   config/inputs.disabled/js/13.ListDirFiles.js: 9ba182a6d286e5ac284828f24cb40ced8d36f0b9
   config/inputs.disabled/js/22.fraud.snapshots.js: eb5d52a7b57dece7331c2c9bbe612bc8cda8433e
   config/inputs.disabled/js/41.fms.rulestatus.js: 5b3012d798f11d2c82a633b3e54f5d6dc53614ad
@@ -160,11 +163,14 @@ filesHash:
   config/inputs.disabled/yaml/03.semaphores.yaml: 9b2b96bf067585976ea84a805e528fd796331782
   config/inputs.disabled/yaml/04.db.appadm.yaml: 21473f76bd120810c87adc6bc9c7f25b74c51261
   config/inputs.disabled/yaml/09.memory.yaml: abd00277facadf9fa16f230fcb92dfee48bcd527
-  config/inputs.disabled/yaml/10.filesystemcount.fixed.yaml: 46d00308be67f3404eded27a536ae918d7f8c766
-  config/inputs.disabled/yaml/10.filesystemcount.mobsubscribers.yaml: e375d9c5dcd2fe4360efcd6e6e9ceeff64432129
+  config/inputs.disabled/yaml/10.filesystem.yaml: 8bb13a7aa3c03e9e0f613d3515401ee5d6f142f9
+  config/inputs.disabled/yaml/10.filesystemcount.fixed.yaml: 1faa5c67efd1210e3905408f42a4e65ea96d3781
+  config/inputs.disabled/yaml/10.filesystemcount.mobsubscribers.yaml: 99dc4af0fab8d6560cb7d6b84d84e7ab22f580a5
+  config/inputs.disabled/yaml/10.osinfo.yaml: 6b4782f7a307e447bb5ac9361da50ff0061029e0
   config/inputs.disabled/yaml/10.sessions.yaml: 5a1724db9eca8b90a6bb6310948a00d7909fc555
   config/inputs.disabled/yaml/11.times.yaml: f437adf46690615e0b52b7cd36eba2ba0eb1cff2
   config/inputs.disabled/yaml/12.connections.yaml: 72579273a36487c4fb05b546f49bec649d8f245f
+  config/inputs.disabled/yaml/12.shellCmd.yaml: 30be1c8b7f3c0b2c9a089b6ea5d69e58413e8e98
   config/move_files_from_the_disabled_folders.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
   config/objects/nInput_AFPing.js: 04258ea17b7063a79e125169b7577faa000a7117
   config/objects/nInput_CBPMSemaphores.js: e22546f3b1de2b17d959c0fdbf0a35ea644c78ad
@@ -218,14 +224,14 @@ filesHash:
   config/objects.assets/noutputhttp/js/retina.min.js: db4bf8404dbd9900faada058ba0fdfeaf6aab23b
   config/objects.assets/noutputhttp/now.html: 85a1c9e3b010fde950f3c21b5d99e428f1b296f7
   config/outputs/add_files_from_outputs_disabled.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
-  config/outputs.disabled/0.init.js: c7c7eed14977e210cd6973eed53cb42b1697a732
-  config/outputs.disabled/1.h2output.js: 0bc642dce946dc17d6b0561d671e5030c0a89333
-  config/outputs.disabled/1.oracleoutput.js: 825a9627256ffa7a7a12848387dd1d86b99ca8df
-  config/outputs.disabled/2.httpjson.js: a5b47b16c4e6340a6bba1aedb344871f4e7289e4
-  config/outputs.disabled/3.http.js: 35414c5895053e18788420e2ff17c9aa71c94eed
-  config/outputs.disabled/4.logFile.js: 002c15afe1e2035dc77e626113bb6c935c2ecf57
-  config/outputs.disabled/5.emailWarnings.js: ea8400db37cddda42ed276b75c94467e3239359a
-  config/outputs.disabled/9.channels.js: 525092466a98774e9a5e3a184dde6f26953c46b9
+  config/outputs.disabled/00.init.js: 71ba0fb4fffa284500e9deb90213bfed66134568
+  config/outputs.disabled/1.h2output.js: a2dce3c2e443ca52f3344aca3529a17a064b3a51
+  config/outputs.disabled/1.oracleoutput.js: 0f7ce56148ba6772216ce4402f5509077c30af6e
+  config/outputs.disabled/2.httpjson.js: f59875492834d2b24895bae73b51dfef3c38f49b
+  config/outputs.disabled/3.http.js: 2c330262e3580992b79cacd0514bb2cdc6d1e17e
+  config/outputs.disabled/4.logFile.js: 00ee44fa9c934d02beb6ec62b1aff6c473c14dbb
+  config/outputs.disabled/5.emailWarnings.js: 4a0139aabd64a3c56c1842499dd6d2203f607550
+  config/outputs.disabled/9.channels.js: b57f0fe5f21d37e936f14031d439cfa48ca9c06b
   config/outputs.disabled/yaml/02.httpjson.yaml: 7c47a8c640dc9d8b8de10089ff2b90785d4eab9a
   config/outputs.disabled/yaml/09.channels.yaml: 5149e2ecb9fbb0884fe37dbb6e8ff6a0bd05243d
   config/validations/add_files_from_validations_disabled.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
