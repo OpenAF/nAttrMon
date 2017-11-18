@@ -43,7 +43,7 @@ var nOutput_Channels = function (aMap) {
             "help": function() {
               return {
                 "list": "List all plug types with the corresponding array of plugs definitions.",
-                "reloadPlugs": "Tries to reload the plugs. Use only for debug proposes.",
+                //"reloadPlug": "Tries to reload a plug. Use only for debug proposes. Use 'list' to find out the plug type you need and plug name and build the arguments { type: 'inputs', name: 'name'}.",
                 //"clearAttribute": "Tries to delete all references to an attribute.",
                 //"closeWarning": "Tries to close a warning.",
                 //"clearAllWarnings": "Tries to delete all warnings.",
@@ -67,15 +67,23 @@ var nOutput_Channels = function (aMap) {
                 }
               }
             },
-            "reloadPlugs": function() {
+            "reloadPlug": function(value) {
+                if (isUnDef(value.type) || isUnDef(value.name)) {
+                  return {
+                    error: "Incorrect parameters.",
+                    params: value
+                  };
+                }
+
                 try {
-                    logWarn("OPS | Stopping objects");
-                    nattrmon.stopObjects();
-                    logWarn("OPS | Reloading plugs");
-                    nattrmon.loadPlugs();
+                    var plug = $from(nattrmon.plugs[value.type]).equals("aName", value.name).at(0);
+                    logWarn("OPS | " + value.type + "::" + value.name + " | Stopping plug");
+                    //plug.close();
+                    logWarn("OPS |  " + value.type + "::" + value.name + " | Reloading plug");
+                    //nattrmon.loadPlugs();
                     return { successfull: true };
                 } catch(e) {
-                    logErr("OPS | Error: " + stringify(e));
+                    logErr("OPS | " + value.type + "::" + value.name + " | Error: " + stringify(e));
                     return { error: e };
                 }
             },
