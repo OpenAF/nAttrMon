@@ -3,7 +3,7 @@ jobs:
    #
    - name: Init
      exec: >
-        global.packPath = getOPackPath("nAttrMon") || "..";
+        global.packPath = getOPackPath("nAttrMon") || ".";
         log("Scanning " + global.packPath);
 
    # Cleaning function
@@ -22,6 +22,7 @@ jobs:
         clean(global.packPath + "/config/nattrmon.attrs.snapshot");
         clean(global.packPath + "/config/nattrmon.cvals.snapshot");
         clean(global.packPath + "/config/nattrmon.lvals.snapshot");
+        clean(global.packPath + "/config/nattrmon.warns.snapshot");
 
    # Cleaning H2 database files
    #

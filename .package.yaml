@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20171116'
+version: '20171117'
 dependencies:
   openaf: '>=20170901'
 files:
@@ -52,7 +52,6 @@ files:
   - config/objects.assets/noutputhttp/fonts/fontawesome-webfont.woff
   - config/objects.assets/noutputhttp/fonts/glyphicons-halflings-regular.svg
   - config/objects.assets/noutputhttp/fonts/fontawesome-webfont.eot
-  - config/nattrmon.lvals.snapshot
   - config/inputs.disabled/js/00.init.js
   - config/inputs.disabled/js/11.OSInfo.js
   - config/inputs.disabled/js/41.fms.rulestatus.js
@@ -104,16 +103,15 @@ files:
   - config/objects/nInput_CBPMSemaphores.js
   - config/objects/nInput_Shell.js
   - config/objects/nInput_DB.js
-  - config/nattrmon.attrs.snapshot
   - config/validations/add_files_from_validations_disabled.dummy
   - config/validations.disabled/js/01.validatePing.js
   - config/validations.disabled/js/30.validateYellows.js
   - config/validations.disabled/js/03.validateSemaphores.js
   - config/validations.disabled/js/04.validateErrorFlows.js
   - config/validations.disabled/yaml/01.somebodyTouched.yaml
-  - config/nattrmon.cvals.snapshot
   - config/outputs.disabled/2.httpjson.js
   - config/outputs.disabled/00.init.js
+  - config/outputs.disabled/js/09.channels.js
   - config/outputs.disabled/3.http.js
   - config/outputs.disabled/1.oracleoutput.js
   - config/outputs.disabled/5.emailWarnings.js
@@ -121,13 +119,9 @@ files:
   - config/outputs.disabled/yaml/02.httpjson.yaml
   - config/outputs.disabled/4.logFile.js
   - config/outputs.disabled/1.h2output.js
-  - config/outputs.disabled/9.channels.js
   - config/outputs/add_files_from_outputs_disabled.dummy
-  - config/outputs/09.channels.yaml
-  - config/outputs/02.httpjson.yaml
   - config/move_files_from_the_disabled_folders.dummy
   - config/inputs/add_files_from_inputs_disabled.dummy
-  - config/inputs/12.shellCmd.yaml
   - .package.yaml
   - tests/nattrmonTester.js
   - tests/outputTest.yml
@@ -151,7 +145,7 @@ files:
 filesHash:
   util/backupConfig.yaml: 55d5cfebaf1acb87bd9ce2523015608b03f586e1
   util/loadDB2Elastic.js: 190b68c03e71fa859df71429da4c31035f20ce94
-  util/clean.yaml: 5e41d1c1362288e1a77201cca379997288a89290
+  util/clean.yaml: b1bbfd4a416313e02f6edc77ab8e956330834979
   config/objects.assets/noutputhttp/index.html: c454af426dc25960d1a2992b6cac99e11881ea48
   config/objects.assets/noutputhttp/now.html: 8dc28c8f998a319561567c342aa46fc16974e459
   config/objects.assets/noutputhttp/css/bootstrap.min.css: ed29315e0ffb3f14382431f2724235bf67f44eb3
@@ -210,7 +204,7 @@ filesHash:
   config/objects/nInput_Semaphores.js: d837eae50410502438f9d2671bb5d52fb493e42b
   config/objects/nOutput_Stdout.js: 5a0d72c32e2f969fe3e27cbad64c7ccf0959aad1
   config/objects/nInput_Filesystem.js: 4117c1a9b19df25d80ce23b69782ff85bd131da7
-  config/objects/nOutput_Channels.js: 3ac54c980da17ebb66f044cef56dd16b32a70e0e
+  config/objects/nOutput_Channels.js: e6cfce62a249e96c170a74c96c8a0c70755515de
   config/objects/nInput_RAIDMemory.js: 69c531663d40f275b071dd0a7d428f49e52ba6f5
   config/objects/nInput_AFPing.js: 04258ea17b7063a79e125169b7577faa000a7117
   config/objects/nOutput_HTTP_JSON.js: 047a7086b8fd58ede9029a6832736de2e7c639cd
@@ -237,14 +231,14 @@ filesHash:
   config/validations.disabled/yaml/01.somebodyTouched.yaml: 2d6a2c34c39aec49d9126c6304e04e66b978a26a
   config/outputs.disabled/2.httpjson.js: f59875492834d2b24895bae73b51dfef3c38f49b
   config/outputs.disabled/00.init.js: 71ba0fb4fffa284500e9deb90213bfed66134568
+  config/outputs.disabled/js/09.channels.js: 90b095b9c68e01b3aa724a8c370391f6d75cadf5
   config/outputs.disabled/3.http.js: 2c330262e3580992b79cacd0514bb2cdc6d1e17e
   config/outputs.disabled/1.oracleoutput.js: 0f7ce56148ba6772216ce4402f5509077c30af6e
   config/outputs.disabled/5.emailWarnings.js: 4a0139aabd64a3c56c1842499dd6d2203f607550
-  config/outputs.disabled/yaml/09.channels.yaml: 5149e2ecb9fbb0884fe37dbb6e8ff6a0bd05243d
+  config/outputs.disabled/yaml/09.channels.yaml: 7ba4a929dd53e7144f2789c603a975eabe5849cd
   config/outputs.disabled/yaml/02.httpjson.yaml: 7c47a8c640dc9d8b8de10089ff2b90785d4eab9a
   config/outputs.disabled/4.logFile.js: 00ee44fa9c934d02beb6ec62b1aff6c473c14dbb
   config/outputs.disabled/1.h2output.js: a2dce3c2e443ca52f3344aca3529a17a064b3a51
-  config/outputs.disabled/9.channels.js: b57f0fe5f21d37e936f14031d439cfa48ca9c06b
   config/outputs/add_files_from_outputs_disabled.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
   config/move_files_from_the_disabled_folders.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
   config/inputs/add_files_from_inputs_disabled.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
@@ -255,6 +249,7 @@ filesHash:
   tests/inputShellTest.yml: ce643955982cb16b53a8843acd3549466e5cddf5
   tests/unitTestYAML.js: 215400bf5e21fbb27f507c2e10b1e75f290e8ff2
   README.md: 648ce4e29bbdc7b99f5cf8734cb1a7f0657789c7
+  .gitignore: 54e8786fc3ba63214d7f78bc82af2a0af2c00a57
   lib/nattributes.js: 35aa5c0dbda964c43dcf1d1b755d642f49d2d272
   lib/nattributevalue.js: d69fff1f7ac29257416ddf4f1eb91e100db9d80e
   lib/nwarnings.js: 616a2c5d9c1f8800d5550c43506fe872ef97b69a
@@ -262,7 +257,7 @@ filesHash:
   lib/nattribute.js: 841e00c3a111133e3d103ef6e24885feb2965108
   lib/nplug.js: 51f921822b4195de6cd949ea443c79fd64dce18b
   lib/ninput.js: 4e7b45bb7dc92950f64451d17a30859d4c4f10e2
-  lib/nvalidation.js: 7cc4d548de8af9ee7924b549f6304c1be2bc7f36
+  lib/nvalidation.js: 4090f1bebc45e7404087c7155d151546ea847916
   lib/nmonitoredobject.js: da0b8a8590ce1534826750e2e70b3d6e4bee9f98
   lib/noutput.js: 0ee871777643fb7f59aa2274f202a721bc500bea
-  nattrmon.js: 3d80ee60a49be0347ac3fdcae86de31757dcda6b
+  nattrmon.js: 085f567e8c7537e2678655854011da9089a05bec

@@ -1,3 +1,11 @@
 output:
    name         : Output Channels
    execFrom     : nOutput_Channels
+   execArgs     :
+      cAuth:
+         nattrmon: 
+            p: nattrmon
+            m: r
+         change:
+            p: me
+            m: rw   

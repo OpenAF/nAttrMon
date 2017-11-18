@@ -593,22 +593,46 @@ nAttrMon.prototype.addPlug = function(aPlugType, aInputMeta, aObject, args) {
 };
 
 nAttrMon.prototype.addInput = function(aInputMeta, aInputObject, args) {
+	if (isDef(nattrmon.plugs[this.PLUGINPUTS])) {
+		var plug = $from(nattrmon.plugs[this.PLUGINPUTS]).equals("aName", aInputMeta.name);
+		if (plug.any()) {
+			logWarn("Stopping plug " + this.PLUGINPUTS + "::" + aInputMeta.name);
+			plug.at(0).close();
+			logWarn("Reloading plug " + this.PLUGINPUTS + "::" + aInputMeta.name);
+		}
+	}
 	this.addPlug(this.PLUGINPUTS, aInputMeta, aInputObject, args);
 };
 
 nAttrMon.prototype.addOutput = function(aOutputMeta, aOutputObject, args) {
+	if (isDef(nattrmon.plugs[this.PLUGOUTPUTS])) {
+		var plug = $from(nattrmon.plugs[this.PLUGOUTPUTS]).equals("aName", aOutputMeta.name);
+		if (plug.any()) {
+			logWarn("Stopping plug " + this.PLUGOUTPUTS + "::" + aOutputMeta.name);
+			plug.at(0).close();
+			logWarn("Reloading plug " + this.PLUGOUTPUTS + "::" + aOutputMeta.name);
+		}	
+	}
 	this.addPlug(this.PLUGOUTPUTS, aOutputMeta, aOutputObject, args);
 };
 
 nAttrMon.prototype.addValidation = function(aValidationMeta, aValidationObject, args) {
+	if (isDef(nattrmon.plugs[this.PLUGVALIDATIONS])) {
+		var plug = $from(nattrmon.plugs[this.PLUGVALIDATIONS]).equals("aName", aValidationMeta.name);
+		if (plug.any()) {
+			logWarn("Stopping plug " + this.PLUGVALIDATIONS + "::" + aValidationMeta.name);
+			plug.at(0).close();
+			logWarn("Reloading plug " + this.PLUGVALIDATIONS + "::" + aValidationMeta.name);
+		}	
+	}
 	this.addPlug(this.PLUGVALIDATIONS, aValidationMeta, aValidationObject, args);
 };
 
 nAttrMon.prototype.loadPlugs = function() {
-	this.loadPlug(this.configPath + "/objects", "objects");
-	this.loadPlug(this.configPath + "/inputs", "inputs");
-	this.loadPlug(this.configPath + "/validations", "validations");
-	this.loadPlug(this.configPath + "/outputs", "outputs");
+	this.loadPlugDir(this.configPath + "/objects", "objects");
+	this.loadPlugDir(this.configPath + "/inputs", "inputs");
+	this.loadPlugDir(this.configPath + "/validations", "validations");
+	this.loadPlugDir(this.configPath + "/outputs", "outputs");
 };
 
 /**
@@ -636,7 +660,7 @@ nAttrMon.prototype.loadObject = function(yy, type) {
 	return yy;
 }
 
-nAttrMon.prototype.loadPlug = function(aPlugDir, aPlugDesc) {
+nAttrMon.prototype.loadPlugDir = function(aPlugDir, aPlugDesc) {
     var files = io.listFiles(aPlugDir).files;
 
     var dirs = [];
@@ -654,56 +678,61 @@ nAttrMon.prototype.loadPlug = function(aPlugDir, aPlugDesc) {
     plugsjs = plugsjs.sort();
 
     for (var i in dirs) {
-        this.loadPlug(dirs[i], aPlugDesc);
+        this.loadPlugDir(dirs[i], aPlugDesc);
     }
 
     for (var i in plugsjs) {
-    	if(plugsjs[i].match(/\.js$/)) {
-	    	if (aPlugDesc != "objects") log("Loading " + aPlugDesc + ": " + plugsjs[i]);
-	    	try {
-	        	af.load(plugsjs[i]);
-	        } catch(e) {
-	        	logErr("Error loading " + aPlugDesc + " (" + plugsjs[i] + "): " + e);
-	        }
-    	}
-        if(plugsjs[i].match(/\.yaml$/)) {
-			if (aPlugDesc != "objects") log("Loading " + aPlugDesc + ": " + plugsjs[i]);
-			try {
-				var y = io.readFileYAML(plugsjs[i]);
-				var parent = this;
-
-				function __handlePlug(yyy, type, parent) {
-					var yy = parent.loadObject(yyy, type);
-					
-					switch (type) {
-						case "input": parent.addInput(yy, yy.exec); break;
-						case "output": parent.addOutput(yy, yy.exec); break;
-						case "validation": parent.addValidation(yy, yy.exec); break;
-					}
-				}
-
-				if (isDef(y.input)) 
-					if (isArray(y.input))
-						y.input.forEach(function(yo) { __handlePlug(yo, "input", parent) });
-					else	
-						__handlePlug(y.input, "input", parent);
-				if (isDef(y.output)) 
-					if (isArray(y.output))
-						y.output.forEach(function(yo) { __handlePlug(yo, "output", parent) });
-					else	
-						__handlePlug(y.output, "output", parent);
-				if (isDef(y.validation))
-					if (isArray(y.validation))
-						y.validation.forEach(function(yo) { __handlePlug(yo, "validation", parent) });
-					else	
-						__handlePlug(y.validation, "validation", parent);
-			} catch(e) {
-				logErr("Error loading " + aPlugDesc + " (" + plugsjs[i] + "): " + e);
-			}
-			}
+		this.loadPlug(plugsjs[i], aPlugDesc);	
     }
 }
 
+nAttrMon.prototype.loadPlug = function (aPlugFile, aPlugDesc) {
+	if (isUnDef(aPlugDesc)) aPlugDesc = "";
+
+	if (aPlugFile.match(/\.js$/)) {
+		if (aPlugDesc != "objects") log("Loading " + aPlugDesc + ": " + aPlugFile);
+		try {
+			af.load(aPlugFile);
+		} catch (e) {
+			logErr("Error loading " + aPlugDesc + " (" + aPlugFile + "): " + e);
+		}
+	}
+	if (aPlugFile.match(/\.yaml$/)) {
+		if (aPlugDesc != "objects") log("Loading " + aPlugDesc + ": " + aPlugFile);
+		try {
+			var y = io.readFileYAML(aPlugFile);
+			var parent = this;
+
+			function __handlePlug(yyy, type, parent) {
+				var yy = parent.loadObject(yyy, type);
+
+				switch (type) {
+					case "input": parent.addInput(yy, yy.exec); break;
+					case "output": parent.addOutput(yy, yy.exec); break;
+					case "validation": parent.addValidation(yy, yy.exec); break;
+				}
+			}
+
+			if (isDef(y.input))
+				if (isArray(y.input))
+					y.input.forEach(function (yo) { __handlePlug(yo, "input", parent) });
+				else
+					__handlePlug(y.input, "input", parent);
+			if (isDef(y.output))
+				if (isArray(y.output))
+					y.output.forEach(function (yo) { __handlePlug(yo, "output", parent) });
+				else
+					__handlePlug(y.output, "output", parent);
+			if (isDef(y.validation))
+				if (isArray(y.validation))
+					y.validation.forEach(function (yo) { __handlePlug(yo, "validation", parent) });
+				else
+					__handlePlug(y.validation, "validation", parent);
+		} catch (e) {
+			logErr("Error loading " + aPlugDesc + " (" + aPlugFile + "): " + e);
+		}
+	}
+}
 
 // ----------------------------------------------------------------------------------------------
 // ----------------------------------------------------------------------------------------------
