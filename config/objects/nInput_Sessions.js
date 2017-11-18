@@ -71,7 +71,7 @@ nInput_Sessions.prototype.input = function(scope, args) {
 
 	if (isDef(this.params.chKeys)) this.params.keys = $stream($ch(this.params.chKeys).getKeys()).map("key").toArray();
 
-	for(let i in this.params.keys) {
+	for(var i in this.params.keys) {
 		arr = arr.concat(this.__getSessions(this.params.keys[i], scope));
 	}
    

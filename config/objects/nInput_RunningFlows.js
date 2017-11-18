@@ -94,7 +94,7 @@ nInput_RunningFlows.prototype.input = function(scope, args) {
 	
 	if (isDef(this.params.chKeys)) this.params.keys = $stream($ch(this.params.chKeys).getKeys()).map("key").toArray();
 
-	for (let i in this.params.keys) {
+	for (var i in this.params.keys) {
 		var arr = [];
 		var aKey = this.params.keys[i];
 
@@ -169,7 +169,7 @@ nInput_RunningFlows.prototype.input = function(scope, args) {
 		// Order output by date
 		var today = new Date();
 		var aWeekAgo = new Date(today.setDate(today.getDate() - 7));
-		for(let i in arr.sort(function(a,b) { return b.Date - a.Date; } )) {
+		for(var i in arr.sort(function(a,b) { return b.Date - a.Date; } )) {
 			// If older than a week, ignore
 			if (arr[i].Date < aWeekAgo) continue;
 			res[templify(this.params.attrTemplate, { 

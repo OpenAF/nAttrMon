@@ -31,14 +31,14 @@ nInput_Filesystem.prototype.input = function (scope, args) {
 		var linesSpace = resSpace.split(/\n/);
 		var linesINode = resINode.split(/\n/);
 
-		for (let j in this.params.volumeNames) {
+		for (var j in this.params.volumeNames) {
 			var vname = this.params.volumeNames[j];
 			var space;
 			var inode;
 
-			for (let i in linesSpace) {
+			for (var i in linesSpace) {
 				if (linesSpace[i].match(new RegExp("^" + vname))) {
-					let line = linesSpace[i].split(/\s+/);
+					var line = linesSpace[i].split(/\s+/);
 					space = {
 						"total": line[1],
 						"free": line[2],
@@ -48,9 +48,9 @@ nInput_Filesystem.prototype.input = function (scope, args) {
 				}
 			}
 
-			for (let i in linesINode) {
+			for (var i in linesINode) {
 				if (linesINode[i].match(new RegExp("^" + vname))) {
-					let line = linesINode[i].split(/\s+/);
+					var line = linesINode[i].split(/\s+/);
 					inode = {
 						"total": line[1],
 						"free": line[2],
