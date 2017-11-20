@@ -18,7 +18,12 @@ var nOutput_Channels = function (aMap) {
     }
 
     // Get server
-    var httpd = nattrmon.getSessionData("httpd");
+    var httpd;
+    if (isDef(aMap.port)) {
+      httpd = ow.loadServer().httpd.start(aMap.port);
+    } else {
+      httpd = nattrmon.getSessionData("httpd");
+    }
 
     if (isDef(aMap.cAuth)) cauth_perms = aMap.cAuth;
 
@@ -51,7 +56,11 @@ var nOutput_Channels = function (aMap) {
             },
 
             "list": function() {
-              return nattrmon.plugs;
+              return {
+                inputs     : $stream(nattrmon.plugs.inputs).map("aName").toArray().sort(),
+                outputs    : $stream(nattrmon.plugs.outputs).map("aName").toArray().sort(),
+                validations: $stream(nattrmon.plugs.validations).map("aName").toArray().sort()
+              };
             },
 
             "closeWarning": function(value) {
