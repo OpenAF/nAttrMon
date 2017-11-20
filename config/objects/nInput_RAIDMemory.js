@@ -88,7 +88,7 @@ nInput_RAIDMemory.prototype.input = function(scope, args) {
 	var res = {};
 	var arr = [];
 
-	if (isDef(this.params.chKeys)) this.params.keys = $stream($ch(this.params.chKeys).getKeys()).map("key").toArray();
+	if (isDef(this.params.chKeys)) this.params.keys = $stream($ch(this.params.chKeys).getKeys()).map("key").toArray().sort();
 
 	for(var i in this.params.keys) {
 		var extra = {};

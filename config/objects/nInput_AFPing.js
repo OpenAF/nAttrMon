@@ -54,7 +54,7 @@ nInput_AFPing.prototype.input = function(scope, args) {
   var ret = {};
   var arr = [];
 
-  if (isDef(this.params.chKeys)) this.params.keys = $from($ch(this.params.chKeys).getAll()).select({ "url": "", "key": ""});
+  if (isDef(this.params.chKeys)) this.params.keys = $from($ch(this.params.chKeys).getAll()).select({ "url": "", "key": ""}).sort(function(a, b){return a.key.toUpperCase() > b.key.toUpperCase()?1:0});
 
   for(var i in this.params.keys) {
     arr.push(this.ping(this.params.keys[i].key, this.params.keys[i].url));
