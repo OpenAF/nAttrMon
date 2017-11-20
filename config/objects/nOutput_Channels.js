@@ -56,11 +56,15 @@ var nOutput_Channels = function (aMap) {
             },
 
             "list": function() {
-              return {
-                inputs     : $stream(nattrmon.plugs.inputs).map("aName").toArray().sort(),
-                outputs    : $stream(nattrmon.plugs.outputs).map("aName").toArray().sort(),
-                validations: $stream(nattrmon.plugs.validations).map("aName").toArray().sort()
-              };
+              if (isDef(nattrmon.plugs)) {
+                return {
+                  inputs     : (isDef(nattrmon.plugs.inputs)) ? $stream(nattrmon.plugs.inputs).map("aName").toArray().sort() : [],
+                  outputs    : (isDef(nattrmon.plugs.outputs)) ? $stream(nattrmon.plugs.outputs).map("aName").toArray().sort() : [],
+                  validations: (isDef(nattrmon.plugs.validations)) ? $stream(nattrmon.plugs.validations).map("aName").toArray().sort() : []
+                };
+              } else {
+                return {};
+              }
             },
 
             "closeWarning": function(value) {
@@ -75,7 +79,7 @@ var nOutput_Channels = function (aMap) {
                 if (isDef(warn)) {
                   nattrmon.listOfWarnings.getCh().unset({ title: value.title });
                   logWarn("OPS | Warning '" + value.title + "' forced deleted!");
-                  return { successfull: true };
+                  return { successfull: true };
                 } else {
                   return { error: "The warning with title '" + value.title + "' wasn't found." };
                 }
@@ -85,7 +89,7 @@ var nOutput_Channels = function (aMap) {
                   warn.level = nWarning.LEVEL_CLOSED;
                   nattrmon.listOfWarnings.getCh().set({ title: value.title }, warn);
                   logWarn("OPS | Warning '" + value.title + "' forced close.");
-                  return { successfull: true };
+                  return { successfull: true };
                 } else {
                   return { error: "The warning with title '" + value.title + "' wasn't found." };
                 }
@@ -108,7 +112,7 @@ var nOutput_Channels = function (aMap) {
                   logWarn("OPS | Warning '" + warns[warn].title + "' forced deleted!");
                   c++;
                 } 
-                return { successfull: true, warningsClosed: c };
+                return { successfull: true, warningsClosed: c };
               } else {
                 var warns = nattrmon.listOfWarnings.getCh().getAll();
                 var c = 0;
@@ -118,7 +122,7 @@ var nOutput_Channels = function (aMap) {
                   logWarn("OPS | Warning '" + warns[warn].title + "' forced close.");
                   c++;
                 }
-                return { successfull: true, warningsClosed: c };
+                return { successfull: true, warningsClosed: c };
               }
             },
 

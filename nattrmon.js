@@ -697,10 +697,15 @@ nAttrMon.prototype.loadPlug = function (aPlugFile, aPlugDesc) {
 			logErr("Error loading " + aPlugDesc + " (" + aPlugFile + "): " + e);
 		}
 	}
-	if (aPlugFile.match(/\.yaml$/)) {
+	if (aPlugFile.match(/\.yaml$/) || aPlugFile.match(/\.json$/)) {
 		if (aPlugDesc != "objects") log("Loading " + aPlugDesc + ": " + aPlugFile);
 		try {
-			var y = io.readFileYAML(aPlugFile);
+			var y;
+			if (aPlugFile.match(/\.yaml$/))
+			   y = io.readFileYAML(aPlugFile);
+			else
+			   y = io.readFile(aPlugFile);
+
 			var parent = this;
 
 			function __handlePlug(yyy, type, parent) {

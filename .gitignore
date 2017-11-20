@@ -4,3 +4,4 @@ config/outputs/*
 config/validations/*
 config/*.snapshot
 util/nattrmonConfig.zip
+configTest
