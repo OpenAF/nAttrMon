@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20171119'
+version: '20171122'
 dependencies:
   openaf: '>=20170901'
 files:
@@ -174,7 +174,7 @@ filesHash:
   config/move_files_from_the_disabled_folders.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
   config/objects/nInput_AFPing.js: 1e39065380ba7c953533d31dc16ca3f3b0559562
   config/objects/nInput_CBPMSemaphores.js: e22546f3b1de2b17d959c0fdbf0a35ea644c78ad
-  config/objects/nInput_DB.js: 80437eeca4353ae8675bf9c35dba6a83bcf478ef
+  config/objects/nInput_DB.js: 196bfbb480324cd40c75a792630cba83a754fb1c
   config/objects/nInput_Filesystem.js: 4117c1a9b19df25d80ce23b69782ff85bd131da7
   config/objects/nInput_FilesystemCount.js: daf3bd9806156dd16a0ac19692290d8b720fc0f9
   config/objects/nInput_FMSRuleStatus.js: a5e4f9a505865b394a81ae4bbbdd839c91d07902

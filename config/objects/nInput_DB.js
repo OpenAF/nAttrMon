@@ -60,6 +60,7 @@ nInput_DB.prototype.input = function(scope, args) {
 			if (isDefined(parent.objectPoolKey)) {
 				nattrmon.useObject(parent.objectPoolKey, function(aDb) {
 					try {
+						if (isDef(aDb.convertDates)) aDb.convertDates(true);
 						res = (useparam) ? aDb.qs(aSQL, [String(lastcheck)], true).results : aDb.q(aSQL).results;
 					} catch(e) {
 						logErr("Error while retriving DB query ' " + aSQL + "' from '" + parent2.objectPoolKey + "': " + e.message);
