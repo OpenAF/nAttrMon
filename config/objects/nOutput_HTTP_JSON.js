@@ -10,7 +10,7 @@ var nOutput_HTTP_JSON = function (aMap) {
 	if (!nattrmon.hasSessionData("httpd")) {
 		plugin("HTTPServer");
 		nattrmon.setSessionData("httpd",
-			new HTTPd(isUndefined(aPort) ? 17878 : aPort));
+			new HTTPd(isUndefined(aPort) ? 8090 : aPort));
 	}
 
 	// Get server
