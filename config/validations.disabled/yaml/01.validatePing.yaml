@@ -1,0 +1,10 @@
+validation:
+   name         : Ping validation
+   chSubscribe  : nattrmon::cvals
+   waitForFinish: true
+   onlyOnEvent  : true
+   execFrom     : nValidation_AFPing
+   execArgs     :
+      attrPattern      : Server status/Ping
+      warnTitleTemplate: RAID {{Name}} down
+      warnDescTemplate : An AF ping to the {{Name}} RAID server failed. The server could be down or not responsive. Check the server status and restart if needed. 

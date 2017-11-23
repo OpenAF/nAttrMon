@@ -121,6 +121,7 @@ files:
   - config/validations.disabled/js/04.validateErrorFlows.js
   - config/validations.disabled/js/30.validateYellows.js
   - config/validations.disabled/yaml/01.somebodyTouched.yaml
+  - config/validations.disabled/yaml/01.validatePing.yaml
   - lib/nattribute.js
   - lib/nattributes.js
   - lib/nattributevalue.js
@@ -240,6 +241,7 @@ filesHash:
   config/validations.disabled/js/04.validateErrorFlows.js: 9b7ff4c1cd03fe47082107d2c22250be1d45a2b4
   config/validations.disabled/js/30.validateYellows.js: 7a99fcd5e3728805783c5c18aff97488f3aed5d7
   config/validations.disabled/yaml/01.somebodyTouched.yaml: 2d6a2c34c39aec49d9126c6304e04e66b978a26a
+  config/validations.disabled/yaml/01.validatePing.yaml: 26a36f729f9443a1893afb7a8586fe7e396085db
   lib/nattribute.js: 4be29e971b5c0c23e1fc89f33d7ed6479d075809
   lib/nattributes.js: 4dc41e0d6fc25c1bdf16608ef41cad8d5df3506d
   lib/nattributevalue.js: f42b29f8b225a391cef31d7f3f22d41033aa3b96
