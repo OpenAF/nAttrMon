@@ -645,16 +645,16 @@ nAttrMon.prototype.loadObject = function(yy, type) {
 	if (isUnDef(yy.args)) yy.args = {};
 	if (isDef(yy.exec))
 		switch (type) {
-			case "input": yy.exec = new nInput(new Function("var scope = arguments[0]; var args = arguments[1]; " + yy.exec)); break;
-			case "output": yy.exec = new nOutput(new Function("var scope = arguments[0]; var args = arguments[1]; " + yy.exec)); break;
+			case "input"     : yy.exec = new nInput(new Function("var scope = arguments[0]; var args = arguments[1]; " + yy.exec)); break;
+			case "output"    : yy.exec = new nOutput(new Function("var scope = arguments[0]; var args = arguments[1]; " + yy.exec)); break;
 			case "validation": yy.exec = new nValidation(new Function("var warns = arguments[0]; var scope = arguments[1]; var args = arguments[2]; " + yy.exec)); break;
 		}
-	if (isUnDef(yy.execArgs)) yy.execArgs = [{}];
-	if (!(isArray(yy.execArgs))) yy.execArgs = [yy.execArgs];
+	if (isUnDef(yy.execArgs)) yy.execArgs = {};
+	//if (!(isArray(yy.execArgs))) yy.execArgs = yy.execArgs;
 	if (isDef(yy.execFrom)) {
 		var o = eval(yy.execFrom);
 		yy.exec = Object.create(o.prototype);
-		o.apply(yy.exec, yy.execArgs);
+		o.apply(yy.exec, [yy.execArgs]);
 	}
 
 	return yy;

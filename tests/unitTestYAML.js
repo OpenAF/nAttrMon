@@ -1,6 +1,6 @@
 load("nattrmonTester.js");
-let NATTRMON_SERVER_IP = "1.2.3.4";
-let NATTRMON_CHS_PORT  = "17878";
+let NATTRMON_SERVER_IP = "127.0.0.1";
+let NATTRMON_CHS_PORT  = "8090";
 
 // INITs
 // -----
@@ -26,9 +26,10 @@ try {
 ow.loadTest().setMemoryProfile(true);
 print("Results:\n" + stringify(ow.test.test(params.withYAML, function() {
    var nattrmonYAMLFile = io.readFileYAML(params.withYAML);
-   if (isDef(nattrmonYAMLFile.input)) return nattrmon.loadObject(nattrmonYAMLFile.input, "input").exec.exec(nattrmon, {});
-   if (isDef(nattrmonYAMLFile.output)) return nattrmon.loadObject(nattrmonYAMLFile.output, "output").exec.exec(nattrmon, {});
-   if (isDef(nattrmonYAMLFile.validation)) return nattrmon.loadObject(nattrmonYAMLFile.validation, "validation").exec.exec(nattrmon, {});
+
+   if (isDef(nattrmonYAMLFile.input)) return nattrmon.loadObject(nattrmonYAMLFile.input, "input").exec.exec(nattrmon, nattrmonYAMLFile.input.execArgs);
+   if (isDef(nattrmonYAMLFile.output)) return nattrmon.loadObject(nattrmonYAMLFile.output, "output").exec.exec(nattrmon, nattrmonYAMLFile.output.execArgs);
+   if (isDef(nattrmonYAMLFile.validation)) return nattrmon.loadObject(nattrmonYAMLFile.validation, "validation").exec.exec(nattrmon, nattrmonYAMLFile.validation.execArgs);
 })));
 
 var execInfo = ow.test.getChannel().get(params.withYAML);
