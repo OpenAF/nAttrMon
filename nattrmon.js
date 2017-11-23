@@ -28,8 +28,8 @@ loadLodash();
 var nAttrMon = function(aConfigPath, debugFlag) {
 	plugin("Threads");
 
-	this.chCurrentValues = "nattrmon::values";
-	this.chLastValues = "nattrmon::lastValues";
+	this.chCurrentValues = "nattrmon::cvals";
+	this.chLastValues = "nattrmon::lvals";
 
 	$ch(this.chCurrentValues).create();
 	$ch(this.chLastValues).create();
