@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20171122'
+version: '20171123'
 dependencies:
   openaf: '>=20170901'
 files:
@@ -194,7 +194,7 @@ filesHash:
   config/objects/nOutput_Log.js: 2a1d2d88a54b31b0fa1cece340c4a95ce8888476
   config/objects/nOutput_Oracle.js: 93fa7228120945b1f1f6a7ecd8cf17853a4c6966
   config/objects/nOutput_Stdout.js: 5a0d72c32e2f969fe3e27cbad64c7ccf0959aad1
-  config/objects/nValidation_AFPing.js: f7ce653012d15558088e50458adc415fa9792eaa
+  config/objects/nValidation_AFPing.js: 44117c2dd16882ff3d919e2f4f0eefcc05762263
   config/objects/nValidation_Semaphores.js: 97b6c1850b80d95cc92c1c50b05fdfa26467fd94
   config/objects/nValidation_Yellows.js: 942478fcd710e392add0b6ef6349ef51a895b764
   config/objects.assets/noutputhttp/css/bootstrap-theme.min.css: c277f5dc2e08fa885e401ee367ac6c0eefa7a6dc
@@ -247,17 +247,17 @@ filesHash:
   lib/nmonitoredobject.js: 24814b7ea819508162cac91a3dd7c14be801be96
   lib/noutput.js: 80983cb56a35eac3726a88e56cac9ea5d51cb39a
   lib/nplug.js: 5e5effd7342fdbc7600c2b283afcec01306d58fc
-  lib/nvalidation.js: 27fac11ab81a5f2d289c89b9275a27d830a733fc
+  lib/nvalidation.js: 47a52a47859267f4012b369ee6b7f315b2583610
   lib/nwarning.js: b6ab4c67c583f878c95bbf19ee11b7099c132136
   lib/nwarnings.js: 939a814f4eb4d114ef22785ed877eb2ffb165e8e
-  nattrmon.js: 4c419757f991561c482160938b426eadd48cae63
+  nattrmon.js: 3e90dc7351ab503de6897ec929f4862757e5547b
   README.md: b2a7dc80a439d865bd03d49960dbd6c96d02c254
   tests/inputDBTest.yml: acafbfa4233802897e81e9ee5457b06b76787303
   tests/inputShellTest.yml: 795c8479c1bfa93454b077d141f58161af5cae08
-  tests/nattrmonTester.js: 0dc31695465dd13d73929a117e4d09a37be8d5fd
+  tests/nattrmonTester.js: fc277bc9d1b899fdcc95689a11ae911f2febbdad
   tests/outputTest.yml: dade7c804e9f967eeb9016fcc045b943888b2ef0
   tests/unitTest.js: bf070ca62206b125a3530c1a34a6097f176b9756
-  tests/unitTestYAML.js: 891879cd3b71d0d6351ae09af0886f981937c6bf
+  tests/unitTestYAML.js: 0fa75983c5b2af572891d6329fc18d10f7a47150
   util/backupConfig.yaml: 55d5cfebaf1acb87bd9ce2523015608b03f586e1
   util/clean.yaml: b1bbfd4a416313e02f6edc77ab8e956330834979
   util/loadDB2Elastic.js: caecf39b3afa1430c089ff57a9974d5bb10a06d9
