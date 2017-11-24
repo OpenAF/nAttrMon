@@ -30,7 +30,7 @@ jobs:
            var files = listFilesRecursive(global.packPath + args.folder);
            for(var file in files) {
               if (files[file].isFile) {
-                var f = files[file].filepath.replace(args.folder, "").replace(/\\+/g, "/").replace(/^\//, "");
+                var f = files[file].filepath.replace(global.packPath, "").replace(/\\+/g, "/").replace(/^\//, "");
                 log("Including " + f + "...");
                 global.zip.putFile(f.replace(global.packPath + "/", ""), io.readFileBytes(files[file].filepath));
               }
