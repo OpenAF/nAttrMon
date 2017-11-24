@@ -7,7 +7,7 @@ jobs:
    - name: Init
      exec: >-
         global.packPath = getOPackPath("nAttrMon") || "..";
-        global.configZIP = (isDef(params.filename)) ? params.filename : "nattrmonConfig.zip";
+        global.configZIP = (isDef(params.filename)) ? params.filename : "nattrmonConfig-" + ow.loadFormat().fromDate(new Date(), "yyyyMMdd") + ".zip";
         log("Scanning " + global.packPath);
 
    # Prepare a ZIP object to be used
@@ -32,7 +32,11 @@ jobs:
               if (files[file].isFile) {
                 var f = files[file].filepath.replace(global.packPath, "").replace(/\\+/g, "/").replace(/^\//, "");
                 log("Including " + f + "...");
-                global.zip.putFile(f.replace(global.packPath + "/", ""), io.readFileBytes(files[file].filepath));
+                try {
+                  global.zip.putFile(f.replace(global.packPath + "/", ""), io.readFileBytes(files[file].filepath));
+                } catch(e) {
+                  logWarn(e.message);
+                }
               }
            }
         }
@@ -50,8 +54,12 @@ jobs:
            global.packPath + "/config/nattrmon.lvals.snapshot"
         ];
         for (var i in f) {
-          log("Including " + f[i] + "...");
-          global.zip.putFile(f[i].replace(global.packPath + "/", ""), io.readFileBytes(f[i]));
+          try {
+            log("Including " + f[i] + "...");
+            global.zip.putFile(f[i].replace(global.packPath + "/", ""), io.readFileBytes(f[i]));
+          } catch(e) {
+            logWarn(e.message);
+          }
         }
 
    # Write the final ZIP file
