@@ -20,6 +20,8 @@ ow.loadServer();
 ow.loadObj(); 
 ow.loadFormat(); 
 ow.loadTemplate();
+//ow.template.addFormatHelpers();
+//ow.template.addConditionalHelpers();
 loadLodash(); 
 
 // ----------------------------------------------------------------------------------------------

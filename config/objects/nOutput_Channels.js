@@ -14,7 +14,7 @@ var nOutput_Channels = function (aMap) {
     // Set server if doesn't exist
     if (!nattrmon.hasSessionData("httpd")) {
         plugin("HTTPServer");
-        nattrmon.setSessionData("httpd", new HTTPd(isUnDef(aMap.port) ? 17878 : aMap.port));
+        nattrmon.setSessionData("httpd", new HTTPd(isUnDef(aMap.port) ? 8090 : aMap.port));
     }
 
     // Get server
