@@ -1,3 +1,10 @@
+// Initialization
+var LOGHK_HOWLONGAGOINMINUTES = 30 * 24 * 60; // How long to keep logs
+var LOGAUDIT = true; // Set to false to turn it off
+var LOGAUDIT_TEMPLATE = "AUDIT | User: {{request.user}} | Channel: {{name}} | Operation: {{op}} | Key: {{{key}}}";
+
+// -------------------------------------------------------------------
+
 // check version
 af.getVersion() >= "20170101" || (print("Version " + af.getVersion() + ". You need OpenAF version 20170101 to run.")) || exit(-1);
 
@@ -62,6 +69,24 @@ var nAttrMon = function(aConfigPath, debugFlag) {
 	this.indexPlugThread = {};
 
 	var nattrmon = this;
+
+	// Start logging
+	io.mkdir(aConfigPath + "/log");
+	ow.ch.utils.setLogToFile({
+		logFolder: aConfigPath + "/log",
+		HKhowLongAgoInMinutes: LOGHK_HOWLONGAGOINMINUTES,
+		numberOfEntriesToKeep: 10,
+		setLogOff            : true
+	});
+
+	if (LOGAUDIT) {
+		ow.ch.server.setLog(function(aMap) {
+			aMap = merge(aMap, { key: stringify(jsonParse(aMap.request.uri.replace(/.+({[^}]+}).*/, "$1").replace(/&quot;/g, "\'")),undefined,"").replace(/\"/g, "") });
+			tlog(LOGAUDIT_TEMPLATE, aMap);
+		});
+	}
+
+	print(new Date() + " | Starting log to " + aConfigPath + "/log");
 
 	// date checks
 	this.currentValues.subscribe((new nAttributeValue()).convertDates);
@@ -822,3 +847,4 @@ ow.server.daemon(__sleepperiod, function() {
 nattrmon.stop();
 
 log("nAttrMon stopped.");
+print(new Date() + " | Stopping.");

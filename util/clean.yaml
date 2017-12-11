@@ -10,7 +10,8 @@ jobs:
    # 
    - name: Clean functions
      exec: >
-        var clean = (aFile) => { log("Removing " + aFile); af.rm(aFile); };
+        var clean = (aFile) => { log("Removing " + aFile); io.rm(aFile); };
+        var cleanDir = (aFile) => { log("Removing " + aFile); io.rm(aFile); };
 
    # Cleaning all snapshots files
    #
@@ -41,7 +42,15 @@ jobs:
      deps:
         - Init
      exec: >
-        clean 
+        clean(global.packPath + "/nattrmon.pid");
+
+   # Cleaning logs
+   - name: Clean logs
+     from: Clean functions
+     deps:
+        - Init
+     exec: >
+        clean(global.packPath + "/log");
 
    # Everything done
    # 
@@ -58,4 +67,5 @@ todo:
    - Clean snapshots
    #- Clean H2 database
    - Clean pid file
+   - Clean logs
    - Done

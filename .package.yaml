@@ -134,7 +134,6 @@ files:
   - lib/nwarning.js
   - lib/nwarnings.js
   - nattrmon.js
-  - nattrmon.pid
   - README.md
   - tests/inputDBTest.yml
   - tests/inputShellTest.yml
@@ -255,8 +254,7 @@ filesHash:
   lib/nvalidation.js: bed4622cc857506821e2d0fc6c5e8592ae0ad4dc
   lib/nwarning.js: 3bc36903e8e7f9be49b3f65352fe1dfddbe5b2aa
   lib/nwarnings.js: 403acd748abc9b101fefe215d624696bbaa5ddb2
-  nattrmon.js: fc4b8d246da0e53d9924f450e8a4f9d150696fe1
-  nattrmon.pid: a4c254f85ef727299c7c796cbc6e1c0aea913fef
+  nattrmon.js: 572f848056186a56cb812a1ffd47cb1c682eb951
   README.md: b2a7dc80a439d865bd03d49960dbd6c96d02c254
   tests/inputDBTest.yml: acafbfa4233802897e81e9ee5457b06b76787303
   tests/inputShellTest.yml: 795c8479c1bfa93454b077d141f58161af5cae08
@@ -265,5 +263,5 @@ filesHash:
   tests/unitTest.js: bf070ca62206b125a3530c1a34a6097f176b9756
   tests/unitTestYAML.js: 0fa75983c5b2af572891d6329fc18d10f7a47150
   util/backupConfig.yaml: f84a08a3c5c8aa50f5aa606585c1453901c20d84
-  util/clean.yaml: b1bbfd4a416313e02f6edc77ab8e956330834979
+  util/clean.yaml: 3682c3c4e87bf25b0170da0fc8636d69005c3b88
   util/loadDB2Elastic.js: caecf39b3afa1430c089ff57a9974d5bb10a06d9
