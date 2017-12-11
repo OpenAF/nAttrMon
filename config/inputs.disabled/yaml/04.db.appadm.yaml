@@ -36,4 +36,3 @@ input:
                   and floor(last_call_et / 60) > 0
             group by username, UPPER(program), floor(last_call_et / 60)
             order by username,floor(last_call_et / 60) desc, "How many db sessions" desc
-
