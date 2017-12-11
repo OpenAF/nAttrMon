@@ -47,7 +47,7 @@ var nOutput_Channels = function (aMap) {
               return {
                 "list": "List all plug types with the corresponding array of plugs definitions.",
                 "reloadPlug": "Tries to reload a plug. Use only for debug proposes (see documentation for limitations). Provide as arguments { file: \"plugTypeDir/aFileNameAndExtension\" }",
-                "clearAttribute": "Tries to delete all references to an attribute.",
+                "clearAttribute": "Tries to delete all references to an attribute ({ name: 'attribute name' }).",
                 "closeWarning": "Tries to close a warning. Use, as argument, { title: \"The warning title\" }",
                 "clearAllWarnings": "Tries to delete all warnings. You will need to provide as argument { force: true }",
                 "test": "Use 'list' to find out the plug type you need and plug name and build the arguments { type: 'inputs', name: 'name', args: { ... }}. The result will be error or the result of running the corresponding plug. Even if successull nAttrMon will NOT consider the result.",      

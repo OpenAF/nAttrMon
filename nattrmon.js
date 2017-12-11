@@ -20,8 +20,8 @@ ow.loadServer();
 ow.loadObj(); 
 ow.loadFormat(); 
 ow.loadTemplate();
-//ow.template.addFormatHelpers();
-//ow.template.addConditionalHelpers();
+ow.template.addFormatHelpers();
+ow.template.addConditionalHelpers();
 loadLodash(); 
 
 // ----------------------------------------------------------------------------------------------
@@ -62,15 +62,23 @@ var nAttrMon = function(aConfigPath, debugFlag) {
 	this.indexPlugThread = {};
 
 	var nattrmon = this;
+
+	// date checks
+	this.currentValues.subscribe((new nAttributeValue()).convertDates);
+	this.lastValues.subscribe((new nAttributeValue()).convertDates);
+	this.listOfAttributes.getCh().subscribe((new nAttribute()).convertDates);
+    this.listOfWarnings.getCh().subscribe((new nWarning()).convertDates);
+   
+    // persistence
 	this.currentValues.storeAdd(this.getConfigPath() + "/nattrmon.cvals.snapshot", [ "name" ], true);
 	this.lastValues.storeAdd(this.getConfigPath() + "/nattrmon.lvals.snapshot", [ "name" ], true);
 	this.listOfAttributes.getCh().storeAdd(this.getConfigPath() + "/nattrmon.attrs.snapshot", [ "name" ], true);
 	this.listOfWarnings.getCh().storeAdd(this.getConfigPath() + "/nattrmon.warns.snapshot", [ "title" ], true);
-}
+};
 
 nAttrMon.prototype.getConfigPath = function() {
 	return this.configPath;
-}
+};
 
 // Snapshot functions
 // ------------------

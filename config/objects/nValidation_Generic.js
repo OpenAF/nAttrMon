@@ -5,15 +5,13 @@
  * execArgs     :
  *    checks:
  *       - attrPattern      : test$
- *         less             : 200
- *         greaterEquals    : 100
+ *         expr             : {{value}} < 200 && {{value}} >= 100
  *         warnLevel        : HIGH
  *         warnTitleTemplate: A test warning
  *         warnDescTemplate : This is just a test warning. 
  * 
  *       - attrPattern      : test3
- *         map              : c
- *         equal            : 3
+ *         expr             : {{value.c}} == 3
  *         warnLevel        : INFO
  *         warnTitleTemplate: A test info warning
  *         warnDescTemplate : This is just a info given {{name}} because the values was {{value}} for '{{map.a}}'.          
@@ -59,7 +57,11 @@ nValidation_Generic.prototype.checkEntry = function(ret, k, v, args) {
     for (var i in this.params.checks) {
         var check = this.params.checks[i];
 
-        if (isDef(k) && k.name.match(new RegExp(check.attrPattern))) {
+        if (isDef(k) && 
+            ((isDef(check.attribute) && k.name == check.attribute) || 
+             (isDef(check.attrPattern) && k.name.match(new RegExp(check.attrPattern))) 
+            )
+           ) {
             var warnLevel;
             switch (check.warnLevel) {
             case "HIGH": warnLevel = nWarning.LEVEL_HIGH; break;
@@ -69,63 +71,100 @@ nValidation_Generic.prototype.checkEntry = function(ret, k, v, args) {
             default: warnLevel = nWarning.LEVEL_INFO; break;
             }
 
-            var evalCond = (v) => { generateWarning = (check.or) ? generateWarning || v : generateWarning && v; };
+            var evalCond = (aV) => { generateWarning = (check.or) ? generateWarning || aV : generateWarning && aV; };
 
             var vals = [];
             if (!(isArray(v.val))) vals = [v.val]; else vals = v.val;
 
-            for (var v in vals) {
+            for (var vv in vals) {
                 var val;
-                if (check.map) val = pathMapper(check.map)(vals[v]);
-                else val = vals[v];
+                if (check.map) { val = this.pathMapper(check.map)(vals[vv]); print(val);} else val = vals[vv];
+
+                if (isUnDef(val)) {
+                    if (check.debug) { sprint(merge(v, {
+                            reason: "undefined value"
+                        }));
+                    }
+                    continue;
+                }
 
                 if (isUnDef(check.warnTitleTemplate)) check.warnTitleTemplate = "{{name}}: Change me with warnTitleTemplate";
                 if (isUnDef(check.warnDescTemplate))  check.warnDescTemplate  = "{{name}}: Change me with warnDescTemplate";
 
-                var warnTitle = templify(check.warnTitleTemplate, merge(args, {
-                    name: v.name,
-                    value: val,
-                    map: vals[v],
-                    dateModified: v.date
-                }));
-                var warnDesc = templify(check.warnDescTemplate, merge(args, {
-                    name: v.name,
-                    value: val,
-                    map: vals[v],
-                    dateModified: v.date
-                }));
+                if (check.expr) {
+                    var generateWarning = true;
+                    var data = args;
 
-                var generateWarning = true;
-                if (Number.parseFloat(val) != null) {
-                    if (check.less)          if (val < check.less) evalCond(true); else evalCond(false);
-                    if (check.lessEquals)    if (val <= check.lessEquals) evalCond(true); else evalCond(false);
-                    if (check.greater)       if (val > check.greater) evalCond(true); else evalCond(false);
-                    if (check.greaterEquals) if (val >= check.greaterEquals) evalCond(true); else evalCond(false);
-                }
+                    data.value = val;
+                    data.originalValue = v.val;
+                    data.name = v.name;
 
-                if (Object.prototype.toString.call(val) == "[object Date]") {
-                    if (check.minutesLess)          if (ow.format.dateDiff.inMinutes(val) < check.minutesLess) evalCond(true); else evalCond(false);
-                    if (check.minutesLessEquals)    if (ow.format.dateDiff.inMinutes(val) <= check.minutesLessEquals) evalCond(true); else evalCond(false);
-                    if (check.minutesGreater)       if (ow.format.dateDiff.inMinutes(val) > check.minutesGreater) evalCond(true); else evalCond(false);
-                    if (check.minutesGreaterEquals) if (ow.format.dateDiff.inMinutes(val) >= check.minutesGreaterEquals) evalCond(true); else evalCond(false);
-                }
-                
-                if (isDef(v.date) && Object.prototype.toString.call(v.date) == "[object Date]") {
-                    if (check.modifiedSecondsAgo)   if (ow.format.dateDiff.inSeconds(v.date) >= check.modifiedSecondsAgo) evalCond(true); else evalCond(false);
-                    if (check.modifiedMinutesAgo)   if (ow.format.dateDiff.inMinutes(v.date) >= check.modifiedMinutesAgo) evalCond(true); else evalCond(false);
-                    if (check.modifiedHoursAgo)     if (ow.format.dateDiff.inHours(v.date) >= check.modifiedHoursAgo) evalCond(true); else evalCond(false);
-                    if (check.modifiedDaysAgo)      if (ow.format.dateDiff.inDays(v.date) >= check.modifiedDaysAgo) evalCond(true); else evalCond(false);
-                }
+                    if (isString(val) && new Date(val) != null) val = new Date(val);
+                    if (Object.prototype.toString.call(val) == "[object Date]") {
+                        data = merge(data, {
+                            dateAgo: {
+                                seconds: ow.format.dateDiff.inSeconds(val),
+                                minutes: ow.format.dateDiff.inMinutes(val),
+                                hours  : ow.format.dateDiff.inHours(val),
+                                days   : ow.format.dateDiff.inDays(val)
+                            }
+                        });
+                    }
 
-                if (check.equal)
-                    if (val == check.equal) evalCond(true);
-                    else evalCond(false);
-                if (check.not) generateWarning = !generateWarning;
+                    if (isString(v.date) && new Date(v.date) != null) v.date = new Date(v.date);
+                    if (isDef(v.date) && Object.prototype.toString.call(v.date) == "[object Date]") {
+                        data = merge(data, {
+                            modifiedAgo: {
+                                seconds: ow.format.dateDiff.inSeconds(v.date),
+                                minutes: ow.format.dateDiff.inMinutes(v.date),
+                                hours  : ow.format.dateDiff.inHours(v.date),
+                                days   : ow.format.dateDiff.inDays(v.date)
+                            }
+                        });
+                    }
+                    data.dateModified = v.date;
 
-                if (!generateWarning) {
-                    this.closeWarning(warnTitle);
-                } else {
-                    ret.push(new nWarning(warnLevel, warnTitle, warnDesc));
+                    var expr = templify(check.expr, data);
+                    try {
+                        if (check.debug) {
+                            sprint({
+                                evaluatedExpression: expr,
+                                originalExpression: check.expr,
+                                data: data
+                            });
+                        }
+                        if (af.eval(expr)) evalCond(true); else evalCond(false);
+                    } catch(e) {
+                        evalCond(false);
+                        logWarn("Couldn't evalute expression: " + check.expr + " for attribute " + stringify(v, undefined, "") + "");
+                    }
+
+                    // Prepare warning data
+                    var warnTitle = templify(check.warnTitleTemplate, data);
+                    var warnDesc = templify(check.warnDescTemplate, data);
+                    
+                    // Generate or close warnings
+                    if (!generateWarning) {
+                        if (check.debug) {
+                            sprint({
+                                closeAlarm: {
+                                    title: warnTitle
+                                }
+                            });
+                        }
+                        this.closeWarning(warnTitle);
+                    } else {
+                        if (check.debug) {
+                            sprint({
+                                createAlarm: {
+                                    level: warnLevel,
+                                    title: warnTitle,
+                                    description: warnDesc
+                                }
+                            });
+                        }
+                        ret.push(new nWarning(warnLevel, warnTitle, warnDesc));
+                    }
                 }
             }
         }
