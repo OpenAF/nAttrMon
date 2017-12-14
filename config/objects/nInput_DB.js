@@ -5,16 +5,24 @@ loadUnderscore();
  * <key>nattrmon.nInput_DB(aMap) : nInput</key>
  * aMap is composed of:\
  *    - key (the key for the database access)\
- *    - sqls (a map of queries (if a ':__lastdate' is included it will be replaced by the last checked date), each will become an attribute)
+ *    - key.parent (in alternative provide the parent key (e.g. RAS))\
+ *    - key.child  (in alternative provide the child key synonym (e.g. db.app))\
+ *    - sqls (a map of query templates (if a '{{lastdate}}' is included it will be replaced by the last checked date), each will become an attribute)
  * </odoc>
  */
-var nInput_DB = function(anMonitoredAFObjectKey, aMapOfAttributeNameANDSQL) {
- 	if (isObject(anMonitoredAFObjectKey)) {
+var nInput_DB = function (anMonitoredAFObjectKey, aMapOfAttributeNameANDSQL) {
+	if (isObject(anMonitoredAFObjectKey)) {
 		this.params = anMonitoredAFObjectKey;
-      
- 		this.objectPoolKey = this.params.key;
- 		this.map = this.params.sqls;
-        } else {
+
+		if (isDef(this.params.key)) {
+			if (isObject(this.params.key) && isDef(this.params.key.parent) && isDef(this.params.key.child)) {
+				this.objectPoolKey = nattrmon.getAssociatedObjectPool(this.params.key.parent, this.params.key.child);
+			} else {
+				this.objectPoolKey = this.params.key;
+			}
+		}
+		this.map = this.params.sqls;
+	} else {
 		// Is a monitored object or a pool?
 		if (nattrmon.isObjectPool(anMonitoredAFObjectKey)) {
 			this.objectPoolKey = anMonitoredAFObjectKey;
@@ -26,51 +34,55 @@ var nInput_DB = function(anMonitoredAFObjectKey, aMapOfAttributeNameANDSQL) {
 			else
 				throw "Key " + anMonitoredAFObjectKey + " not found.";
 		}
-		
+
 		this.map = aMapOfAttributeNameANDSQL;
-        }
+	}
 
 	nInput.call(this, this.input);
 }
 inherit(nInput_DB, nInput);
 
-nInput_DB.prototype.input = function(scope, args) {
+nInput_DB.prototype.input = function (scope, args) {
 	var ret = {};
 	var parent = this;
 
-	parallel4Array(Object.keys(this.map), function(aKey) {
+	ow.template.addHelper("toDate", (s) => { if (isDef(s) && s != null && new Date(s) != null) return "to_date('" + ow.format.fromDate(new Date(s), 'yyyyMMddHHmmss') + "', 'YYYYMMDDHH24MISS')"; else return null; });
+	ow.template.addHelper("debug", (s) => { sprint(s); });
+
+	parallel4Array(Object.keys(this.map), function (aKey) {
 		var res;
 		var i = aKey;
 		var parent2 = parent;
 		var aSQL = parent.map[aKey];
 
 		try {
-        		var atr = scope.getAttributes().getAttributeByName(i);
-                        var lastcheck;
-                        var useparam = true;
+			var atr = scope.getAttributes().getAttributeByName(i);
+			var lval = scope.getLastValues()[i];
+			//var warns = ow.obj.fromArray2Obj(scope.getWarnings(true).getCh().getAll(), "title");
+			//var atrs = 
 
-                        if (isDef(atr) && isDef(atr.lastcheck)) 
-                           lastcheck = new Date(String(atr.lastcheck)); 
-                        else 
-                           lastcheck = ow.format.toDate("20000101000000", "yyyyMMddHHmmss"); 
-                        lastcheck = (_.isDate(lastcheck) && !isNaN(lastcheck.getTime())) ? ow.format.fromDate(lastcheck, 'yyyyMMddHHmmss') : "20000101000000";
-                        if (!aSQL.match(/:__lastdate/)) useparam = false; 
- 			aSQL = aSQL.replace(/:__lastdate/g, "to_date(?, 'YYYYMMDDHH24MISS')");
+			var data = {
+				attribute: atr,
+				lastValue: lval
+			};
+
 			// Get result for monitoredObject or object pool
 			if (isDefined(parent.objectPoolKey)) {
-				nattrmon.useObject(parent.objectPoolKey, function(aDb) {
+				nattrmon.useObject(parent.objectPoolKey, function (aDb) {
 					try {
 						if (isDef(aDb.convertDates)) aDb.convertDates(true);
-						res = (useparam) ? aDb.qs(aSQL, [String(lastcheck)], true).results : aDb.q(aSQL).results;
-					} catch(e) {
+						res = aDb.q(templify(aSQL, data)).results;
+						//res = (useparam) ? aDb.qs(aSQL, [String(lastcheck)], true).results : aDb.q(aSQL).results;
+					} catch (e) {
 						logErr("Error while retriving DB query ' " + aSQL + "' from '" + parent2.objectPoolKey + "': " + e.message);
 						throw e;
 					}
 					return true;
 				});
 			} else {
-				sync(function() {
-					res = (useparam) ? parent2.db.qs(aSQL, [String(lastcheck)], true).results : parent2.db.q(aSQL).results;
+				sync(function () {
+					//res = (useparam) ? parent2.db.qs(aSQL, [String(lastcheck)], true).results : parent2.db.q(aSQL).results;
+					res = parent2.db.q(templify(aSQL, data)).results;
 				}, this.db);
 			}
 
@@ -86,18 +98,20 @@ nInput_DB.prototype.input = function(scope, args) {
 					} else {
 						ret[i] = res;
 					}
-				}				
+				}
 			}
 
-		} catch(e) {
+		} catch (e) {
 			logErr("Error while retriving DB queries from '" + parent2.objectPoolKey + "': " + stringify(e));
 			if (isUndefined(parent2.objectPoolKey)) {
 				nattrmon.declareMonitoredObjectDirty(parent2.monitoredObjectKey);
 				parent2.db = nattrmon.getMonitoredObject(parent2.monitoredObjectKey);
 			}
 		}
-                return 1;
+		return 1;
 	});
+	ow.template.delHelper("toDate");
+	ow.template.delHelper("debug");
 
 	return ret;
-}
+};
