@@ -31,7 +31,65 @@ ow.template.addFormatHelpers();
 ow.template.addConditionalHelpers();
 loadLodash(); 
 
-// ----------------------------------------------------------------------------------------------
+// nAttrMon template helpers -----------------------------------------------------------------
+// -------------------------------------------------------------------------------------------
+
+ow.template.addHelper("attr", (a, p) => {
+	if (isDef(a) && a != null) {
+		var res = nattrmon.getAttributes().getAttributeByName(a);
+		if (isDef(p) && p != null && isString(p)) {
+			res = ow.obj.getPath(res, p);
+		} else {
+			res = stringify(res, void 0, "");
+		}
+		return res;
+	} else {
+		return null;
+	}
+});
+ow.template.addHelper("cval", (a, p) => {
+	if (isDef(a) && a != null) {
+		var res = nattrmon.getCurrentValues(true).get({ name: a });
+		if (isDef(p) && p != null && isString(p)) {
+			res = ow.obj.getPath(res, p);
+		} else {
+			res = stringify(res, void 0, "");
+		}
+		return res;
+	} else {
+		return null;
+	}
+});
+ow.template.addHelper("lval", (a, p) => {
+	if (isDef(a) && a != null) {
+		var res = nattrmon.getLastValues(true).get({ name: a });
+		if (isDef(p) && p != null && isString(p)) {
+			res = ow.obj.getPath(res, p);
+		} else {
+			res = stringify(res, void 0, "");
+		}
+		return res;
+	} else {
+		return null;
+	}
+});
+ow.template.addHelper("warn", (a, p) => {
+	if (isDef(a) && a != null) {
+		var res = nattrmon.getWarnings(true).get({ title: a });
+		if (isDef(p) && p != null && isString(p)) {
+			res = ow.obj.getPath(res, p);
+		} else {
+			res = stringify(res, void 0, "");
+		}
+		return res;
+	} else {
+		return null;
+	}
+});
+
+ow.template.addHelper("debug", (s) => { sprint(s); });
+
+// Main object ----------------------------------------------------------------------------------
 // ----------------------------------------------------------------------------------------------
 
 var nAttrMon = function(aConfigPath, debugFlag) {

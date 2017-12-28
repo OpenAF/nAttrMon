@@ -47,7 +47,6 @@ nInput_DB.prototype.input = function (scope, args) {
 	var parent = this;
 
 	ow.template.addHelper("toDate", (s) => { if (isDef(s) && s != null && new Date(s) != null) return "to_date('" + ow.format.fromDate(new Date(s), 'yyyyMMddHHmmss') + "', 'YYYYMMDDHH24MISS')"; else return null; });
-	ow.template.addHelper("debug", (s) => { sprint(s); });
 
 	parallel4Array(Object.keys(this.map), function (aKey) {
 		var res;
