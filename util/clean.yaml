@@ -50,7 +50,7 @@ jobs:
      deps:
         - Init
      exec: >
-        clean(global.packPath + "/log");
+        cleanDir(global.packPath + "/log");
 
    # Everything done
    # 

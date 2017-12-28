@@ -55,13 +55,16 @@ nValidation_Generic.prototype.pathMapper = function (path) {
 
 nValidation_Generic.prototype.checkEntry = function(ret, k, v, args) {
     for (var i in this.params.checks) {
-        var check = this.params.checks[i];
+        var check = this.params.checks[i]; 
 
         if (isDef(k) && 
             ((isDef(check.attribute) && k.name == check.attribute) || 
              (isDef(check.attrPattern) && k.name.match(new RegExp(check.attrPattern))) 
             )
            ) {
+            var uuid;
+            if (check.debug) uuid = genUUID();
+
             var warnLevel;
             switch (check.warnLevel) {
             case "HIGH": warnLevel = nWarning.LEVEL_HIGH; break;
@@ -70,8 +73,6 @@ nValidation_Generic.prototype.checkEntry = function(ret, k, v, args) {
             case "INFO": warnLevel = nWarning.LEVEL_INFO; break;
             default: warnLevel = nWarning.LEVEL_INFO; break;
             }
-
-            var evalCond = (aV) => { generateWarning = (check.or) ? generateWarning || aV : generateWarning && aV; };
 
             var vals = [];
             if (!(isArray(v.val))) vals = [v.val]; else vals = v.val;
@@ -82,6 +83,7 @@ nValidation_Generic.prototype.checkEntry = function(ret, k, v, args) {
 
                 if (isUnDef(val)) {
                     if (check.debug) { sprint(merge(v, {
+                            execId: uuid,
                             reason: "undefined value"
                         }));
                     }
@@ -94,6 +96,8 @@ nValidation_Generic.prototype.checkEntry = function(ret, k, v, args) {
                 if (check.expr) {
                     var generateWarning = true;
                     var data = args;
+
+                    var evalCond = (aV) => { generateWarning = aV; };
 
                     data.value = val;
                     data.originalValue = v.val;
@@ -128,6 +132,7 @@ nValidation_Generic.prototype.checkEntry = function(ret, k, v, args) {
                     try {
                         if (check.debug) {
                             sprint({
+                                execId: uuid,
                                 evaluatedExpression: expr,
                                 originalExpression: check.expr,
                                 data: data
@@ -147,6 +152,7 @@ nValidation_Generic.prototype.checkEntry = function(ret, k, v, args) {
                     if (!generateWarning) {
                         if (check.debug) {
                             sprint({
+                                execId: uuid,
                                 closeAlarm: {
                                     title: warnTitle
                                 }
@@ -156,6 +162,7 @@ nValidation_Generic.prototype.checkEntry = function(ret, k, v, args) {
                     } else {
                         if (check.debug) {
                             sprint({
+                                execId: uuid,
                                 createAlarm: {
                                     level: warnLevel,
                                     title: warnTitle,

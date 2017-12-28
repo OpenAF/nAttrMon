@@ -475,10 +475,12 @@ nAttrMon.prototype.getHistoryValuesByEvents = function(anAttributeName, howManyE
  	}
 }
 
-nAttrMon.prototype.addValues = function(onlyOnEvent, aValues) {
+nAttrMon.prototype.addValues = function(onlyOnEvent, aOrigValues) {
 	var count;
 
-	if (isUnDef(aValues)) return;
+	if (isUnDef(aOrigValues) || isUnDef(aOrigValues.attributes)) return;
+
+	var aValues = aOrigValues.attributes;
 
 	for(var key in aValues) {
 		if (key.length > 0) {
