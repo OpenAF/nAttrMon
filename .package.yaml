@@ -1,7 +1,7 @@
 author: Nuno Aguiar
 scripts:
   posterase: ''
-  postinstall: 'print(''AFPing: Since version 20160616 first parameter became URL.'');'
+  postinstall: ''
   preerase: ''
   preinstall: ''
 keywords:
@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20171227'
+version: '20171229'
 dependencies:
   openaf: '>=20171101'
 files:
@@ -80,6 +80,7 @@ files:
   - config/inputs.disabled/yaml/12.connections.yaml
   - config/objects/nInput_OSInfo.js
   - config/objects/nOutput_EmailWarnings.js
+  - config/objects/nInput_EndPoints.js
   - config/objects/nOutput_H2.js
   - config/objects/nInput_Semaphores.js
   - config/objects/nOutput_Stdout.js
@@ -202,6 +203,7 @@ filesHash:
   config/inputs.disabled/yaml/12.connections.yaml: 691345117ddd695b5493127dea0a5568a8283fe9
   config/objects/nInput_OSInfo.js: 3418957f8d9e4d47dba8dd1100d0d101337904b3
   config/objects/nOutput_EmailWarnings.js: efde17d1a4704319a2783e4995c3643e06d5f232
+  config/objects/nInput_EndPoints.js: 03084acddad1d42bd447ab5890dadac629681f96
   config/objects/nOutput_H2.js: 9f231c207510afc896de968eee3bdc3db558dd77
   config/objects/nInput_Semaphores.js: d837eae50410502438f9d2671bb5d52fb493e42b
   config/objects/nOutput_Stdout.js: 5a0d72c32e2f969fe3e27cbad64c7ccf0959aad1
