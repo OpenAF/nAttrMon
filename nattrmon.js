@@ -75,7 +75,7 @@ ow.template.addHelper("lval", (a, p) => {
 });
 ow.template.addHelper("warn", (a, p) => {
 	if (isDef(a) && a != null) {
-		var res = nattrmon.getWarnings(true).get({ title: a });
+		var res = nattrmon.getWarnings(true).getWarningByName(a);
 		if (isDef(p) && p != null && isString(p)) {
 			res = ow.obj.getPath(res, p);
 		} else {
