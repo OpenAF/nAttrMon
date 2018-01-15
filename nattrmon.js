@@ -125,6 +125,8 @@ var nAttrMon = function(aConfigPath, debugFlag) {
 	this.objPoolsCat = {};
 	this.objPoolsAssociations = {};
 	this.indexPlugThread = {};
+	this.sch = new ow.server.scheduler(); // schedule plugs thread pool
+	this.schList = {}; // schedule plugs list
 
 	var nattrmon = this;
 
@@ -584,7 +586,18 @@ nAttrMon.prototype.addValues = function(onlyOnEvent, aOrigValues) {
  */
 nAttrMon.prototype.getPlugs = function() {
 	return this.plugs;
-}
+};
+
+nAttrMon.prototype.addSch = function(aName, aCronExpr, aFunc, waitForFinish) {
+	if (isDef(this.schList[aName])) {
+		this.sch.modifyEntry(this.schList[aName], aCronExpr, aFunc, waitForFinish);
+	} else {
+		var uuid = this.sch.addEntry(aCronExpr, aFunc, waitForFinish);
+		this.schList[aName] = uuid;
+	}
+
+	return this.schList[aName];
+};
 
 nAttrMon.prototype.execPlugs = function(aPlugType) {
     for(var iPlug in this.plugs[aPlugType]) {
@@ -593,31 +606,34 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
     	var parent = this;
     	parent.thread = thread;
 
-        var uuid = thread.addThread(function(uuid) {
-        	try {
-        		var etry = parent.threadsSessions[uuid].entry;
-        		if (isDef(etry.getCron()) &&
-        			!(ow.format.cron.isCronMatch(new Date(), etry.getCron()))) {
-        			return false;
-        		}
-        		parent.debug("Executing '" + etry.getName() + "' (" + uuid + ")");
-        		var res = etry.exec(parent);
-    			parent.addValues(etry.onlyOnEvent, res);
-				parent.threadsSessions[uuid].count = now();
-				etry.touch();
-    		} catch(e) {
-    			logErr(etry.getName() + " | " + e);
-    		}
+		var uuid;
+		if (entry.aTime > 0 || isDef(entry.chSubscribe)) {
+			uuid = thread.addThread(function(uuid) {
+				try {
+					var etry = parent.threadsSessions[uuid].entry;
+					if (isDef(etry.getCron()) &&
+						!(ow.format.cron.isCronMatch(new Date(), etry.getCron()))) {
+						return false;
+					}
+					parent.debug("Executing '" + etry.getName() + "' (" + uuid + ")");
+					var res = etry.exec(parent);
+					parent.addValues(etry.onlyOnEvent, res);
+					parent.threadsSessions[uuid].count = now();
+					etry.touch();
+				} catch(e) {
+					logErr(etry.getName() + " | " + e);
+				}
 
-    		return true;
-		});
-		this.debug("Creating a thread for " + entry.getName() + " with uuid = " + uuid);
+				return true;
+			});
+			this.debug("Creating a thread for " + entry.getName() + " with uuid = " + uuid);
 
-        parent.threadsSessions[uuid] = {
-    		"entry": this.plugs[aPlugType][iPlug],
-    		"count": now()
-    	};
-    	parent.indexPlugThread[entry.getCategory() + "/" + entry.getName()] = uuid;
+			parent.threadsSessions[uuid] = {
+				"entry": this.plugs[aPlugType][iPlug],
+				"count": now()
+			};
+			parent.indexPlugThread[entry.getCategory() + "/" + entry.getName()] = uuid;
+		}
 
 		if (entry.aTime > 0) {
 			try {
@@ -657,7 +673,35 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 					$ch(entry.chSubscribe).subscribe(subs(uuid));
 				}
 			} else {
-				this.debug("Muting " + entry.getName() + "' (uuid + " + uuid + ") ");
+				if (isDef(entry.getCron())) {
+					var f = function(uuid) {
+						try {
+							var etry = parent.threadsSessions[uuid].entry;
+							if (isDef(etry.getCron()) &&
+								!(ow.format.cron.isCronMatch(new Date(), etry.getCron()))) {
+								return false;
+							}
+							parent.debug("Executing '" + etry.getName() + "' (" + uuid + ")");
+							var res = etry.exec(parent);
+							parent.addValues(etry.onlyOnEvent, res);
+							parent.threadsSessions[uuid].count = now();
+							etry.touch();
+						} catch(e) {
+							logErr(etry.getName() + " | " + e);
+						}
+			
+						return true;
+					};
+
+					uuid = this.addSch(entry.getName(), entry.getCron(), f, entry.getWaitForFinish());
+					parent.threadsSessions[uuid] = {
+						"entry": this.plugs[aPlugType][iPlug],
+						"count": now()
+					};
+					parent.indexPlugThread[entry.getCategory() + "/" + entry.getName()] = uuid;
+				} else {
+					this.debug("Muting " + entry.getName() + "' (uuid + " + uuid + ") ");
+				}
 			}
 		}
 
