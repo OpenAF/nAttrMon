@@ -56,7 +56,7 @@ nOutput_Notifications.prototype.output = function(scope, args) {
             var parent = this;
 
             selec.select((w) => {
-                if (!w.notified[parent.__notifyID] && isDef(notif.userID)) {
+                if (!nattrmon.isNotified(w.title, parent.__notifyID) && isDef(notif.userID)) {
                     // Prepare message for notification
                     var message = templify(notif.message, { warn: w });
                     try {
@@ -65,8 +65,9 @@ nOutput_Notifications.prototype.output = function(scope, args) {
                         ph.send(notif.userID, message);
 
                         // Notify that was been sent successfully
-                        w.notified[parent.__notifyID] = true;
-                        nattrmon.getWarnings(true).setWarningByName(w.title, w);
+                        //w.notified[parent.__notifyID] = true;
+                        nattrmon.setNotified(w.title, parent.__notifyID);
+                        //nattrmon.getWarnings(true).setWarningByName(w.title, w);
                     } catch(e) {
                         logErr("nOutput_Notifications: [" + stringify(notif, void 0, "") + "] " + String(e));
                     }

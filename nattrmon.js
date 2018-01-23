@@ -486,6 +486,24 @@ nAttrMon.prototype.getWarnings = function(full) {
         }
 }
 
+nAttrMon.prototype.setNotified = function(aTitle, aId, aValue) {
+	if (isUnDef(aValue)) aValue = true;
+	if (isUnDef(aId)) throw "Please provide a setNotified id";
+
+	var w = nattrmon.getWarnings(true).getWarningByName(aTitle);
+	if (isUnDef(w.notified)) w.notified = {};
+	w.notified[aId] = aValue;
+	nattrmon.getWarnings(true).setWarningByName(aTitle, w);
+};
+
+nAttrMon.prototype.isNotified = function(aTitle, aId) {
+	if (isUnDef(aId)) throw "Please provide a setNotified id";
+
+	var w = nattrmon.getWarnings(true).getWarningByName(aTitle);
+	if (isUnDef(w.notified)) return false;
+	return w.notified[aId];
+};
+
 // Attribute values management
 // ---------------------------
 
