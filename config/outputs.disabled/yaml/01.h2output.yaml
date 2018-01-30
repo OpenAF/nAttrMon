@@ -1,0 +1,8 @@
+output:
+   name         : H2 history
+   chSubscribe  : nattrmon::cvals
+   waitForFinish: true
+   onlyOnEvent  : true
+   execFrom     : nOutput_H2
+   execArgs     :
+      db: "{{NATTRMON_HOME}}/config/nattrmon_db"

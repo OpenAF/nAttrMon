@@ -2,6 +2,7 @@ var nattrmonCtgs = [];
 var nattrmonAttrsOrig = {};
 var nattrmonAttrs = [];
 var nattrmonWarns = [];
+var plugs = [];
 
 function refresh(data) {
     var attrs      = data.attributes;
@@ -55,7 +56,10 @@ function render(sce, aValue, aType) {
     }
 
     // If object
-    if (typeof aValue == 'object') {
+    var _render = (aValue) => {
+        if (typeof aValue != 'object') return aValue;
+
+        var out = "";
         if (aValue instanceof Array && aValue.length > 0) {
             var out = "<table class=\"nattributetable\"><tr>";
             for(var i in aValue[0]) {
@@ -65,20 +69,25 @@ function render(sce, aValue, aType) {
             for(var x in aValue) {
                 out += "<tr>";
                 for(var y in aValue[x]) {
-                	out += "<td class=\"nattributetablecell\">" + aValue[x][y] + "</td>";
+                	out += "<td class=\"nattributetablecell\">" + _render(aValue[x][y]) + "</td>";
                 }
                 out += "</tr>";
             }
             out += "</table>";
-            aValue = out;
         } else {
             var out = "<table class=\"nattributetable\">";
             for(var i in aValue) {
-                out += "<tr><td class=\"nattributetablecell\"><b>" + i + "</b></td><td class=\"nattributetablecell\">" + aValue[i] + "</td></tr>";
+                out += "<tr><td class=\"nattributetablecell\"><b>" + i + "</b></td><td class=\"nattributetablecell\">" + _render(aValue[i]) + "</td></tr>";
             }
             out += "</table>";
-            aValue = out;
         }
+        return out;
+    };
+
+    if (typeof aValue == 'object') {
+        var out = "";
+        out += _render(aValue);
+        aValue = out;
     }
 
     switch(aType) {

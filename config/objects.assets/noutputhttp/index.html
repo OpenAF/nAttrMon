@@ -10,6 +10,7 @@
         <script src="js/angular.min.js"></script>
         <script src="js/angular-animate.min.js"></script>
         <script src="js/nattrmon_js.js"></script>
+        <link rel="icon" type="image/png" href="/f/favicon.png" />
         <!-- Bootstrap core CSS -->
         <link href="css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="/f/css/font-awesome.min.css">
@@ -75,8 +76,8 @@
                                 refresh(d.data);
                                 $scope.ctgs = nattrmonCtgs;
                                 $scope.warnsHigh = Object.keys(nattrmonWarns['High']).length;
-                       		$scope.warnsMedium = Object.keys(nattrmonWarns['Medium']).length;
-                      		$scope.warnsLow = Object.keys(nattrmonWarns['Low']).length;
+                       		    $scope.warnsMedium = Object.keys(nattrmonWarns['Medium']).length;
+                      		    $scope.warnsLow = Object.keys(nattrmonWarns['Low']).length;
                                 $scope.loading = false;
                             });
 
@@ -129,7 +130,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="#" ng-click="startRefresh()">{{title}} - nAttrMon report</a>
+                    <a class="navbar-brand" href="#" ng-click="startRefresh()"><i class="icon-wedo-nattrmon" style="font-size:150%;color:darkorange"></i>&nbsp;&nbsp;<span style="color:darkorange">{{title}}</span> <span style="font-size:85%;">- nAttrMon report</span></a>
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right">
@@ -142,6 +143,9 @@
                         <li>
                             <a href="history.html">History</a>
                         </li>
+                        <li>
+                            <a href="plugs.html">Plugs</a>
+                        </li>                         
                     </ul>
                 </div>
             </div>
