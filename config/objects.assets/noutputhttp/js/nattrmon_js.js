@@ -38,8 +38,13 @@ function refresh(data) {
                   });
     }
 
-    var tempwarns = {};
-    for(i in warns) {
+    var tempwarns = {
+        High: [],
+        Medium: [],
+        Low: [],
+        Info: []
+    };
+    for(var i in warns) {
         tempwarns[i] = warns[i];
     }
 

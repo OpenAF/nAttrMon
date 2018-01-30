@@ -80,7 +80,7 @@
                             $scope.loading = true;
                             JsonService.getPlugs().then(function(d) {
                                 plugs = d.data.plugs;
-
+                                $scope.plugs = plugs;
                                 $scope.plugsInputs = Object.keys(plugs['inputs']).length;
                        		    $scope.plugsValidations = Object.keys(plugs['validations']).length;
                       		    $scope.plugsOutputs = Object.keys(plugs['outputs']).length;
