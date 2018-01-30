@@ -1,4 +1,4 @@
-// Author: nuno.aguiar@wedotechnologies.com
+// Author: Nuno Aguiar
 
 // Channel permissions
 // [BEGIN] -----------
@@ -20,7 +20,7 @@ var nOutput_Channels = function (aMap) {
     // Get server
     var httpd;
     if (isDef(aMap.port)) {
-      httpd = ow.loadServer().httpd.start(aMap.port);
+      httpd = ow.loadServer().httpd.start(aMap.port, aMap.host);
     } else {
       httpd = nattrmon.getSessionData("httpd");
     }
