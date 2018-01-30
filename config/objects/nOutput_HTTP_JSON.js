@@ -10,7 +10,7 @@ var nOutput_HTTP_JSON = function (aMap) {
 	if (!nattrmon.hasSessionData("httpd")) {
 		plugin("HTTPServer");
 		nattrmon.setSessionData("httpd",
-			new HTTPd(isUndefined(aPort) ? 8090 : aPort));
+			new HTTPd(isUndefined(aPort) ? 8090 : aPort), aMap.host);
 	}
 
 	// Get server
@@ -32,8 +32,13 @@ var nOutput_HTTP_JSON = function (aMap) {
 					};
 					break;
 				case "plugs":
+					var tmp = $ch("nattrmon::plugs").getAll();
 					res = {
-						plugs: $ch("nattrmon::plugs").getAll()
+						plugs: {
+							inputs: $from(tmp).equals("meta.type", "inputs").select(),
+							validations: $from(tmp).equals("meta.type", "validations").select(),
+							outputs: $from(tmp).equals("meta.type", "outputs").select(),
+						}
 					};
 					break;
 				default:
@@ -52,7 +57,7 @@ var nOutput_HTTP_JSON = function (aMap) {
 	});
 
 	nOutput.call(this, this.output);
-}
+};
 inherit(nOutput_HTTP_JSON, nOutput);
 
 nOutput_HTTP_JSON.prototype.refresh = function (scope) {
@@ -63,8 +68,8 @@ nOutput_HTTP_JSON.prototype.refresh = function (scope) {
 		"values": scope.getCurrentValues(),
 		"lastvalues": scope.getLastValues()
 	});
-}
+};
 
 nOutput_HTTP_JSON.prototype.output = function (scope, args) {
 	//this.refresh(scope);
-}
+};
