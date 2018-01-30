@@ -1,14 +1,18 @@
 /**
  * [nOutput_H2 description]
- * @param  {[type]} aDatabaseFile [description]
- * @param  {[type]} aPort         [description]
- * @param  {[type]} aRollData     [description]
- * @return {[type]}               [description]
  */
-var nOutput_H2 = function(aDatabaseFile, aPort, aRollData) {
-	this.databasefile = ow.format.string.separatorsToUnix((isUndefined(aDatabaseFile)) ? (new java.io.File(nattrmon.getConfigPath())).getAbsolutePath() + "/nattrmon.db" : aDatabaseFile);
-	this.rdata = (isUndefined(aRollData)) ? 172800 : Number(aRollData);
-	this.port = (isUndefined(aPort)) ? 19090 : Number(aPort);
+var nOutput_H2 = function(aMap) {
+	var aDatabaseFile = isDef(aMap.db) ? templify(aMap.db) : void 0;
+	var aRollData = isDef(aMap.rollData) ? aMap.rollData : void 0;
+	var aPort = isDef(aMap.port) ? aMap.port : void 0;
+	var aUser = isDef(aMap.user) ? aMap.user : "nattrmon";
+	var aPass = isDef(aMap.pass) ? aMap.pass : "nattrmon";
+
+	this.databasefile = ow.format.string.separatorsToUnix((isUnDef(aDatabaseFile)) ? (new java.io.File(nattrmon.getConfigPath())).getAbsolutePath() + "/nattrmon.db" : aDatabaseFile);
+	this.rdata = (isUnDef(aRollData)) ? 172800 : Number(aRollData);
+	this.port = (isUnDef(aPort)) ? 19090 : Number(aPort);
+	this.user = aUser;
+	this.pass = aPass;
 
 	if (!nattrmon.hasMonitoredObject("h2")) {
 		this.connect();
@@ -18,7 +22,7 @@ var nOutput_H2 = function(aDatabaseFile, aPort, aRollData) {
 
 	nattrmon.setSessionData("attribute.history", this);
 	nOutput.call(this, this.output);
-}
+};
 inherit(nOutput_H2, nOutput);
 
 /**
@@ -35,19 +39,21 @@ nOutput_H2.prototype.connect = function(force) {
 	if (!nattrmon.hasMonitoredObject("h2")) {
 		var databasefile = this.databasefile;
 		var port = this.port;
+		var parent = this;
 		nattrmon.addMonitoredObject("h2",
 			function() {
 				try {
 					af.rm(databasefile + ".lock.db");
 				} catch(e) {
 				}
-				return new DB("org.h2.Driver", "jdbc:h2:" + databasefile + ";MVCC=TRUE;auto_server=true;auto_server_port=" + port, "nattrmon", "nattrmon");
+				log("Output_H2 | Connecting to " + databasefile);
+				return new DB("org.h2.Driver", "jdbc:h2:" + databasefile + ";MVCC=TRUE;auto_server=true;auto_server_port=" + port, parent.user, parent.pass);
 			}
 		);
 	}
 
 	return nattrmon.getMonitoredObject("h2");
-}
+};
 
 /**
  * [rolldata description]
@@ -58,7 +64,7 @@ nOutput_H2.prototype.rolldata = function(aDB, rdata) {
 	aDB.us("delete ATTRIBUTE_VALUES where date_checked < dateadd('second', ?, now()) limit 10000", [- rdata ]);
 	aDB.us("delete ATTRIBUTES where last_seen < dateadd('second', ?, now()) limit 1000", [- rdata ]);
 	aDB.commit();
-}
+};
 
 /**
  * [getValuesByTime description]
@@ -78,7 +84,7 @@ nOutput_H2.prototype.getValuesByTime = function(anAttributeName, howManySecondsA
 		                   date_checked >= dateadd('second', - ?, now())\
 		                   order by date_checked desc", [anAttributeName, howManySecondsAgo ], true).results;
 
-		for(i in vals) {
+		for(var i in vals) {
 			ret.push({
 				"val"         : JSON.parse(vals[i].VAL),
 				"type"        : type,
@@ -89,7 +95,7 @@ nOutput_H2.prototype.getValuesByTime = function(anAttributeName, howManySecondsA
 		logErr("Error while getValuesByTime: " + e.message);
 	}
 	return ret;
-}
+};
 
 /**
  * [getValuesByEvents description]
@@ -109,7 +115,7 @@ nOutput_H2.prototype.getValuesByEvents = function(anAttributeName, howManyEvents
 		                   order by date_modified desc limit ? ", [ anAttributeName, howManyEventsAgo], true).results;
 		//var vals  = db.q("select distinct val, formatdatetime(date_modified, 'yyyy-MM-dd''T''HH:mm:ss.SSS''Z''') date_modified from (select val, date_modified from attribute_values where name = '" + anAttributeName + "' order by date_checked desc) where rownum <= " + howManyEventsAgo).results;
 
-		for(i in vals) {
+		for(var i in vals) {
 			ret.push({
 				"val"         : JSON.parse(vals[i].VAL),
 				"type"        : type,
@@ -120,7 +126,7 @@ nOutput_H2.prototype.getValuesByEvents = function(anAttributeName, howManyEvents
 		logErr("Error while getValuesByEvents: " + e.message);
 	}
 	return ret;
-}
+};
 
 /**
  * [exec description]
@@ -130,55 +136,53 @@ nOutput_H2.prototype.getValuesByEvents = function(anAttributeName, howManyEvents
  */
 nOutput_H2.prototype.output = function(scope, args) {
 	var db = this.connect();
-	//var db = new DB("org.h2.Driver", "jdbc:h2:" + this.databasefile + ";auto_server=true;auto_server_port=" + this.port, "nattrmon", "nattrmon");
-	//var db = new DB("org.h2.Driver", "jdbc:h2:" + this.databasefile, "nattrmon", "nattrmon");
 
 	try {
 		// Create if doesn't exist
 		var parent = this;
-		scope.thread.sync(function() {
-			db.u("create table if not exists attributes(name varchar(255) primary key, description varchar(4000), last_seen datetime)");
-			db.u("create table if not exists attribute_values(name varchar(255), val clob, date_modified datetime, date_checked datetime)");
+		sync(function() {
+			db.u("create table if not exists ATTRIBUTES(name varchar(255) primary key, description varchar(4000), last_seen datetime)");
+			db.u("create table if not exists ATTRIBUTE_VALUES(name varchar(255), val clob, date_modified datetime, date_checked datetime)");
 			db.u("create index if not exists IDX_ATTRIBUTE_VALUES on ATTRIBUTE_VALUES (NAME, DATE_MODIFIED, DATE_CHECKED)");
 
 			// Get attributes
-			var resNames = db.q("select name from attributes").results;
+			//var resNames = db.q("select name from attributes").results;
 
-			var arrAttr = scope.getAttributes(true);
-			for(var i in arrAttr) {
-				var attr = arrAttr[i];
-				if (resNames.indexOf(attr.name) < 0) {
-					var dchk = (isUndefined(attr.lastcheck)) ? null : stringify(attr.lastcheck).replace(/"/g, "");
+			//var arrAttr = scope.getAttributes(true);
+			//for(var i in arrAttr) {
+				//var attr = arrAttr[i];
+				var attr = nattrmon.getAttributes().getAttributeByName(args.k.name);
+				//if (resNames.indexOf(attr.name) < 0) {
+					var dchk = (isUnDef(attr.lastcheck)) ? null : stringify(attr.lastcheck).replace(/"/g, "");
 					db.us("merge into attributes (name, description, last_seen) key(name) values(?, ?, parsedatetime(?, 'yyyy-MM-dd\'\'T\'\'HH:mm:ss.SSS\'\'Z\'\'','en','GMT'))", [ attr.name, attr.description, dchk ]);
-					// " + attr.name + "', '" + attr.description + "', parsedatetime('" + dchk + "', 'yyyy-MM-dd\'\'T\'\'HH:mm:ss.SSS\'\'Z\'\''))");
-				}
-			}
+				//}
+			//}
 
-			for(attrid in scope.getCurrentValues()) {
-				var attrval = scope.getCurrentValues()[attrid];
-				var lastval = scope.getLastValues()[attrid];
+			//for(var args.k.name in scope.getCurrentValues()) {
+				var attrval = scope.getCurrentValues(true).get({ name: args.k.name });
+				var lastval = nattrmon.getLastValues(true).get({ name: args.k.name });
 
 				if (isDef(attrval) && isDef(attrval.date)) {
-					if (isUndefined(parent.firstTime[attrid]) || (args.onlyOnEvent && parent.see(attrid, attrval))) {
+					if (isUnDef(parent.firstTime[args.k.name]) || (args.onlyOnEvent && parent.see(args.k.name, attrval))) {
 						var dmod = stringify(attrval.date).replace(/"/g, "");
-						var dchk = scope.getAttributes().getAttributeByName(attrid);
+
 						if (isDef(dchk)) {
-							var dchk = (isDef(dchk.lastcheck) ? stringify(dchk.lastcheck).replace(/"/g, "") : "");
+							var dchk = (isDef(dchk.lastcheck) ? stringify(dchk.lastcheck).replace(/"/g, "") : null);
 							var val = stringify(attrval.val);
-							if (isDefined(val))
-								db.us("insert into attribute_values (name, val, date_modified, date_checked) values (?, ?, parsedatetime(?, 'yyyy-MM-dd\'\'T\'\'HH:mm:ss.SSS\'\'Z\'\'','en','GMT'), parsedatetime(?, 'yyyy-MM-dd\'\'T\'\'HH:mm:ss.SSS\'\'Z\'\'','en','GMT'))", [ attrid, val, dmod, dchk ]);
-							parent.firstTime[attrid] = 1;
+							if (isDef(val))
+								db.us("insert into attribute_values (name, val, date_modified, date_checked) values (?, ?, parsedatetime(?, 'yyyy-MM-dd\'\'T\'\'HH:mm:ss.SSS\'\'Z\'\'','en','GMT'), parsedatetime(?, 'yyyy-MM-dd\'\'T\'\'HH:mm:ss.SSS\'\'Z\'\'','en','GMT'))", [ args.k.name, val, dmod, dchk ]);
+							parent.firstTime[args.k.name] = 1;
 						}
 					}
 				}
-			}
+			//}
 			db.commit();
 
 			parent.rolldata(db, parent.rdata);
-		});
+		}, this);
 	} catch (e) {
-		logErr("Error while updating H2: " + stringify(e) + " - " + ((isUndefined(e.javaException)) ? "" : e.javaException.printStackTrace()));
-		if(!isUndefined(db)) {
+		logErr("Error while updating H2: " + stringify(e) + " - " + ((isUnDef(e.javaException)) ? "" : e.javaException.printStackTrace()));
+		if(!isUnDef(db)) {
 			try {
 				db.rollback();
 				db.close();
@@ -186,6 +190,4 @@ nOutput_H2.prototype.output = function(scope, args) {
 		}
 		this.connect(true);
 	}
-
-	//db.close();
-}
+};
