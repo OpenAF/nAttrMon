@@ -1,113 +1,98 @@
 var nOutput_EmailWarnings_duplicatePrevent = [];
 
-var nOutput_EmailWarnings = function(anArrayOfEmails, aSubject, aFrom, aMailServer, aPort) {
-    plugin("Email");
+// anArrayOfEmails, aSubject, aFrom, aMailServer, aPort
+// 
+var nOutput_EmailWarnings = function(aMap) {
+	plugin("Email");
 
-    if (isObject(anArrayOfEmails)) {
-      this.addresses = anArrayOfEmails.to;
-      this.subject = (isUndefined(anArrayOfEmails.subject)) ? "nAttrMon" : anArrayOfEmails.subject;
-      this.from = (isUndefined(anArrayOfEmails.from)) ? "nattrmon@wdtcloud.com" : anArrayOfEmails.from; 
-      this.mailserver = (isUndefined(anArrayOfEmails.server)) ? "rnsmtp.connectiv.local" : anArrayOfEmails.server; 
-      this.port = (isUnDef(anArrayOfEmails.port)) ? undefined : anArrayOfEmails.port;
-      this.credentials = (isUnDef(anArrayOfEmails.credentials)) ? undefined : anArrayOfEmails.credentials;
-      this.tls = anArrayOfEmails.tls;
-      this.debug = anArrayOfEmails.debug;
-    } else {
-      this.addresses = anArrayOfEmails;
-      this.subject = (isUndefined(aSubject)) ? "nAttrMon" : aSubject;
-      this.from = (isUndefined(aFrom)) ? "nattrmon@wdtcloud.com" : aFrom;
-      this.mailserver = (isUndefined(aMailServer)) ? "rnsmtp.connectiv.local" : aMailServer;
-      this.port = aPort;
-    }
+	this.addresses = [];
+	if (isArray(aMap.to)) {
+		aMap.to.forEach((v) => {
+			this.addresses.push(String(v));
+		});
+	} else {
+		this.addresses.push(String(aMap.to));
+	}
+	this.subject = (isUnDef(aMap.subject)) ? "nAttrMon" : aMap.subject;
+	this.from = (isUnDef(aMap.from)) ? "nattrmon@openaf.io" : aMap.from;
+	this.mailserver = (isUnDef(aMap.server)) ? "my.mail.server.com" : aMap.server;
+	this.port = (isUnDef(aMap.port)) ? void 0 : aMap.port;
+	this.credentials = (isUnDef(aMap.credentials)) ? void 0 : aMap.credentials;
+	this.warnTypes = (isUnDef(aMap.warnTypes)) ? [ "High" ] : aMap.warnTypes;
+	this.tls = aMap.tls;
+	this.debug = aMap.debug;
 
-    this.first = true;
+	this.first = (isUnDef(aMap.dontAvoidStartEmails)) ? true : aMap.dontAvoidStartEmails;
 
-    nOutput.call(this, this.output);
-}
+	if (this.debug) sprint(this);
+	nOutput.call(this, this.output);
+};
 inherit(nOutput_EmailWarnings, nOutput);
 
-nOutput_EmailWarnings.prototype.addDuplicatePrevent = function(aHash) {
-	nOutput_EmailWarnings_duplicatePrevent.push(sha1(aHash) + "");
-	if (nOutput_EmailWarnings_duplicatePrevent.length > 50) {
-		nOutput_EmailWarnings_duplicatePrevent.reverse().pop();
-	}
-}
+nOutput_EmailWarnings.prototype.output = function (scope, args, meta) {
+	if(isUnDef(meta.chSubscribe) && meta.chSubscribe == "nattrmon::warnings") 
+		throw "nOutput_EmailWarnings only supports chSubscribe: nattrmon::warnings";
 
-nOutput_EmailWarnings.prototype.isDuplicate = function(aHash) {
-	if (nOutput_EmailWarnings_duplicatePrevent.indexOf(sha1(aHash) + "") > 0)
-		return true;
-	else
-		return false;
-}
-
-nOutput_EmailWarnings.prototype.output = function(scope, args, meta) {
 	var owarns = scope.getWarnings(false);
-	var warns = clone(owarns);
- 	var highs = warns[nWarning.LEVEL_HIGH];
-        var instanceId = sha1(meta.aName);
+	var instanceId = sha1(meta.aName);
 
-    // Avoids the first email right out of starting  
-    if (this.first) {
-       this.first = false;
-       return;
-    }   
- 
-    if (isUndefined(highs) || 
-    	highs.length == 0 ||
-    	$from(highs).equals("notified." + instanceId, true).count() == highs.length) return;
+	// Avoids the first email right out of starting  
+	if (this.first) {
+		this.first = false;
+		return;
+	}
 
 	var email = new Email(this.mailserver, this.from, (isDef(this.credentials) && !this.tls), this.tls, true);
-        if (isDef(this.port)) email.setPort(this.port);
-        if (isDef(this.credentials)) {
-		//email.setSecure(true, this.tls);
+	if (isDef(this.port)) email.setPort(this.port);
+	if (isDef(this.credentials)) {
 		email.setCredentials(this.credentials.user, this.credentials.password);
 	}
-    	if (isDef(this.debug) && this.debug) email.getEmailObj().setDebug(true);
+	if (isDef(this.debug) && this.debug) email.getEmailObj().setDebug(true);
 
 	var count = 0;
 	var mhash = this.aSubject + this.from.toSource();
 
-        var part = "<h2>" + this.subject + "</h2>";
-        for(var i in {"High":1, "Medium":2, "Low":3}) {
-			part += "<h3>" + i + "</h3><table>";
-			for(var j in warns[i]) {
-				if(isUndefined(owarns[i][j]["notified"][instanceId]) || 
-				   !owarns[i][j]["notified"][instanceId]) {
-					var color = "";
-	                
-	                if(i == 'High') color = "red";
-	                if(i == 'Medium') color = "yellow";
+	var part = "<h2>" + this.subject + "</h2>";
+	for (var i in {
+			"High"  : 1,
+			"Medium": 2,
+			"Low"   : 3,
+			"Info"  : 4
+		}) {
+		part += "<h3>" + i + "</h3><table>";
+		for (var j in owarns[i]) {
+			if (!nattrmon.isNotified(owarns[i][j].title, instanceId) && 
+			    this.warnTypes.indexOf(owarns[i][j].level) >= 0) {
+				
+				var color = "";
 
-					part = part + "<tr><td bgcolor=\"" + color + "\"><b>" + warns[i][j].title + "</b></td><td><i>" + warns[i][j].description + "</i></td><td><small><b>Updated</b>:<br>" + warns[i][j].lastupdate + "</small></td><td><small><b>Created:</b><br>" + warns[i][j].createdate + "</small></td></tr>";
-					mhash += warns[i][j].title + warns[i][j].description;
+				if (i == 'High')   color = "red";
+				if (i == 'Medium') color = "yellow";
 
-					var nwarn = nattrmon.getWarnings(true).getWarningByName(owarns[i][j].title); 
- 					nwarn["notified"][instanceId] = true;
-                                        nattrmon.getWarnings(true).setWarningByName(nwarn.title, nwarn);
- 
-					count++;
-				}
+				part = part + "<tr><td bgcolor=\"" + color + "\"><b>" + owarns[i][j].title + "</b></td><td><i>" + owarns[i][j].description + "</i></td><td><small><b>Updated</b>:<br>" + owarns[i][j].lastupdate + "</small></td><td><small><b>Created:</b><br>" + owarns[i][j].createdate + "</small></td></tr>";
+				mhash += owarns[i][j].title + owarns[i][j].description;
+
+				nattrmon.setNotified(owarns[i][j].title, instanceId);
+				count++;
 			}
-			part += "</table>";
-        }
+		}
+		part += "</table>";
+	}
 
-    if (count == 0) return;
-	var message = nOutput_EmailWarnings.htmlTemplate.replace(/%%REPLACE_HERE%%/, part);
+	if (count == 0) return;
+	var message = templify(nOutput_EmailWarnings.htmlTemplate, { part: part });
 
-	if (this.isDuplicate(mhash))
-		return;
-	else
-		this.addDuplicatePrevent(mhash);
+	email.setHTML(message);
+	try {	
+		if (this.debug) sprint(message);
+		email.send(this.subject, message, this.addresses, [], [], this.from);
 
-        /*email.setFrom(this.from);
-        email.addTo(this.addresses);
-        email.setSubject(this.subject);
-        email.setMessage(message);*/
- 	    email.setHTML(message);
-        email.send(this.subject, message, this.addresses, [], [], this.from);
-
-	log("Email sent to " + this.addresses.join(","));
-}
+		log("Email sent to " + this.addresses.join(","));
+	} catch(e) {
+		if (this.debug) e.javaException.printStackTrace();
+		throw e;
+	}
+};
 
 nOutput_EmailWarnings.htmlTemplate = "<html><style type=\"text/css\">\
 body {background-color: #ffffff; color: #000000; }\
@@ -135,5 +120,5 @@ hr {background-color: #cccccc; border: 0px; height: 1px; color: #000000;}\
 .pagelist  { color: #999999;}\
 a.pagelist { color: #990000;}\
 </style><body>\
-%%REPLACE_HERE%%\
+{{{part}}}\
 </body></html>";
