@@ -145,9 +145,9 @@ nInput_RunningFlows.prototype.input = function(scope, args) {
 												logErr(e);
 												throw e;
 											}
-											arr.push({ "Category": flowCtgs[j], "Flow": xml.item[ii].label.toString(), "Version": map2.version, "Run ID": map2.runId, "User": map2.user, "Date": this.convertRAIDDates(map2.date), "Exception": admres[0].EXCEPTION});
+											arr.push({ "Category": flowCtgs[j], "Flow": xml.item[ii].label.toString(), "Version": map2.version, "Run ID": map2.runId, "User": map2.user, "Date": parent.convertRAIDDates(map2.date), "Exception": admres[0].EXCEPTION});
 										} else {
-											arr.push({ "Category": flowCtgs[j], "Flow": xml.item[ii].label.toString(), "Version": map2.version, "Run ID": map2.runId, "User": map2.user, "Date": this.convertRAIDDates(map2.date)});
+											arr.push({ "Category": flowCtgs[j], "Flow": xml.item[ii].label.toString(), "Version": map2.version, "Run ID": map2.runId, "User": map2.user, "Date": parent.convertRAIDDates(map2.date)});
 										}
 									} catch(e) {
 										logErr("Error while retrieving flow executions using '" + parent.monitoredObjectKey + "': " + e.message);
