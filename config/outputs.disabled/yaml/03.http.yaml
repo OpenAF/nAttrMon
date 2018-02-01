@@ -1,3 +1,5 @@
 output:
   name         : Output HTTP
   execFrom     : nOutput_HTTP
+  execArgs     :
+     title: Some title
