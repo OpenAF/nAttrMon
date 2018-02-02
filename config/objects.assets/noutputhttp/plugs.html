@@ -33,7 +33,7 @@
                 };
             });
 
-			nattrmonApp.service('JsonService', function($http) {
+            nattrmonApp.service('JsonService', function($http) {
                 this.getJson = function() {
                     return $http.get('/json').then(function(result) {
                         return result;
@@ -48,15 +48,18 @@
             });
 
             nattrmonApp.controller('ctl_nattrmon', function($scope, $sce, $http, $interval, MetaService, JsonService) {
-                var reftime = JsonService.getPlugs();
+                var reftime = MetaService.getMeta();
                 reftime.then(function(data) {
                     var refreshTimeout = data.data.refresh;
                     $scope.refreshActive = false;
                     $scope.loading = true;
 
                     JsonService.getPlugs().then(function(d) {
+                        refresh(d.data);
+
                         plugs = d.data.plugs;
                         $scope.plugs = plugs;
+
                         try { $scope.plugsInputs = Object.keys(plugs['Inputs']).length; }
                          catch(e) { $scope.plugsInputs = 0; };
                         try { $scope.plugsValidations = Object.keys(plugs['Validations']).length; }
@@ -79,11 +82,12 @@
 
                             $scope.loading = true;
                             JsonService.getPlugs().then(function(d) {
+				refresh(d.data);
                                 plugs = d.data.plugs;
                                 $scope.plugs = plugs;
                                 $scope.plugsInputs = Object.keys(plugs['inputs']).length;
-                       		    $scope.plugsValidations = Object.keys(plugs['validations']).length;
-                      		    $scope.plugsOutputs = Object.keys(plugs['outputs']).length;
+                       		$scope.plugsValidations = Object.keys(plugs['validations']).length;
+                      		$scope.plugsOutputs = Object.keys(plugs['outputs']).length;
                                 $scope.loading = false;
                             });
 
@@ -95,7 +99,7 @@
                     $scope.stopRefresh = function() {
                         $scope.loading = false;
                         if (angular.isDefined(stop)) {
-                        	$interval.cancel(dataref);
+                            $interval.cancel(dataref);
                             dataref = undefined;
                         }
 
@@ -115,8 +119,8 @@
                     });
 
                     $scope.render = function(aValue, aType) {
-						return render($sce, aValue, aType);
-            		}
+			return render($sce, aValue, aType);
+                    }
 
                     angular.element(document).ready(function () {
                         $scope.startRefresh();

@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20180131'
+version: '20180201'
 dependencies:
   openaf: '>=20180130'
 files:
@@ -195,10 +195,10 @@ filesHash:
   config/objects/nInput_FilesystemCount.js: daf3bd9806156dd16a0ac19692290d8b720fc0f9
   config/objects/nInput_FMSRuleStatus.js: a5e4f9a505865b394a81ae4bbbdd839c91d07902
   config/objects/nInput_IMMemory.js: 1b3570cb3c64005c6b731f837c0684cd22cb5403
-  config/objects/nInput_LogErrorAgg.js: 149f6b0a61a806a0d3ffcf2975bb151f0a94317f
+  config/objects/nInput_LogErrorAgg.js: 29b9201607432b841f41871a83475d9a25409215
   config/objects/nInput_OSInfo.js: 3418957f8d9e4d47dba8dd1100d0d101337904b3
   config/objects/nInput_RAIDMemory.js: bf7945d3af630132abf94f737524f38b8a4f74bd
-  config/objects/nInput_RunningFlows.js: f21d3f64fc10348a5f7297aeae439c25bc5c68f0
+  config/objects/nInput_RunningFlows.js: 578e1d231ee304d5b86f569e31f5ea95b04bccfd
   config/objects/nInput_Semaphores.js: f7dbeabb7e1baebef64fa09a9a9fd68e59026aa2
   config/objects/nInput_Sessions.js: 0a68a945ba6c4b98d139b8c666c275c4fc716f81
   config/objects/nInput_Shell.js: de4e651212ce678428caaa606fcec129b89a03bc
@@ -216,12 +216,12 @@ filesHash:
   config/objects/nValidation_Semaphores.js: 97b6c1850b80d95cc92c1c50b05fdfa26467fd94
   config/objects/nValidation_Yellows.js: 942478fcd710e392add0b6ef6349ef51a895b764
   config/objects.assets/noutputemailwarnings/logo.png: ee5366a3aa207c69d5139e04e7a4523078b974ba
-  config/objects.assets/noutputemailwarnings/warningEmailTemplate.hbs: 8f77bfb2e4190541c3f748aed264854496aaf49d
+  config/objects.assets/noutputemailwarnings/warningEmailTemplate.hbs: 7b12389806d2a3a2bf6c990dd8b73a115ba76c46
   config/objects.assets/noutputhttp/css/bootstrap-theme.min.css: c277f5dc2e08fa885e401ee367ac6c0eefa7a6dc
   config/objects.assets/noutputhttp/css/bootstrap.min.css: 12028adaae10f0c43445362df5481aeec8bb1153
   config/objects.assets/noutputhttp/css/font-awesome.min.css: 4c2c5f5f6cc86d775a44b944661e038b7be98149
   config/objects.assets/noutputhttp/css/nattrmon.css: d7d83aa0d973efa4c78b6b9a40f25863e2732563
-  config/objects.assets/noutputhttp/dashboard.css: 9bab6b06cc427f9bd2908387e49e65f542c99764
+  config/objects.assets/noutputhttp/dashboard.css: 96d9d77e456868b0797afe0ce344be026315d535
   config/objects.assets/noutputhttp/favicon.png: 1ad74b6b72424d71c71da6f832ca8f4e7ac5d632
   config/objects.assets/noutputhttp/fonts/fontawesome-webfont.eot: b3c2f08e73320135b69c23a3908b87a12053a2f6
   config/objects.assets/noutputhttp/fonts/fontawesome-webfont.svg: f346b8b3df147e4059e1a7d66c52c9a6e1cec3e8
@@ -237,18 +237,18 @@ filesHash:
   config/objects.assets/noutputhttp/fonts/icon.svg: 3890f01fd40b7ac222f232f7ee7ac9f43a249953
   config/objects.assets/noutputhttp/fonts/icon.ttf: 35f955b5810ecdddfdcf3d6c0140186882a19bdb
   config/objects.assets/noutputhttp/fonts/icon.woff: 24762bf06bbde956f97836f84d9af098f237c44f
-  config/objects.assets/noutputhttp/history.html: 7466aa4f11441ada1932f39c055ac0c451ed0219
-  config/objects.assets/noutputhttp/index.html: 3ca4241f7ca516d7ee5804941e5034dc960d299e
-  config/objects.assets/noutputhttp/js/angular-animate.min.js: 48ceb01a73169491d532151456b4004cb13446d8
-  config/objects.assets/noutputhttp/js/angular.min.js: d2e5e39be85f51c828be35b20d877f6b4c101add
-  config/objects.assets/noutputhttp/js/bootstrap.min.js: e2ddfe5a574c29f39b511aada1bd85e0ba60fa70
+  config/objects.assets/noutputhttp/history.html: ccb80e5a27255e40e6ca2d7c585b94adccccd91c
+  config/objects.assets/noutputhttp/index.html: 1a1e34b48e68e6b88da0ca34011a6e871fd4f4ce
+  config/objects.assets/noutputhttp/js/angular-animate.min.js: 648e2ca79c0c074b2b61042e91d31b353ad290d3
+  config/objects.assets/noutputhttp/js/angular.min.js: d0e3fccc46957eeaaf5611075a2015b410b64725
+  config/objects.assets/noutputhttp/js/bootstrap.min.js: 253711c6d825de55a8360552573be950da180614
   config/objects.assets/noutputhttp/js/holder.min.js: c1ad1dcfebf4c1770d40fc5d7bc46ca692d12822
-  config/objects.assets/noutputhttp/js/ie10-viewport-bug-workaround.js: f580bb4a182612f728cdef6ab2fd5e417879980b
-  config/objects.assets/noutputhttp/js/jquery.min.js: b63bd0a78caf8effb1061adcde124376de49c607
-  config/objects.assets/noutputhttp/js/nattrmon_js.js: 228365498dd4ce289d03965137921eef73d9cd86
-  config/objects.assets/noutputhttp/js/retina.min.js: db4bf8404dbd9900faada058ba0fdfeaf6aab23b
-  config/objects.assets/noutputhttp/now.html: 30167729a394e65bc7a9c5765b1642ed813fc197
-  config/objects.assets/noutputhttp/plugs.html: 6788c8e45dd1784c91076db59255768172f97f7a
+  config/objects.assets/noutputhttp/js/ie10-viewport-bug-workaround.js: b133cb4aaff8f32026190281d8a27456eace82b1
+  config/objects.assets/noutputhttp/js/jquery.min.js: 7ed710bf2b3a08cee23950790208683b0346fb1c
+  config/objects.assets/noutputhttp/js/nattrmon_js.js: c926c6a8003f32bc8afcc3b6b3ed0330d5a9cc49
+  config/objects.assets/noutputhttp/js/retina.min.js: da44a409a0907960a6526cf35807ecaf61059223
+  config/objects.assets/noutputhttp/now.html: eaf96e43ea90311c6aa34283a264cf27a125a391
+  config/objects.assets/noutputhttp/plugs.html: 362b62241ae40c3208c2fc8935d894ac8d370810
   config/outputs/add_files_from_outputs_disabled.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
   config/outputs.disabled/00.init.js: 71ba0fb4fffa284500e9deb90213bfed66134568
   config/outputs.disabled/1.h2output.js: a2dce3c2e443ca52f3344aca3529a17a064b3a51
@@ -280,7 +280,7 @@ filesHash:
   lib/nvalidation.js: 419ebc9daa5149344d45a0563e7ae5509da1970b
   lib/nwarning.js: 3bc36903e8e7f9be49b3f65352fe1dfddbe5b2aa
   lib/nwarnings.js: d3cbf26c8e834a2151390505f3b880624ecbfc71
-  nattrmon.js: b141e302d2b573143617dbfafbb2d5b60a9fa48b
+  nattrmon.js: 1e161289db9e9c95a610d284fc56e008bc44489c
   README.md: 648ce4e29bbdc7b99f5cf8734cb1a7f0657789c7
   tests/inputDBTest.yml: c38616606dc5956e449189d11f8e661170f94dfb
   tests/inputShellTest.yml: ce643955982cb16b53a8843acd3549466e5cddf5
