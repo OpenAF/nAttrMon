@@ -39,6 +39,7 @@ text-align: center;
 	width: 1%;
 }
 .nwarning_Low {
+	background-color: lightblue;
 	white-space: nowrap;
 	width: 1%;
 }

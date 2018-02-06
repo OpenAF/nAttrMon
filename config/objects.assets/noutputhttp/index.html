@@ -193,8 +193,9 @@
                         <table class="table table-striped">
                             <tbody>
                                 <tr ng-repeat="a in warns['High'] | orderBy: 'lastupdate'">
-                                    <td align="right" class="nwarning_High">
-                                        <small><b><i class="fa fa-exclamation-circle fa-2x"></i><br>{{a.title}}</b></small>
+                                    <td style="width: 5px; padding-left: 0px;padding-right: 0px;" class="nwarning_High"></td>
+                                    <td align="left" bgcolor="#f0f0f0"'>
+                                        <small><b><i class="fa fa-exclamation-circle fa-2x" style="font-size: 15px"></i>&nbsp;&nbsp;{{a.title}}</b></small>
                                     </td>
                                     <td ng-bind-html="render(a.description, 'desc')"></td>
                                     <td align="right" style="white-space: nowrap; width: 1%">
@@ -210,8 +211,9 @@
                         <table class="table table-striped">
                             <tbody>
                                 <tr ng-repeat="a in warns['Medium'] | orderBy: 'lastupdate'">
-                                    <td align="right" class="nwarning_Medium">
-                                        <small><b><i class="fa fa-exclamation-triangle fa-2x"></i><br>{{a.title}}</b></small>
+                                    <td style="width: 5px; padding-left: 0px;padding-right: 0px;" class="nwarning_Medium"></td>
+                                    <td align="left" bgcolor="#f0f0f0"'>
+                                        <small><b><i class="fa fa-exclamation-triangle fa-2x" style="font-size: 15px"></i>&nbsp;&nbsp;{{a.title}}</b></small>
                                     </td>
                                     <td ng-bind-html="render(a.description, 'desc')"></td>
                                     <td align="right" style="white-space: nowrap; width: 1%">
@@ -227,7 +229,8 @@
                         <table class="table table-striped">
                             <tbody>
                                 <tr ng-repeat="a in warns['Low'] | orderBy: 'lastupdate'">
-                                    <td align="right" class="nwarning_Low">
+                                    <td style="width: 5px; padding-left: 0px;padding-right: 0px;" class="nwarning_Low"></td>
+                                    <td align="left" bgcolor="#f0f0f0"'>
                                         <small><b>{{a.title}}</b></small>
                                     </td>
                                     <td ng-bind-html="render(a.description, 'desc')"></td>
@@ -245,7 +248,8 @@
                         <table class="table table-striped">
                             <tbody>
                                 <tr ng-repeat="a in warns['Info'] | orderBy: 'lastupdate'">
-                                    <td align="right" class="nwarning_Info">
+                                    <td style="width: 5px; padding-left: 0px;padding-right: 0px;" class="nwarning_Info"></td>
+                                    <td align="left" bgcolor="#f0f0f0"'>
                                         <small><b>{{a.title}}</b></small>
                                     </td>
                                     <td ng-bind-html="render(a.description, 'desc')"></td>
