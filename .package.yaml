@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20180205'
+version: '20180206'
 dependencies:
   openaf: '>=20180130'
 files:
@@ -203,7 +203,7 @@ filesHash:
   config/objects/nInput_Sessions.js: 0a68a945ba6c4b98d139b8c666c275c4fc716f81
   config/objects/nInput_Shell.js: de4e651212ce678428caaa606fcec129b89a03bc
   config/objects/nOutput_Channels.js: 02f48d8ff9f9a281fcd488869169cbb730209133
-  config/objects/nOutput_EmailWarnings.js: 76a45f64096a2d645d623aead790726d01419326
+  config/objects/nOutput_EmailWarnings.js: 5475f2828ef4f72dfca33d647945e094a9ffd3b1
   config/objects/nOutput_H2.js: d4b2182a8acf34caf4408be7048826915511ccf2
   config/objects/nOutput_HTTP.js: e0e365cd54a8e70729f1076899c5009422a004ab
   config/objects/nOutput_HTTP_JSON.js: a8f33d05e5a7f33e6d97ce5096b7906f63d31787
@@ -220,7 +220,7 @@ filesHash:
   config/objects.assets/noutputhttp/css/bootstrap-theme.min.css: c277f5dc2e08fa885e401ee367ac6c0eefa7a6dc
   config/objects.assets/noutputhttp/css/bootstrap.min.css: 12028adaae10f0c43445362df5481aeec8bb1153
   config/objects.assets/noutputhttp/css/font-awesome.min.css: 4c2c5f5f6cc86d775a44b944661e038b7be98149
-  config/objects.assets/noutputhttp/css/nattrmon.css: d7d83aa0d973efa4c78b6b9a40f25863e2732563
+  config/objects.assets/noutputhttp/css/nattrmon.css: 0055ecbcf5fde61529f82b1e250bf57cd29cc4d0
   config/objects.assets/noutputhttp/dashboard.css: 96d9d77e456868b0797afe0ce344be026315d535
   config/objects.assets/noutputhttp/favicon.png: 1ad74b6b72424d71c71da6f832ca8f4e7ac5d632
   config/objects.assets/noutputhttp/fonts/fontawesome-webfont.eot: b3c2f08e73320135b69c23a3908b87a12053a2f6
@@ -237,8 +237,8 @@ filesHash:
   config/objects.assets/noutputhttp/fonts/icon.svg: 3890f01fd40b7ac222f232f7ee7ac9f43a249953
   config/objects.assets/noutputhttp/fonts/icon.ttf: 35f955b5810ecdddfdcf3d6c0140186882a19bdb
   config/objects.assets/noutputhttp/fonts/icon.woff: 24762bf06bbde956f97836f84d9af098f237c44f
-  config/objects.assets/noutputhttp/history.html: ccb80e5a27255e40e6ca2d7c585b94adccccd91c
-  config/objects.assets/noutputhttp/index.html: 1a1e34b48e68e6b88da0ca34011a6e871fd4f4ce
+  config/objects.assets/noutputhttp/history.html: 7950ea78ea270ef8aa44c37e289500659dc6982f
+  config/objects.assets/noutputhttp/index.html: ab9dfe31bf85d03c4bee22ccc90c82f46754f983
   config/objects.assets/noutputhttp/js/angular-animate.min.js: 648e2ca79c0c074b2b61042e91d31b353ad290d3
   config/objects.assets/noutputhttp/js/angular.min.js: d0e3fccc46957eeaaf5611075a2015b410b64725
   config/objects.assets/noutputhttp/js/bootstrap.min.js: 253711c6d825de55a8360552573be950da180614
@@ -247,7 +247,7 @@ filesHash:
   config/objects.assets/noutputhttp/js/jquery.min.js: 7ed710bf2b3a08cee23950790208683b0346fb1c
   config/objects.assets/noutputhttp/js/nattrmon_js.js: c926c6a8003f32bc8afcc3b6b3ed0330d5a9cc49
   config/objects.assets/noutputhttp/js/retina.min.js: da44a409a0907960a6526cf35807ecaf61059223
-  config/objects.assets/noutputhttp/now.html: eaf96e43ea90311c6aa34283a264cf27a125a391
+  config/objects.assets/noutputhttp/now.html: 5fd98ef97f2411825097bda4dfe31997a498caaa
   config/objects.assets/noutputhttp/plugs.html: 362b62241ae40c3208c2fc8935d894ac8d370810
   config/outputs/add_files_from_outputs_disabled.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
   config/outputs.disabled/00.init.js: 71ba0fb4fffa284500e9deb90213bfed66134568
@@ -278,9 +278,9 @@ filesHash:
   lib/noutput.js: 097a89ae2ab12cb28d88034444a72d368464d14c
   lib/nplug.js: 93e2ac5b530dd7501ea78b0563869cbacfc515ba
   lib/nvalidation.js: 419ebc9daa5149344d45a0563e7ae5509da1970b
-  lib/nwarning.js: 3bc36903e8e7f9be49b3f65352fe1dfddbe5b2aa
+  lib/nwarning.js: 9be450128b70148f3bea179b14567c496900d4c7
   lib/nwarnings.js: d3cbf26c8e834a2151390505f3b880624ecbfc71
-  nattrmon.js: 1e161289db9e9c95a610d284fc56e008bc44489c
+  nattrmon.js: d066d9ba98ad8c6e64653fb84535db03fb4e3d26
   README.md: 648ce4e29bbdc7b99f5cf8734cb1a7f0657789c7
   tests/inputDBTest.yml: c38616606dc5956e449189d11f8e661170f94dfb
   tests/inputShellTest.yml: ce643955982cb16b53a8843acd3549466e5cddf5
