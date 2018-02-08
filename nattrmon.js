@@ -44,7 +44,7 @@ loadLodash();
 // nAttrMon template helpers -----------------------------------------------------------------
 // -------------------------------------------------------------------------------------------
 
-ow.template.addHelper("attr", (a, p) => {
+ow.template.addHelper("attr", (a, p, isN) => {
 	if (isDef(a) && a != null) {
 		var res = nattrmon.getAttributes().getAttributeByName(a);
 		if (isDef(p) && p != null && isString(p)) {
@@ -54,10 +54,10 @@ ow.template.addHelper("attr", (a, p) => {
 		}
 		return res;
 	} else {
-		return null;
+		return (isString(isN) ? isN : null);
 	}
 });
-ow.template.addHelper("cval", (a, p) => {
+ow.template.addHelper("cval", (a, p, isN) => {
 	if (isDef(a) && a != null) {
 		var res = nattrmon.getCurrentValues(true).get({ name: a });
 		if (isDef(p) && p != null && isString(p)) {
@@ -67,10 +67,10 @@ ow.template.addHelper("cval", (a, p) => {
 		}
 		return res;
 	} else {
-		return null;
+		return (isString(isN) ? isN : null);
 	}
 });
-ow.template.addHelper("lval", (a, p) => {
+ow.template.addHelper("lval", (a, p, isN) => {
 	if (isDef(a) && a != null) {
 		var res = nattrmon.getLastValues(true).get({ name: a });
 		if (isDef(p) && p != null && isString(p)) {
@@ -80,10 +80,10 @@ ow.template.addHelper("lval", (a, p) => {
 		}
 		return res;
 	} else {
-		return null;
+		return (isString(isN) ? isN : null);
 	}
 });
-ow.template.addHelper("warn", (a, p) => {
+ow.template.addHelper("warn", (a, p, isN) => {
 	if (isDef(a) && a != null) {
 		var res = nattrmon.getWarnings(true).getWarningByName(a);
 		if (isDef(p) && p != null && isString(p)) {
@@ -93,7 +93,7 @@ ow.template.addHelper("warn", (a, p) => {
 		}
 		return res;
 	} else {
-		return null;
+		return (isString(isN) ? isN : null);
 	}
 });
 
