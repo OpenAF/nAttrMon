@@ -1,10 +1,11 @@
 load("nattrmonTester.js");
 let NATTRMON_SERVER_IP = "127.0.0.1";
 let NATTRMON_CHS_PORT  = "8090";
+let NATTRMON_CONFIG    = "../config";
 
 // INITs
 // -----
-var nattrmon = new nAttrMon("http://nattrmon:nattrmon@" + NATTRMON_SERVER_IP + ":" + NATTRMON_CHS_PORT);
+var nattrmon = new nAttrMon("http://nattrmon:nattrmon@" + NATTRMON_SERVER_IP + ":" + NATTRMON_CHS_PORT, NATTRMON_CONFIG);
 $ch("pres").createRemote("http://nattrmon:nattrmon@" + NATTRMON_SERVER_IP + ":" + NATTRMON_CHS_PORT + "/chs/pres");
 $ch("pros").createRemote("http://nattrmon:nattrmon@" + NATTRMON_SERVER_IP + ":" + NATTRMON_CHS_PORT + "/chs/pros");
 $ch("ldap").createRemote("http://nattrmon:nattrmon@" + NATTRMON_SERVER_IP + ":" + NATTRMON_CHS_PORT + "/chs/ldap");
