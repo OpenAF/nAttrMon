@@ -513,7 +513,7 @@ nAttrMon.prototype.isNotified = function(aTitle, aId) {
 	if (isUnDef(aId)) throw "Please provide a setNotified id";
 
 	var w = nattrmon.getWarnings(true).getWarningByName(aTitle);
-	if (isUnDef(w.notified)) return false;
+	if (isUnDef(w) || isUnDef(w.notified)) return false;
 	return w.notified[aId];
 };
 

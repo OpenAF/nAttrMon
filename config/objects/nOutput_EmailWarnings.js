@@ -27,6 +27,8 @@ var nOutput_EmailWarnings = function(aMap) {
 	this.lock = false;
 
 	this.first = (isUnDef(aMap.dontAvoidStartEmails)) ? true : aMap.dontAvoidStartEmails;
+	this.startTime = new Date();
+	this.firstGrace = (isUnDef(aMap.firstGrace)) ? void 0 : aMap.firstGrace;	
 
 	if (this.debug) sprint(this);
 	nOutput.call(this, this.output);
@@ -41,7 +43,11 @@ nOutput_EmailWarnings.prototype.output = function (scope, args, meta) {
 
 	// Avoids the first email right out of starting  
 	if (this.first) {
-		this.first = false;
+		if (isDef(this.firstGrace)) {
+			if (ow.format.dateDiff.inSeconds(this.startTime) >= this.firstGrace) this.first = false;
+		} else {
+			this.first = false;
+		}
 		return;
 	}
 
@@ -53,6 +59,8 @@ nOutput_EmailWarnings.prototype.output = function (scope, args, meta) {
 	var shouldEmail = false;
 	for(var wsi in ws) {
 		var shouldEval = true;
+		if (isUnDef(ws[wsi]) || isUnDef(ws[wsi].level) || isUnDef(ws[wsi].title)) continue;
+        if (isUnDef(owarns[ws[wsi].level]) || isUnDef(owarns[ws[wsi].level][ws[wsi].title])) continue;
 		if (isDef(this.include) && isArray(this.include) && this.include.indexOf(ws[wsi].title) < 0) shouldEval = false;
 		if (isDef(this.exclude) && isArray(this.exclude) && this.exclude.indexOf(ws[wsi].title) >= 0) shouldEval = false;
 		if (shouldEval && !nattrmon.isNotified(ws[wsi].title, this.instanceId) && this.warnTypes.indexOf(ws[wsi].level) >= 0) {
@@ -93,18 +101,20 @@ nOutput_EmailWarnings.prototype.output = function (scope, args, meta) {
 				var list = [];
 
 				for (var j in owarns[i]) {
-					var shouldEval = true;
-					if (isDef(this.include) && isArray(this.include) && this.include.indexOf(owarns[i][j].title) < 0) shouldEval = false;
-					if (isDef(this.exclude) && isArray(this.exclude) && this.exclude.indexOf(owarns[i][j].title) >= 0) shouldEval = false;
+					if (isDef(owarns[i][j])) {
+						var shouldEval = true;
+						if (isDef(this.include) && isArray(this.include) && this.include.indexOf(owarns[i][j].title) < 0) shouldEval = false;
+						if (isDef(this.exclude) && isArray(this.exclude) && this.exclude.indexOf(owarns[i][j].title) >= 0) shouldEval = false;
 
-					if (shouldEval) {
-						list.push(owarns[i][j]);
+						if (shouldEval) {
+							list.push(owarns[i][j]);
 
-						if (!nattrmon.isNotified(owarns[i][j].title, this.instanceId) && 
-							this.warnTypes.indexOf(owarns[i][j].level) >= 0)
-								nattrmon.setNotified(owarns[i][j].title, this.instanceId);
+							if (!nattrmon.isNotified(owarns[i][j].title, this.instanceId) && 
+								this.warnTypes.indexOf(owarns[i][j].level) >= 0)
+									nattrmon.setNotified(owarns[i][j].title, this.instanceId);
 
-						count++;
+							count++;
+						}
 					}
 				}
 

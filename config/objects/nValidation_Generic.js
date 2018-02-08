@@ -79,7 +79,7 @@ nValidation_Generic.prototype.checkEntry = function(ret, k, v, args) {
 
             for (var vv in vals) {
                 var val;
-                if (check.map) { val = this.pathMapper(check.map)(vals[vv]); print(val);} else val = vals[vv];
+                if (check.map) { val = this.pathMapper(check.map)(vals[vv]); } else val = vals[vv];
 
                 if (isUnDef(val)) {
                     if (check.debug) { sprint(merge(v, {
@@ -141,7 +141,7 @@ nValidation_Generic.prototype.checkEntry = function(ret, k, v, args) {
                         if (af.eval(expr)) evalCond(true); else evalCond(false);
                     } catch(e) {
                         evalCond(false);
-                        logWarn("Couldn't evalute expression: " + check.expr + " for attribute " + stringify(v, undefined, "") + "");
+                        logWarn("Couldn't evalute expression: " + check.expr + " for attribute " + stringify(v, undefined, "") + " [" + String(e) + "]");
                     }
 
                     // Prepare warning data
