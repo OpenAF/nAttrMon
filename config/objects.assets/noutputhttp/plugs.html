@@ -33,12 +33,18 @@
                 };
             });
 
-			nattrmonApp.service('JsonService', function($http) {
+            nattrmonApp.service('JsonService', function($http) {
                 this.getJson = function() {
                     return $http.get('/json').then(function(result) {
                         return result;
                     });
                 };
+
+                this.getPlugs = function() {
+                    return $http.get('/json?op=plugs').then(function(result) {
+                        return result;
+                    });
+                }
             });
 
             nattrmonApp.controller('ctl_nattrmon', function($scope, $sce, $http, $interval, MetaService, JsonService) {
@@ -48,17 +54,18 @@
                     $scope.refreshActive = false;
                     $scope.loading = true;
 
-                    JsonService.getJson().then(function(d) {
+                    JsonService.getPlugs().then(function(d) {
                         refresh(d.data);
-                        $scope.warns = nattrmonWarns;
-                        try { $scope.warnsHigh = Object.keys(nattrmonWarns['High']).length; }
-                         catch(e) { $scope.warnsHigh = 0; };
-                        try { $scope.warnsMedium = Object.keys(nattrmonWarns['Medium']).length; }
-                         catch(e) { $scope.warnsMedium = 0 };
-                        try { $scope.warnsLow = Object.keys(nattrmonWarns['Low']).length; }
-                         catch(e) { $scope.warnsLow = 0 };
-                        try { $scope.warnsInfo = Object.keys(nattrmonWarns['Info']).length; }
-                         catch(e) { $scope.warnsInfo = 0 };                         
+
+                        plugs = d.data.plugs;
+                        $scope.plugs = plugs;
+
+                        try { $scope.plugsInputs = Object.keys(plugs['Inputs']).length; }
+                         catch(e) { $scope.plugsInputs = 0; };
+                        try { $scope.plugsValidations = Object.keys(plugs['Validations']).length; }
+                         catch(e) { $scope.plugsValidations = 0 };
+                        try { $scope.plugsOutputs = Object.keys(plugs['Outputs']).length; }
+                         catch(e) { $scope.plugsOutputs = 0 };
                     });
 
                     $scope.startRefresh = function() {
@@ -74,13 +81,13 @@
                             });
 
                             $scope.loading = true;
-                            JsonService.getJson().then(function(d) {
-                                refresh(d.data);
-                                $scope.warns = nattrmonWarns;
-                                $scope.warnsHigh = Object.keys(nattrmonWarns['High']).length;
-                       		    $scope.warnsMedium = Object.keys(nattrmonWarns['Medium']).length;
-                                $scope.warnsLow = Object.keys(nattrmonWarns['Low']).length;
-                                $scope.warnsInfo = Object.keys(nattrmonWarns['Info']).length;
+                            JsonService.getPlugs().then(function(d) {
+				refresh(d.data);
+                                plugs = d.data.plugs;
+                                $scope.plugs = plugs;
+                                $scope.plugsInputs = Object.keys(plugs['inputs']).length;
+                       		$scope.plugsValidations = Object.keys(plugs['validations']).length;
+                      		$scope.plugsOutputs = Object.keys(plugs['outputs']).length;
                                 $scope.loading = false;
                             });
 
@@ -92,7 +99,7 @@
                     $scope.stopRefresh = function() {
                         $scope.loading = false;
                         if (angular.isDefined(stop)) {
-                        	$interval.cancel(dataref);
+                            $interval.cancel(dataref);
                             dataref = undefined;
                         }
 
@@ -112,8 +119,8 @@
                     });
 
                     $scope.render = function(aValue, aType) {
-						return render($sce, aValue, aType);
-            		}
+			return render($sce, aValue, aType);
+                    }
 
                     angular.element(document).ready(function () {
                         $scope.startRefresh();
@@ -133,7 +140,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="index.html" ng-click="startRefresh()"><i class="icon-wedo-nattrmon" style="font-size:150%;color:darkorange"></i>&nbsp;&nbsp;<span style="color:darkorange"></span><span style="color:#f5f5f5">{{title}}</span>&nbsp;<span style="font-size:75%;"> nAttrMon warnings</span></a>
+                    <a class="navbar-brand" href="#" ng-click="startRefresh()"><i class="icon-wedo-nattrmon" style="font-size:150%;color:darkorange"></i>&nbsp;&nbsp;<span style="color:darkorange"></span><span style="color:#f5f5f5">{{title}}</span>&nbsp;<span style="font-size:75%;"> nAttrMon plugs</span></a>
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right">
@@ -174,93 +181,89 @@
                     <br>
                     <ul class="nav nav-sidebar">
                         <li>
-                            <a href="#High">High (#{{warnsHigh}})</a>
+                            <a href="#Inputs">Inputs (#{{plugsInputs}})</a>
                         </li>
                         <li>
-                            <a href="#Medium">Medium (#{{warnsMedium}})</a>
+                            <a href="#Validations">Validations (#{{plugsValidations}})</a>
                         </li>
                         <li>
-                            <a href="#Low">Low (#{{warnsLow}})</a>
-                        </li>
-                        <li>
-                            <a href="#Info">Info (#{{warnsInfo}})</a>
+                            <a href="#Outputs">Outputs (#{{plugsOutputs}})</a>
                         </li>
                     </ul>
                 </div>
                 <div class="col-sm-10 col-sm-offset-2 main">
-                    <h3 class="sub-header" id="High">High</h3>
-                    <div class="table-responsive" ng-if="warnsHigh > 0">
+                    <h3 class="sub-header" id="Inputs">Inputs</h3>
+                    <div class="table-responsive" ng-if="plugsInputs > 0">
                         <table class="table table-striped">
                             <tbody>
-                                <tr ng-repeat="a in warns['High'] | orderBy: 'lastupdate'">
-                                    <td style="width: 5px; padding-left: 0px;padding-right: 0px;" class="nwarning_High"></td>
-                                    <td align="left" bgcolor="#f0f0f0"'>
-                                        <small><b><i class="fa fa-exclamation-circle fa-2x" style="font-size: 15px"></i>&nbsp;&nbsp;{{a.title}}</b></small>
-                                    </td>
-                                    <td ng-bind-html="render(a.description, 'desc')"></td>
-                                    <td align="right" style="white-space: nowrap; width: 1%">
-                                        <small>Last update: <span ng-bind-html="render(a.lastupdate, 'date')"></span><br>Created on: <span ng-bind-html="render(a.createdate, 'date')"></span></small>
+                                <tr ng-repeat="a in plugs['inputs'] | orderBy: 'meta.name'">
+                                    <td>
+                                        <table class="nattributetable">
+                                            <tr class="nattributetablehead">
+                                                <th class="nattributetablehead">Metadata</th>
+                                                <th class="nattributetablehead">Last check</th>
+                                                <th class="nattributetablehead">Created on</th>
+                                            </tr>
+                                            <tr>
+                                                <td class="nattributetablecell"><span ng-bind-html="render(a.meta)"></span></td>
+                                                <td class="nattributetablecell">&nbsp;&nbsp;<span ng-bind-html="render(a.last)"></span>&nbsp;&nbsp;</td>
+                                                <td class="nattributetablecell">&nbsp;&nbsp;<span ng-bind-html="render(a.created)"></span>&nbsp;&nbsp;</td>
+                                            </tr>
+                                        </table>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                    <div ng-if="!(warnsHigh > 0)">No high warnings.</div>
-                    <h3 class="sub-header" id="Medium">Medium</h3>
-                    <div class="table-responsive" ng-if="warnsMedium > 0">
+                    <div ng-if="!(plugsInputs > 0)">No input plugs.</div>
+                    <h3 class="sub-header" id="Validations">Validations</h3>
+                    <div class="table-responsive" ng-if="plugsValidations > 0">
                         <table class="table table-striped">
                             <tbody>
-                                <tr ng-repeat="a in warns['Medium'] | orderBy: 'lastupdate'">
-                                    <td style="width: 5px; padding-left: 0px;padding-right: 0px;" class="nwarning_Medium"></td>
-                                    <td align="left" bgcolor="#f0f0f0"'>
-                                        <small><b><i class="fa fa-exclamation-triangle fa-2x" style="font-size: 15px"></i>&nbsp;&nbsp;{{a.title}}</b></small>
-                                    </td>
-                                    <td ng-bind-html="render(a.description, 'desc')"></td>
-                                    <td align="right" style="white-space: nowrap; width: 1%">
-                                        <small>Last update: <span ng-bind-html="render(a.lastupdate, 'date')"></span><br>Created on: <span ng-bind-html="render(a.createdate, 'date')"></span></small>
+                                <tr ng-repeat="a in plugs['validations'] | orderBy: 'meta.name'">
+                                    <td>
+                                        <table class="nattributetable">
+                                            <tr class="nattributetablehead">
+                                                <th class="nattributetablehead">Metadata</th>
+                                                <th class="nattributetablehead">Last check</th>
+                                                <th class="nattributetablehead">Created on</th>
+                                            </tr>
+                                            <tr>
+                                                <td class="nattributetablecell"><span ng-bind-html="render(a.meta)"></span></td>
+                                                <td class="nattributetablecell">&nbsp;&nbsp;<span ng-bind-html="render(a.last)"></span>&nbsp;&nbsp;</td>
+                                                <td class="nattributetablecell">&nbsp;&nbsp;<span ng-bind-html="render(a.created)"></span>&nbsp;&nbsp;</td>
+                                            </tr>
+                                        </table>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                    <div ng-if="!(warnsMedium > 0)">No medium warnings.</div>
-                    <h3 class="sub-header" id="Low">Low</h3>
-                    <div class="table-responsive" ng-if="warnsLow > 0">
+                    <div ng-if="!(plugsValidations > 0)">No validation plugs.</div>
+                    <h3 class="sub-header" id="Outputs">Outputs</h3>
+                    <div class="table-responsive" ng-if="plugsOutputs > 0">
                         <table class="table table-striped">
                             <tbody>
-                                <tr ng-repeat="a in warns['Low'] | orderBy: 'lastupdate'">
-                                    <td style="width: 5px; padding-left: 0px;padding-right: 0px;" class="nwarning_Low"></td>
-                                    <td align="left" bgcolor="#f0f0f0"'>
-                                        <small><b>{{a.title}}</b></small>
-                                    </td>
-                                    <td ng-bind-html="render(a.description, 'desc')"></td>
-                                    <td align="right" style="white-space: nowrap; width: 1%">
-                                        <small>Last update: <span ng-bind-html="render(a.lastupdate, 'date')"></span><br>Created on: <span ng-bind-html="render(a.createdate, 'date')"></span></small>
+                                <tr ng-repeat="a in plugs['outputs'] | orderBy: 'meta.name'">
+                                    <td>
+                                        <table class="nattributetable">
+                                            <tr class="nattributetablehead">
+                                                <th class="nattributetablehead">Metadata</th>
+                                                <th class="nattributetablehead">Last check</th>
+                                                <th class="nattributetablehead">Created on</th>
+                                            </tr>
+                                            <tr>
+                                                <td class="nattributetablecell"><span ng-bind-html="render(a.meta)"></span></td>
+                                                <td class="nattributetablecell">&nbsp;&nbsp;<span ng-bind-html="render(a.last)"></span>&nbsp;&nbsp;</td>
+                                                <td class="nattributetablecell">&nbsp;&nbsp;<span ng-bind-html="render(a.created)"></span>&nbsp;&nbsp;</td>
+                                            </tr>
+                                        </table>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                    <div ng-if="!(warnsLow > 0)">No low warnings.</div>
-                    <br>
-                    <h3 class="sub-header" id="Info">Info</h3>
-                    <div class="table-responsive" ng-if="warnsInfo > 0">
-                        <table class="table table-striped">
-                            <tbody>
-                                <tr ng-repeat="a in warns['Info'] | orderBy: 'lastupdate'">
-                                    <td style="width: 5px; padding-left: 0px;padding-right: 0px;" class="nwarning_Info"></td>
-                                    <td align="left" bgcolor="#f0f0f0"'>
-                                        <small><b>{{a.title}}</b></small>
-                                    </td>
-                                    <td ng-bind-html="render(a.description, 'desc')"></td>
-                                    <td align="right" style="white-space: nowrap; width: 1%">
-                                        <small>Last update: <span ng-bind-html="render(a.lastupdate, 'date')"></span><br>Created on: <span ng-bind-html="render(a.createdate, 'date')"></span></small>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>           
-                    <div ng-if="!(warnsInfo > 0)">No info messages available.</div>
+                    <div ng-if="!(plugsOutputs > 0)">No output plugs.</div>
                 </div>
             </div>
         </div>

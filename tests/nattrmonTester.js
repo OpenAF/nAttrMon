@@ -19,14 +19,81 @@ ow.loadServer();
 ow.loadObj(); 
 ow.loadFormat(); 
 ow.loadTemplate();
-loadUnderscore(); 
+ow.template.addFormatHelpers();
+ow.template.addConditionalHelpers();
+loadLodash(); 
 
-var nAttrMon = function(aURL, localAttrs, localWarns) {
+// nAttrMon template helpers -----------------------------------------------------------------
+// -------------------------------------------------------------------------------------------
+
+ow.template.addHelper("attr", (a, p) => {
+	if (isDef(a) && a != null) {
+		var res = nattrmon.getAttributes().getAttributeByName(a);
+		if (isDef(p) && p != null && isString(p)) {
+			res = ow.obj.getPath(res, p);
+		} else {
+			res = stringify(res, void 0, "");
+		}
+		return res;
+	} else {
+		return null;
+	}
+});
+ow.template.addHelper("cval", (a, p) => {
+	if (isDef(a) && a != null) {
+		var res = nattrmon.getCurrentValues(true).get({ name: a });
+		if (isDef(p) && p != null && isString(p)) {
+			res = ow.obj.getPath(res, p);
+		} else {
+			res = stringify(res, void 0, "");
+		}
+		return res;
+	} else {
+		return null;
+	}
+});
+ow.template.addHelper("lval", (a, p) => {
+	if (isDef(a) && a != null) {
+		var res = nattrmon.getLastValues(true).get({ name: a });
+		if (isDef(p) && p != null && isString(p)) {
+			res = ow.obj.getPath(res, p);
+		} else {
+			res = stringify(res, void 0, "");
+		}
+		return res;
+	} else {
+		return null;
+	}
+});
+ow.template.addHelper("warn", (a, p) => {
+	if (isDef(a) && a != null) {
+		var res = nattrmon.getWarnings(true).getWarningByName(a);
+		if (isDef(p) && p != null && isString(p)) {
+			res = ow.obj.getPath(res, p);
+		} else {
+			res = stringify(res, void 0, "");
+		}
+		return res;
+	} else {
+		return null;
+	}
+});
+
+ow.template.addHelper("debug", (s) => { sprint(s); });
+ow.template.addHelper("stringify", (s) => { return stringify(s); });
+ow.template.addHelper("stringifyInLine", (s) => { return stringify(s, void 0, ""); });
+ow.template.addHelper("toYAML", (s) => { return af.toYAML(s); });
+
+
+var nAttrMon = function(aURL, aConfigPath, localAttrs, localWarns) {
 	this.currentValues    = $ch("cvals").createRemote(aURL + "/chs/cvals");
 	this.lastValues       = $ch("lvals").createRemote(aURL + "/chs/lvals");
 	this.monitoredObjects = {};
 	this.objPools = {};
+	this.objPoolsCat = {};
+	this.objPoolsAssociations = {};	
 	this.sessionData = {};
+	this.configPath = aConfigPath;
 
 	this.listOfAttributes = new nAttributes();
 	if (!localAttrs) {
@@ -160,8 +227,10 @@ nAttrMon.prototype.isObjectPool = function(aKey) {
 		return false;
 }
 
-nAttrMon.prototype.addObjectPool = function(aKey, aOWObjPool) {
+nAttrMon.prototype.addObjectPool = function(aKey, aOWObjPool, aCat) {
 	this.objPools[aKey] = aOWObjPool.start();
+	this.objPoolsCat[aKey] = aCat;
+	this.objPoolsAssociations[aKey] = {};	
 }
 
 nAttrMon.prototype.getObjectPool = function(aKey) {
@@ -169,12 +238,27 @@ nAttrMon.prototype.getObjectPool = function(aKey) {
 }
 
 nAttrMon.prototype.delObjectPool = function(aKey) {
-        this.objPools[aKey].stop();
-	deleteFromArray(this.objPools, this.objPools.indexOf(aKey));
+    this.objPools[aKey].stop();
+	//deleteFromArray(this.objPools, this.objPools.indexOf(aKey));
+	delete this.objPools[aKey];
+	delete this.objPoolsCat[aKey];
+	delete this.objPoolsAssociations[aKey];
 }
 
-nAttrMon.prototype.getObjectPoolKeys = function(aKey) {
-	return Object.keys(this.objPools);
+nAttrMon.prototype.getObjectPoolKeys = function(aCat) {
+	var res = [];
+	if (isUnDef(aCat))
+		return Object.keys(this.objPools);
+	else {
+		var ori = Object.keys(this.objPools);
+		for(var i in ori) {
+			if (this.objPoolsCat[ori[i]] == aCat) {
+				res.push(ori[i]);
+			}
+		}
+	}
+
+	return res;
 }
 
 nAttrMon.prototype.leaseObject = function(aKey) {
@@ -188,6 +272,14 @@ nAttrMon.prototype.returnObject = function(aKey, anObj, aStatus) {
 nAttrMon.prototype.useObject = function(aKey, aFunction) {
 	return this.objPools[aKey].use(aFunction);
 }
+
+nAttrMon.prototype.associateObjectPool = function(aParentKey, aChildKey, aPath) {
+	this.objPoolsAssociations[aParentKey][aPath] = aChildKey;
+};
+
+nAttrMon.prototype.getAssociatedObjectPool = function(aParentKey, aPath) {
+	return this.objPoolsAssociations[aParentKey][aPath];
+};
 
 /**
  * Creates the necessary internal objects (nInput, nOutput and nValidation) given an yaml definition.

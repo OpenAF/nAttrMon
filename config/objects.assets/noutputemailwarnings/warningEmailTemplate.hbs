@@ -1,0 +1,179 @@
+<html>
+<style type="text/css">
+    body {
+        background-color: #ffffff;
+        color: #000000;
+    }
+
+    body,
+    td,
+    th,
+    h1,
+    h2 {
+        font-family: 'Segoe UI Light', 'Segoe UI', -apple-system-font, 'Lucida Grande', Verdana, Arial, Helvetica, serif;
+        font-style: normal;
+        border-bottom: 1px solid #ffa500;
+    }
+
+    pre {
+        margin: 0px;
+        font-family: monospace;
+    }
+
+    a:link {
+        color: #0000AA;
+        text-decoration: none;
+        background-color: #ffffff;
+    }
+
+    a:visited {
+        color: #0000AA;
+        text-decoration: none;
+        background-color: #ffffff;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    table {
+        border-collapse: collapse;
+        margin-left: 25px;
+        border: 0px
+    }
+
+    th {
+        text-align: center !important;
+        border: 0px
+    }
+
+    td,
+    th {
+        border: 0px;
+        font-family: -apple-system-font, sans-serif;
+        font-size: 85%;
+        vertical-align: baseline;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    h1 {
+        font-size: 150%;
+    }
+
+    h2 {
+        font-size: 125%;
+    }
+
+    p {
+        font-weight: normal;
+        font-size: 100%;
+        font-family: 'Segoe UI Light', 'Segoe UI', -apple-system-font, 'Lucida Grande', Verdana, Arial, Helvetica, serif;
+        font-style: normal;
+        color: #999999;
+    }
+
+    ul {
+        font-size: 90%;
+    }
+
+    h3 {
+        text-align: left;
+        font-size: 100%;
+        color: #999999;
+        border-bottom: 1px dotted #ffa500;
+    }
+
+    .p {
+        text-align: left;
+    }
+
+    .b {
+        font-style: normal;
+        color: #999999;
+    }
+
+    .e {
+        background-color: #ffffff;
+        font-weight: bold;
+        color: #000000;
+        text-align: right;
+        padding-left: 30px;
+    }
+
+    .h {
+        background-color: #9999cc;
+        font-weight: bold;
+        color: #000000;
+    }
+
+    .v {
+        background-color: #ffffff;
+        color: #999999;
+        font-family: 'Segoe UI Light', 'Segoe UI', -apple-system-font, 'Lucida Grande', Verdana, Arial, Helvetica, serif;
+        font-weight: normal;
+        text-align: left;
+        padding-top: 15px;
+        font-size: 115%;
+        border-bottom: 1px solid #ffa500;
+    }
+
+    .vr {
+        background-color: #cccccc;
+        text-align: right;
+        color: #000000;
+    }
+
+    img {
+        float: right;
+        border: 0px;
+    }
+
+    hr {
+        background-color: #cccccc;
+        border: 0px;
+        height: 1px;
+        color: #000000;
+    }
+
+    .pagelist {
+        color: #999999;
+    }
+
+    a.pagelist {
+        color: #990000;
+    }
+</style>
+
+<body>
+    <h2><img align="right" width="32" src="cid:logo"/>{{subject}}</h2>
+    <table style="border-collapse: collapse; margin-left: 25px; border: 0px; width: 95%">
+    {{#each warns}}
+        {{#if list.length}}
+        <h3>{{level}}</h3>
+        <table style="border-collapse: collapse; margin-left: 25px; border: 0px; width: 95%">
+            {{#each list}}
+                <tr>
+                    <td bgcolor="{{#is level "High"}}red{{/is}}{{#is level "Medium"}}yellow{{/is}}{{#is level "Low"}}lightblue{{/is}}" style="width: 5px; border:0px;font-family: -apple-system-font, sans-serif;font-size: 1px;vertical-align: baseline;padding-left: 0px;padding-right: 0px; text-align:left; vertical-align: top">
+                    </td>                    
+                    <td bgcolor="#F0F0F0" style="border:0px;font-family: -apple-system-font, sans-serif;font-size: 85%;vertical-align: baseline;padding-left: 10px;padding-right: 10px; text-align:left; vertical-align: top; border-bottom: 1px dotted #f0f0f0;">
+                        <b>{{title}}</b>
+                    </td>
+                    <td style="border:0px;font-family: -apple-system-font, sans-serif;font-size: 85%;vertical-align: baseline;padding-left: 10px;padding-right: 10px;  text-align: left; vertical-align: top; border-bottom: 1px dotted #f0f0f0;">
+                        {{{description}}}
+                    </td>
+                    <td style="border:0px;font-family: -apple-system-font, sans-serif;font-size: 85%;vertical-align: baseline;padding-left: 10px;padding-right: 10px; text-align: right; border-bottom: 1px dotted #f0f0f0;">
+                        <small><b>Updated</b>: <i>{{owFormat_fromDate lastupdate 'yyyy-MM-dd HH:mm:ss (z)'}}</i></small><br>
+                        <small><b>Created</b>: <i>{{owFormat_fromDate createdate 'yyyy-MM-dd HH:mm:ss (z)'}}</i></small>
+                    </td>
+                </tr>
+            {{/each}}
+        </table>
+        {{/if}}
+    {{/each}}
+    </table>
+    <br/>
+    <center><small><small>This is an automated email. Please do not reply.</small></small></center>
+</body>
+
+</html>

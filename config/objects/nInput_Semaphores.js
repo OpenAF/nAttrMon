@@ -1,35 +1,40 @@
 /**
  * <odoc>
- * <key>nattrmon.nInput_Semaphores(anMonitoredAFObjectKey, attributePrefix, dontIgnoreDuplicates)</key>
- * You can create an input to check for BPM semaphores using the anMonitoredAFObjectKey. Optionally you can provide also an attributePrefix
- * and a dontIgnoreDuplicates flag to indicate that duplicate semaphores names should not be ignore (usually true to avoid satellites duplicated
- * semaphores).
+ * <key>nattrmon.nInput_Semaphores(aMap) : nInput</key>
+ * You can create an input to check for BPM semaphores using a map composed of:\
+ *    - keys (a key string or an array of keys for an AF object)\
+ *    - chKeys (a channel name for the keys of AF objects)\
+ *    - attrTemplate (a string template for the name of the attribute using {{key}},{semNameOrDesc}},{{semName}},{{semDescription}})\
+ * \
  * </odoc>
  */
 var nInput_Semaphores = function(anMonitoredAFObjectKey, attributePrefix, dontIgnoreDuplicates) {
 	// Set server if doesn't exist
 	// Is a monitored object or a pool?
-	if (nattrmon.isObjectPool(anMonitoredAFObjectKey)) {
-		this.objectPoolKey = anMonitoredAFObjectKey;
-		this.monitoredObjectKey = anMonitoredAFObjectKey; // just for reference
+	if (isObject(anMonitoredAFObjectKey)) {
+		this.params = anMonitoredAFObjectKey;
+		// If keys is not an array make it an array.
+		if (!(isArray(this.params.keys))) this.params.keys = [ this.params.keys ];
 	} else {
-		this.monitoredObjectKey = anMonitoredAFObjectKey;
-		if (nattrmon.hasMonitoredObject(anMonitoredAFObjectKey))
-			this.server = nattrmon.getMonitoredObject(anMonitoredAFObjectKey);
-		else
-			throw "Key " + anMonitoredAFObjectKey + " not found.";
+		if (nattrmon.isObjectPool(anMonitoredAFObjectKey)) {
+			this.objectPoolKey = anMonitoredAFObjectKey;
+			this.monitoredObjectKey = anMonitoredAFObjectKey; // just for reference
+		} 
 	}
-	this.attributePrefix = (isUndefined(attributePrefix)) ? "Semaphores/SEM_" : attributePrefix;
-	this.dontIgnoreDuplicates = dontIgnoreDuplicates;
-	this.semsList = {};
 
-	nInput.call(this, this.input);
-}
+	if (isDef(this.attributePrefix)) {
+		this.params.attrTemplate = this.attributePrefix;
+	}
+        if (isUnDef(this.params.attrTemplate)) {        
+		this.params.attrTemplate = "Semaphores {{key}}/SEM_{{semNameOrDesc}}";
+	}
+
+	nInput.call(this, this.input);	
+};
 inherit(nInput_Semaphores, nInput);
-nInput_Semaphores.findDuplicates = {};
 
 nInput_Semaphores.prototype.translate = function(aValue) {
-	if (isUndefined(aValue)) return undefined;
+	if (isUnDef(aValue)) return undefined;
 
 	switch(aValue) {
 	case "0": return "red";
@@ -37,23 +42,24 @@ nInput_Semaphores.prototype.translate = function(aValue) {
 	case "2": return "green";
 	default: return undefined;
 	}
-}
+};
 
-nInput_Semaphores.prototype.getPrefix = function() {
-	return this.attributePrefix;
-}
+nInput_Semaphores.prototype.getTemplate = function() {
+	return this.params.attrTemplate;
+};
 
-nInput_Semaphores.prototype.input = function(scope, args) {
+nInput_Semaphores.prototype.__getSems = function(aKey, scope) {
+	var retSems = {};
+	var sems;
+
 	try {
-		var sems;
-
-		if (isDefined(this.objectPoolKey)) {
-			nattrmon.useObject(this.objectPoolKey, function(s) {
+		if (isDef(aKey)) {
+			nattrmon.useObject(aKey, function(s) {
 				try {
 					sems = s.exec("BPM.SemaphoreListToEdit", {});
 					return true;
 				} catch(e) {
-					logErr("Error while retrieving Semaphores using '" + this.monitoredObjectKey + "': " + e.message);
+					logErr("Error while retrieving Semaphores using '" + aKey + "': " + e.message);
 					return false;
 				}
 			});
@@ -61,34 +67,56 @@ nInput_Semaphores.prototype.input = function(scope, args) {
 			sems = this.server.exec("BPM.SemaphoreListToEdit", {});
 		}
 
-		if(!isUndefined(sems.entry_list)) {
+		if(!isUnDef(sems.entry_list)) {
 			for(var i in sems.entry_list) {
-				if (isDefined(sems.entry_list[i].description) && isDefined(sems.entry_list[i].name) && isDefined(sems.entry_list[i].value)) {
+				if (isDef(sems.entry_list[i].description) && 
+					isDef(sems.entry_list[i].name) && 
+					isDef(sems.entry_list[i].value)) {
+					
 					var semName = ((sems.entry_list[i].description.length > 0) ? sems.entry_list[i].description : sems.entry_list[i].name);
+
+					// Can use now specific keys to avoid satellites
+					/*
                     if(!this.dontIgnoreDuplicates) {
                     	if (isUndefined(nInput_Semaphores.findDuplicates[semName])) {
                        		nInput_Semaphores.findDuplicates[semName] = this.getPrefix();
                     	} else {
                     		if (nInput_Semaphores.findDuplicates[semName] != this.getPrefix()) continue;
                     	}
-                    }
+					}
+					*/
 
-                    semName = this.getPrefix() + semName;
+                    semName = templify(this.getTemplate(), {
+						"key": aKey,
+						"semNameOrDesc": semName,
+						"semName": sems.entry_list[i].name,
+						"semDescription": sems.entry_list[i].description
+					});
+
 					// Add new
 					if (!scope.getAttributes().exists(semName)) {
 						scope.setAttribute(semName, semName + " semaphore", nAttribute.TYPE_SEMAPHORE);
-					};
-					this.semsList[semName] = this.translate(sems.entry_list[i].value);
+					}
+					retSems[semName] = this.translate(sems.entry_list[i].value);
 				}
 			}
+		} else {
+			retSems = {};
 		}
 	} catch(e) {
-		logErr("Error while retrieving Semaphores using '" + this.monitoredObjectKey + "': " + e.message);
-		if (isUndefined(this.objectPoolKey)) {
-			nattrmon.declareMonitoredObjectDirty(this.monitoredObjectKey);
-			this.server = nattrmon.getMonitoredObject(this.monitoredObjectKey);
-		}
+		logErr("Error while retrieving Semaphores using '" + aKey + "': " + e.message);
 	}
 
-	return this.semsList;
+	return retSems;
 }
+
+nInput_Semaphores.prototype.input = function(scope, args) {
+	var res = {};
+
+	if (isDef(this.params.chKeys)) this.params.keys = $stream($ch(this.params.chKeys).getKeys()).map("key").toArray();
+
+	for(var i in this.params.keys) {
+		res = merge(res, this.__getSems(this.params.keys[i], scope));
+	}
+	return res;
+};

@@ -7,9 +7,15 @@ new nInput_LogErrorAgg([
 ])
 
  */
-var nInput_LogErrorAgg = function(anAttributeName, anArrayOfLogsAndPatterns) {
-	this.logsandpatterns = anArrayOfLogsAndPatterns;
-	this.attributename = anAttributeName;
+//anAttributeName, anArrayOfLogsAndPatterns
+var nInput_LogErrorAgg = function(aMap) {
+	if (isUnDef(aMap)) aMap = {};
+	if (isDef(aMap.logs) && isArray(aMap.logs)) this.logsandpatterns = aMap.logs;
+	if (isDef(aMap.chLogs)) this.chLogs = aMap.chLogs;
+	if (isDef(aMap.attrTemplate)) this.attrTemplate = aMap.attrTemplate; else this.attrTemplate = "Filesystem/Logs";
+
+	if (isUnDef(this.chLogs) && isUnDef(this.logsandpatterns)) 
+		throw "You need to provide either a 'logs' array or a corresponding 'chLogs' channel";
 
 	nInput.call(this, this.input);
 }
@@ -20,11 +26,15 @@ nInput_LogErrorAgg.prototype.input = function(scope, args) {
 	var attr = {};
 	var errors = {};
 
-	for(var i in this.logsandpatterns) {
-		var item = this.logsandpatterns[i];
+	var ar = [];
+	if (isDef(this.logsandpatterns)) ar = this.logsandpatterns;
+	if (isDef(this.chLogs)) ar = $ch(this.chLogs).getAll();
+
+	for(var i in ar) {
+		var item = ar[i];
 
 		try {
-			var lines = af.readFileAsArray(item.file);
+			var lines = io.readFileAsArray(item.file);
 
 			for(var j in lines) {
 				var line = lines[j];
@@ -32,7 +42,7 @@ nInput_LogErrorAgg.prototype.input = function(scope, args) {
 				try {
 					var error = line.match(new RegExp(item.pattern));
 					if (error != null) {
-						if (isUndefined(errors[error[1]]))
+						if (isUnDef(errors[error[1]]))
 							errors[error[1]] = 1;
 						else
 							errors[error[1]] += 1;
@@ -46,6 +56,6 @@ nInput_LogErrorAgg.prototype.input = function(scope, args) {
 		}
 	}
 
-	attr[this.attributename] = errors;
+	attr[templify(this.attrTemplate)] = errors;
 	return attr;
-}
+};

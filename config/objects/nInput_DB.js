@@ -73,7 +73,8 @@ nInput_DB.prototype.input = function (scope, args) {
 						res = aDb.q(templify(aSQL, data)).results;
 						//res = (useparam) ? aDb.qs(aSQL, [String(lastcheck)], true).results : aDb.q(aSQL).results;
 					} catch (e) {
-						logErr("Error while retriving DB query ' " + aSQL + "' from '" + parent2.objectPoolKey + "': " + e.message);
+						logErr("Error while retriving DB query from '" + parent2.objectPoolKey + "': " + e.message);
+						logErr("DB query = '" + templify(aSQL, data) + "'");
 						throw e;
 					}
 					return true;

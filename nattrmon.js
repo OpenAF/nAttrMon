@@ -1,7 +1,8 @@
 // Initialization
 var LOGHK_HOWLONGAGOINMINUTES = 30 * 24 * 60; // How long to keep logs
-var LOGAUDIT = true; // Set to false to turn it off
+var LOGAUDIT = true;                          // Set to false to turn it off
 var LOGAUDIT_TEMPLATE = "AUDIT | User: {{request.user}} | Channel: {{name}} | Operation: {{op}} | Key: {{{key}}}";
+var JAVA_ARGS = [ ];                          // Array of java arguments
 
 // -------------------------------------------------------------------
 
@@ -10,6 +11,15 @@ af.getVersion() >= "20170101" || (print("Version " + af.getVersion() + ". You ne
 
 var NATTRMON_HOME = getOPackPath("nAttrMon") || ".";
 //var NATTRMON_HOME = ".";
+
+if (io.fileExists(NATTRMON_HOME + "/nattrmon.yaml")) {
+	var params = io.readFileYAML(NATTRMON_HOME + "/nattrmon.yaml");
+
+	if (isDef(params.JAVA_ARGS) && isArray(params.JAVA_ARGS)) JAVA_ARGS = params.JAVA_ARGS;
+	if (isDef(params.LOGAUDIT)) LOGAUDIT = params.LOGAUDIT;
+	if (isDef(params.LOGAUDIT_TEMPLATE) && isString(params.LOGAUDIT_TEMPLATE)) LOGAUDIT_TEMPLATE = params.LOGAUDIT_TEMPLATE;
+	if (isDef(params.LOGHK_HOWLONGAGOINMINUTES) && isNumber(params.LOGHK_HOWLONGAGOINMINUTES)) LOGHK_HOWLONGAGOINMINUTES = params.LOGHK_HOWLONGAGOINMINUTES; 
+}
 
 // Auxiliary objects
 load(NATTRMON_HOME + "/lib/nattribute.js");
@@ -34,7 +44,7 @@ loadLodash();
 // nAttrMon template helpers -----------------------------------------------------------------
 // -------------------------------------------------------------------------------------------
 
-ow.template.addHelper("attr", (a, p) => {
+ow.template.addHelper("attr", (a, p, isN) => {
 	if (isDef(a) && a != null) {
 		var res = nattrmon.getAttributes().getAttributeByName(a);
 		if (isDef(p) && p != null && isString(p)) {
@@ -42,12 +52,12 @@ ow.template.addHelper("attr", (a, p) => {
 		} else {
 			res = stringify(res, void 0, "");
 		}
-		return res;
+		return (isDef(res) ? isN : res);
 	} else {
-		return null;
+		return (isString(isN) ? isN : null);
 	}
 });
-ow.template.addHelper("cval", (a, p) => {
+ow.template.addHelper("cval", (a, p, isN) => {
 	if (isDef(a) && a != null) {
 		var res = nattrmon.getCurrentValues(true).get({ name: a });
 		if (isDef(p) && p != null && isString(p)) {
@@ -55,12 +65,12 @@ ow.template.addHelper("cval", (a, p) => {
 		} else {
 			res = stringify(res, void 0, "");
 		}
-		return res;
+		return (isDef(res) ? isN : res);
 	} else {
-		return null;
+		return (isString(isN) ? isN : null);
 	}
 });
-ow.template.addHelper("lval", (a, p) => {
+ow.template.addHelper("lval", (a, p, isN) => {
 	if (isDef(a) && a != null) {
 		var res = nattrmon.getLastValues(true).get({ name: a });
 		if (isDef(p) && p != null && isString(p)) {
@@ -68,12 +78,12 @@ ow.template.addHelper("lval", (a, p) => {
 		} else {
 			res = stringify(res, void 0, "");
 		}
-		return res;
+		return (isDef(res) ? isN : res);
 	} else {
-		return null;
+		return (isString(isN) ? isN : null);
 	}
 });
-ow.template.addHelper("warn", (a, p) => {
+ow.template.addHelper("warn", (a, p, isN) => {
 	if (isDef(a) && a != null) {
 		var res = nattrmon.getWarnings(true).getWarningByName(a);
 		if (isDef(p) && p != null && isString(p)) {
@@ -81,13 +91,16 @@ ow.template.addHelper("warn", (a, p) => {
 		} else {
 			res = stringify(res, void 0, "");
 		}
-		return res;
+		return (isDef(res) ? isN : res);
 	} else {
-		return null;
+		return (isString(isN) ? isN : null);
 	}
 });
 
 ow.template.addHelper("debug", (s) => { sprint(s); });
+ow.template.addHelper("stringify", (s) => { return stringify(s); });
+ow.template.addHelper("stringifyInLine", (s) => { return stringify(s, void 0, ""); });
+ow.template.addHelper("toYAML", (s) => { return af.toYAML(s); });
 
 // Main object ----------------------------------------------------------------------------------
 // ----------------------------------------------------------------------------------------------
@@ -446,8 +459,8 @@ nAttrMon.prototype.stopObjects = function() {
 nAttrMon.prototype.restart = function() {
 	this.debug("nAttrMon restarting");
 	this.stop();
-	restartOpenAF();
-}
+	restartOpenAF(void 0, JAVA_ARGS);
+};
 
 // Attribute management
 // --------------------
@@ -500,7 +513,7 @@ nAttrMon.prototype.isNotified = function(aTitle, aId) {
 	if (isUnDef(aId)) throw "Please provide a setNotified id";
 
 	var w = nattrmon.getWarnings(true).getWarningByName(aTitle);
-	if (isUnDef(w.notified)) return false;
+	if (isUnDef(w) || isUnDef(w.notified)) return false;
 	return w.notified[aId];
 };
 

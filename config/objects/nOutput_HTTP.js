@@ -1,175 +1,64 @@
-var nOutput_HTTP = function(aTitle, aRefreshTime, aPort) {
+// aTitle, aRefreshTime, aPort
+var nOutput_HTTP = function (aMap) {
+
+	var aTitle = isDef(aMap.title) ? aMap.title : "Untitled";
+	var aPort = isDef(aMap.port) ? aMap.port : 8090;
+	var aRefreshTime = isDef(aMap.refreshTime) ? aMap.refreshTime : 1000;
+	var path = isDef(aMap.path) ? aMap.path : io.fileInfo(nattrmon.getConfigPath()).canonicalPath;
+
 	// Set server if doesn't exist
 	if (!nattrmon.hasSessionData("httpd")) {
 		plugin("HTTPServer");
-		var hs = new HTTPd(isUndefined(aPort) ? 8090 : aPort);
+		var hs = new HTTPd(aPort, aMap.host);
 		nattrmon.setSessionData("httpd", hs);
 	}
 
 	// Get server
 	var httpd = nattrmon.getSessionData("httpd");
-	this.title = (isUndefined(aTitle) ? "Untitled" : aTitle);
+	this.title = aTitle;
 
 	// Set session data
 	nattrmon.setSessionData("httpd.summary.custom", {
-		"title"  : (isUndefined(aTitle) ? "Untitled" : aTitle),
-		"refresh": (isUndefined(aRefreshTime) ? 1000 : aRefreshTime)
+		"title": aTitle,
+		"refresh": aRefreshTime
 	});
 
 	// Add function to server
 	ow.server.httpd.route(httpd, ow.server.httpd.mapWithExistingRoutes(httpd, {
-           "/f": function(r) {
-              if (r.uri == "/f") r.uri = "/index.html";
-              return ow.server.httpd.replyFile(httpd, nattrmon.getConfigPath() + "/objects.assets/noutputhttp", "/f", r.uri);
-           },
-           "/meta": function(req) {
-	//httpd.addFileBrowse("/f", nattrmon.getConfigPath() + "/objects.assets/noutputhttp");
-	//httpd.setDefault("/f");
-	//httpd.add("/meta", function(req) {
-		var ret = {};
-
-		ret = nattrmon.getSessionData("httpd.summary.custom");
-
-		return httpd.replyOKJSON(beautifier(ret));
-           }
-	}), function(r) {
-            if (r.uri == "/") r.uri = "/index.html";
-            return ow.server.httpd.replyFile(httpd, nattrmon.getConfigPath() + "/objects.assets/noutputhttp", "/", r.uri);
-        });
-	/*httpd.addXDTServer("/xdt",
-		function(auth) {
-			if (auth.getUser() == 'nattrmon' &&
-				auth.getPass() == 'nattrmon')
-				return true;
-			else
-				return false;
+		"/f": function (r) {
+			if (r.uri == "/f") r.uri = "/index.html";
+			return ow.server.httpd.replyFile(httpd, path + "/objects.assets/noutputhttp", "/f", r.uri);
 		},
-		function(sid, ops, pin, req) {
-			var pout = {};
+		"/meta": function (req) {
+			var ret = {};
 
-			switch(ops) {
-			case "GetAttributes":
-				pout = { "attributes": nattrmon.getAttributes(true) };
-				break;
-			case "GetAttributesValues":
-				pout = { "values": nattrmon.getCurrentValues() };
-				break;
-			case "GetAttributesValuesMap":
-				pout = { "values": [] };
-				var attrs = nattrmon.getCurrentValues();
-				for(i in attrs) {
-					pout.values.push({
-						"name": i,
-						"val" : attrs[i].val,
-						"date": attrs[i].date
-					});
-				}
-				break;
-			case "GetAttributesLastValues":
-				pout = { "values": nattrmon.getLastValues() };
-				break;
-			case "GetAttributesLastValuesMap":
-				pout = { "values": [] };
-				var attrs = nattrmon.getLastValues();
-				for(i in attrs) {
-					pout.values.push({
-						"name": i,
-						"val" : attrs[i].val,
-						"date": attrs[i].date
-					});
-				}
-				break;
-			case "GetAttributeHistoryByEvents":
-				try {
-					pout.history = nattrmon.getHistoryValuesByEvents(pin.attr, pin.events);
-				} catch(e) {
-					pout.result = 0;
-					pout.message = e.message;
-				}
-				break;
-			case "GetAttributeHistoryByTime":
-				try {
-					pout.history = nattrmon.getHistoryValuesByTime(pin.attr, pin.seconds);
-				} catch(e) {
-					pout.result = 0;
-					pout.message = e.message;
-				}
-				break;
-			case "Restart":
-				try {
-					nattrmon.restart();
-					pout.result = 1;
-				} catch(e) {
-					pout.result = 0;
-					pout.message = e.message;
-				}
-				break;
-			case "ReloadPlugs":
-				try {
-					nattrmon.genSnapshot();
-					nattrmon.stopObjects();
-					nattrmon.loadPlugs();
-					nattrmon.restoreSnapshot();
-					pout.result = 1;
-				} catch(e) {
-					pout.result = 0;
-					pout.message = e.message;
-				}
-				break;
-                case "GetWarnings":
-                        try {
-                                pout = { "warnings": nattrmon.getWarnings() };
-                                pout.result = 1;
-                        } catch(e) {
-                                pout.result = 0;
-                                pout.message = e.message;
-                        }
-                        break;
-                case "CloseWarnings":
-                        try {
-                                var w = nattrmon.getWarnings();
-                                w.High = {}; w.Medium = {}; w.Low = {};
-                                pout = { "warnings": nattrmon.getWarnings() };
-                                pout.result = 1;
-                        } catch(e) {
-                                pout.result = 0;
-                                pout.message = e.message;
-                        }
-                        break;				
-			case "Help":
-			default:
-				pout = {
-					"Available ops": {
-						"Help": "",
-						"GetAttributes": "",
-						"GetAttributesValues": "",
-						"GetAttributesValuesMap": "",
-						"GetAttributesLastValues": "",
-						"GetAttributesLastValuesMap": "",
-						"GetAttributeHistoryByTime":  "{\"attr\": \"myAttribute\", \"seconds\": 1}",
-						"GetAttributeHistoryByEvents": "{\"attr\": \"myAttribute\", \"events\": 1}",
-						"GetWarnings": "",
-						"CloseWarnings": "",
-						"ReloadPlugs": "",
-						"Restart": ""
-					}
-				}
-				break;
-			}
-			return pout;
-		});*/
-	
+			ret = nattrmon.getSessionData("httpd.summary.custom");
+
+			return httpd.replyOKJSON(beautifier(ret));
+		}
+	}), function (r) {
+		if (r.uri == "/") r.uri = "/index.html";
+		return ow.server.httpd.replyFile(httpd, path + "/objects.assets/noutputhttp", "/", r.uri);
+	});
+
+	nattrmon.setSessionData("httpd.summary.custom", {
+		"title": this.title,
+		"refresh": aRefreshTime
+	});
+
+	log("Output_HTTP | Output HTTP created on " + aPort);
+
 	nOutput.call(this, this.output);
-}
+};
 inherit(nOutput_HTTP, nOutput);
 
-nOutput_HTTP.prototype.output = function(scope, args, meta) {
-	scope.setSessionData("httpd.summary.custom", {
+nOutput_HTTP.prototype.output = function (scope, args, meta) {
+	/*scope.setSessionData("httpd.summary.custom", {
 		"title": this.title,
 		"refresh": meta.getTime()
-	});
-}
+	});*/
+};
 
-nOutput_HTTP.prototype.close = function() {
+nOutput_HTTP.prototype.close = function () {
 	nattrmon.getSessionData("httpd").stop();
-}
+};

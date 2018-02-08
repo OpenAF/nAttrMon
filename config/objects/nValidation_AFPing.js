@@ -48,4 +48,4 @@ nValidation_AFPing.prototype.validate = function(warns, scope, args) {
 		}
 	}
 	return ret;
-}
+};
