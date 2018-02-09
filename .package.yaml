@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20180207'
+version: '20180208'
 dependencies:
   openaf: '>=20180130'
 files:
@@ -273,12 +273,12 @@ filesHash:
   config/validations.disabled/yaml/01.somebodyTouched.yaml: 2d6a2c34c39aec49d9126c6304e04e66b978a26a
   config/validations.disabled/yaml/01.validatePing.yaml: 26a36f729f9443a1893afb7a8586fe7e396085db
   lib/nattribute.js: 0eeb6849981672a5660811fb740327e8032211f5
-  lib/nattributes.js: 35aa5c0dbda964c43dcf1d1b755d642f49d2d272
+  lib/nattributes.js: 19979886ff0528b466f2e013f54ef4ff0a061247
   lib/nattributevalue.js: d6a378dba74922540bcc3e054222733f69d5cead
   lib/ninput.js: cb1a2bc442a0a3ac9e6237fd02b445e31bd518cf
   lib/nmonitoredobject.js: da0b8a8590ce1534826750e2e70b3d6e4bee9f98
   lib/noutput.js: 097a89ae2ab12cb28d88034444a72d368464d14c
-  lib/nplug.js: 93e2ac5b530dd7501ea78b0563869cbacfc515ba
+  lib/nplug.js: 910c4334fb548bec74cdaa17829c5bd8c8dab035
   lib/nvalidation.js: 419ebc9daa5149344d45a0563e7ae5509da1970b
   lib/nwarning.js: 9be450128b70148f3bea179b14567c496900d4c7
   lib/nwarnings.js: d3cbf26c8e834a2151390505f3b880624ecbfc71
