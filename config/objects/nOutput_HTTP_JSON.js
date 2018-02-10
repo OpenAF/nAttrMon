@@ -1,7 +1,11 @@
 var nOutput_HTTP_JSON = function (aMap) {
+	var AUDIT_TEMPLATE = "AUDIT HTTP | {{method}} {{uri}} {{reply.status}} {{reply.mimetype}} ({{header.remote-addr}}; {{header.user-agent}})";
+
 	var aPort;
 	if (isObject(aMap)) {
 		if (isDef(aMap.port)) aPort = aMap.port;
+		this.audit = (isDef(aMap.audit) ? aMap.audit : true);
+		this.auditTemplate = (isDef(aMap.auditTemplate) ? aMap.auditTemplate : AUDIT_TEMPLATE);
 	} else {
 		aPort = aMap;
 	}
@@ -15,6 +19,20 @@ var nOutput_HTTP_JSON = function (aMap) {
 
 	// Get server
 	var httpd = nattrmon.getSessionData("httpd");
+
+	var auditAccess = (aReq, aReply) => {
+		var data = merge(aReq, { 
+			reply: {
+				status  : aReply.status,
+				mimetype: aReply.mimetype
+			}
+	    });
+		try { 
+			tlog(this.auditTemplate, data);
+		} catch(e) {
+			logErr("Error on auditing access: " + String(e));
+		}
+	}
 
 	// Add function to server
 	//httpd.addEcho("/echo");
@@ -50,10 +68,14 @@ var nOutput_HTTP_JSON = function (aMap) {
 					}
 					break;
 			}
-			return httpd.replyOKJSON(stringify(res));
+			var hres = httpd.replyOKJSON(stringify(res));
+			auditAccess(req, hres);
+			return hres;
 		}
 	}), function (r) {
-		return httpd.replyOKJSON(stringify({}));
+		var hres = httpd.replyOKJSON(stringify({}));
+		auditAccess(r, hres);
+		return hres;
 	});
 
 	nOutput.call(this, this.output);

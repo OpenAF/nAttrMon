@@ -1,10 +1,14 @@
 // aTitle, aRefreshTime, aPort
 var nOutput_HTTP = function (aMap) {
+	var AUDIT_TEMPLATE = "AUDIT HTTP | {{method}} {{uri}} {{reply.status}} {{reply.mimetype}} ({{header.remote-addr}}; {{header.user-agent}})";
 
 	var aTitle = isDef(aMap.title) ? aMap.title : "Untitled";
 	var aPort = isDef(aMap.port) ? aMap.port : 8090;
 	var aRefreshTime = isDef(aMap.refreshTime) ? aMap.refreshTime : 1000;
 	var path = isDef(aMap.path) ? aMap.path : io.fileInfo(nattrmon.getConfigPath()).canonicalPath;
+
+	this.audit = (isDef(aMap.audit) ? aMap.audit : true);
+	this.auditTemplate = (isDef(aMap.auditTemplate) ? aMap.auditTemplate : AUDIT_TEMPLATE);
 
 	// Set server if doesn't exist
 	if (!nattrmon.hasSessionData("httpd")) {
@@ -23,22 +27,42 @@ var nOutput_HTTP = function (aMap) {
 		"refresh": aRefreshTime
 	});
 
+	var auditAccess = (aReq, aReply) => {
+		var data = merge(aReq, { 
+			reply: {
+				status  : aReply.status,
+				mimetype: aReply.mimetype
+			}
+	    });
+		try { 
+			tlog(this.auditTemplate, data);
+		} catch(e) {
+			logErr("Error on auditing access: " + String(e));
+		}
+	};
+
 	// Add function to server
 	ow.server.httpd.route(httpd, ow.server.httpd.mapWithExistingRoutes(httpd, {
 		"/f": function (r) {
 			if (r.uri == "/f") r.uri = "/index.html";
-			return ow.server.httpd.replyFile(httpd, path + "/objects.assets/noutputhttp", "/f", r.uri);
+			var hres = ow.server.httpd.replyFile(httpd, path + "/objects.assets/noutputhttp", "/f", r.uri);			
+			auditAccess(r, hres);
+			return hres;
 		},
 		"/meta": function (req) {
 			var ret = {};
 
 			ret = nattrmon.getSessionData("httpd.summary.custom");
 
-			return httpd.replyOKJSON(beautifier(ret));
+			var hres = httpd.replyOKJSON(beautifier(ret));
+			auditAccess(req, hres);
+			return hres;
 		}
 	}), function (r) {
 		if (r.uri == "/") r.uri = "/index.html";
-		return ow.server.httpd.replyFile(httpd, path + "/objects.assets/noutputhttp", "/", r.uri);
+		var hres = ow.server.httpd.replyFile(httpd, path + "/objects.assets/noutputhttp", "/", r.uri);
+		auditAccess(r, hres);
+		return hres;
 	});
 
 	nattrmon.setSessionData("httpd.summary.custom", {
