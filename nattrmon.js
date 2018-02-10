@@ -385,6 +385,24 @@ nAttrMon.prototype.getAssociatedObjectPool = function(aParentKey, aPath) {
 	return this.objPoolsAssociations[aParentKey][aPath];
 };
 
+/**
+ * <odoc>
+ * <key>nattrmon.newSSHObjectPool(aSSHURL) : ObjectPool</key>
+ * Creates a new ow.obj.pool.SSH based on the provided aSSHURL in the form:
+ *  ssh://user:password@host:port/pathToIdentificationKey
+ * </odoc>
+ */
+nAttrMon.prototype.newSSHObjectPool = function(aURL) {
+	var uri = new java.net.URI(aURL);
+
+	if (uri.getScheme().toLowerCase() == "ssh") {
+		var port = uri.getPort();
+		var [user, pass] = String(uri.getUserInfo()).split(/:/);
+		var path = uri.getPath();
+		return ow.obj.pool.SSH(uri.getHost(), (port > 0) ? port : 22, user, pass, (path.length > 0) ? path : void 0, true);
+	}
+}
+
 // System functions
 // ----------------
 

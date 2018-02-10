@@ -3,16 +3,19 @@
  * <key>nattrmon.nInput_Shell(aMap)</key>
  * Creates a nattrmon input to execute a given command (cmd). The stdout result is directly assign as the attribute value
  * or parsed as json if parseJson = true. Optionally you can provide an attrTemplate otherwise the default will be:
- * "Server status/[aCommand]". The parameter aMap can have the following values:\
+ * "Server status/[aCommand]". If keys or chKeys is provided the command will be executed remotelly. The parameter aMap can have the following values:\
  * \
  *    - cmd (the command-line to execute)\
  *    - parseJson (boolean to indicate if the cmd output is json parsable)\
  *    - attrTemplate (a string template for the name of the attribute)\
+ *    - keys (a map with a SSH key or array of maps with SSH keys)\
+ *    - chKeys (a channel with similar maps as keys)\
  * \
  * </odoc>
  */
 var nInput_Shell = function(aCommand, isJson, attributeName) {
 	if (isObject(aCommand)) {
+		this.params = aCommand;
 		this.cmd = (isDef(aCommand.cmd) ? aCommand.cmd : ""); 
 		this.parseJson = (isDef(aCommand.parseJson) ? aCommand.parseJson : false);
 		this.name = (isDef(aCommand.name) ? aCommand.name : this.cmd);
@@ -25,19 +28,53 @@ var nInput_Shell = function(aCommand, isJson, attributeName) {
 	}
 
 	nInput.call(this, this.input);
-}
+};
 inherit(nInput_Shell, nInput);
 
 /**
  */
 nInput_Shell.prototype.input = function(scope, args) {
     var ret = {};
-    var attrname = templify(this.attrTemplate, { name: this.name });
 
-    if (this.parseJson) 
-		ret[attrname] = jsonParse(sh(this.cmd));
-    else
-    	ret[attrname] = sh(this.cmd);
+	if (isDef(this.params.chKeys) || isDef(this.params.keys)) {
+		var res = [], attrname;
+
+		if (isDef(this.params.chKeys)) this.params.keys = $stream($ch(this.params.chKeys).getKeys()).map("key").toArray();
+
+		for(var i in this.params.keys) {
+			nattrmon.useObject(this.params.keys[i], (ssh) => {
+				if (this.parseJson) {
+					res.push({
+						key: this.params.keys[i],
+						result: jsonParse(ssh.exec(this.cmd))
+					});
+				} else {
+					res.push({
+						key: this.params.keys[i],
+						result: ssh.exec(this.cmd)
+					});
+				}
+			});
+
+		}
+
+		if (this.params.keys.length == 1) {
+			attrname = templify(this.attrTemplate, { name: this.name, key: this.params.keys[0]});
+			res = res[0].result;
+		} else {
+			attrname = templify(this.attrTemplate, { name: this.name });
+		}
+
+		ret[attrname] = res;
+	} else {
+		var attrname = templify(this.attrTemplate, { name: this.name });
+
+		if (this.parseJson) {
+			ret[attrname] = jsonParse(sh(this.cmd));
+		} else {
+			ret[attrname] = sh(this.cmd);
+		}
+	}
 
     return ret;
-}
+};
