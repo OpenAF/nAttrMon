@@ -111,13 +111,13 @@ nInput_Filesystem.prototype.input = function (scope, args) {
 			resINode = sh("df -i -P");
 
 			dfs = this.__parseCmd(resSpace, resINode);
+			
+			ret[templify(this.params.attrTemplate)] = dfs;
 		}
 
 	} catch (e) {
 		logErr("Error executing command: " + e.message);
 	}
-
-	ret[templify(this.params.attrTemplate)] = dfs;
 
 	return ret;
 };
