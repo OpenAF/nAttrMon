@@ -399,9 +399,9 @@ nAttrMon.prototype.newSSHObjectPool = function(aURL) {
 		var port = uri.getPort();
 		var [user, pass] = String(uri.getUserInfo()).split(/:/);
 		var path = uri.getPath();
-		return ow.obj.pool.SSH(uri.getHost(), (port > 0) ? port : 22, user, pass, (path.length > 0) ? path : void 0, true);
+		return ow.obj.pool.SSH(String(uri.getHost()), (Number(port) > 0) ? port : 22, user, pass, (String(path).length > 0) ? String(path) : void 0, true);
 	}
-}
+};
 
 // System functions
 // ----------------
@@ -412,7 +412,7 @@ nAttrMon.prototype.debug = function(aMessage) {
 		log(ansiColor("BG_YELLOW,BLACK", "DEBUG | " + aMessage));
 		ansiStop();
 	}
-}
+};
 
 nAttrMon.prototype.start = function() {
 	this.debug("nAttrMon monitor plug");
