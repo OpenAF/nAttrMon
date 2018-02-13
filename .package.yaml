@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20180210'
+version: '20180212'
 dependencies:
   openaf: '>=20180130'
 files:
@@ -223,7 +223,7 @@ filesHash:
   config/inputs.disabled/yaml/11.times.yaml: 0d2c1bfb7bd2f3160840b9aad98cd03e1cf68080
   config/inputs.disabled/yaml/12.connections.yaml: 691345117ddd695b5493127dea0a5568a8283fe9
   config/objects/nInput_OSInfo.js: 3418957f8d9e4d47dba8dd1100d0d101337904b3
-  config/objects/nOutput_EmailWarnings.js: ebcaa2ec835cc57b86f507008bf94fe69abd77c3
+  config/objects/nOutput_EmailWarnings.js: c5c678fa018f57cfc660fd0faabdd1c39a2f6680
   config/objects/nInput_EndPoints.js: 03084acddad1d42bd447ab5890dadac629681f96
   config/objects/nOutput_H2.js: d4b2182a8acf34caf4408be7048826915511ccf2
   config/objects/nInput_Semaphores.js: f7dbeabb7e1baebef64fa09a9a9fd68e59026aa2
