@@ -2,7 +2,7 @@ var FRAUD_SNAPSHOTS_DAYS = 3;
 
 nattrmon.addInput(
      { "name"          : "FMS ADM database",
-       "timeInterval"  : 300000,
+       "cron"          : "*/5 * * * *",
        "waitForFinish" : true,
        "onlyOnEvent"   : true,
      },

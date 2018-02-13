@@ -1,6 +1,6 @@
 input: 	
    name         : AppAdm database queries
-   timeInterval : 30000
+   cron         : "*/30 * * * * *"
    waitForFinish: true
    onlyOnEvent  : true
    execFrom     : nInput_DB

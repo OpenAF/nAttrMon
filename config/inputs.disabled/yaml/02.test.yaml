@@ -1,6 +1,6 @@
 input: 	
    name         : Test 
-   timeInterval : 1000
+   cron         : 60000
    waitForFinish: true
    onlyOnEvent  : true
    execFrom     : nInput_Shell

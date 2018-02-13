@@ -1,6 +1,6 @@
 input: 	
    name         : RAID Memory
-   timeInterval : 2000
+   cron         : "*/30 * * * * *"
    waitForFinish: true
    onlyOnEvent  : true
    execFrom     : nInput_RAIDMemory

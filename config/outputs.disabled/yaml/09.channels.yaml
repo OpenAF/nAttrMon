@@ -1,5 +1,8 @@
 output:
    name         : Output Channels
+   description  : >
+    Provides, on the same nOutput_HTTPJSON or nOutput_HTTP port or other, access to the nAttrMon specific OpenAF channels like: /chs/ops,
+    /chs/cvals, /chs/pvals and /chs/attr.
    execFrom     : nOutput_Channels
    execArgs     :
       cAuth:

@@ -1,0 +1,20 @@
+validation:
+   name         : Compare times validation
+   description  : Example of a simple validation for nInput_CompareTimes.
+   chSubscribe  : nattrmon::cvals
+   waitForFinish: true
+   onlyOnEvent  : true
+   execFrom     : nValidation_Generic
+   execArgs     : 
+      checks: 
+         - attribute        : Server status/Compare timestamps
+           expr             : "{{value.[db.app diff (min)]}} >= 5 || {{value.[db.dat diff (min)]}} >= 5"
+           warnLevel        : MEDIUM
+           warnTitleTemplate: "Database/App time difference"
+           warnDescTemplate : "The current difference of time between the RAID instance {{value.key}} and the database is of {{value.[db.app diff (min)]}} min (app) and {{value.[db.dat diff (min)]}} min (dat)"
+
+         - attribute        : Server status/Compare timestamps
+           expr             : "{{value.[RAID diff (min)]}} >= 5"
+           warnLevel        : MEDIUM
+           warnTitleTemplate: "App/Internet time difference"
+           warnDescTemplate : "The current difference of time between the RAID instance {{value.key}} and internet time is of {{value.[RAID diff (min)]}} min"

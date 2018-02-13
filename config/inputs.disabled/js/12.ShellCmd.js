@@ -1,6 +1,6 @@
 nattrmon.addInput({
 	"name":	"Commands Script",
-	"timeInterval": 1800000,
+	"cron": "*/30 * * * *",
 	"waitForFinish": true,
 	"onlyOnEvent": true
   },

@@ -1,6 +1,6 @@
 nattrmon.addInput({
 	"name":	"Server status/OS",
-	"timeInterval": 60000,
+	"cron": "*/1 * * * *",
 	"waitForFinish": true,
 	"onlyOnEvent": true
   },

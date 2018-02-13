@@ -1,6 +1,6 @@
 input: 	
    name         : Filesystem volumes check
-   timeInterval : 60000
+   cron         : "*/1 * * * *"
    waitForFinish: true
    onlyOnEvent  : true
    execFrom     : nInput_Filesystem

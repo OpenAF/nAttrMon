@@ -1,5 +1,6 @@
 output:
    name         : H2 history
+   description  : Provides to nOutput_HTTP a history service to access the previous values for each attribute.
    chSubscribe  : nattrmon::cvals
    waitForFinish: true
    onlyOnEvent  : true

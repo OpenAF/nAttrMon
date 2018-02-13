@@ -1,7 +1,7 @@
 nattrmon.addInput(
    {
       "name"         : "Filesystem check",
-      "timeInterval" : 2000,
+      "cron"         : "*/10 * * * * *",
       "waitForFinish": true,
       "onlyOnEvent"  : true
    },

@@ -1,6 +1,6 @@
 nattrmon.addInput(
 { 	"name": "Directory Name",
-	"timeInterval": 1000,
+	"cron": "*/1 * * * *",
 	"waitForFinish": true,
 	"onlyOnEvent": true
 },

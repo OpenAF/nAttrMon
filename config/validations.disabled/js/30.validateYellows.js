@@ -2,7 +2,7 @@ loadUnderscore();
 
 var VAL_SEMGLOBAL_HIGH = 180;
 var VAL_SEMGLOBAL_MEDIUM = 60;
-var VAL_SEMGLOBAL_EXPLAIN = "<a href='http://192.168.40.110/nac:projects:aproject:ops:nattrmon:semglobal'>(more information)</a>";
+var VAL_SEMGLOBAL_EXPLAIN = "<a href='http://1.2.3.4/nac:projects:aproject:ops:nattrmon:semglobal'>(more information)</a>";
 
 nattrmon.addValidation(
    { "name"         : "Yellow semaphore validation",

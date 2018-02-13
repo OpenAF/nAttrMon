@@ -1,3 +1,4 @@
 output:
    name         : Output JSON
+   description  : Outputs attributes, warnings, current and previous values in a JSON representation through HTTP.
    execFrom     : nOutput_HTTP_JSON

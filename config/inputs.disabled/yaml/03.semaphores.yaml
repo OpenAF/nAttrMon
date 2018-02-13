@@ -1,6 +1,6 @@
 input: 	
    name         : Semaphores 
-   timeInterval : 2000
+   cron         : "*/5 * * * * *"
    waitForFinish: true
    onlyOnEvent  : true
    execFrom     : nInput_CBPMSemaphores

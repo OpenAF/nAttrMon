@@ -1,9 +1,9 @@
 nattrmon.addInput(
 	{ "name"         : "Fraud rules status",
-	"timeInterval" : 30000,
+	"cron"         : "*/30 * * * *",
 	"waitForFinish": true,
 	"onlyOnEvent"  : true,
 	"cron"         : "15 */1 * * *"
 	},
 	new nInput_FMSRulesStatus("FMS")
-);
+); 

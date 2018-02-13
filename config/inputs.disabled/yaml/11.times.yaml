@@ -1,6 +1,6 @@
 input: 	
    name         : Difference in times 
-   timeInterval : 600000
+   timeInterval : "*/10 * * * *"
    waitForFinish: true
    onlyOnEvent  : true
    exec         : >

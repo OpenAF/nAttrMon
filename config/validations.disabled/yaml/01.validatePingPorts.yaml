@@ -1,0 +1,14 @@
+validation:
+   name         : Ping ports validation
+   description  : Provides a simple validation for nInput_EndPoints
+   chSubscribe  : nattrmon::cvals
+   waitForFinish: true
+   onlyOnEvent  : true
+   execFrom     : nValidation_Generic
+   execArgs     : 
+      checks: 
+         - attrPattern      : "Server status/Ping "
+           expr             : {{value.result}} == false
+           warnLevel        : HIGH 
+           warnTitleTemplate: "{{name}} fail"
+           warnDescTemplate : "{{name}} failed with message {{value.errorMessage}}"

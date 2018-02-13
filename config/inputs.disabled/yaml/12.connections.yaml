@@ -1,6 +1,6 @@
 input: 	
    name         : RAID connections 
-   timeInterval : 5000
+   cron         : "*/15 * * * * *"
    waitForFinish: true
    onlyOnEvent  : true
    exec         : >
