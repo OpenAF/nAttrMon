@@ -1,0 +1,23 @@
+## Uncomment and change the relevant parameters
+##
+
+# Java arguments in case of automatic restart (you are still responsible for the startup arguments)
+#JAVA_ARGS: -Xms128m -Xmx512m
+
+# Turns auditing log on or off
+#LOGAUDIT: true
+
+# Specifies the template to use for auditing log
+#LOGAUDIT_TEMPLATE: "AUDIT | User: {{request.user}} | Channel: {{name}} | Operation: {{op}} | Key: {{{key}}}"
+
+# Specifies how long the log files should be kepted before being removed from the filesystem
+#LOGHK_HOWLONGAGOINMINUTES: 43200
+
+# Number of worker threads to use (this automatically defaults to twice the number of cores but increase if needed or to ensure at least 4 to 8 workers)
+#NUMBER_WORKERS: 4
+
+# Logging should be async or not (turn it off if you need to see logging immediately)
+#LOG_ASYNC: false
+
+# Turn debugging of the nattrmon core on or off
+#DEBUG: true

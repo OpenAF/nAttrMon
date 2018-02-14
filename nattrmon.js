@@ -3,6 +3,7 @@ var LOGHK_HOWLONGAGOINMINUTES = 30 * 24 * 60; // How long to keep logs
 var LOGAUDIT = true;                          // Set to false to turn it off
 var LOGAUDIT_TEMPLATE = "AUDIT | User: {{request.user}} | Channel: {{name}} | Operation: {{op}} | Key: {{{key}}}";
 var JAVA_ARGS = [ ];                          // Array of java arguments
+var DEBUG = false;
 
 // -------------------------------------------------------------------
 
@@ -19,6 +20,11 @@ if (io.fileExists(NATTRMON_HOME + "/nattrmon.yaml")) {
 	if (isDef(params.LOGAUDIT)) LOGAUDIT = params.LOGAUDIT;
 	if (isDef(params.LOGAUDIT_TEMPLATE) && isString(params.LOGAUDIT_TEMPLATE)) LOGAUDIT_TEMPLATE = params.LOGAUDIT_TEMPLATE;
 	if (isDef(params.LOGHK_HOWLONGAGOINMINUTES) && isNumber(params.LOGHK_HOWLONGAGOINMINUTES)) LOGHK_HOWLONGAGOINMINUTES = params.LOGHK_HOWLONGAGOINMINUTES; 
+	if (isDef(params.NUMBER_WORKERS)) __cpucores = Number(params.NUMBER_WORKERS);
+	if (isDef(params.LOG_ASYNC)) __logFormat.async = params.LOG_ASYNC;
+	if (isDef(params.DEBUG)) DEBUG = params.DEBUG;	
+	print("Applying parameters:");
+	sprint(params);
 }
 
 // Auxiliary objects
@@ -935,9 +941,9 @@ var params = processExpr();
 var nattrmon;
 
 if (isUnDef(params.withDirectory)) {
-	nattrmon = new nAttrMon(NATTRMON_HOME + "/config", params.debug);
+	nattrmon = new nAttrMon(NATTRMON_HOME + "/config", params.debug || DEBUG);
 } else {
-	nattrmon = new nAttrMon(params.withDirectory, params.debug);
+	nattrmon = new nAttrMon(params.withDirectory, params.debug || DEBUG);
 }
 
 var __sleepperiod = 60000; // less aggressive
