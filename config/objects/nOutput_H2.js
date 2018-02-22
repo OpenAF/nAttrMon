@@ -152,6 +152,7 @@ nOutput_H2.prototype.output = function(scope, args) {
 			//for(var i in arrAttr) {
 				//var attr = arrAttr[i];
 				var attr = nattrmon.getAttributes().getAttributeByName(args.k.name);
+				if (isUnDef(attr)) return;
 				//if (resNames.indexOf(attr.name) < 0) {
 					var dchk = (isUnDef(attr.lastcheck)) ? null : stringify(attr.lastcheck).replace(/"/g, "");
 					db.us("merge into attributes (name, description, last_seen) key(name) values(?, ?, parsedatetime(?, 'yyyy-MM-dd\'\'T\'\'HH:mm:ss.SSS\'\'Z\'\'','en','GMT'))", [ attr.name, attr.description, dchk ]);
@@ -167,7 +168,7 @@ nOutput_H2.prototype.output = function(scope, args) {
 						var dmod = stringify(attrval.date).replace(/"/g, "");
 
 						if (isDef(dchk)) {
-							var dchk = (isDef(dchk.lastcheck) ? stringify(dchk.lastcheck).replace(/"/g, "") : null);
+							//var dchk = (isDef(dchk.lastcheck) ? stringify(dchk.lastcheck).replace(/"/g, "") : null);
 							var val = stringify(attrval.val);
 							if (isDef(val))
 								db.us("insert into attribute_values (name, val, date_modified, date_checked) values (?, ?, parsedatetime(?, 'yyyy-MM-dd\'\'T\'\'HH:mm:ss.SSS\'\'Z\'\'','en','GMT'), parsedatetime(?, 'yyyy-MM-dd\'\'T\'\'HH:mm:ss.SSS\'\'Z\'\'','en','GMT'))", [ args.k.name, val, dmod, dchk ]);
