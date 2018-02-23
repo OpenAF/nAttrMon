@@ -5,10 +5,28 @@ output:
     /chs/cvals, /chs/pvals and /chs/attr.
    execFrom     : nOutput_Channels
    execArgs     :
-      cAuth:
-         nattrmon: 
-            p: nattrmon
-            m: r
-         change:
-            p: me
-            m: rw
+      local:
+        nattrmon: 
+          p: nattrmon
+          m: r
+        change:
+          p: me 
+          m: rw
+      custom: |
+        // Custom has priority over local. Comment the entry you won't use.
+        //
+        // u - user
+        // p - password
+        // s - server object
+        // r - request object (e.g. uri, method, header["remote-addr"], header["user-agent"], ...)
+         
+        if (u == "nattrmon" && p == "nattrmon") return true;
+
+        try {
+          new ow.server.ldap("ldap://my.auth.ldap:389", u + "@my.domain", p);
+          return true;
+        } catch(e) {
+          tlogErr("AUDIT | {{user}} authentication refused ({{message}}).", { user: u, message: e.message });
+        }
+
+        return false;

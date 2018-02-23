@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20180221'
+version: '20180222'
 dependencies:
   openaf: '>=20180130'
 files:
@@ -203,7 +203,7 @@ filesHash:
   config/objects/nInput_Semaphores.js: f7dbeabb7e1baebef64fa09a9a9fd68e59026aa2
   config/objects/nInput_Sessions.js: 0a68a945ba6c4b98d139b8c666c275c4fc716f81
   config/objects/nInput_Shell.js: 6402aeb121ec0d3068c123c4a3fba8c57e12a070
-  config/objects/nOutput_Channels.js: 02f48d8ff9f9a281fcd488869169cbb730209133
+  config/objects/nOutput_Channels.js: b05f38f15a70c6a585aa404db158e89d36dab59b
   config/objects/nOutput_EmailWarnings.js: c5c678fa018f57cfc660fd0faabdd1c39a2f6680
   config/objects/nOutput_H2.js: 4aa7668410f3bbf64b1c7cd3a8b6031e5367903d
   config/objects/nOutput_HTTP.js: 26bf4443d99146780bffa070543b4f32bf2cd918
@@ -259,7 +259,7 @@ filesHash:
   config/outputs.disabled/yaml/02.httpjson.yaml: 6d14637f7fff15b4d75481597bb9ae4f77f12665
   config/outputs.disabled/yaml/03.http.yaml: 24096733c110810674f6219dbb00ee96a2858b33
   config/outputs.disabled/yaml/04.emailWarnings.yaml: 5b4705eb204fc63d2627ab3f5452fc697379568f
-  config/outputs.disabled/yaml/09.channels.yaml: f2c55b45b986c4366a76199c08271cf4ddccb237
+  config/outputs.disabled/yaml/09.channels.yaml: 0a9ccf1ae9655b1ca3140a14e7f39f7caf40bd1d
   config/validations/add_files_from_validations_disabled.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
   config/validations.disabled/js/01.validatePing.js: cc572c157971ebdccd0a40a261f199cb9e509b5c
   config/validations.disabled/js/03.validateSemaphores.js: 6ded3ea530db8b5d4621fa8bad510e281ebd632d
