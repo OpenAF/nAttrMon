@@ -259,7 +259,7 @@ filesHash:
   config/outputs.disabled/yaml/02.httpjson.yaml: 6d14637f7fff15b4d75481597bb9ae4f77f12665
   config/outputs.disabled/yaml/03.http.yaml: 24096733c110810674f6219dbb00ee96a2858b33
   config/outputs.disabled/yaml/04.emailWarnings.yaml: 5b4705eb204fc63d2627ab3f5452fc697379568f
-  config/outputs.disabled/yaml/09.channels.yaml: 0a9ccf1ae9655b1ca3140a14e7f39f7caf40bd1d
+  config/outputs.disabled/yaml/09.channels.yaml: f38c539f163ec3457267c55d4248237b76caee14
   config/validations/add_files_from_validations_disabled.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
   config/validations.disabled/js/01.validatePing.js: cc572c157971ebdccd0a40a261f199cb9e509b5c
   config/validations.disabled/js/03.validateSemaphores.js: 6ded3ea530db8b5d4621fa8bad510e281ebd632d
