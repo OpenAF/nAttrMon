@@ -159,7 +159,7 @@ files:
   - lib/noutput.js
   - nattrmon.js
 filesHash:
-  nattrmon.yaml.sample: a52ae081decae39513c0a2ccc9a7dd1ea2a5c229
+  nattrmon.yaml.sample: 0057d835a9f707b29d76e04316a76d78768ac01d
   util/backupConfig.yaml: f84a08a3c5c8aa50f5aa606585c1453901c20d84
   util/loadDB2Elastic.js: 190b68c03e71fa859df71429da4c31035f20ce94
   util/clean.yaml: 616b7ddb24b12af7f1cbec473282decb57843869
@@ -292,4 +292,4 @@ filesHash:
   lib/nvalidation.js: 419ebc9daa5149344d45a0563e7ae5509da1970b
   lib/nmonitoredobject.js: da0b8a8590ce1534826750e2e70b3d6e4bee9f98
   lib/noutput.js: 097a89ae2ab12cb28d88034444a72d368464d14c
-  nattrmon.js: 8bfce5947dbb603a8166533fbfca0dce1e3e2fe5
+  nattrmon.js: 5742e52df8dc3703d6208e7b66be47b1e352e7a7

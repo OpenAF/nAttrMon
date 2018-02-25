@@ -11,20 +11,22 @@ var DEBUG = false;
 af.getVersion() >= "20170101" || (print("Version " + af.getVersion() + ". You need OpenAF version 20170101 to run.")) || exit(-1);
 
 var NATTRMON_HOME = getOPackPath("nAttrMon") || ".";
-//var NATTRMON_HOME = ".";
+var params = processExpr();
 
 if (io.fileExists(NATTRMON_HOME + "/nattrmon.yaml")) {
-	var params = io.readFileYAML(NATTRMON_HOME + "/nattrmon.yaml");
+	var pms = io.readFileYAML(NATTRMON_HOME + "/nattrmon.yaml");
 
-	if (isDef(params.JAVA_ARGS) && isArray(params.JAVA_ARGS)) JAVA_ARGS = params.JAVA_ARGS;
-	if (isDef(params.LOGAUDIT)) LOGAUDIT = params.LOGAUDIT;
-	if (isDef(params.LOGAUDIT_TEMPLATE) && isString(params.LOGAUDIT_TEMPLATE)) LOGAUDIT_TEMPLATE = params.LOGAUDIT_TEMPLATE;
-	if (isDef(params.LOGHK_HOWLONGAGOINMINUTES) && isNumber(params.LOGHK_HOWLONGAGOINMINUTES)) LOGHK_HOWLONGAGOINMINUTES = params.LOGHK_HOWLONGAGOINMINUTES; 
-	if (isDef(params.NUMBER_WORKERS)) __cpucores = Number(params.NUMBER_WORKERS);
-	if (isDef(params.LOG_ASYNC)) __logFormat.async = params.LOG_ASYNC;
-	if (isDef(params.DEBUG)) DEBUG = params.DEBUG;	
+	if (isDef(pms.JAVA_ARGS) && isArray(pms.JAVA_ARGS)) JAVA_ARGS = pms.JAVA_ARGS;
+	if (isDef(pms.LOGAUDIT)) LOGAUDIT = pms.LOGAUDIT;
+	if (isDef(pms.LOGAUDIT_TEMPLATE) && isString(pms.LOGAUDIT_TEMPLATE)) LOGAUDIT_TEMPLATE = pms.LOGAUDIT_TEMPLATE;
+	if (isDef(pms.LOGHK_HOWLONGAGOINMINUTES) && isNumber(pms.LOGHK_HOWLONGAGOINMINUTES)) LOGHK_HOWLONGAGOINMINUTES = pms.LOGHK_HOWLONGAGOINMINUTES; 
+	if (isDef(pms.NUMBER_WORKERS)) __cpucores = Number(pms.NUMBER_WORKERS);
+	if (isDef(pms.LOG_ASYNC)) __logFormat.async = pms.LOG_ASYNC;
+	if (isDef(pms.DEBUG)) DEBUG = pms.DEBUG;	
+	if (isUnDef(params.withDirectory) && isDef(pms.CONFIG)) params.withDirectory = pms.CONFIG;
+
 	print("Applying parameters:");
-	sprint(params);
+	sprint(pms);
 }
 
 // Auxiliary objects
@@ -937,7 +939,6 @@ nAttrMon.prototype.loadPlug = function (aPlugFile, aPlugDesc) {
 // ----------------------------------------------------------------------------------------------
 // ----------------------------------------------------------------------------------------------
 
-var params = processExpr();
 var nattrmon;
 
 if (isUnDef(params.withDirectory)) {
