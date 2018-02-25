@@ -1,0 +1,11 @@
+output:
+  name         : Output CSV
+  timeInterval : 1000
+  description  : >
+    Provides a very basic CSV output to a file given an outputTemplate.
+  execFrom     : nOutput_DSV
+  execArgs     :
+    #filename      : a.csv
+    folder        : csvs
+    headerTemplate: "Date, Test, Test2"
+    outputTemplate: "\"{{datetime}}\", \"{{cval 'Test/Test' 'val'}}\", \"{{cval 'Test/Test2' 'val'}}\""

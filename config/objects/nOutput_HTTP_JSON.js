@@ -60,11 +60,23 @@ var nOutput_HTTP_JSON = function (aMap) {
 					};
 					break;
 				default:
+					var attrs, warns, 
+						cvals = nattrmon.getCurrentValues(), 
+						lvals = nattrmon.getLastValues();
+					if (isDef(req.params.ct)) {
+						attrs = $from(nattrmon.getAttributes(true)).contains("category", req.params.ct).select();
+						warns = $stream($from(nattrmon.getWarnings(true).getCh().getAll()).contains("category", req.params.ct).select()).groupBy("level");
+						$from(nattrmon.getAttributes(true)).notContains("category", req.params.ct).select((r) => { delete cvals[r.name]; });
+						$from(nattrmon.getAttributes(true)).notContains("category", req.params.ct).select((r) => { delete lvals[r.name]; });
+					} else {
+						attrs = nattrmon.getAttributes(true);
+						warns = nattrmon.getWarnings();
+					}
 					res = {
-						"warnings": nattrmon.getWarnings(),
-						"attributes": ow.obj.fromArray2Obj(nattrmon.getAttributes(true), "name", true),
-						"values": nattrmon.getCurrentValues(),
-						"lastvalues": nattrmon.getLastValues()
+						"warnings": warns,
+						"attributes": ow.obj.fromArray2Obj(attrs, "name", true),
+						"values": cvals,
+						"lastvalues": lvals
 					}
 					break;
 			}
