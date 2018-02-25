@@ -104,3 +104,10 @@ function render(sce, aValue, aType) {
             return sce.trustAsHtml("<span class=\"nattributevalue\">" + aValue + "</span>");
     }
 }
+
+function getUrlParameter(name) {
+    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+    var results = regex.exec(location.search);
+    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+};

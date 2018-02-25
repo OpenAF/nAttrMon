@@ -24,6 +24,8 @@
     <![endif]-->
         <script>
             var nattrmonApp = angular.module('nattrmonApp', ['ngAnimate']);
+            var extra = "?";
+            if (getUrlParameter("ct") != "") extra = "?ct=" + getUrlParameter("ct");
             
             nattrmonApp.service('MetaService', function($http) {
                 this.getMeta = function() {
@@ -35,7 +37,7 @@
             
 			nattrmonApp.service('JsonService', function($http) {
                 this.getJson = function() {
-                    return $http.get('/json').then(function(result) {
+                    return $http.get('/json' + extra).then(function(result) {
                         return result;
                     });
                 };
@@ -63,6 +65,7 @@
                             $scope.loading = true;
                             MetaService.getMeta().then(function(d) {
                                 $scope.title = d.data.title;
+                                $scope.extra = extra;
                                 $scope.refresh = d.data.refresh;
                                 document.title = d.data.title + " nAttrMon";
                                 $scope.loading = false;
@@ -127,21 +130,21 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="index.html" ng-click="startRefresh()"><i class="icon-wedo-nattrmon" style="font-size:150%;color:darkorange"></i>&nbsp;&nbsp;<span style="color:darkorange"></span><span style="color:#f5f5f5">{{title}}</span>&nbsp;<span style="font-size:75%;"> nAttrMon report</span></a>
+                    <a class="navbar-brand" href="index.html{{extra}}" ng-click="startRefresh()"><i class="icon-wedo-nattrmon" style="font-size:150%;color:darkorange"></i>&nbsp;&nbsp;<span style="color:darkorange"></span><span style="color:#f5f5f5">{{title}}</span>&nbsp;<span style="font-size:75%;"> nAttrMon report</span></a>
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right">
                         <li>
-                            <a href="index.html">Warnings</a>
+                            <a href="index.html{{extra}}">Warnings</a>
                         </li>
                         <li>
-                            <a href="now.html">Now</a>
+                            <a href="now.html{{extra}}">Now</a>
                         </li>
                         <li>
-                            <a href="history.html">History</a>
+                            <a href="history.html{{extra}}">History</a>
                         </li>
                         <li>
-                            <a href="plugs.html">Plugs</a>
+                            <a href="plugs.html{{extra}}">Plugs</a>
                         </li>                         
                     </ul>
                 </div>
@@ -174,8 +177,8 @@
                 </div>
                 <div class="col-sm-10 col-sm-offset-2 main">
                     <center>
-                        <small ng-if="warnsHigh > 0" style="color: red"><b><i class="fa fa-exclamation-circle"></i> <a href="index.html#High">#{{warnsHigh}} high warning(s)</a></b><br></small>
-                        <small ng-if="warnsMedium > 0" style="color: yellow"><i class="fa fa-exclamation-triangle"></i> <a href="index.html#Medium">#{{warnsMedium}} medium warning(s)</a><br></small>
+                        <small ng-if="warnsHigh > 0" style="color: red"><b><i class="fa fa-exclamation-circle"></i> <a href="index.html{{extra}}#High">#{{warnsHigh}} high warning(s)</a></b><br></small>
+                        <small ng-if="warnsMedium > 0" style="color: yellow"><i class="fa fa-exclamation-triangle"></i> <a href="index.html{{extra}}#Medium">#{{warnsMedium}} medium warning(s)</a><br></small>
                     </center>
                     <div ng-repeat="c in ctgs | orderBy: 'name'">
                         <h3 class="sub-header" id="{{c.name}}">{{c.name}}</h3>
@@ -196,7 +199,7 @@
                                         </td>
                                         <td>
                                             <span ng-bind-html="render(a.val, a.type)"></span>
-                                            <span ng-show="showme" class="animate-show"><br><small><i>last value: <span ng-bind-html="render(a.lastval, a.type)"></span> @<span ng-bind-html="render(a.lastmoddate, 'date')"></span> (<a href="/history.html?attr={{a.name}}">see more</a>)</i></small></span>
+                                            <span ng-show="showme" class="animate-show"><br><small><i>last value: <span ng-bind-html="render(a.lastval, a.type)"></span> @<span ng-bind-html="render(a.lastmoddate, 'date')"></span> (<a href="/history.html{{extra}}&attr={{a.name}}">see more</a>)</i></small></span>
                                         </td>
                                         <td align="right" style="white-space: nowrap; width: 1%">
                                             <small>Last modify: <span ng-bind-html="render(a.moddate, 'date')"></span><span ng-show="showme" class="animate-show"><br>Last check: <span ng-bind-html="render(a.lastcheck, 'date')"></span></small>
