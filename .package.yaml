@@ -108,6 +108,7 @@ files:
   - config/objects/nOutput_HTTP.js
   - config/objects/nValidation_Yellows.js
   - config/objects/nInput_RunningFlows.js
+  - config/objects/nOutput_DSV.js
   - config/objects/nInput_LogErrorAgg.js
   - config/objects/nInput_IMMemory.js
   - config/objects/nInput_CBPMSemaphores.js
@@ -128,14 +129,16 @@ files:
   - config/validations.disabled/yaml/03.validateSemaphores.yaml
   - config/outputs.disabled/00.init.js
   - config/outputs.disabled/js/09.channels.js
+  - config/outputs.disabled/js/4.logFile.js
   - config/outputs.disabled/1.oracleoutput.js
   - config/outputs.disabled/yaml/03.http.yaml
   - config/outputs.disabled/yaml/04.emailWarnings.yaml
+  - config/outputs.disabled/yaml/4.csvFile.yaml
   - config/outputs.disabled/yaml/09.channels.yaml
   - config/outputs.disabled/yaml/02.httpjson.yaml
   - config/outputs.disabled/yaml/01.h2output.yaml
-  - config/outputs.disabled/4.logFile.js
   - config/outputs/add_files_from_outputs_disabled.dummy
+  - config/outputs/4.csvFile.yaml
   - config/move_files_from_the_disabled_folders.dummy
   - config/inputs/add_files_from_inputs_disabled.dummy
   - .package.yaml
@@ -227,7 +230,7 @@ filesHash:
   config/objects/nInput_EndPoints.js: 03084acddad1d42bd447ab5890dadac629681f96
   config/objects/nOutput_H2.js: 4aa7668410f3bbf64b1c7cd3a8b6031e5367903d
   config/objects/nInput_Semaphores.js: f7dbeabb7e1baebef64fa09a9a9fd68e59026aa2
-  config/objects/nOutput_Stdout.js: 5a0d72c32e2f969fe3e27cbad64c7ccf0959aad1
+  config/objects/nOutput_Stdout.js: 389169e32c1beb2a1f725de1d6cc92c7bce7ed22
   config/objects/nInput_Filesystem.js: 2522c3fa0cb229559b47e35360e50c72a2b82f0b
   config/objects/nOutput_Channels.js: b05f38f15a70c6a585aa404db158e89d36dab59b
   config/objects/nInput_RAIDMemory.js: bf7945d3af630132abf94f737524f38b8a4f74bd
@@ -237,13 +240,14 @@ filesHash:
   config/objects/nValidation_Semaphores.js: 97b6c1850b80d95cc92c1c50b05fdfa26467fd94
   config/objects/nInput_Sessions.js: 0a68a945ba6c4b98d139b8c666c275c4fc716f81
   config/objects/nOutput_Oracle.js: ab0f2fe7958952437ae93030715633858462269f
-  config/objects/nOutput_Log.js: 2a1d2d88a54b31b0fa1cece340c4a95ce8888476
+  config/objects/nOutput_Log.js: 69ef02bb37d306deb390f303a8bbf6e2234be792
   config/objects/nOutput_Notifications.js: 53c73cac46e6bd99de0e8ec5bf6a7ca63590ff5e
   config/objects/nInput_FilesystemCount.js: 9404886daec28b17475f2b05ab4a9a8f2afe321d
   config/objects/nValidation_AFPing.js: f48325d605e693dee3ab2912224cda0fde11e490
   config/objects/nOutput_HTTP.js: 26bf4443d99146780bffa070543b4f32bf2cd918
   config/objects/nValidation_Yellows.js: 942478fcd710e392add0b6ef6349ef51a895b764
   config/objects/nInput_RunningFlows.js: 578e1d231ee304d5b86f569e31f5ea95b04bccfd
+  config/objects/nOutput_DSV.js: c7abe8eedc378da6f310aea61c13ead03c94cdde
   config/objects/nInput_LogErrorAgg.js: 29b9201607432b841f41871a83475d9a25409215
   config/objects/nInput_IMMemory.js: 1b3570cb3c64005c6b731f837c0684cd22cb5403
   config/objects/nInput_CBPMSemaphores.js: e22546f3b1de2b17d959c0fdbf0a35ea644c78ad
@@ -264,14 +268,16 @@ filesHash:
   config/validations.disabled/yaml/03.validateSemaphores.yaml: 4e6c3313132e8636abbe3e8c0c8fd63fe42ac225
   config/outputs.disabled/00.init.js: 2fc376d4557dc91ec036f115661c7634f7f8f0eb
   config/outputs.disabled/js/09.channels.js: 90b095b9c68e01b3aa724a8c370391f6d75cadf5
+  config/outputs.disabled/js/4.logFile.js: 64e401aa6e0ee55a2abbc3fd8fe72b965e8b9ddb
   config/outputs.disabled/1.oracleoutput.js: 0f7ce56148ba6772216ce4402f5509077c30af6e
   config/outputs.disabled/yaml/03.http.yaml: 24096733c110810674f6219dbb00ee96a2858b33
   config/outputs.disabled/yaml/04.emailWarnings.yaml: 5b4705eb204fc63d2627ab3f5452fc697379568f
+  config/outputs.disabled/yaml/4.csvFile.yaml: f60dfbca5b88b5225c676bafcd5ccbeb23c6930c
   config/outputs.disabled/yaml/09.channels.yaml: f38c539f163ec3457267c55d4248237b76caee14
   config/outputs.disabled/yaml/02.httpjson.yaml: 6d14637f7fff15b4d75481597bb9ae4f77f12665
   config/outputs.disabled/yaml/01.h2output.yaml: 49d7992bfbcf70ea667d6aeb4f0c71e7c16a1067
-  config/outputs.disabled/4.logFile.js: 00ee44fa9c934d02beb6ec62b1aff6c473c14dbb
   config/outputs/add_files_from_outputs_disabled.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
+  config/outputs/4.csvFile.yaml: f60dfbca5b88b5225c676bafcd5ccbeb23c6930c
   config/move_files_from_the_disabled_folders.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
   config/inputs/add_files_from_inputs_disabled.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
   tests/nattrmonTester.js: 1676171ab793cdb67da4de3e033aee110aa8ef20
