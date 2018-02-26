@@ -46,12 +46,12 @@ nInput_Shell.prototype.input = function(scope, args) {
 				if (this.parseJson) {
 					res.push({
 						key: this.params.keys[i],
-						result: jsonParse(ssh.exec(this.cmd))
+						result: jsonParse(ssh.exec(templify(this.cmd)))
 					});
 				} else {
 					res.push({
 						key: this.params.keys[i],
-						result: ssh.exec(this.cmd)
+						result: ssh.exec(templify(this.cmd))
 					});
 				}
 			});
@@ -70,9 +70,9 @@ nInput_Shell.prototype.input = function(scope, args) {
 		var attrname = templify(this.attrTemplate, { name: this.name });
 
 		if (this.parseJson) {
-			ret[attrname] = jsonParse(sh(this.cmd));
+			ret[attrname] = jsonParse(sh(templify(this.cmd)));
 		} else {
-			ret[attrname] = sh(this.cmd);
+			ret[attrname] = sh(templify(this.cmd));
 		}
 	}
 

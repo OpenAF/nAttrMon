@@ -19,281 +19,281 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20180225'
+version: '20180226'
 dependencies:
   openaf: '>=20180130'
 files:
-  - nattrmon.yaml.sample
-  - util/backupConfig.yaml
-  - util/loadDB2Elastic.js
-  - util/clean.yaml
-  - config/objects.assets/noutputhttp/index.html
-  - config/objects.assets/noutputhttp/now.html
-  - config/objects.assets/noutputhttp/css/bootstrap.min.css
-  - config/objects.assets/noutputhttp/css/nattrmon.css
-  - config/objects.assets/noutputhttp/css/font-awesome.min.css
-  - config/objects.assets/noutputhttp/css/bootstrap-theme.min.css
-  - config/objects.assets/noutputhttp/js/angular.min.js
-  - config/objects.assets/noutputhttp/js/nattrmon_js.js
-  - config/objects.assets/noutputhttp/js/retina.min.js
-  - config/objects.assets/noutputhttp/js/ie10-viewport-bug-workaround.js
-  - config/objects.assets/noutputhttp/js/jquery.min.js
-  - config/objects.assets/noutputhttp/js/bootstrap.min.js
-  - config/objects.assets/noutputhttp/js/holder.min.js
-  - config/objects.assets/noutputhttp/js/angular-animate.min.js
-  - config/objects.assets/noutputhttp/dashboard.css
-  - config/objects.assets/noutputhttp/plugs.html
-  - config/objects.assets/noutputhttp/favicon.png
-  - config/objects.assets/noutputhttp/history.html
-  - config/objects.assets/noutputhttp/fonts/fontawesome-webfont.svg
-  - config/objects.assets/noutputhttp/fonts/FontAwesome.otf
-  - config/objects.assets/noutputhttp/fonts/glyphicons-halflings-regular.woff
-  - config/objects.assets/noutputhttp/fonts/glyphicons-halflings-regular.eot
-  - config/objects.assets/noutputhttp/fonts/icon.svg
-  - config/objects.assets/noutputhttp/fonts/glyphicons-halflings-regular.ttf
-  - config/objects.assets/noutputhttp/fonts/fontawesome-webfont.woff2
-  - config/objects.assets/noutputhttp/fonts/icon.eot
-  - config/objects.assets/noutputhttp/fonts/icon.woff
-  - config/objects.assets/noutputhttp/fonts/fontawesome-webfont.ttf
-  - config/objects.assets/noutputhttp/fonts/fontawesome-webfont.woff
-  - config/objects.assets/noutputhttp/fonts/icon.ttf
-  - config/objects.assets/noutputhttp/fonts/glyphicons-halflings-regular.svg
-  - config/objects.assets/noutputhttp/fonts/fontawesome-webfont.eot
-  - config/objects.assets/noutputemailwarnings/logo.png
-  - config/objects.assets/noutputemailwarnings/warningEmailTemplate.hbs
-  - config/inputs.disabled/js/11.OSInfo.js
-  - config/inputs.disabled/js/41.fms.rulestatus.js
-  - config/inputs.disabled/js/09.filesystemcount.js
+  - .gitignore
+  - .package.yaml
+  - config/inputs/add_files_from_inputs_disabled.dummy
   - config/inputs.disabled/js/00.raid.init.js
-  - config/inputs.disabled/js/10.filesystem.js
-  - config/inputs.disabled/js/13.ListDirFiles.js
-  - config/inputs.disabled/js/12.ShellCmd.js
   - config/inputs.disabled/js/05.filesystemCount.js
-  - config/inputs.disabled/js/22.fraud.snapshots.js
   - config/inputs.disabled/js/07.logErrorAgg.js
+  - config/inputs.disabled/js/09.filesystemcount.js
+  - config/inputs.disabled/js/10.filesystem.js
   - config/inputs.disabled/js/10.filesystemcount.js
+  - config/inputs.disabled/js/11.OSInfo.js
+  - config/inputs.disabled/js/12.ShellCmd.js
+  - config/inputs.disabled/js/13.ListDirFiles.js
+  - config/inputs.disabled/js/22.fraud.snapshots.js
+  - config/inputs.disabled/js/41.fms.rulestatus.js
   - config/inputs.disabled/yaml/01.ping.yaml
-  - config/inputs.disabled/yaml/10.filesystem.yaml
-  - config/inputs.disabled/yaml/04.db.appadm.yaml
-  - config/inputs.disabled/yaml/12.shellCmd.yaml
-  - config/inputs.disabled/yaml/10.filesystemcount.mobsubscribers.yaml
-  - config/inputs.disabled/yaml/10.sessions.yaml
-  - config/inputs.disabled/yaml/02.test.yaml
-  - config/inputs.disabled/yaml/10.osinfo.yaml
-  - config/inputs.disabled/yaml/03.semaphores.yaml
-  - config/inputs.disabled/yaml/10.filesystemcount.fixed.yaml
-  - config/inputs.disabled/yaml/09.memory.yaml
   - config/inputs.disabled/yaml/01.test.yaml
+  - config/inputs.disabled/yaml/02.test.yaml
+  - config/inputs.disabled/yaml/03.semaphores.yaml
+  - config/inputs.disabled/yaml/04.db.appadm.yaml
+  - config/inputs.disabled/yaml/09.memory.yaml
+  - config/inputs.disabled/yaml/10.filesystem.yaml
+  - config/inputs.disabled/yaml/10.filesystemcount.fixed.yaml
+  - config/inputs.disabled/yaml/10.filesystemcount.mobsubscribers.yaml
+  - config/inputs.disabled/yaml/10.osinfo.yaml
+  - config/inputs.disabled/yaml/10.sessions.yaml
   - config/inputs.disabled/yaml/11.times.yaml
   - config/inputs.disabled/yaml/12.connections.yaml
-  - config/objects/nInput_OSInfo.js
-  - config/objects/nOutput_EmailWarnings.js
-  - config/objects/nInput_EndPoints.js
-  - config/objects/nOutput_H2.js
-  - config/objects/nInput_Semaphores.js
-  - config/objects/nOutput_Stdout.js
-  - config/objects/nInput_Filesystem.js
-  - config/objects/nOutput_Channels.js
-  - config/objects/nInput_RAIDMemory.js
+  - config/inputs.disabled/yaml/12.shellCmd.yaml
+  - config/move_files_from_the_disabled_folders.dummy
   - config/objects/nInput_AFPing.js
-  - config/objects/nOutput_HTTP_JSON.js
-  - config/objects/nInput_FMSRuleStatus.js
-  - config/objects/nValidation_Semaphores.js
-  - config/objects/nInput_Sessions.js
-  - config/objects/nOutput_Oracle.js
-  - config/objects/nOutput_Log.js
-  - config/objects/nOutput_Notifications.js
-  - config/objects/nInput_FilesystemCount.js
-  - config/objects/nValidation_AFPing.js
-  - config/objects/nOutput_HTTP.js
-  - config/objects/nValidation_Yellows.js
-  - config/objects/nInput_RunningFlows.js
-  - config/objects/nOutput_DSV.js
-  - config/objects/nInput_LogErrorAgg.js
-  - config/objects/nInput_IMMemory.js
   - config/objects/nInput_CBPMSemaphores.js
-  - config/objects/nInput_Shell.js
-  - config/objects/nValidation_Generic.js
   - config/objects/nInput_CompareTimes.js
   - config/objects/nInput_DB.js
-  - config/validations/add_files_from_validations_disabled.dummy
-  - config/validations.disabled/js/01.validatePing.js
-  - config/validations.disabled/js/30.validateYellows.js
-  - config/validations.disabled/js/03.validateSemaphores.js
-  - config/validations.disabled/js/04.validateErrorFlows.js
-  - config/validations.disabled/yaml/14.validateCompareTimes.yaml
-  - config/validations.disabled/yaml/01.validatePingPorts.yaml
-  - config/validations.disabled/yaml/05.validateErrorFlows.yaml
-  - config/validations.disabled/yaml/01.somebodyTouched.yaml
-  - config/validations.disabled/yaml/01.validatePing.yaml
-  - config/validations.disabled/yaml/03.validateSemaphores.yaml
+  - config/objects/nInput_EndPoints.js
+  - config/objects/nInput_Filesystem.js
+  - config/objects/nInput_FilesystemCount.js
+  - config/objects/nInput_FMSRuleStatus.js
+  - config/objects/nInput_IMMemory.js
+  - config/objects/nInput_LogErrorAgg.js
+  - config/objects/nInput_OSInfo.js
+  - config/objects/nInput_RAIDMemory.js
+  - config/objects/nInput_RunningFlows.js
+  - config/objects/nInput_Semaphores.js
+  - config/objects/nInput_Sessions.js
+  - config/objects/nInput_Shell.js
+  - config/objects/nOutput_Channels.js
+  - config/objects/nOutput_DSV.js
+  - config/objects/nOutput_EmailWarnings.js
+  - config/objects/nOutput_H2.js
+  - config/objects/nOutput_HTTP.js
+  - config/objects/nOutput_HTTP_JSON.js
+  - config/objects/nOutput_Log.js
+  - config/objects/nOutput_Notifications.js
+  - config/objects/nOutput_Oracle.js
+  - config/objects/nOutput_Stdout.js
+  - config/objects/nValidation_AFPing.js
+  - config/objects/nValidation_Generic.js
+  - config/objects/nValidation_Semaphores.js
+  - config/objects/nValidation_Yellows.js
+  - config/objects.assets/noutputemailwarnings/logo.png
+  - config/objects.assets/noutputemailwarnings/warningEmailTemplate.hbs
+  - config/objects.assets/noutputhttp/css/bootstrap-theme.min.css
+  - config/objects.assets/noutputhttp/css/bootstrap.min.css
+  - config/objects.assets/noutputhttp/css/font-awesome.min.css
+  - config/objects.assets/noutputhttp/css/nattrmon.css
+  - config/objects.assets/noutputhttp/dashboard.css
+  - config/objects.assets/noutputhttp/favicon.png
+  - config/objects.assets/noutputhttp/fonts/fontawesome-webfont.eot
+  - config/objects.assets/noutputhttp/fonts/fontawesome-webfont.svg
+  - config/objects.assets/noutputhttp/fonts/fontawesome-webfont.ttf
+  - config/objects.assets/noutputhttp/fonts/fontawesome-webfont.woff
+  - config/objects.assets/noutputhttp/fonts/fontawesome-webfont.woff2
+  - config/objects.assets/noutputhttp/fonts/FontAwesome.otf
+  - config/objects.assets/noutputhttp/fonts/glyphicons-halflings-regular.eot
+  - config/objects.assets/noutputhttp/fonts/glyphicons-halflings-regular.svg
+  - config/objects.assets/noutputhttp/fonts/glyphicons-halflings-regular.ttf
+  - config/objects.assets/noutputhttp/fonts/glyphicons-halflings-regular.woff
+  - config/objects.assets/noutputhttp/fonts/icon.eot
+  - config/objects.assets/noutputhttp/fonts/icon.svg
+  - config/objects.assets/noutputhttp/fonts/icon.ttf
+  - config/objects.assets/noutputhttp/fonts/icon.woff
+  - config/objects.assets/noutputhttp/history.html
+  - config/objects.assets/noutputhttp/index.html
+  - config/objects.assets/noutputhttp/js/angular-animate.min.js
+  - config/objects.assets/noutputhttp/js/angular.min.js
+  - config/objects.assets/noutputhttp/js/bootstrap.min.js
+  - config/objects.assets/noutputhttp/js/holder.min.js
+  - config/objects.assets/noutputhttp/js/ie10-viewport-bug-workaround.js
+  - config/objects.assets/noutputhttp/js/jquery.min.js
+  - config/objects.assets/noutputhttp/js/nattrmon_js.js
+  - config/objects.assets/noutputhttp/js/retina.min.js
+  - config/objects.assets/noutputhttp/now.html
+  - config/objects.assets/noutputhttp/plugs.html
+  - config/outputs/add_files_from_outputs_disabled.dummy
   - config/outputs.disabled/00.init.js
+  - config/outputs.disabled/1.oracleoutput.js
   - config/outputs.disabled/js/09.channels.js
   - config/outputs.disabled/js/4.logFile.js
-  - config/outputs.disabled/1.oracleoutput.js
+  - config/outputs.disabled/yaml/01.h2output.yaml
+  - config/outputs.disabled/yaml/02.httpjson.yaml
   - config/outputs.disabled/yaml/03.http.yaml
   - config/outputs.disabled/yaml/04.emailWarnings.yaml
-  - config/outputs.disabled/yaml/4.csvFile.yaml
   - config/outputs.disabled/yaml/09.channels.yaml
-  - config/outputs.disabled/yaml/02.httpjson.yaml
-  - config/outputs.disabled/yaml/01.h2output.yaml
-  - config/outputs/add_files_from_outputs_disabled.dummy
-  - config/move_files_from_the_disabled_folders.dummy
-  - config/inputs/add_files_from_inputs_disabled.dummy
-  - .package.yaml
+  - config/outputs.disabled/yaml/4.csvFile.yaml
+  - config/validations/add_files_from_validations_disabled.dummy
+  - config/validations.disabled/js/01.validatePing.js
+  - config/validations.disabled/js/03.validateSemaphores.js
+  - config/validations.disabled/js/04.validateErrorFlows.js
+  - config/validations.disabled/js/30.validateYellows.js
+  - config/validations.disabled/yaml/01.somebodyTouched.yaml
+  - config/validations.disabled/yaml/01.validatePing.yaml
+  - config/validations.disabled/yaml/01.validatePingPorts.yaml
+  - config/validations.disabled/yaml/03.validateSemaphores.yaml
+  - config/validations.disabled/yaml/05.validateErrorFlows.yaml
+  - config/validations.disabled/yaml/14.validateCompareTimes.yaml
+  - lib/nattribute.js
+  - lib/nattributes.js
+  - lib/nattributevalue.js
+  - lib/ninput.js
+  - lib/nmonitoredobject.js
+  - lib/noutput.js
+  - lib/nplug.js
+  - lib/nvalidation.js
+  - lib/nwarning.js
+  - lib/nwarnings.js
+  - nattrmon.js
+  - nattrmon.yaml.sample
+  - README.md
+  - tests/inputDBTest.yml
+  - tests/inputShellTest.yml
   - tests/nattrmonTester.js
   - tests/outputTest.yml
   - tests/unitTest.js
-  - tests/inputDBTest.yml
-  - tests/inputShellTest.yml
   - tests/unitTestYAML.js
-  - README.md
-  - .gitignore
-  - lib/nattributes.js
-  - lib/nattributevalue.js
-  - lib/nwarnings.js
-  - lib/nwarning.js
-  - lib/nattribute.js
-  - lib/nplug.js
-  - lib/ninput.js
-  - lib/nvalidation.js
-  - lib/nmonitoredobject.js
-  - lib/noutput.js
-  - nattrmon.js
+  - util/backupConfig.yaml
+  - util/clean.yaml
+  - util/loadDB2Elastic.js
 filesHash:
-  nattrmon.yaml.sample: 0057d835a9f707b29d76e04316a76d78768ac01d
-  util/backupConfig.yaml: f84a08a3c5c8aa50f5aa606585c1453901c20d84
-  util/loadDB2Elastic.js: 190b68c03e71fa859df71429da4c31035f20ce94
-  util/clean.yaml: 616b7ddb24b12af7f1cbec473282decb57843869
-  config/objects.assets/noutputhttp/index.html: 21aa122aa667fadf417a80fcb284728a128139ab
-  config/objects.assets/noutputhttp/now.html: 7528350e8e41140d797aa83b2089317daba96bdd
-  config/objects.assets/noutputhttp/css/bootstrap.min.css: ed29315e0ffb3f14382431f2724235bf67f44eb3
-  config/objects.assets/noutputhttp/css/nattrmon.css: 1e1b1eaea971a8a736c0fa5943a33c630fbadd68
-  config/objects.assets/noutputhttp/css/font-awesome.min.css: 05ea25bc9b3ac48993e1fee322d3bc94b49a6e22
-  config/objects.assets/noutputhttp/css/bootstrap-theme.min.css: fc6b4268fbd57ad95d2b41a1d4d6866f222fbdb2
-  config/objects.assets/noutputhttp/js/angular.min.js: d0e3fccc46957eeaaf5611075a2015b410b64725
-  config/objects.assets/noutputhttp/js/nattrmon_js.js: 183bc1c0e18aa62259d2e4a9a10697c810ae60ca
-  config/objects.assets/noutputhttp/js/retina.min.js: da44a409a0907960a6526cf35807ecaf61059223
-  config/objects.assets/noutputhttp/js/ie10-viewport-bug-workaround.js: b133cb4aaff8f32026190281d8a27456eace82b1
-  config/objects.assets/noutputhttp/js/jquery.min.js: 7ed710bf2b3a08cee23950790208683b0346fb1c
-  config/objects.assets/noutputhttp/js/bootstrap.min.js: 253711c6d825de55a8360552573be950da180614
-  config/objects.assets/noutputhttp/js/holder.min.js: c1ad1dcfebf4c1770d40fc5d7bc46ca692d12822
-  config/objects.assets/noutputhttp/js/angular-animate.min.js: 648e2ca79c0c074b2b61042e91d31b353ad290d3
-  config/objects.assets/noutputhttp/dashboard.css: 96d9d77e456868b0797afe0ce344be026315d535
-  config/objects.assets/noutputhttp/plugs.html: 79d9a49816aedbcf9847352b90291a00982da9ac
-  config/objects.assets/noutputhttp/favicon.png: 1ad74b6b72424d71c71da6f832ca8f4e7ac5d632
-  config/objects.assets/noutputhttp/history.html: 7dde5f5088c736a2927f27b4d67018e0b8e7c438
-  config/objects.assets/noutputhttp/fonts/fontawesome-webfont.svg: 2b3c8ba7008cc014d8fb37abc6f9f49aeda83824
-  config/objects.assets/noutputhttp/fonts/FontAwesome.otf: 0112e96f327d413938d37c1693806f468ffdbace
-  config/objects.assets/noutputhttp/fonts/glyphicons-halflings-regular.woff: 278e49a86e634da6f2a02f3b47dd9d2a8f26210f
-  config/objects.assets/noutputhttp/fonts/glyphicons-halflings-regular.eot: 86b6f62b7853e67d3e635f6512a5a5efc58ea3c3
-  config/objects.assets/noutputhttp/fonts/icon.svg: 3890f01fd40b7ac222f232f7ee7ac9f43a249953
-  config/objects.assets/noutputhttp/fonts/glyphicons-halflings-regular.ttf: 44bc1850f570972267b169ae18f1cb06b611ffa2
-  config/objects.assets/noutputhttp/fonts/fontawesome-webfont.woff2: 574ea2698c03ae9477db2ea3baf460ee32f1a7ea
-  config/objects.assets/noutputhttp/fonts/icon.eot: 1821dc5d05f13dc52ec7363f38258265f88202e8
-  config/objects.assets/noutputhttp/fonts/icon.woff: 24762bf06bbde956f97836f84d9af098f237c44f
-  config/objects.assets/noutputhttp/fonts/fontawesome-webfont.ttf: 27cf1f2ec59aece6938c7bb2feb0e287ea778ff9
-  config/objects.assets/noutputhttp/fonts/fontawesome-webfont.woff: 507970402e328b2baeb05bde73bf9ded4e2c3a2d
-  config/objects.assets/noutputhttp/fonts/icon.ttf: 35f955b5810ecdddfdcf3d6c0140186882a19bdb
-  config/objects.assets/noutputhttp/fonts/glyphicons-halflings-regular.svg: de51a8494180a6db074af2dee2383f0a363c5b08
-  config/objects.assets/noutputhttp/fonts/fontawesome-webfont.eot: b3c2f08e73320135b69c23a3908b87a12053a2f6
-  config/objects.assets/noutputemailwarnings/logo.png: ee5366a3aa207c69d5139e04e7a4523078b974ba
-  config/objects.assets/noutputemailwarnings/warningEmailTemplate.hbs: e5913675ad5adf1bd217a15de9148c65e39f3822
-  config/inputs.disabled/js/11.OSInfo.js: f388c959fb4e9b05708c17c07251192dcd4d3d0d
-  config/inputs.disabled/js/41.fms.rulestatus.js: cd8b30f94543a6fa3ada1c455da4e0accc3ca770
-  config/inputs.disabled/js/09.filesystemcount.js: 076acd8dcea5205d3777498e9393c05d2296fb8b
+  .gitignore: f7206c200c6c95e6ce56afc36f29f63106f16be6
+  config/inputs/add_files_from_inputs_disabled.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
   config/inputs.disabled/js/00.raid.init.js: d6c7847577ab7a88cf84e2d6ce24b2d0258213ef
-  config/inputs.disabled/js/10.filesystem.js: a883f937e97cb77905e339918d1ce2b522d4034c
-  config/inputs.disabled/js/13.ListDirFiles.js: 036bbed7d54bc873a5437fa757af5e7b757b9345
-  config/inputs.disabled/js/12.ShellCmd.js: 3c34d9f76d2fa8d3f8642dc6daaf6e9008dc137d
   config/inputs.disabled/js/05.filesystemCount.js: e8d4d119ec2d022033309bc18de8a2dc3a9d66aa
-  config/inputs.disabled/js/22.fraud.snapshots.js: 1af700aa9302c8a0b0a3e381dac357922d2d2a39
   config/inputs.disabled/js/07.logErrorAgg.js: 5d3c5c139c8aa224b8a6175d53c5d33113037588
+  config/inputs.disabled/js/09.filesystemcount.js: 076acd8dcea5205d3777498e9393c05d2296fb8b
+  config/inputs.disabled/js/10.filesystem.js: a883f937e97cb77905e339918d1ce2b522d4034c
   config/inputs.disabled/js/10.filesystemcount.js: 735c57c35a0ca7e3c40120dd69865f0833f1dacd
+  config/inputs.disabled/js/11.OSInfo.js: f388c959fb4e9b05708c17c07251192dcd4d3d0d
+  config/inputs.disabled/js/12.ShellCmd.js: 3c34d9f76d2fa8d3f8642dc6daaf6e9008dc137d
+  config/inputs.disabled/js/13.ListDirFiles.js: 036bbed7d54bc873a5437fa757af5e7b757b9345
+  config/inputs.disabled/js/22.fraud.snapshots.js: 1af700aa9302c8a0b0a3e381dac357922d2d2a39
+  config/inputs.disabled/js/41.fms.rulestatus.js: cd8b30f94543a6fa3ada1c455da4e0accc3ca770
   config/inputs.disabled/yaml/01.ping.yaml: 28654d869c766481cfa8a7b577239de8cc560ca4
-  config/inputs.disabled/yaml/10.filesystem.yaml: e8b8a6149c8f32128cd3c601081f6f67b3822e70
-  config/inputs.disabled/yaml/04.db.appadm.yaml: eb64f93d7b7695edc9fd36caeb2bd53157a329db
-  config/inputs.disabled/yaml/12.shellCmd.yaml: 99f3999328344d2910484d31b2da10f3f98d54ee
-  config/inputs.disabled/yaml/10.filesystemcount.mobsubscribers.yaml: 7a606e7180296c916b585bac13313452ca73840d
-  config/inputs.disabled/yaml/10.sessions.yaml: 460da54e61f71ae9b1f0ef325f70d87b55e6861c
-  config/inputs.disabled/yaml/02.test.yaml: 3f101d11aaa6467cf29bc047f1afe2c2994b6756
-  config/inputs.disabled/yaml/10.osinfo.yaml: bd4b88bbd3ddf03fb40d90264ab85766bfbf452a
-  config/inputs.disabled/yaml/03.semaphores.yaml: fd31533483b329db1cf558eb8607e2fd0cdf7328
-  config/inputs.disabled/yaml/10.filesystemcount.fixed.yaml: b36490b7dfa1794602a46c108e915d3bc45d55f8
-  config/inputs.disabled/yaml/09.memory.yaml: 7f25e9591f3bc16d3181a56a92b1100709afccd3
   config/inputs.disabled/yaml/01.test.yaml: 1f769bf740a9820d8ed8f4684f74c7e53611a765
+  config/inputs.disabled/yaml/02.test.yaml: 3f101d11aaa6467cf29bc047f1afe2c2994b6756
+  config/inputs.disabled/yaml/03.semaphores.yaml: fd31533483b329db1cf558eb8607e2fd0cdf7328
+  config/inputs.disabled/yaml/04.db.appadm.yaml: eb64f93d7b7695edc9fd36caeb2bd53157a329db
+  config/inputs.disabled/yaml/09.memory.yaml: 7f25e9591f3bc16d3181a56a92b1100709afccd3
+  config/inputs.disabled/yaml/10.filesystem.yaml: e8b8a6149c8f32128cd3c601081f6f67b3822e70
+  config/inputs.disabled/yaml/10.filesystemcount.fixed.yaml: b36490b7dfa1794602a46c108e915d3bc45d55f8
+  config/inputs.disabled/yaml/10.filesystemcount.mobsubscribers.yaml: 7a606e7180296c916b585bac13313452ca73840d
+  config/inputs.disabled/yaml/10.osinfo.yaml: bd4b88bbd3ddf03fb40d90264ab85766bfbf452a
+  config/inputs.disabled/yaml/10.sessions.yaml: 460da54e61f71ae9b1f0ef325f70d87b55e6861c
   config/inputs.disabled/yaml/11.times.yaml: 018d23a5788ca3d728da0ad5dc1eec174debc3ac
   config/inputs.disabled/yaml/12.connections.yaml: 55a46e2273b31cf96b6d83b3791d1c857dfacdda
-  config/objects/nInput_OSInfo.js: 3418957f8d9e4d47dba8dd1100d0d101337904b3
-  config/objects/nOutput_EmailWarnings.js: c5c678fa018f57cfc660fd0faabdd1c39a2f6680
-  config/objects/nInput_EndPoints.js: 03084acddad1d42bd447ab5890dadac629681f96
-  config/objects/nOutput_H2.js: 4aa7668410f3bbf64b1c7cd3a8b6031e5367903d
-  config/objects/nInput_Semaphores.js: f7dbeabb7e1baebef64fa09a9a9fd68e59026aa2
-  config/objects/nOutput_Stdout.js: 389169e32c1beb2a1f725de1d6cc92c7bce7ed22
-  config/objects/nInput_Filesystem.js: 2522c3fa0cb229559b47e35360e50c72a2b82f0b
-  config/objects/nOutput_Channels.js: b05f38f15a70c6a585aa404db158e89d36dab59b
-  config/objects/nInput_RAIDMemory.js: bf7945d3af630132abf94f737524f38b8a4f74bd
+  config/inputs.disabled/yaml/12.shellCmd.yaml: 99f3999328344d2910484d31b2da10f3f98d54ee
+  config/move_files_from_the_disabled_folders.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
   config/objects/nInput_AFPing.js: fb1405a486d3a627488f746b791c373579c3a6bc
-  config/objects/nOutput_HTTP_JSON.js: e2e614f43fa181f09cb70d34a4e9f13255fe1171
-  config/objects/nInput_FMSRuleStatus.js: a5e4f9a505865b394a81ae4bbbdd839c91d07902
-  config/objects/nValidation_Semaphores.js: 97b6c1850b80d95cc92c1c50b05fdfa26467fd94
-  config/objects/nInput_Sessions.js: 0a68a945ba6c4b98d139b8c666c275c4fc716f81
-  config/objects/nOutput_Oracle.js: ab0f2fe7958952437ae93030715633858462269f
-  config/objects/nOutput_Log.js: 69ef02bb37d306deb390f303a8bbf6e2234be792
-  config/objects/nOutput_Notifications.js: 53c73cac46e6bd99de0e8ec5bf6a7ca63590ff5e
-  config/objects/nInput_FilesystemCount.js: 9404886daec28b17475f2b05ab4a9a8f2afe321d
-  config/objects/nValidation_AFPing.js: f48325d605e693dee3ab2912224cda0fde11e490
-  config/objects/nOutput_HTTP.js: 26bf4443d99146780bffa070543b4f32bf2cd918
-  config/objects/nValidation_Yellows.js: 942478fcd710e392add0b6ef6349ef51a895b764
-  config/objects/nInput_RunningFlows.js: 578e1d231ee304d5b86f569e31f5ea95b04bccfd
-  config/objects/nOutput_DSV.js: c7abe8eedc378da6f310aea61c13ead03c94cdde
-  config/objects/nInput_LogErrorAgg.js: 29b9201607432b841f41871a83475d9a25409215
-  config/objects/nInput_IMMemory.js: 1b3570cb3c64005c6b731f837c0684cd22cb5403
   config/objects/nInput_CBPMSemaphores.js: e22546f3b1de2b17d959c0fdbf0a35ea644c78ad
-  config/objects/nInput_Shell.js: 6402aeb121ec0d3068c123c4a3fba8c57e12a070
-  config/objects/nValidation_Generic.js: 5deeec24514c63b5f01ba63faee6ec834ca7ecc4
   config/objects/nInput_CompareTimes.js: 4b4f6cc1b5bb16e3ff3378fd849e0501d7d2461a
   config/objects/nInput_DB.js: e59bb592a983c0d38f7a6b8160eceeedd596a4ea
-  config/validations/add_files_from_validations_disabled.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
-  config/validations.disabled/js/01.validatePing.js: cc572c157971ebdccd0a40a261f199cb9e509b5c
-  config/validations.disabled/js/30.validateYellows.js: 5d48afe1debcde73b91ca41fc74c99b51a8ce997
-  config/validations.disabled/js/03.validateSemaphores.js: 6ded3ea530db8b5d4621fa8bad510e281ebd632d
-  config/validations.disabled/js/04.validateErrorFlows.js: 9b7ff4c1cd03fe47082107d2c22250be1d45a2b4
-  config/validations.disabled/yaml/14.validateCompareTimes.yaml: f7ce84ebfa3e2c7bef73d152b87afe53856c4867
-  config/validations.disabled/yaml/01.validatePingPorts.yaml: 0212369d4ad2fc9f2126efa029cba4173cbec17a
-  config/validations.disabled/yaml/05.validateErrorFlows.yaml: 3e0149242482c8d02234a75f2735dd7b6d2ae7bd
-  config/validations.disabled/yaml/01.somebodyTouched.yaml: 9e8bef8264e42fc5dd6f5d3356d292c762638f1a
-  config/validations.disabled/yaml/01.validatePing.yaml: 0b19c480931ce1a5b154ebfb3f7820069f9fd654
-  config/validations.disabled/yaml/03.validateSemaphores.yaml: 4e6c3313132e8636abbe3e8c0c8fd63fe42ac225
+  config/objects/nInput_EndPoints.js: 03084acddad1d42bd447ab5890dadac629681f96
+  config/objects/nInput_Filesystem.js: 2522c3fa0cb229559b47e35360e50c72a2b82f0b
+  config/objects/nInput_FilesystemCount.js: 9404886daec28b17475f2b05ab4a9a8f2afe321d
+  config/objects/nInput_FMSRuleStatus.js: a5e4f9a505865b394a81ae4bbbdd839c91d07902
+  config/objects/nInput_IMMemory.js: 1b3570cb3c64005c6b731f837c0684cd22cb5403
+  config/objects/nInput_LogErrorAgg.js: 29b9201607432b841f41871a83475d9a25409215
+  config/objects/nInput_OSInfo.js: 3418957f8d9e4d47dba8dd1100d0d101337904b3
+  config/objects/nInput_RAIDMemory.js: bf7945d3af630132abf94f737524f38b8a4f74bd
+  config/objects/nInput_RunningFlows.js: 578e1d231ee304d5b86f569e31f5ea95b04bccfd
+  config/objects/nInput_Semaphores.js: f7dbeabb7e1baebef64fa09a9a9fd68e59026aa2
+  config/objects/nInput_Sessions.js: 0a68a945ba6c4b98d139b8c666c275c4fc716f81
+  config/objects/nInput_Shell.js: 2b84085de7c592241d5e9ee72d207ca24e9d5ad9
+  config/objects/nOutput_Channels.js: b05f38f15a70c6a585aa404db158e89d36dab59b
+  config/objects/nOutput_DSV.js: c7abe8eedc378da6f310aea61c13ead03c94cdde
+  config/objects/nOutput_EmailWarnings.js: c5c678fa018f57cfc660fd0faabdd1c39a2f6680
+  config/objects/nOutput_H2.js: 4aa7668410f3bbf64b1c7cd3a8b6031e5367903d
+  config/objects/nOutput_HTTP.js: 26bf4443d99146780bffa070543b4f32bf2cd918
+  config/objects/nOutput_HTTP_JSON.js: e2e614f43fa181f09cb70d34a4e9f13255fe1171
+  config/objects/nOutput_Log.js: 69ef02bb37d306deb390f303a8bbf6e2234be792
+  config/objects/nOutput_Notifications.js: 53c73cac46e6bd99de0e8ec5bf6a7ca63590ff5e
+  config/objects/nOutput_Oracle.js: ab0f2fe7958952437ae93030715633858462269f
+  config/objects/nOutput_Stdout.js: 389169e32c1beb2a1f725de1d6cc92c7bce7ed22
+  config/objects/nValidation_AFPing.js: f48325d605e693dee3ab2912224cda0fde11e490
+  config/objects/nValidation_Generic.js: 5deeec24514c63b5f01ba63faee6ec834ca7ecc4
+  config/objects/nValidation_Semaphores.js: 97b6c1850b80d95cc92c1c50b05fdfa26467fd94
+  config/objects/nValidation_Yellows.js: 942478fcd710e392add0b6ef6349ef51a895b764
+  config/objects.assets/noutputemailwarnings/logo.png: ee5366a3aa207c69d5139e04e7a4523078b974ba
+  config/objects.assets/noutputemailwarnings/warningEmailTemplate.hbs: e5913675ad5adf1bd217a15de9148c65e39f3822
+  config/objects.assets/noutputhttp/css/bootstrap-theme.min.css: fc6b4268fbd57ad95d2b41a1d4d6866f222fbdb2
+  config/objects.assets/noutputhttp/css/bootstrap.min.css: ed29315e0ffb3f14382431f2724235bf67f44eb3
+  config/objects.assets/noutputhttp/css/font-awesome.min.css: 05ea25bc9b3ac48993e1fee322d3bc94b49a6e22
+  config/objects.assets/noutputhttp/css/nattrmon.css: 1e1b1eaea971a8a736c0fa5943a33c630fbadd68
+  config/objects.assets/noutputhttp/dashboard.css: 96d9d77e456868b0797afe0ce344be026315d535
+  config/objects.assets/noutputhttp/favicon.png: 1ad74b6b72424d71c71da6f832ca8f4e7ac5d632
+  config/objects.assets/noutputhttp/fonts/fontawesome-webfont.eot: b3c2f08e73320135b69c23a3908b87a12053a2f6
+  config/objects.assets/noutputhttp/fonts/fontawesome-webfont.svg: 2b3c8ba7008cc014d8fb37abc6f9f49aeda83824
+  config/objects.assets/noutputhttp/fonts/fontawesome-webfont.ttf: 27cf1f2ec59aece6938c7bb2feb0e287ea778ff9
+  config/objects.assets/noutputhttp/fonts/fontawesome-webfont.woff: 507970402e328b2baeb05bde73bf9ded4e2c3a2d
+  config/objects.assets/noutputhttp/fonts/fontawesome-webfont.woff2: 574ea2698c03ae9477db2ea3baf460ee32f1a7ea
+  config/objects.assets/noutputhttp/fonts/FontAwesome.otf: 0112e96f327d413938d37c1693806f468ffdbace
+  config/objects.assets/noutputhttp/fonts/glyphicons-halflings-regular.eot: 86b6f62b7853e67d3e635f6512a5a5efc58ea3c3
+  config/objects.assets/noutputhttp/fonts/glyphicons-halflings-regular.svg: de51a8494180a6db074af2dee2383f0a363c5b08
+  config/objects.assets/noutputhttp/fonts/glyphicons-halflings-regular.ttf: 44bc1850f570972267b169ae18f1cb06b611ffa2
+  config/objects.assets/noutputhttp/fonts/glyphicons-halflings-regular.woff: 278e49a86e634da6f2a02f3b47dd9d2a8f26210f
+  config/objects.assets/noutputhttp/fonts/icon.eot: 1821dc5d05f13dc52ec7363f38258265f88202e8
+  config/objects.assets/noutputhttp/fonts/icon.svg: 3890f01fd40b7ac222f232f7ee7ac9f43a249953
+  config/objects.assets/noutputhttp/fonts/icon.ttf: 35f955b5810ecdddfdcf3d6c0140186882a19bdb
+  config/objects.assets/noutputhttp/fonts/icon.woff: 24762bf06bbde956f97836f84d9af098f237c44f
+  config/objects.assets/noutputhttp/history.html: 7dde5f5088c736a2927f27b4d67018e0b8e7c438
+  config/objects.assets/noutputhttp/index.html: 21aa122aa667fadf417a80fcb284728a128139ab
+  config/objects.assets/noutputhttp/js/angular-animate.min.js: 648e2ca79c0c074b2b61042e91d31b353ad290d3
+  config/objects.assets/noutputhttp/js/angular.min.js: d0e3fccc46957eeaaf5611075a2015b410b64725
+  config/objects.assets/noutputhttp/js/bootstrap.min.js: 253711c6d825de55a8360552573be950da180614
+  config/objects.assets/noutputhttp/js/holder.min.js: c1ad1dcfebf4c1770d40fc5d7bc46ca692d12822
+  config/objects.assets/noutputhttp/js/ie10-viewport-bug-workaround.js: b133cb4aaff8f32026190281d8a27456eace82b1
+  config/objects.assets/noutputhttp/js/jquery.min.js: 7ed710bf2b3a08cee23950790208683b0346fb1c
+  config/objects.assets/noutputhttp/js/nattrmon_js.js: 183bc1c0e18aa62259d2e4a9a10697c810ae60ca
+  config/objects.assets/noutputhttp/js/retina.min.js: da44a409a0907960a6526cf35807ecaf61059223
+  config/objects.assets/noutputhttp/now.html: 7528350e8e41140d797aa83b2089317daba96bdd
+  config/objects.assets/noutputhttp/plugs.html: 79d9a49816aedbcf9847352b90291a00982da9ac
+  config/outputs/add_files_from_outputs_disabled.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
   config/outputs.disabled/00.init.js: 2fc376d4557dc91ec036f115661c7634f7f8f0eb
+  config/outputs.disabled/1.oracleoutput.js: 0f7ce56148ba6772216ce4402f5509077c30af6e
   config/outputs.disabled/js/09.channels.js: 90b095b9c68e01b3aa724a8c370391f6d75cadf5
   config/outputs.disabled/js/4.logFile.js: 64e401aa6e0ee55a2abbc3fd8fe72b965e8b9ddb
-  config/outputs.disabled/1.oracleoutput.js: 0f7ce56148ba6772216ce4402f5509077c30af6e
+  config/outputs.disabled/yaml/01.h2output.yaml: 49d7992bfbcf70ea667d6aeb4f0c71e7c16a1067
+  config/outputs.disabled/yaml/02.httpjson.yaml: 6d14637f7fff15b4d75481597bb9ae4f77f12665
   config/outputs.disabled/yaml/03.http.yaml: 24096733c110810674f6219dbb00ee96a2858b33
   config/outputs.disabled/yaml/04.emailWarnings.yaml: 5b4705eb204fc63d2627ab3f5452fc697379568f
-  config/outputs.disabled/yaml/4.csvFile.yaml: f60dfbca5b88b5225c676bafcd5ccbeb23c6930c
   config/outputs.disabled/yaml/09.channels.yaml: f38c539f163ec3457267c55d4248237b76caee14
-  config/outputs.disabled/yaml/02.httpjson.yaml: 6d14637f7fff15b4d75481597bb9ae4f77f12665
-  config/outputs.disabled/yaml/01.h2output.yaml: 49d7992bfbcf70ea667d6aeb4f0c71e7c16a1067
-  config/outputs/add_files_from_outputs_disabled.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
-  config/move_files_from_the_disabled_folders.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
-  config/inputs/add_files_from_inputs_disabled.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
+  config/outputs.disabled/yaml/4.csvFile.yaml: f60dfbca5b88b5225c676bafcd5ccbeb23c6930c
+  config/validations/add_files_from_validations_disabled.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
+  config/validations.disabled/js/01.validatePing.js: cc572c157971ebdccd0a40a261f199cb9e509b5c
+  config/validations.disabled/js/03.validateSemaphores.js: 6ded3ea530db8b5d4621fa8bad510e281ebd632d
+  config/validations.disabled/js/04.validateErrorFlows.js: 9b7ff4c1cd03fe47082107d2c22250be1d45a2b4
+  config/validations.disabled/js/30.validateYellows.js: 5d48afe1debcde73b91ca41fc74c99b51a8ce997
+  config/validations.disabled/yaml/01.somebodyTouched.yaml: 9e8bef8264e42fc5dd6f5d3356d292c762638f1a
+  config/validations.disabled/yaml/01.validatePing.yaml: 0b19c480931ce1a5b154ebfb3f7820069f9fd654
+  config/validations.disabled/yaml/01.validatePingPorts.yaml: 0212369d4ad2fc9f2126efa029cba4173cbec17a
+  config/validations.disabled/yaml/03.validateSemaphores.yaml: 4e6c3313132e8636abbe3e8c0c8fd63fe42ac225
+  config/validations.disabled/yaml/05.validateErrorFlows.yaml: 3e0149242482c8d02234a75f2735dd7b6d2ae7bd
+  config/validations.disabled/yaml/14.validateCompareTimes.yaml: f7ce84ebfa3e2c7bef73d152b87afe53856c4867
+  lib/nattribute.js: 957b3e1e4d55c554e029229dae26e838df1da7b4
+  lib/nattributes.js: 19979886ff0528b466f2e013f54ef4ff0a061247
+  lib/nattributevalue.js: d6a378dba74922540bcc3e054222733f69d5cead
+  lib/ninput.js: cb1a2bc442a0a3ac9e6237fd02b445e31bd518cf
+  lib/nmonitoredobject.js: da0b8a8590ce1534826750e2e70b3d6e4bee9f98
+  lib/noutput.js: 097a89ae2ab12cb28d88034444a72d368464d14c
+  lib/nplug.js: bda7f7e0d8941a2cb16d4b803ca8e8bc613af434
+  lib/nvalidation.js: 419ebc9daa5149344d45a0563e7ae5509da1970b
+  lib/nwarning.js: 0edfbe1bb4482223103a8fc6cd83e6060174b98d
+  lib/nwarnings.js: d3cbf26c8e834a2151390505f3b880624ecbfc71
+  nattrmon.js: 5742e52df8dc3703d6208e7b66be47b1e352e7a7
+  nattrmon.yaml.sample: 0057d835a9f707b29d76e04316a76d78768ac01d
+  README.md: 648ce4e29bbdc7b99f5cf8734cb1a7f0657789c7
+  tests/inputDBTest.yml: c38616606dc5956e449189d11f8e661170f94dfb
+  tests/inputShellTest.yml: ce643955982cb16b53a8843acd3549466e5cddf5
   tests/nattrmonTester.js: 1676171ab793cdb67da4de3e033aee110aa8ef20
   tests/outputTest.yml: 0c4ba4176163e4aa9ff7fd4ae4128339d8384581
   tests/unitTest.js: 067565f7c1517b331684246f5c9a7949124417ea
-  tests/inputDBTest.yml: c38616606dc5956e449189d11f8e661170f94dfb
-  tests/inputShellTest.yml: ce643955982cb16b53a8843acd3549466e5cddf5
   tests/unitTestYAML.js: 01fd646107421f0441b19cd966977ab7ac2eff37
-  README.md: 648ce4e29bbdc7b99f5cf8734cb1a7f0657789c7
-  .gitignore: f7206c200c6c95e6ce56afc36f29f63106f16be6
-  lib/nattributes.js: 19979886ff0528b466f2e013f54ef4ff0a061247
-  lib/nattributevalue.js: d6a378dba74922540bcc3e054222733f69d5cead
-  lib/nwarnings.js: d3cbf26c8e834a2151390505f3b880624ecbfc71
-  lib/nwarning.js: 0edfbe1bb4482223103a8fc6cd83e6060174b98d
-  lib/nattribute.js: 957b3e1e4d55c554e029229dae26e838df1da7b4
-  lib/nplug.js: bda7f7e0d8941a2cb16d4b803ca8e8bc613af434
-  lib/ninput.js: cb1a2bc442a0a3ac9e6237fd02b445e31bd518cf
-  lib/nvalidation.js: 419ebc9daa5149344d45a0563e7ae5509da1970b
-  lib/nmonitoredobject.js: da0b8a8590ce1534826750e2e70b3d6e4bee9f98
-  lib/noutput.js: 097a89ae2ab12cb28d88034444a72d368464d14c
-  nattrmon.js: 5742e52df8dc3703d6208e7b66be47b1e352e7a7
+  util/backupConfig.yaml: f84a08a3c5c8aa50f5aa606585c1453901c20d84
+  util/clean.yaml: 616b7ddb24b12af7f1cbec473282decb57843869
+  util/loadDB2Elastic.js: 190b68c03e71fa859df71429da4c31035f20ce94
