@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20180224'
+version: '20180225'
 dependencies:
   openaf: '>=20180130'
 files:
@@ -138,7 +138,6 @@ files:
   - config/outputs.disabled/yaml/02.httpjson.yaml
   - config/outputs.disabled/yaml/01.h2output.yaml
   - config/outputs/add_files_from_outputs_disabled.dummy
-  - config/outputs/4.csvFile.yaml
   - config/move_files_from_the_disabled_folders.dummy
   - config/inputs/add_files_from_inputs_disabled.dummy
   - .package.yaml
@@ -277,7 +276,6 @@ filesHash:
   config/outputs.disabled/yaml/02.httpjson.yaml: 6d14637f7fff15b4d75481597bb9ae4f77f12665
   config/outputs.disabled/yaml/01.h2output.yaml: 49d7992bfbcf70ea667d6aeb4f0c71e7c16a1067
   config/outputs/add_files_from_outputs_disabled.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
-  config/outputs/4.csvFile.yaml: f60dfbca5b88b5225c676bafcd5ccbeb23c6930c
   config/move_files_from_the_disabled_folders.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
   config/inputs/add_files_from_inputs_disabled.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
   tests/nattrmonTester.js: 1676171ab793cdb67da4de3e033aee110aa8ef20
