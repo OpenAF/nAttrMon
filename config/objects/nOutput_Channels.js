@@ -8,6 +8,7 @@ var cauth_perms = {
   //    m: "r" // permissions (r, rw)
   //  }
 };
+var cauth_func = void 0;
 // [END] -------------
 
 var nOutput_Channels = function (aMap) {

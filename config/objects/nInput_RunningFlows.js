@@ -169,12 +169,14 @@ nInput_RunningFlows.prototype.input = function(scope, args) {
 		// Order output by date
 		var today = new Date();
 		var aWeekAgo = new Date(today.setDate(today.getDate() - 7));
+
+		res[templify(this.params.attrTemplate, { key: aKey})] = [];
 		for(var i in arr.sort(function(a,b) { return b.Date - a.Date; } )) {
 			// If older than a week, ignore
 			if (arr[i].Date < aWeekAgo) continue;
 			res[templify(this.params.attrTemplate, { 
 				key: aKey
-			})] = arr[i];
+			})].push(arr[i]);
 		}				
 	}
 
