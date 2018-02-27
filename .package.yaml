@@ -116,6 +116,7 @@ files:
   - config/objects.assets/noutputhttp/js/retina.min.js
   - config/objects.assets/noutputhttp/now.html
   - config/objects.assets/noutputhttp/plugs.html
+  - config/outputs/02.httpjson.yaml
   - config/outputs/add_files_from_outputs_disabled.dummy
   - config/outputs.disabled/00.init.js
   - config/outputs.disabled/1.oracleoutput.js
@@ -253,6 +254,7 @@ filesHash:
   config/objects.assets/noutputhttp/js/retina.min.js: da44a409a0907960a6526cf35807ecaf61059223
   config/objects.assets/noutputhttp/now.html: 7528350e8e41140d797aa83b2089317daba96bdd
   config/objects.assets/noutputhttp/plugs.html: 79d9a49816aedbcf9847352b90291a00982da9ac
+  config/outputs/02.httpjson.yaml: 6d14637f7fff15b4d75481597bb9ae4f77f12665
   config/outputs/add_files_from_outputs_disabled.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
   config/outputs.disabled/00.init.js: 2fc376d4557dc91ec036f115661c7634f7f8f0eb
   config/outputs.disabled/1.oracleoutput.js: 0f7ce56148ba6772216ce4402f5509077c30af6e
@@ -276,7 +278,7 @@ filesHash:
   config/validations.disabled/yaml/05.validateErrorFlows.yaml: 3e0149242482c8d02234a75f2735dd7b6d2ae7bd
   config/validations.disabled/yaml/14.validateCompareTimes.yaml: f7ce84ebfa3e2c7bef73d152b87afe53856c4867
   lib/nattribute.js: 957b3e1e4d55c554e029229dae26e838df1da7b4
-  lib/nattributes.js: 19979886ff0528b466f2e013f54ef4ff0a061247
+  lib/nattributes.js: b8e273085a57d414972d7a29505cb0faef753f94
   lib/nattributevalue.js: d6a378dba74922540bcc3e054222733f69d5cead
   lib/ninput.js: cb1a2bc442a0a3ac9e6237fd02b445e31bd518cf
   lib/nmonitoredobject.js: da0b8a8590ce1534826750e2e70b3d6e4bee9f98
