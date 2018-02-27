@@ -195,7 +195,7 @@
                     <div class="table-responsive" ng-if="warnsHigh > 0">
                         <table class="table table-striped">
                             <tbody>
-                                <tr ng-repeat="a in warns['High'] | orderBy: 'lastupdate'">
+                                <tr ng-repeat="a in warns['High'] | orderBy: 'title'">
                                     <td style="width: 5px; padding-left: 0px;padding-right: 0px;" class="nwarning_High"></td>
                                     <td align="left" bgcolor="#f0f0f0"'>
                                         <small><b><i class="fa fa-exclamation-circle fa-2x" style="font-size: 15px"></i>&nbsp;&nbsp;{{a.title}}</b></small>
@@ -213,7 +213,7 @@
                     <div class="table-responsive" ng-if="warnsMedium > 0">
                         <table class="table table-striped">
                             <tbody>
-                                <tr ng-repeat="a in warns['Medium'] | orderBy: 'lastupdate'">
+                                <tr ng-repeat="a in warns['Medium'] | orderBy: 'title'">
                                     <td style="width: 5px; padding-left: 0px;padding-right: 0px;" class="nwarning_Medium"></td>
                                     <td align="left" bgcolor="#f0f0f0"'>
                                         <small><b><i class="fa fa-exclamation-triangle fa-2x" style="font-size: 15px"></i>&nbsp;&nbsp;{{a.title}}</b></small>
@@ -231,7 +231,7 @@
                     <div class="table-responsive" ng-if="warnsLow > 0">
                         <table class="table table-striped">
                             <tbody>
-                                <tr ng-repeat="a in warns['Low'] | orderBy: 'lastupdate'">
+                                <tr ng-repeat="a in warns['Low'] | orderBy: 'title'">
                                     <td style="width: 5px; padding-left: 0px;padding-right: 0px;" class="nwarning_Low"></td>
                                     <td align="left" bgcolor="#f0f0f0"'>
                                         <small><b>{{a.title}}</b></small>
@@ -250,7 +250,7 @@
                     <div class="table-responsive" ng-if="warnsInfo > 0">
                         <table class="table table-striped">
                             <tbody>
-                                <tr ng-repeat="a in warns['Info'] | orderBy: 'lastupdate'">
+                                <tr ng-repeat="a in warns['Info'] | orderBy: 'title'">
                                     <td style="width: 5px; padding-left: 0px;padding-right: 0px;" class="nwarning_Info"></td>
                                     <td align="left" bgcolor="#f0f0f0"'>
                                         <small><b>{{a.title}}</b></small>
