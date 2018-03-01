@@ -1,0 +1,19 @@
+output:
+  name         : Output ES values
+  chSubscribe  : nattrmon::cvals
+  wairForFinish: true
+  onlyForEvent : true
+  execFrom     : nOutput_ES
+  execArgs     : 
+    url      : http://127.0.0.1:9200
+    #user     : nouser
+    #pass     : nopass
+    #index: 
+    #considerSetAll: false 
+    funcIndex: "ow.ch.utils.getElasticIndex('nattrmon-attrs')"
+    #index: nattrs
+    stampMap : 
+      region: US
+    #include  :
+    #  - test/test 1
+    # exclude  :
