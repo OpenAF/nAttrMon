@@ -1,8 +1,8 @@
 output:
   name         : Output ES values
   chSubscribe  : nattrmon::cvals
-  wairForFinish: true
-  onlyForEvent : true
+  waitForFinish: true
+  onlyOnEvent  : true
   execFrom     : nOutput_ES
   execArgs     : 
     url      : http://127.0.0.1:9200

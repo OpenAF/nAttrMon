@@ -48,7 +48,7 @@ nOutput_ES.prototype.addToES = function (aCh, aVal, useTitle) {
 
 	if (useTitle) {
 		obj = {
-			title: String(aVal.warning.title.replace(/[\/ ]/g, "_")),
+			title: String(aVal.title.replace(/[\/ ]/g, "_")),
 			date: aVal.createdate
 		};
 	} else {
@@ -83,7 +83,7 @@ nOutput_ES.prototype.addToES = function (aCh, aVal, useTitle) {
 		} else {
 			if (useTitle) {
 				obj.id = sha1(obj.title + obj.date + i);
-				obj[obj.title] = aVal.val[i];
+				obj[obj.title] = aVal.val;
 			} else {
 				obj.id = sha1(obj.name + obj.date);
 				obj[obj.name] = aVal.val;
