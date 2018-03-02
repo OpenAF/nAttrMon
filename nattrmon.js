@@ -109,6 +109,7 @@ ow.template.addHelper("debug", (s) => { sprint(s); });
 ow.template.addHelper("stringify", (s) => { return stringify(s); });
 ow.template.addHelper("stringifyInLine", (s) => { return stringify(s, void 0, ""); });
 ow.template.addHelper("toYAML", (s) => { return af.toYAML(s); });
+ow.template.addHelper("env", (s) => { return java.lang.System.getenv().get(s); });
 
 // Main object ----------------------------------------------------------------------------------
 // ----------------------------------------------------------------------------------------------
