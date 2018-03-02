@@ -8,22 +8,18 @@ var cauth_perms = {
   //    m: "r" // permissions (r, rw)
   //  }
 };
+var cauth_func;
 // [END] -------------
 
-var nOutput_Channels = function (aMap) {
+var nOutput_Channels = function(aMap) {
   // Set server if doesn't exist
-  if (!nattrmon.hasSessionData("httpd")) {
-    plugin("HTTPServer");
-    nattrmon.setSessionData("httpd", new HTTPd(isUnDef(aMap.port) ? 8090 : aMap.port));
+  if (isDef(aMap.port) || !nattrmon.hasSessionData("httpd")) {
+    ow.loadServer();
+    nattrmon.setSessionData("httpd", ow.server.httpd.start(isUnDef(aMap.port) ? 8090 : aMap.port, aMap.host));
   }
 
   // Get server
-  var httpd;
-  if (isDef(aMap.port)) {
-    httpd = ow.loadServer().httpd.start(aMap.port, aMap.host);
-  } else {
-    httpd = nattrmon.getSessionData("httpd");
-  }
+  var httpd = nattrmon.getSessionData("httpd");
 
   if (isDef(aMap.cAuth)) cauth_perms = aMap.cAuth;
   if (isDef(aMap.local)) cauth_perms = aMap.local;
@@ -31,8 +27,8 @@ var nOutput_Channels = function (aMap) {
 
   if (isDef(httpd)) {
     // Channel authentication
-    var chAuth = function (u, p, s, r) {
-      if (isDef(cauth_func)) {
+    var chAuth = function(u, p, s, r) {
+      if (isDef(cauth_func) && isString(cauth_func)) {
         return (new Function('u', 'p', 's', 'r', cauth_func))(u, p, s, r);
       } else {
         if (isDef(cauth_perms) && isDef(cauth_perms[u])) {

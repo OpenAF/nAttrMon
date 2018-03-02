@@ -11,10 +11,9 @@ var nOutput_HTTP_JSON = function (aMap) {
 	}
 
 	// Set server if doesn't exist
-	if (!nattrmon.hasSessionData("httpd")) {
-		plugin("HTTPServer");
+	if (isDef(aPort) || !nattrmon.hasSessionData("httpd")) {
 		nattrmon.setSessionData("httpd",
-			new HTTPd(isUndefined(aPort) ? 8090 : aPort), aMap.host);
+			ow.server.httpd.start(isUnDef(aPort) ? 8090 : aPort, aMap.host));
 	}
 
 	// Get server
