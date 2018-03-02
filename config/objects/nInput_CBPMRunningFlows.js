@@ -1,4 +1,5 @@
 /**
+ * Author: Nuno Aguiar
  * <odoc>
  * <key>nattrmon.nInput_CBPMRunningFlows(aMap)</key>
  * You can create an input to get a list of running flows by running status using a map compose of:\
@@ -57,14 +58,14 @@ nInput_CBPMRunningFlows.prototype.input = function(scope, args) {
 
                 if (isDef(instances) && isArray(instances)) {          
                     $from(instances).select((t) => {
-                        if (ow.format.dateDiff.inHours(ow.format.fromWedoDateToDate(t.instanceStartTime)) <= this.hoursToCheck) {
+                        if (ow.format.dateDiff.inHours(ow.format.fromWeDoDateToDate(t.instanceStartTime)) <= this.hoursToCheck) {
                             arr.push({
                                 Category: r.flowCategory,
                                 Flow: r.flowName,
                                 Version: t.instanceVersion,
                                 "Run ID": t.instanceId,
                                 User: t.instanceStartUser,
-                                "Date": ow.format.fromWedoDateToDate(t.instanceStartTime),
+                                "Date": ow.format.fromWeDoDateToDate(t.instanceStartTime),
                                 Exception: t.instanceErrorMessage
                             });
                         }
