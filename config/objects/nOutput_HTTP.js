@@ -12,8 +12,7 @@ var nOutput_HTTP = function (aMap) {
 
 	// Set server if doesn't exist
 	if (!nattrmon.hasSessionData("httpd")) {
-		plugin("HTTPServer");
-		var hs = new HTTPd(aPort, aMap.host);
+		var hs = ow.server.httpd.start(aPort, aMap.host);
 		nattrmon.setSessionData("httpd", hs);
 	}
 
