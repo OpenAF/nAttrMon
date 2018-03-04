@@ -25,7 +25,8 @@ The config folders as the following main sub-folders:
 | outputs| Where all the **active** output *plugs* files (either yaml, json or js) exist. |
 | outputs.disabled | Where all the **inactive** output *plugs* files (either yaml, json or js) exist. This is a good place to check-out the distributed examples to copy to the outputs folder and adapt to your monitoring objectives. |
 | validations| Where all the **active** validation *plugs* files (either yaml, json or js) exist. |
-| validations.disabled | Where all the **inactive** validation *plugs* files (either yaml, json or js) exist. This is a good place to check-out the distributed examples to copy to the validations folder and adapt to your monitoring objectives. | objects | This is the place for reusable inputs, outputs and validations. They can be used with execFrom (in yaml and json plug files) or instantiating the javascript object (in javascript plug files) |
+| validations.disabled | Where all the **inactive** validation *plugs* files (either yaml, json or js) exist. This is a good place to check-out the distributed examples to copy to the validations folder and adapt to your monitoring objectives. 
+| objects | This is the place for reusable inputs, outputs and validations. They can be used with execFrom (in yaml and json plug files) or instantiating the javascript object (in javascript plug files) |
 | objects.assets | This is where objects on the *objects* folder refer to their corresponding assets (for example css for HTTP output) |
 
 ## Lib
