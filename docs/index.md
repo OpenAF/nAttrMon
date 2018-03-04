@@ -1,4 +1,4 @@
-Welcome to the openaf-nattrmon wiki!
+Welcome to the nAttrMon
 
 # Introduction
 
