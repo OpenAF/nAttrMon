@@ -58,7 +58,7 @@ inherit(nInput_RunningFlows, nInput);
  */
 nInput_RunningFlows.prototype.getCategories = function(aKey) {
 	var bpmFlowList;
-    if (isUnDef(this.bpmFlowCtgs)) {
+    //if (isUnDef(this.bpmFlowCtgs)) {
     	if (isDef(aKey)) {
 			nattrmon.useObject(aKey, function(s) {
 				try {
@@ -79,9 +79,9 @@ nInput_RunningFlows.prototype.getCategories = function(aKey) {
 
  		this.bpmFlowCtgs = tempFlowCtgs;
  		return this.bpmFlowCtgs;
-        } else {
-		return this.bpmFlowCtgs;
-    }
+    //    } else {
+	//	return this.bpmFlowCtgs;
+    //}
 };
 
 nInput_RunningFlows.prototype.convertRAIDDates = function(aRAIDDate) {
