@@ -196,7 +196,7 @@ filesHash:
   config/inputs.disabled/yaml/12.shellCmd.yaml: 0788119c6d68336209422bf46f6dfa0c93880d14
   config/move_files_from_the_disabled_folders.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
   config/objects/nInput_AFPing.js: fb1405a486d3a627488f746b791c373579c3a6bc
-  config/objects/nInput_CBPMRunningFlows.js: 4bcb6a950ff0a7abfbebf2949c605d5e90147b69
+  config/objects/nInput_CBPMRunningFlows.js: 57ffc5b5193b158c0e1740ddf0c95c0fdb8dfabd
   config/objects/nInput_CBPMSemaphores.js: e22546f3b1de2b17d959c0fdbf0a35ea644c78ad
   config/objects/nInput_CompareTimes.js: 4b4f6cc1b5bb16e3ff3378fd849e0501d7d2461a
   config/objects/nInput_DB.js: e59bb592a983c0d38f7a6b8160eceeedd596a4ea

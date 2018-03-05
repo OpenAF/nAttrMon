@@ -8,6 +8,7 @@
  *    - status (a string of the status that should be filtered ('ERROR', 'STARTED'))\
  *    - hoursToCheck (a number of days to flow instances to consider from the flow start time)\
  *    - attrTemplate (a string template for the name of the attribute using {{key}})\
+ *    - limit (the limit of records to retrieve from the server)\
  * \
  * </odoc>
  */
@@ -23,6 +24,7 @@ var nInput_CBPMRunningFlows = function(aMap) {
 
     this.keys = aMap.keys;
     this.chKeys = aMap.chKeys;
+    this.limit = aMap.limit;
 
     if (!(isArray(aMap.keys))) aMap.keys = [ aMap.keys ];
 
@@ -54,7 +56,7 @@ nInput_CBPMRunningFlows.prototype.input = function(scope, args) {
             var listOfFlows = ow.waf.cbpm.listFlows(aAF);
 
             $from(listOfFlows).select((r) => {
-                var instances = ow.waf.cbpm.getFlowInstancesByName(aAF, r.flowName, [ this.status.toUpperCase() ], void 0, true, true);
+                var instances = ow.waf.cbpm.getFlowInstancesByName(aAF, r.flowName, [ this.status.toUpperCase() ], this.limit, true, true);
 
                 if (isDef(instances) && isArray(instances)) {          
                     $from(instances).select((t) => {
