@@ -19,13 +19,13 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20180302'
+version: '20180305'
 dependencies:
   openaf: '>=20180302'
 files:
   - .gitignore
   - .package.yaml
-  - config/inputs/add_files_from_inputs_disabled.dummy
+  - config/inputs/move_files_from_inputs_disabled.dummy
   - config/inputs.disabled/js/00.raid.init.js
   - config/inputs.disabled/js/05.filesystemCount.js
   - config/inputs.disabled/js/07.logErrorAgg.js
@@ -119,7 +119,8 @@ files:
   - config/objects.assets/noutputhttp/js/retina.min.js
   - config/objects.assets/noutputhttp/now.html
   - config/objects.assets/noutputhttp/plugs.html
-  - config/outputs/add_files_from_outputs_disabled.dummy
+  - config/objects.disabled/move_files_from_objects.dummy
+  - config/outputs/move_files_from_outputs_disabled.dummy
   - config/outputs.disabled/00.init.js
   - config/outputs.disabled/1.oracleoutput.js
   - config/outputs.disabled/js/05.es.log.js
@@ -132,7 +133,7 @@ files:
   - config/outputs.disabled/yaml/05.es.warnings.yaml
   - config/outputs.disabled/yaml/09.channels.yaml
   - config/outputs.disabled/yaml/4.csvFile.yaml
-  - config/validations/add_files_from_validations_disabled.dummy
+  - config/validations/move_files_from_validations_disabled.dummy
   - config/validations.disabled/js/01.validatePing.js
   - config/validations.disabled/js/03.validateSemaphores.js
   - config/validations.disabled/js/04.validateErrorFlows.js
@@ -167,7 +168,7 @@ files:
   - util/loadDB2Elastic.js
 filesHash:
   .gitignore: f7206c200c6c95e6ce56afc36f29f63106f16be6
-  config/inputs/add_files_from_inputs_disabled.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
+  config/inputs/move_files_from_inputs_disabled.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
   config/inputs.disabled/js/00.raid.init.js: d6c7847577ab7a88cf84e2d6ce24b2d0258213ef
   config/inputs.disabled/js/05.filesystemCount.js: e8d4d119ec2d022033309bc18de8a2dc3a9d66aa
   config/inputs.disabled/js/07.logErrorAgg.js: 5d3c5c139c8aa224b8a6175d53c5d33113037588
@@ -261,7 +262,8 @@ filesHash:
   config/objects.assets/noutputhttp/js/retina.min.js: da44a409a0907960a6526cf35807ecaf61059223
   config/objects.assets/noutputhttp/now.html: 7528350e8e41140d797aa83b2089317daba96bdd
   config/objects.assets/noutputhttp/plugs.html: 79d9a49816aedbcf9847352b90291a00982da9ac
-  config/outputs/add_files_from_outputs_disabled.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
+  config/objects.disabled/move_files_from_objects.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
+  config/outputs/move_files_from_outputs_disabled.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
   config/outputs.disabled/00.init.js: 2fc376d4557dc91ec036f115661c7634f7f8f0eb
   config/outputs.disabled/1.oracleoutput.js: 0f7ce56148ba6772216ce4402f5509077c30af6e
   config/outputs.disabled/js/05.es.log.js: 81226b91993780752b42cab33325041f2207d14f
@@ -274,7 +276,7 @@ filesHash:
   config/outputs.disabled/yaml/05.es.warnings.yaml: abd5cf0947d0480e34840de0c35fabe289f8130c
   config/outputs.disabled/yaml/09.channels.yaml: f38c539f163ec3457267c55d4248237b76caee14
   config/outputs.disabled/yaml/4.csvFile.yaml: f60dfbca5b88b5225c676bafcd5ccbeb23c6930c
-  config/validations/add_files_from_validations_disabled.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
+  config/validations/move_files_from_validations_disabled.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
   config/validations.disabled/js/01.validatePing.js: cc572c157971ebdccd0a40a261f199cb9e509b5c
   config/validations.disabled/js/03.validateSemaphores.js: 6ded3ea530db8b5d4621fa8bad510e281ebd632d
   config/validations.disabled/js/04.validateErrorFlows.js: 9b7ff4c1cd03fe47082107d2c22250be1d45a2b4
@@ -291,7 +293,7 @@ filesHash:
   lib/ninput.js: cb1a2bc442a0a3ac9e6237fd02b445e31bd518cf
   lib/nmonitoredobject.js: da0b8a8590ce1534826750e2e70b3d6e4bee9f98
   lib/noutput.js: 097a89ae2ab12cb28d88034444a72d368464d14c
-  lib/nplug.js: bda7f7e0d8941a2cb16d4b803ca8e8bc613af434
+  lib/nplug.js: 403ee2ffd217cc545ce8d943e648d833cadef5b7
   lib/nvalidation.js: 233bce3743284b329f6cc9fae3ec5fed0d930a46
   lib/nwarning.js: 0b50703356670d2d9f92e5b466dc0c430b4ee19a
   lib/nwarnings.js: d3cbf26c8e834a2151390505f3b880624ecbfc71
