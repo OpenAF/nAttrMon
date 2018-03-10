@@ -3,6 +3,7 @@ This validation provides a simple generic object to perform simple validations o
 ## Example of use of the execArgs
 
 ````yaml
+{% raw %}
 validation:
    name         : My generic validation
    chSubscribe  : nattrmon::cvals
@@ -21,6 +22,7 @@ validation:
            warnLevel        : INFO
            warnTitleTemplate: A test info warning
            warnDescTemplate : This is just a info given {{name}} because the values was {{value}} for '{{map.a}}'.  
+{% endraw %}
 ````
 
 ## Description of execArgs
