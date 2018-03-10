@@ -1,3 +1,5 @@
+# Plugs <a href="/"><img align="right" src="/images/logo.png"></a>
+
 nAttrMon plugs are a basic unit to add inputs, outputs and validations to nAttrMon. Plugs have a common set of parameters to affect their behavior:
 
 | Parameter | Type | Mandatory? | Description |

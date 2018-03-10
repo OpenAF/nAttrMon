@@ -1,4 +1,4 @@
-## Current objects
+# Current objects <a href="/"><img align="right" src="/images/logo.png"></a>
 
 The following is a list of the current objects base for Inputs, Outputs and Validations:
 
@@ -20,7 +20,7 @@ The following is a list of the current objects base for Inputs, Outputs and Vali
 | Input | nInput_Sessions | RAID | Returns the current sessions list for a RAID instance. |
 | Input | [nInput_Shell](nAttrMon-nInput-Shell) | OS | Executes (locally or remotely) and returns the output of a shell command (parsing or not the output as JSON). |
 | Output | [nOutput_DSV](nAttrMon-nOutput-DSV) | Output DSV | Outputs a specific set of attributes or warnings to DSV/CSV files per date with automatic housekeeping. | 
-| Output | [nOutput_EmailWarnings](nAttrMon-nOuput-EmailWarnings) | Output Warning | If there is any new level HIGH warning (or any other combination) it will send an email with it. |
+| Output | [nOutput_EmailWarnings](nAttrMon-nOutput-EmailWarnings) | Output Warning | If there is any new level HIGH warning (or any other combination) it will send an email with it. |
 | Output | nOutput_H2 | Output History | Records the attribute values and warnings on a H2 database. |
 | Output | nOutput_HTTP | Output HTTP | Provides a minimal HTTP interface to check attribute values, warnings and output history (if activated). |
 | Output | nOutput_HTTP_JSON | Output HTTP | Provides a JSON full dump of the current attribute, attribute values and warnings. |

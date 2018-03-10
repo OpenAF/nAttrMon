@@ -1,3 +1,5 @@
+# nOutput Notifications <a href="/"><img align="right" src="/images/logo.png"></a>
+
 This output sends push notifications (using https://pushover.net) upon match with a specific warning or warnings. 
 
 **Note:** this plug requires the Notifications opack. Install it using "opack install notifications"

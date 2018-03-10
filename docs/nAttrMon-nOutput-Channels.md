@@ -1,3 +1,4 @@
+# nOutput Channels <a href="/"><img align="right" src="/images/logo.png"></a>
 This output exposes nAttrMon internal channels and data externally (configurable to what should be read-only or read-write/execution permissions). 
 
 | execArgs | Type | Mandatory | Description | 

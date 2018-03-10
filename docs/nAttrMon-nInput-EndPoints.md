@@ -1,3 +1,5 @@
+# nInput EndPoints <a href="/"><img align="right" src="/images/logo.png"></a>
+
 This input tests a HTTP/HTTPs endpoint or a TCP port for reachability/expected availability. Each defined attribute will be a map with a boolean result and a errorMessage string (defaults to "n/a" if result = false).
 
 Example of use of the execArgs:

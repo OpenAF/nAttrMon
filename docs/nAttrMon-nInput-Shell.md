@@ -1,3 +1,5 @@
+# nInput Shell <a href="/"><img align="right" src="/images/logo.png"></a>
+
 This input executes a shell command locally or remotely (via ssh) and can parse the output if JSON (otherwise will create an attribute with the stdout text).
 
 Example of use of the execArgs:

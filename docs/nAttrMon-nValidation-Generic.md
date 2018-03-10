@@ -1,3 +1,5 @@
+# nValidation Generic <a href="/"><img align="right" src="/images/logo.png"></a>
+
 This validation provides a simple generic object to perform simple validations on attribute values with a single validation plug. It's ready to be triggered by timeInterval/cron or chSubscribe and the execArgs is composed of a _checks_ array where warnings will be created, updated or closed based on an expression (expr) evaluation (e.g. a true evaluation will create/update a warning, a false will close any previously created warnings) for an attribute or attributes following an attribute pattern (attrPattern). Check the examples and the execArgs description.
 
 ## Example of use of the execArgs

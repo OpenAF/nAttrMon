@@ -1,4 +1,4 @@
-# Folders
+# Folders <a href="/"><img align="right" src="/images/logo.png"></a>
 
 | Folder | Description |
 |--------|-------------|

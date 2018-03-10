@@ -1,12 +1,13 @@
+# Examples <a href="/"><img align="right" src="/images/logo.png"></a>
 nAttrMon YAML/JSON based Inputs, Output or Validations can be created in the same folders as the regular JS based Inputs, Outputs and Validations.
 
-# Some examples:
+## Some examples:
 
-## INPUT: Adding SQL queries
+### INPUT: Adding SQL queries
 
-### YAML 
+#### YAML 
 
-````YAML
+````yaml
 input:
   name         : Test input
   timeInterval : 10000
