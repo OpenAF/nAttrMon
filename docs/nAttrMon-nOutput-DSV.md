@@ -1,4 +1,4 @@
-# nOutput DSV <a href="/"><img align="right" src="/images/logo.png"></a>
+# nOutput DSV <a href="/"><img align="right" src="images/logo.png"></a>
 
 This output will generate DSV/CSVs files writing a specific template (using attribute values or warnings) per a given date and performing automatic housekeeping to previous generated files.
 

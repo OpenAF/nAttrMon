@@ -1,4 +1,4 @@
-# Current objects <a href="/"><img align="right" src="/images/logo.png"></a>
+# Current objects <a href="/"><img align="right" src="images/logo.png"></a>
 
 The following is a list of the current objects base for Inputs, Outputs and Validations:
 

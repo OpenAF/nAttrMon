@@ -1,4 +1,4 @@
-<a href="/"><img align="right" src="/images/logo.png"></a>
+<a href="/"><img align="right" src="images/logo.png"></a>
 Welcome to the nAttrMon
 
 # Introduction

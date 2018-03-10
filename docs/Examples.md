@@ -1,4 +1,4 @@
-# Examples <a href="/"><img align="right" src="/images/logo.png"></a>
+# Examples <a href="/"><img align="right" src="images/logo.png"></a>
 nAttrMon YAML/JSON based Inputs, Output or Validations can be created in the same folders as the regular JS based Inputs, Outputs and Validations.
 
 ## Some examples:
