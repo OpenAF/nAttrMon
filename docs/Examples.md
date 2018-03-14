@@ -1,16 +1,18 @@
 # Examples <a href="/"><img align="right" src="images/logo.png"></a>
 nAttrMon YAML/JSON based Inputs, Output or Validations can be created in the same folders as the regular JS based Inputs, Outputs and Validations.
 
-## Some examples:
+## Some basic examples comparing YAML, JSON and Javascript:
 
 ### INPUT: Adding SQL queries
+
+The following are three ways of implementing the same Input in YAML, JSON and Javascript:
 
 #### YAML 
 
 ````yaml
 input:
   name         : Test input
-  timeInterval : 10000
+  cron         : "*/10 * * * * *"
   waitForFinish: true
   onlyOnEvent  : true
   execFrom     : nInput_DB
@@ -25,13 +27,13 @@ input:
            FROM dual connect by level <= 5
 ````
 
-### JSON
+#### JSON
 
 ````javascript
 {
   input: {
     name: "Test input",
-    timeInterval: 10000,
+    cron: "*/10 * * * * *",
     waitForFinish: true,
     onlyOnEvent: true,
     execFrom: "nInput_DB",
@@ -46,12 +48,12 @@ input:
 }
 ````
 
-### Javascript
+#### Javascript
 
 ````javascript
 nattrmon.addInput({
   name: "Test input",
-  timeInterval: 10000,
+  cron: "*/10 * * * * *",
   waitForFinish: true,
   onlyOnEvent: true
 }, new nInput_DB({
@@ -63,62 +65,71 @@ nattrmon.addInput({
 }));
 ````
 
-## INPUT: Shell
+----
 
-### YAML
+### INPUT: Using Shell (simple example)
+
+The following example builds a json string to provide, as Input, the current number of processes and files vs the current limitations.
+
+#### YAML
 
 ````YAML
 input:
-  name         : Test input
-  timeInterval : 10000
+  name         : Processes and files limits
+  cron         : "*/5 * * * *"
   waitForFinish: true
   onlyOnEvent  : true
   execFrom     : nInput_Shell
   execArgs     :
-     name     : a1
-     cmd      : "echo { \\\"a\\\": 1 }"
-     parseJson: true
+     name        : Processes and files limits
+     attrTemplate: Server/Status processes and files limits
+     cmd         : "echo \"{ \\\"maxFilesPerUser\\\": \"`ulimit -n`\", \\\"currentFilesPerUser\\\": \"`lsof -u myuser | wc -l`\", \\\"numberOfProcesses\\\": \"`ps h -u myuser  | wc | awk '{print $1}'`\", \\\"maxNumberOfProcesses\\\": `bash -c 'ulimit -u'` }\""
+     parseJson   : true
 ````
 
-### JSON
+#### JSON
 
 ````javascript
 {
   input: {
-    name: "Test input",
-    timeInterval: 10000,
+    name: "Processes and files limits",
+    cron: "*/5 * * * *",
     waitForFinish: true,
     onlyOnEvent: true,
     execFrom: "nInput_Shell",
     execArgs: {
-      name: "a1",
-      cmd: "echo { \\\"a\\\": 1 }",
+      name: "Processes and files limits",
+      attrTemplate: "Server/Status processes and files limits",
+      cmd: "echo \"{ \\\"maxFilesPerUser\\\": \"`ulimit -n`\", \\\"currentFilesPerUser\\\": \"`lsof -u myuser | wc -l`\", \\\"numberOfProcesses\\\": \"`ps h -u myuser  | wc | awk '{print $1}'`\", \\\"maxNumberOfProcesses\\\": `bash -c 'ulimit -u'` }\"",
       parseJson: true
     }
   }
 }
 ````
 
-### Javascript
+#### Javascript
 
 ````javascript
 nattrmon.addInput({
-  name: "Test input",
-  timeInterval: 10000,
+  name: "Processes and files limits",
+  cron: "*/5 * * * *",
   waitForFinish: true,
   onlyOnEvent: true
 }, new nInput_Shell({
-  name: "a1",
-  cmd: "echo { \\\"a\\\": 1 }",
+  name: "Processes and files limits",
+  attrTemplate: "Server/Status processes and files limits",
+  cmd: "echo \"{ \\\"maxFilesPerUser\\\": \"`ulimit -n`\", \\\"currentFilesPerUser\\\": \"`lsof -u myuser | wc -l`\", \\\"numberOfProcesses\\\": \"`ps h -u myuser  | wc | awk '{print $1}'`\", \\\"maxNumberOfProcesses\\\": `bash -c 'ulimit -u'` }\"",
   parseJson: true
 }));
 ````
 
-# Basic templates for custom inputs, outputs or validations:
+----
 
-## INPUT template
+## Basic templates for custom inputs, outputs or validations:
 
-### YAML
+### INPUT template
+
+#### YAML
 
 ````YAML
 input:
@@ -135,7 +146,7 @@ input:
      // res[attrName] = a map or array of info collected to be added/updated on the attribute
      return res;
 ````
-### JSON
+#### JSON
 
 ````javascript
 {
@@ -149,7 +160,7 @@ input:
 }
 ````
 
-### Javascript
+#### Javascript
 
 ````javascript
 nattrmon.addInput({
@@ -168,9 +179,9 @@ nattrmon.addInput({
 }));
 ````
 
-## VALIDATION template
+### VALIDATION template
 
-### YAML
+#### YAML
 
 ````YAML
 validation:
@@ -200,7 +211,7 @@ validation:
      return res;
 ````
 
-### JSON
+#### JSON
 
 ````javascript
 {
@@ -214,7 +225,7 @@ validation:
 }
 ````
 
-### Javascript
+#### Javascript
 
 ````javascript
 nattrmon.addValidation({
@@ -245,9 +256,9 @@ nattrmon.addValidation({
 }));
 ````
 
-## OUTPUT template
+### OUTPUT template
 
-### YAML
+#### YAML
 
 ````YAML
 output:
@@ -263,7 +274,7 @@ output:
      // Do something with attrs, lastAttrs and warns
 ````
 
-### JSON
+#### JSON
 
 ````javascript
 {
@@ -277,7 +288,7 @@ output:
 }
 ````
 
-### Javascript
+#### Javascript
 
 ````javascript
 nattrmon.addOutput({
