@@ -128,7 +128,7 @@ nValidation_Generic.prototype.checkEntry = function(ret, k, v, args) {
                     }
                     data.dateModified = v.date;
 
-                    var expr = templify(check.expr, data);
+                    var expr = templify(check.expr, data).replace(/\n/g, "");
                     try {
                         if (check.debug) {
                             sprint({
@@ -141,7 +141,7 @@ nValidation_Generic.prototype.checkEntry = function(ret, k, v, args) {
                         if (af.eval(expr)) evalCond(true); else evalCond(false);
                     } catch(e) {
                         evalCond(false);
-                        logWarn("Couldn't evalute expression: " + check.expr + " for attribute " + stringify(v, undefined, "") + " [" + String(e) + "]");
+                        logWarn("Couldn't evaluate expression: " + check.expr + " for attribute " + stringify(v, undefined, "") + " [" + String(e) + "]");
                     }
 
                     // Prepare warning data
