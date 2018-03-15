@@ -198,7 +198,7 @@ filesHash:
   config/move_files_from_the_disabled_folders.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
   config/objects/nInput_AFPing.js: fb1405a486d3a627488f746b791c373579c3a6bc
   config/objects/nInput_CBPMRunningFlows.js: 57ffc5b5193b158c0e1740ddf0c95c0fdb8dfabd
-  config/objects/nInput_CBPMSemaphores.js: e22546f3b1de2b17d959c0fdbf0a35ea644c78ad
+  config/objects/nInput_CBPMSemaphores.js: b8499174b7ca536c43c17e8cd5d6bd2df12db099
   config/objects/nInput_CompareTimes.js: 4b4f6cc1b5bb16e3ff3378fd849e0501d7d2461a
   config/objects/nInput_DB.js: e59bb592a983c0d38f7a6b8160eceeedd596a4ea
   config/objects/nInput_EndPoints.js: 03084acddad1d42bd447ab5890dadac629681f96
@@ -210,7 +210,7 @@ filesHash:
   config/objects/nInput_OSInfo.js: 3418957f8d9e4d47dba8dd1100d0d101337904b3
   config/objects/nInput_RAIDMemory.js: bf7945d3af630132abf94f737524f38b8a4f74bd
   config/objects/nInput_RunningFlows.js: a77d10b6bd6227dcc652b23bd746dec25571e74d
-  config/objects/nInput_Semaphores.js: f7dbeabb7e1baebef64fa09a9a9fd68e59026aa2
+  config/objects/nInput_Semaphores.js: 07fda9baaec06e10db832b10bdef3aad27dc9bec
   config/objects/nInput_Sessions.js: 0a68a945ba6c4b98d139b8c666c275c4fc716f81
   config/objects/nInput_Shell.js: 2b84085de7c592241d5e9ee72d207ca24e9d5ad9
   config/objects/nOutput_Channels.js: d9a17a63ab5bebbdb9109e9469fce07b74067771
