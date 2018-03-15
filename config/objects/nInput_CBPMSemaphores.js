@@ -73,13 +73,13 @@ nInput_CBPMSemaphores.prototype.__getSems = function(aKey, scope) {
 					isDefined(sems.entry_list[i].name) && 
 					isDefined(sems.entry_list[i].value)) {
 
-					var semNameOrDesc = _.unescape(((sems.entry_list[i].description.length > 0) ? sems.entry_list[i].description : sems.entry_list[i].name));
+					var semNameOrDesc = _.unescape(((sems.entry_list[i].description.length > 0) ? sems.entry_list[i].description.replace("/","_") : sems.entry_list[i].name.replace("/","_")));
 					
 					var attrName = templify(this.getTemplate(), { 
 						"key": aKey,
 						"semNameOrDesc": semNameOrDesc,
-						"semName": _.unescape(sems.entry_list[i].name),
-						"semDescription": sems.entry_list[i].description
+						"semName": _.unescape(sems.entry_list[i].name.replace("/","_")),
+						"semDescription": sems.entry_list[i].description.replace("/","_")
 					});
 
 					// Add new attribute of type semaphore if it doesn't exist.

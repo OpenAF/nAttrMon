@@ -73,7 +73,7 @@ nInput_Semaphores.prototype.__getSems = function(aKey, scope) {
 					isDef(sems.entry_list[i].name) && 
 					isDef(sems.entry_list[i].value)) {
 					
-					var semName = ((sems.entry_list[i].description.length > 0) ? sems.entry_list[i].description : sems.entry_list[i].name);
+					var semName = ((sems.entry_list[i].description.length > 0) ? sems.entry_list[i].description.replace("/","_") : sems.entry_list[i].name.replace("/","_"));
 
 					// Can use now specific keys to avoid satellites
 					/*
@@ -89,8 +89,8 @@ nInput_Semaphores.prototype.__getSems = function(aKey, scope) {
                     semName = templify(this.getTemplate(), {
 						"key": aKey,
 						"semNameOrDesc": semName,
-						"semName": sems.entry_list[i].name,
-						"semDescription": sems.entry_list[i].description
+						"semName": sems.entry_list[i].name.replace("/","_"),
+						"semDescription": sems.entry_list[i].description.replace("/","_")
 					});
 
 					// Add new
