@@ -60,16 +60,21 @@ nInput_CBPMRunningFlows.prototype.input = function(scope, args) {
 
                 if (isDef(instances) && isArray(instances)) {          
                     $from(instances).select((t) => {
-                        if (ow.format.dateDiff.inHours(ow.format.fromWeDoDateToDate(t.instanceStartTime)) <= this.hoursToCheck) {
-                            arr.push({
-                                Category: r.flowCategory,
-                                Flow: r.flowName,
-                                Version: t.instanceVersion,
-                                "Run ID": t.instanceId,
-                                User: t.instanceStartUser,
-                                "Date": ow.format.fromWeDoDateToDate(t.instanceStartTime),
-                                Exception: t.instanceErrorMessage
-                            });
+                        try {
+                            if (ow.format.dateDiff.inHours(ow.format.fromWeDoDateToDate(t.instanceStartTime)) <= this.hoursToCheck) {
+                                arr.push({
+                                    Category: r.flowCategory,
+                                    Flow: r.flowName,
+                                    Version: t.instanceVersion,
+                                    "Run ID": t.instanceId,
+                                    User: t.instanceStartUser,
+                                    "Date": ow.format.fromWeDoDateToDate(t.instanceStartTime),
+                                    Exception: t.instanceErrorMessage
+                                });
+                            }
+                        } catch(e) {
+                            // Check if it never executed
+                            if (!String(e).match(/Cannot find the object/)) logErr("Can't retrieve instances, in " + aKey + ", for flow: " + r.flowName);
                         }
                     });
                 }
