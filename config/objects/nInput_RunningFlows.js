@@ -131,10 +131,10 @@ nInput_RunningFlows.prototype.input = function(scope, args) {
 
 										var line = (xml2.item[0].tip+"").replace(/[^=]+=([^;]+)/g, "$1|").split(/\|/);
 										var map2 = { "version": line[0], "runId": line[1].replace(/,/g, ""), "user": line[2], "date": line[3] };
-										if (this.runningstatus == 3) {
+										if (parent.runningstatus == 3) {
 											// Try app if fails try adm
-											var dbKey = nattrmon.getAssociatedObjectPool(parent.aKey, "db.app");
-											if (isUnDef(dbKey)) dbKey = nattrmon.getAssociatedObjectPool(parent.aKey, "db.adm");
+											var dbKey = nattrmon.getAssociatedObjectPool(aKey, "db.app");
+											if (isUnDef(dbKey)) dbKey = nattrmon.getAssociatedObjectPool(aKey, "db.adm");
 
 											var admres;
 											nattrmon.useObject(dbKey, function(db) {
