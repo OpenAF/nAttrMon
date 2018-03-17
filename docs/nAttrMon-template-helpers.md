@@ -12,3 +12,4 @@ Throughout nAttrMon you can use OpenAF's template functionality (ow.template bas
 | **stringify** | *{{stringify object}}* | Returns a string representing the stringify of the provided object. |
 | **stringifyInLine** | *{{stringifyInLine object}}* | Similar to stringify but without returning any new lines. | 
 | **toYAML** | *{{toYAML object}}* | Returns a YAML representation of the provided object. |
+| **env** | *{{env 'JAVA_HOME'}}* | Returns the environment variable value. |
