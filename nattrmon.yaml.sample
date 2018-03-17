@@ -7,6 +7,9 @@
 # Java arguments in case of automatic restart (you are still responsible for the startup arguments)
 #JAVA_ARGS: -Xms128m -Xmx512m
 
+# Log to console or to files
+#LOGCONSOLE: true
+
 # Turns auditing log on or off
 #LOGAUDIT: true
 
