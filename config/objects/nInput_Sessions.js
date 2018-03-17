@@ -75,7 +75,7 @@ nInput_Sessions.prototype.input = function(scope, args) {
 		arr = arr.concat(this.__getSessions(this.params.keys[i], scope));
 	}
    
-    res[templify(this.params.attrTemplate)] = $from(arr).sort("Start Time", "Username", "Name").select();
+    res[templify(this.params.attrTemplate)] = $from(arr).sort("Name", "Start Time", "Username").select();
 	return res;
 };
 

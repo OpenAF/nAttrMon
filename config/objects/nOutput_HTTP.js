@@ -56,7 +56,13 @@ var nOutput_HTTP = function (aMap) {
 			var hres = httpd.replyOKJSON(beautifier(ret));
 			auditAccess(req, hres);
 			return hres;
-		}
+		},
+		"/": function (r) {
+			if (r.uri == "/") r.uri = "/index.html";
+			var hres = ow.server.httpd.replyFile(httpd, path + "/objects.assets/noutputhttp", "/", r.uri);			
+			auditAccess(r, hres);
+			return hres;
+		},
 	}), function (r) {
 		if (r.uri == "/") r.uri = "/index.html";
 		var hres = ow.server.httpd.replyFile(httpd, path + "/objects.assets/noutputhttp", "/", r.uri);
