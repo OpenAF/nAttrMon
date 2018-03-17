@@ -3,6 +3,7 @@ var LOGHK_HOWLONGAGOINMINUTES = 30 * 24 * 60; // How long to keep logs
 var LOGAUDIT = true;                          // Set to false to turn it off
 var LOGAUDIT_TEMPLATE = "AUDIT | User: {{request.user}} | Channel: {{name}} | Operation: {{op}} | Key: {{{key}}}";
 var JAVA_ARGS = [ ];                          // Array of java arguments
+var LOGCONSOLE = false;                       // Create files or log to console
 var DEBUG = false;
 
 // -------------------------------------------------------------------
@@ -23,10 +24,11 @@ if (io.fileExists(NATTRMON_HOME + "/nattrmon.yaml")) {
 	if (isDef(pms.NUMBER_WORKERS)) __cpucores = Number(pms.NUMBER_WORKERS);
 	if (isDef(pms.LOG_ASYNC)) __logFormat.async = pms.LOG_ASYNC;
 	if (isDef(pms.DEBUG)) DEBUG = pms.DEBUG;	
+	if (isDef(pms.LOGCONSOLE)) LOGCONSOLE = pms.LOGCONSOLE;
 	if (isUnDef(params.withDirectory) && isDef(pms.CONFIG)) params.withDirectory = pms.CONFIG;
 
 	print("Applying parameters:");
-	sprint(pms);
+	print(af.toYAML(pms));
 }
 
 // Auxiliary objects
@@ -153,13 +155,15 @@ var nAttrMon = function(aConfigPath, debugFlag) {
 	var nattrmon = this;
 
 	// Start logging
-	io.mkdir(aConfigPath + "/log");
-	ow.ch.utils.setLogToFile({
-		logFolder: aConfigPath + "/log",
-		HKhowLongAgoInMinutes: LOGHK_HOWLONGAGOINMINUTES,
-		numberOfEntriesToKeep: 10,
-		setLogOff            : true
-	});
+	if (!LOGCONSOLE) {
+		io.mkdir(aConfigPath + "/log");
+		ow.ch.utils.setLogToFile({
+			logFolder: aConfigPath + "/log",
+			HKhowLongAgoInMinutes: LOGHK_HOWLONGAGOINMINUTES,
+			numberOfEntriesToKeep: 10,
+			setLogOff            : true
+		});
+	}
 
 	if (LOGAUDIT) {
 		ow.ch.server.setLog(function(aMap) {
@@ -168,7 +172,7 @@ var nAttrMon = function(aConfigPath, debugFlag) {
 		});
 	}
 
-	print(new Date() + " | Starting log to " + aConfigPath + "/log");
+	if (!LOGCONSOLE) print(new Date() + " | Starting log to " + aConfigPath + "/log");
 
 	// date checks
 	this.currentValues.subscribe((new nAttributeValue()).convertDates);
