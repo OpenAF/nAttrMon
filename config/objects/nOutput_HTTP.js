@@ -41,7 +41,7 @@ var nOutput_HTTP = function (aMap) {
 	};
 
 	// Add function to server
-	ow.server.httpd.route(httpd, ow.server.httpd.mapWithExistingRoutes(httpd, {
+	ow.server.httpd.route(httpd, ow.server.httpd.mapRoutesWithLibs(httpd, ow.server.httpd.mapWithExistingRoutes(httpd, {
 		"/f": function (r) {
 			if (r.uri == "/f") r.uri = "/index.html";
 			var hres = ow.server.httpd.replyFile(httpd, path + "/objects.assets/noutputhttp", "/f", r.uri);			
@@ -68,7 +68,7 @@ var nOutput_HTTP = function (aMap) {
 		var hres = ow.server.httpd.replyFile(httpd, path + "/objects.assets/noutputhttp", "/", r.uri);
 		auditAccess(r, hres);
 		return hres;
-	});
+	}));
 
 	nattrmon.setSessionData("httpd.summary.custom", {
 		"title": this.title,
