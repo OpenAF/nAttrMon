@@ -24,6 +24,14 @@ var nOutput_EmailWarnings = function(aMap) {
 	this.include = aMap.include;
 	this.exclude = aMap.exclude;
 
+	this.template = nattrmon.configPath + "/objects.assets/noutputemailwarnings/" + ((isUnDef(aMap.template)) ? "warningEmailTemplate.hbs" : aMap.template);
+	if (!(io.fileInfo(this.template).canonicalPath.startsWith(nattrmon.configPath + "/objects.assets/noutputemailwarnings/")))
+		this.template = nattrmon.configPath + "/objects.assets/noutputemailwarnings/warningEmailTemplate.hbs";
+
+	this.htmlTemplate = ow.template.loadHBSs({
+		"nOutput_EmailWarnings": this.template
+	});
+
 	this.lock = false;
 
 	this.first = (isUnDef(aMap.dontAvoidStartEmails)) ? true : aMap.dontAvoidStartEmails;
@@ -136,7 +144,7 @@ nOutput_EmailWarnings.prototype.output = function (scope, args, meta) {
 
 	if (count == 0) return;
 	email.embedFile(nattrmon.configPath + "/objects.assets/noutputemailwarnings/logo.png", "logo");
-	var message = nOutput_EmailWarnings.htmlTemplate("nOutput_EmailWarnings", data);
+	var message = this.htmlTemplate("nOutput_EmailWarnings", data);
 
 	email.setHTML(message);
 	try {	
@@ -149,7 +157,3 @@ nOutput_EmailWarnings.prototype.output = function (scope, args, meta) {
 		throw e;
 	}
 };
-
-nOutput_EmailWarnings.htmlTemplate = ow.template.loadHBSs({
-	"nOutput_EmailWarnings": nattrmon.configPath + "/objects.assets/noutputemailwarnings/warningEmailTemplate.hbs"
-});
