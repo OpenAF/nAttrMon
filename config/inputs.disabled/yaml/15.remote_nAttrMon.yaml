@@ -1,0 +1,11 @@
+input:
+   name    : Remote nAttrMon
+   cron    : "*/1 * * * *"
+   execFrom: nInput_RemoteChannel
+   execArgs:
+      url         : http://nattrmon:nattrmon@some.remote.server:8090/chs/cvals
+      ids         :
+        - Attr1
+        - My attribute 2
+        - Attr3
+      attrTemplate: Remote/{{id}}
