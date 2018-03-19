@@ -4,8 +4,10 @@ input:
    execFrom: nInput_RemoteChannel
    execArgs:
       url         : http://nattrmon:nattrmon@some.remote.server:8090/chs/cvals
-      ids         :
+      include     :
         - Attr1
         - My attribute 2
         - Attr3
+      exclude     :
+        - Attr4
       attrTemplate: Remote/{{id}}

@@ -6,20 +6,23 @@
  *    - url (String) The remote channel url\
  *    - idKey (String) The object path to the id key to use (default "name")\
  *    - valueKey (String) The object path to the value to include in attributes (default val)\
- *    - ids (Array)  An optional array of ids to retrieve (default all)\
+ *    - include (Array) An optional array of ids to include (default all)\
+ *    - exclude (Array) An optional array of ids to exclude\
  *    - attrTemplate (String) Attribute template given id, value and originalValue\
  * \
  * </odoc>
  */
 var nInput_RemoteChannel = function(aMap) {
     this.url = aMap.url;
-    this.ids = aMap.ids;
+    this.include = aMap.include;
+    this.exclude = aMap.exclude;
     this.idKey = (isUnDef(aMap.idKey)) ? "name" : aMap.idKey;
     this.valueKey = (isUnDef(aMap.valueKey)) ? "val" : aMap.valueKey;
     this.attrTemplate = (isUnDef(aMap.attrTemplate)) ? "{{id}}" : aMap.attrTemplate;
 
     if (isUnDef(this.url)) throw "You need to define an external channel url.";
-    if (isDef(this.ids) && !isArray(this.ids)) throw "The ids should be an array.";
+    if (isDef(this.include) && !isArray(this.include)) throw "The include entry should be an array.";
+    if (isDef(this.exclude) && !isArray(this.exclude)) throw "The exclude entry should be an array.";
 
     this.channelId = sha1(this.url);
     $ch(this.channelId).createRemote(this.url);
@@ -32,13 +35,24 @@ nInput_RemoteChannel.prototype.input = function(scope, args) {
     var res = {};
 
     var data = [];
-    if (isUnDef(this.ids)) {
+    if (isUnDef(this.include)) {
         data = $ch(this.channelId).getAll();
+        if (isDef(this.exclude)) {
+            var excMap = [];
+            this.exclude.forEach((v) => {
+                excMap.push({
+                    name: v
+                });
+            });
+            data = _.differenceBy(data, excMap, 'name');
+        }
     } else {
-        for (var i in this.ids) {
+        for (var i in this.include) {
             var k = {};
-            ow.obj.setPath(k, this.idKey, this.ids[i]);
-            data.push($ch(this.channelId).get(k));
+            ow.obj.setPath(k, this.idKey, this.include[i]);
+            var v = $ch(this.channelId).get(k);
+            if (isDef(this.exclude) && this.exclude.indexOf(ow.obj.getPath(k, this.idKey)) >= 0) continue; 
+            data.push(v);
         }
     }
 
