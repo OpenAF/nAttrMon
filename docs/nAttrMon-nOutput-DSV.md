@@ -16,6 +16,11 @@ output:
      # fileDateFormat     : "myCSV\\d{4}-\\d{2}-\\d{2}\\.csv"
      # howLongAgoInMinutes: 7200
      # dontCompress       : true
+     # include            :
+     #    - Attr 1
+     #    - Attr 2
+     # exclude            :
+     #    - Attr 3
      headerTemplate     : "Date Time; Attr 1; Attr 2"
      outputTemplate     : "{{datetime}}; {{values.[Attr 1].val}}: {{values.[Attr 2].val}}"
 ````
@@ -32,5 +37,7 @@ output:
 | dontCompress | Boolean | No | Specifies if old files on folder should be compressed or note. Defaults to false. |
 | headerTemplate | String | No | Defines a Handlebars template to be used as a DSV/CSV header. Available to the template are the generic template helpers plus: {{datetime}} the current date time; {{values}} a map of the current attribute values; {{warnings}} a map of warning Levels and an array, per each, of the corresponding warnings; {{lastvalues}} a map of the last attribute values; {{attributes}} a map of the current attributes defined. If not specified no header will be used. |
 | outputTemplate | String | Yes | Defines a Handlebars template to be used as the DSV/CSV line. Available to the template are the generic template helpers plus: {{datetime}} the current date time; {{values}} a map of the current attribute values; {{warnings}} a map of warning Levels and an array, per each, of the corresponding warnings; {{lastvalues}} a map of the last attribute values; {{attributes}} a map of the current attributes defined. |
+| include | Array | No | An array of attribute names to include. |
+| exclude | Array | No | An array of attribute names to exclude. |
 
 You can also use [nAttrMon generic template helpers](nAttrMon-template-helpers) to access other attribute values, previous attribute values, etc... for the DSV.headerTemplate and DSV.outputTemplate arguments.

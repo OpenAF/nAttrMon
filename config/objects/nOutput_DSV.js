@@ -16,6 +16,14 @@ var nOutput_DSV = function(aMap) {
     this.howLongAgoInMinutes = (isUnDef(aMap.howLongAgoInMinutes)) ? 7200 : aMap.howLongAgoInMinutes;
 	this.dontCompress = (isUnDef(aMap.dontCompress)) ? false : aMap.dontCompress;
 
+	this.idKey = (isUnDef(aMap.idKey)) ? "name" : aMap.idKey;
+
+	this.include = aMap.include;
+	this.exclude = aMap.exclude;
+
+	if (isDef(this.include) && !isArray(this.include)) throw "Include needs to be an array";
+	if (isDef(this.exclude) && !isArray(this.exclude)) throw "Exclude needs to be an array";
+
 	nOutput.call(this, this.output);
 };
 inherit(nOutput_DSV, nOutput);
@@ -23,6 +31,13 @@ inherit(nOutput_DSV, nOutput);
 /**
  */
 nOutput_DSV.prototype.output = function(scope, args) {
+	if (isDef(this.include) || isDef(this.exclude)) {
+		var k = ow.obj.getPath(args.k, this.idKey);
+
+		if ((isDef(this.include) && this.include.indexOf(k) < 0) || 
+		    (isDef(this.exclude) && this.exclude.indexOf(k) >= 0 )) return;
+	}
+
 	var newd = new Date();
 
 	var makeLine = (data) => {
