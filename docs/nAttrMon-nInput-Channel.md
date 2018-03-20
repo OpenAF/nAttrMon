@@ -17,6 +17,11 @@ input:
       #path        : /chs/remoteVals
       #idKey       : name
       #httpSession : myhttpd
+      #include      :
+      #   - Attr 1 
+      #   - Attr 2
+      #exclude      :
+      #   - Attr 3
       valueKey    : val
       attrTemplate: Remote/{{id}}
 ``` 
@@ -28,6 +33,10 @@ input:
 | **host** | String | No | If *port* was used you can also specify the host network address to bind the network listener to. |
 | **path** | String | No | Either if you have used *port* or *httpSession* you can use path to define the uri where the channel will be exposed on. |
 | **httpSession** | String | No | If a httpd object was created previously and stored on nAttrMon's session data you can specify it here to be used (defaults to httpd if port is not used effectively binding to the same listener as nOutput_HTTP or nOutput_HTTP_JSON or nOutput_Channels). |
+| **keyStore** | String | No | Path to the secure key file to use for https. |
+| **keyPassword** | String | No | Password for the secure key file (https). |
 | **idKey** | String | No | Defines the map path to find the attribute name on the channel value and/or key *set* operation. Defaults to "name". |
 | **valueKey** | String | No | Defines the map path to find the attribute value on the channel value. If you are using nOutput_RemoteChannel or similar you should use "val" on this parameter to ensure the attribute value is picked up. |
 | **attrTemplate** | String | No | A Handlebars template to build the local attribute name. You can use {{id}} (the original attribute name), {{value}} (the identified value object) and {{originalValue}} the raw value received. Defaults to "{{id}}". |
+| **include** | Array | No | An array of attribute names to include. |
+| **exclude** | Array | No | An array of attribute names to exclude. |
