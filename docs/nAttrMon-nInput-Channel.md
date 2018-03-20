@@ -24,7 +24,33 @@ input:
       #   - Attr 3
       valueKey    : val
       attrTemplate: Remote/{{id}}
-``` 
+
+      # local:
+      #  nattrmon: 
+      #    p: nattrmon
+      #    m: r
+      #  change:
+      #    p: me 
+      #    m: rw
+      #  custom: |
+      #        // Custom has priority over local. Comment the entry you won't use.
+      #        //
+      #        // u - user
+      #        // p - password
+      #        // s - server object
+      #        // r - request object (e.g. uri, method, header["remote-addr"], header["user-agent"], ...)
+      #         
+      #        if (u == "nattrmon" && p == "nattrmon") return true;
+      #
+      #        try {
+      #          new ow.server.ldap("ldap://my.auth.ldap:389", u + "@my.domain", p);
+      #          return true;
+      #        } catch(e) {
+      #          tlogErr("AUDIT | {{user}} authentication refused ({{message}}).", { user: u, message: e.message });
+      #        }
+      #
+      #        return false;      
+```
 
 | execArgs | Type | Mandatory | Description | 
 | -------- | ---- | --------- |:----------- |
@@ -40,3 +66,5 @@ input:
 | **attrTemplate** | String | No | A Handlebars template to build the local attribute name. You can use {{id}} (the original attribute name), {{value}} (the identified value object) and {{originalValue}} the raw value received. Defaults to "{{id}}". |
 | **include** | Array | No | An array of attribute names to include. |
 | **exclude** | Array | No | An array of attribute names to exclude. |
+| **local** | Map | No | Provides a list of login, password and corresponding permissions to access the channels |
+| **custom** | String | No | Function that receives 4 arguments: u (user), p (password), s (HTTPd server object) and r (request map). If it returns true the user is authenticated, if returns false or fails the user is not authenticated. |

@@ -15,18 +15,6 @@ Example of use of the execArgs:
 
 ```yaml
 output:
-   name    : Output Channels
-   execFrom: nOutput_Channels
-   execArgs:
-      port : 17878
-      cAuth:
-         nattrmon:
-            p: nattrmon
-            m: r
-         change:
-            p: me
-            m: rw
-output:
    name         : Output Channels
    description  : >
     Provides, on the same nOutput_HTTPJSON or nOutput_HTTP port or other, access to the nAttrMon specific OpenAF channels like: /chs/ops,
