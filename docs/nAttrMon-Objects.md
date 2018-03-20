@@ -19,6 +19,8 @@ The following is a list of the current objects base for Inputs, Outputs and Vali
 | Input | nInput_Semaphores | RAID | Returns the current BPM semaphores values. |
 | Input | nInput_Sessions | RAID | Returns the current sessions list for a RAID instance. |
 | Input | [nInput_Shell](nAttrMon-nInput-Shell) | OS | Executes (locally or remotely) and returns the output of a shell command (parsing or not the output as JSON). |
+| Input | [nInput_Channel](nAttrMon-nInput-Channel) | Input Channel | Receives attributes from another nAttrMon or OpenAF script. |
+| Input | [nInput_RemoteChannel](nAttrMon-nInput-RemoteChannel) | Input Channel | Retrieves attributes from another nAttrMon or OpenAF script through an OpenAF channel. | 
 | Output | [nOutput_DSV](nAttrMon-nOutput-DSV) | Output DSV | Outputs a specific set of attributes or warnings to DSV/CSV files per date with automatic housekeeping. | 
 | Output | [nOutput_EmailWarnings](nAttrMon-nOutput-EmailWarnings) | Output Warning | If there is any new level HIGH warning (or any other combination) it will send an email with it. |
 | Output | nOutput_H2 | Output History | Records the attribute values and warnings on a H2 database. |
@@ -28,6 +30,7 @@ The following is a list of the current objects base for Inputs, Outputs and Vali
 | Output | nOutput_Oracle | Output History | Records the attribute values and warnings on a Oracle database. |
 | Output | nOutput_Stdout | Output Log | Outputs the current attribute values into the stdout. |
 | Output | [nOutput_Channels](nAttrMon-nOutput-Channels) | Output Channels | Exposes several OpenAF channels with attributes, values, warnings and plugs plus access to operational functionality. |
+| Output | [nOutput_RemoteChannel](nAttrMon-nOutput-Channel) | Output Channel | Pushes attribute values to a remote nAttrMon or OpenAF script through an OpenAF channel. |
 | Output | [nOutput_Notifications](nAttrMon-nOutput-Notifications) | Output Warnings | Sends push notifications triggered by warnings. |
 | Validation | [nValidation_Generic](nAttrMon-nValidation-Generic) | Validation Generic | Simple generic validation for an attribute or any set of attribute patterns. |
 

@@ -1,0 +1,9 @@
+input:
+   name       : Test channel input
+   chSubscribe: test
+   execFrom   : nInput_Channel
+   execArgs   :
+      ch          : test
+      port        : 7878
+      valueKey    : val
+      attrTemplate: Remote/{{id}}
