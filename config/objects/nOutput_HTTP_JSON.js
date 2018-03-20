@@ -11,13 +11,17 @@ var nOutput_HTTP_JSON = function (aMap) {
 	}
 
 	// Set server if doesn't exist
-	if (isDef(aPort) || !nattrmon.hasSessionData("httpd")) {
-		nattrmon.setSessionData("httpd",
-			ow.server.httpd.start(isUnDef(aPort) ? 8090 : aPort, aMap.host));
+	var hS = "httpd";
+
+	if (isDef(aMap.httpSession)) hS = aMap.httpSession;
+
+	if (isDef(aPort) || !nattrmon.hasSessionData(hS)) {
+		nattrmon.setSessionData(hS,
+			ow.server.httpd.start(isUnDef(aPort) ? 8090 : aPort, aMap.host, aMap.keyStore, aMap.keyPassword));
 	}
 
 	// Get server
-	var httpd = nattrmon.getSessionData("httpd");
+	var httpd = nattrmon.getSessionData(hS);
 
 	var auditAccess = (aReq, aReply) => {
 		var data = merge(aReq, { 

@@ -4,6 +4,9 @@ This output exposes nAttrMon internal channels and data externally (configurable
 | execArgs | Type | Mandatory | Description | 
 | -------- | ---- | --------- |:----------- |
 | port | Number | No | Forces the channels expose port. If omitted defaults to the current httpd object (e.g. usually port 8090) or creates a new one in port 17878. |
+| host | String | No | If *port* was used you can also specify the host network address to bind the network listener to. |
+| keyStore | String | No | Path to the secure key file to use for https. | 
+| keyPassword | String | No | Password for the secure key file (https). |
 | local | Map | No | Provides a list of login, password and corresponding permissions to access the channels | 
 | cAuth | Map | No | Equal no local (to be deprecated in the future) |
 | custom | String | No | Function that receives 4 arguments: u (user), p (password), s (HTTPd server object) and r (request map). If it returns true the user is authenticated, if returns false or fails the user is not authenticated. |
