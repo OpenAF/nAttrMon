@@ -47,4 +47,5 @@ opack script nattrmon
 # Operational topics
 
 * [Managing warnings](nAttrMon-Warnings)
+* [Interconnecting several nAttrMon's instances](nAttrMon-Interconnect)
 * [Auditing](nAttrMon-Auditing)
