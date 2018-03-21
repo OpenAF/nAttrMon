@@ -24,7 +24,8 @@ var nInput_CBPMRunningFlows = function(aMap) {
 
     this.keys = aMap.keys;
     this.chKeys = aMap.chKeys;
-    this.limit = aMap.limit;
+    this.limit = (isUnDef(aMap.limit)) ? 24 : aMap.limit;
+    if (this.limit <= 0) this.limit = void 0;
 
     if (!(isArray(aMap.keys))) aMap.keys = [ aMap.keys ];
 
@@ -35,6 +36,7 @@ var nInput_CBPMRunningFlows = function(aMap) {
     this.attrTemplate = aMap.attrTemplate;
     this.status = (isUnDef(aMap.status)) ? 'STARTED' : aMap.status;
     this.hoursToCheck = (isUnDef(aMap.hoursToCheck)) ? 24 : aMap.hoursToCheck;
+    //this.useDatabase = aMap.useDatabase;
 
     ow.loadWAF();
 
@@ -51,39 +53,54 @@ nInput_CBPMRunningFlows.prototype.input = function(scope, args) {
 	for (var i in this.keys) {
 		var arr = [];
         var aKey = this.keys[i];
-    
+        
+        var listOfFlows;
         nattrmon.useObject(aKey, (aAF) => {
-            var listOfFlows = ow.waf.cbpm.listFlows(aAF);
+            listOfFlows = ow.waf.cbpm.listFlows(aAF);
+        });
 
-            $from(listOfFlows).select((r) => {
-                var instances = ow.waf.cbpm.getFlowInstancesByName(aAF, r.flowName, [ this.status.toUpperCase() ], this.limit, true, true);
-
+        //if (this.useDatabase) {
+            // TODO
+        //} else {
+            //$from(listOfFlows).select((r) => {
+            arr = _.flatten(parallel4Array(listOfFlows, (r) => {
+                var oo = [];
+                var instances;
+    
+                nattrmon.useObject(aKey, (aAF) => {
+                    try {
+                        instances = ow.waf.cbpm.getFlowInstances(aAF, r.flowUUID, [ this.status.toUpperCase() ], this.limit, false, false);
+                    } catch(e) {
+                        // Check if it never executed
+                        if (!String(e).match(/Cannot find the object/)) logErr("Can't retrieve instances, in " + aKey + ", for flow: " + r.flowName);
+                    }
+                });
+    
                 if (isDef(instances) && isArray(instances)) {          
                     $from(instances).select((t) => {
-                        try {
-                            if (ow.format.dateDiff.inHours(ow.format.fromWeDoDateToDate(t.instanceStartTime)) <= this.hoursToCheck) {
-                                arr.push({
-                                    Category: r.flowCategory,
-                                    Flow: r.flowName,
-                                    Version: t.instanceVersion,
-                                    "Run ID": t.instanceId,
-                                    User: t.instanceStartUser,
-                                    "Date": ow.format.fromWeDoDateToDate(t.instanceStartTime),
-                                    Exception: t.instanceErrorMessage
-                                });
-                            }
-                        } catch(e) {
-                            // Check if it never executed
-                            if (!String(e).match(/Cannot find the object/)) logErr("Can't retrieve instances, in " + aKey + ", for flow: " + r.flowName);
+                        if (ow.format.dateDiff.inHours(ow.format.fromWeDoDateToDate(t.instanceStartTime)) <= this.hoursToCheck) {
+                            oo.push({
+                                Category: r.flowCategory,
+                                Flow: r.flowName,
+                                Version: t.instanceVersion,
+                                "Run ID": t.instanceId,
+                                User: t.instanceStartUser,
+                                "Date": ow.format.fromWeDoDateToDate(t.instanceStartTime),
+                                Exception: t.instanceErrorMessage
+                            });
                         }
                     });
                 }
-            });
-        });
+    
+                return oo;
+    
+            //});
+            }));    
+        //}
 
         res[templify(this.attrTemplate, {
             key: aKey
-        })] = arr;
+        })] = $from(arr).sort("-Date").select();
 	}
 
 	return res;
