@@ -1,0 +1,7 @@
+output:
+   name       : Push Channels
+   chSubscribe: nattrmon::cvals
+   execFrom   : nOutput_RemoteChannel
+   execArgs   :
+      url         : http://127.0.0.1:17878/cvals
+      attrTemplate: "Remote/{{id}}"

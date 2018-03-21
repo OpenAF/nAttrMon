@@ -11,13 +11,16 @@ var nOutput_HTTP = function (aMap) {
 	this.auditTemplate = (isDef(aMap.auditTemplate) ? aMap.auditTemplate : AUDIT_TEMPLATE);
 
 	// Set server if doesn't exist
-	if (!nattrmon.hasSessionData("httpd")) {
-		var hs = ow.server.httpd.start(aPort, aMap.host);
-		nattrmon.setSessionData("httpd", hs);
+	var hS = "httpd";
+
+	if (isDef(aMap.httpSession)) hS = aMap.httpSession;
+	if (!nattrmon.hasSessionData(hS)) {
+		var hs = ow.server.httpd.start(aPort, aMap.host, aMap.keyStore, aMap.keyPassword);
+		nattrmon.setSessionData(hS, hs);
 	}
 
 	// Get server
-	var httpd = nattrmon.getSessionData("httpd");
+	var httpd = nattrmon.getSessionData(hS);
 	this.title = aTitle;
 
 	// Set session data
@@ -89,5 +92,5 @@ nOutput_HTTP.prototype.output = function (scope, args, meta) {
 };
 
 nOutput_HTTP.prototype.close = function () {
-	nattrmon.getSessionData("httpd").stop();
+	nattrmon.getSessionData(hS).stop();
 };

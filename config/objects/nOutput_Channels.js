@@ -13,13 +13,17 @@ var cauth_func = void 0;
 
 var nOutput_Channels = function(aMap) {
   // Set server if doesn't exist
-  if (isDef(aMap.port) || !nattrmon.hasSessionData("httpd")) {
+  var hS = "httpd";
+
+  if (isDef(aMap.httpSession)) hS = aMap.httpSession;
+
+  if (isDef(aMap.port) || !nattrmon.hasSessionData(hS)) {
     ow.loadServer();
-    nattrmon.setSessionData("httpd", ow.server.httpd.start(isUnDef(aMap.port) ? 8090 : aMap.port, aMap.host));
+    nattrmon.setSessionData(hS, ow.server.httpd.start(isUnDef(aMap.port) ? 8090 : aMap.port, aMap.host, aMap.keyStore, aMap.keyPassword));
   }
 
   // Get server
-  var httpd = nattrmon.getSessionData("httpd");
+  var httpd = nattrmon.getSessionData(hS);
 
   if (isDef(aMap.cAuth)) cauth_perms = aMap.cAuth;
   if (isDef(aMap.local)) cauth_perms = aMap.local;
