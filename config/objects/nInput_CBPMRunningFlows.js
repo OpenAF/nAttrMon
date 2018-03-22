@@ -72,7 +72,7 @@ nInput_CBPMRunningFlows.prototype.input = function(scope, args) {
                         instances = ow.waf.cbpm.getFlowInstances(aAF, r.flowUUID, [ this.status.toUpperCase() ], this.limit, false, false);
                     } catch(e) {
                         // Check if it never executed
-                        if (!String(e).match(/Cannot find the object/)) logErr("Can't retrieve instances, in " + aKey + ", for flow: " + r.flowName);
+                        if (!String(e).match(/Cannot find the object/)) logErr("Can't retrieve instances, in " + aKey + ", for flow: " + r.flowName + " -- " + String(e));
                     }
                 });
     
