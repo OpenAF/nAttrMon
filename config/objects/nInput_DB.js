@@ -111,7 +111,7 @@ nInput_DB.prototype.input = function (scope, args) {
 		return 1;
 	});
 	ow.template.delHelper("toDate");
-	ow.template.delHelper("debug");
+	//ow.template.delHelper("debug");
 
 	return ret;
 };
