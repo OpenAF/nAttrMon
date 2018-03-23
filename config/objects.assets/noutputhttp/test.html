@@ -9,7 +9,7 @@
         <script src="js/nattrmon_js.js"></script>
         <script id="entry-template" type="text/x-handlebars-template">
             {{#each ctgs}}
-                <h4 class="sub-header" id="{{name}}">{{name}}</h4>
+                <h5 class="sub-header" id="{{name}}">{{name}}</h5>
                 <div class="table-responsive">
                     <table class="table striped">
                         <thead>
@@ -74,42 +74,23 @@
             var source   = document.getElementById("entry-template").innerHTML;
             var template = Handlebars.compile(source);
             Handlebars.registerHelper('render', function(aVal, aType) { return render({ trustAsHtml: (s) => { return s; }}, aVal, aType); } );
-            document.getElementById("entries").innerHTML = template({
-                ctgs: [
-                    {
-                        name: "name test",
-                        attrs: [
-                            {
-                                simplename: "simplename test",
-                                description: "description test",
-                                val: {
-                                    a:1, b: "a2a"
-                                },
-                                lastval: {
-                                    a:2, b: "a2a"
-                                },
-                                lastmoddate: String(new Date()),
-                                moddate: String(new Date()),
-                                lastcheck: String(new Date()),
-                                type: "simple"
-                            },
-                            {
-                                simplename: "simplename 2 test",
-                                description: "description  2test",
-                                val: [{
-                                    a:1, b: "a2a"
-                                }],
-                                lastval: [{
-                                    a:2, b: "a2a"
-                                }],
-                                lastmoddate: String(new Date()),
-                                moddate: String(new Date()),
-                                lastcheck: String(new Date()),
-                                type: "simple"
-                            }
-                        ]
-                    }
-                ]
+
+            $.getJSON("/json", function(data) {
+                var cvals = data.values;
+                var lvals = data.lastvalues;
+                var attrs = data.attributes;
+                var warns = data.warnings;
+                
+                refresh(data);
+                var ctgs = nattrmonCtgs;
+                var warnsHigh = Object.keys(nattrmonWarns['High']).length;
+                var warnsMedium = Object.keys(nattrmonWarns['Medium']).length;
+                var warnsLow = Object.keys(nattrmonWarns['Low']).length;
+                var warnsInfo = Object.keys(nattrmonWarns['Info']).length;
+
+                document.getElementById("entries").innerHTML = template({
+                    ctgs: ctgs
+                });
             });
         </script>
     </body>
