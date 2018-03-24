@@ -9,6 +9,7 @@
         <script src="js/nattrmon_js.js"></script>
         <script id="entry-template" type="text/x-handlebars-template">
             {{#each ctgs}}
+<<<<<<< HEAD
                 <p id="{{name}}"></p>
                 <br>
                 <div class="card">
@@ -94,10 +95,66 @@
             <div class="col s11 m11 l11" id="entries">
             </div>
         </div>
+=======
+                <h4 class="sub-header" id="{{name}}">{{name}}</h4>
+                <div class="table-responsive">
+                    <table class="table striped">
+                        <thead>
+                            <tr>
+                                <th style="text-align:right">Description</th>
+                                <th>Value</th>
+                                <th style="text-align:right">Dates</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each attrs}}
+                            <tr>
+                                <td align="right" style="white-space: nowrap; width: 1%">
+                                    <small>{{simplename}}</small>
+                                    <span ng-show="showme" class="animate-show"><br><small>{{{render description 'desc'}}}</small></span>
+                                </td>
+                                <td>
+                                    {{{render val type}}}
+                                    <span ng-show="showme" class="animate-show"><br><small><i>last value: {{{render lastval type}}} @{{{render lastmoddate 'date'}}} (<a href="/history.html{{extra}}&attr={{name}}">see more</a>)</i></small></span>
+                                </td>
+                                <td align="right" style="white-space: nowrap; width: 1%">
+                                    <small>Last modify: {{{render moddate 'date'}}}<span ng-show="showme" class="animate-show"><br>Last check: {{{render lastcheck 'date'}}}</small>
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            {{/each}}
+        </script>
+    </head>
+    <body>
+        <nav class="grey lighten-5" role="navigation">
+            <div class="nav-wrapper">&nbsp;&nbsp;<a id="logo" href="/" class="brand-logo orange-text thin"><i class="icon-wedo-nattrmon" style="font-size:100%;color:darkorange"></i><small>Test <small><small>- nAttrMon</small></small></small></a>
+                <ul class="right hide-on-med-and-down waves-effect waves-light thin">
+                    <li><a href="/" class="orange-text">Warnings</a></li>
+                    <li><a href="/" class="orange-text">Now</a></li>
+                    <li><a href="/" class="orange-text">History</a></li>
+                    <li><a href="/" class="orange-text">Plugs</a></li>
+                </ul>
+        
+                <ul id="nav-mobile" class="side-nav waves-effect waves-light thin">
+                    <li><a href="/" class="orange-text">Warnings</a></li>
+                    <li><a href="/" class="orange-text">Now</a></li>
+                    <li><a href="/" class="orange-text">History</a></li>
+                    <li><a href="/" class="orange-text">Plugs</a></li>
+                </ul>
+                <a href="#" data-activates="nav-mobile" class="button-collapse orange-text thin"><i class="material-icons">menu</i></a>
+            </div>
+        </nav>
+        <br/>
+        <div id="entries"></div>
+>>>>>>> 6f89cca23b488fa1da66264db98a1e9f1e5375cc
 
         <script src="/js/jquery.js"></script>
         <script src="/js/handlebars.js"></script>
         <script src="/js/materialize.js"></script>
+<<<<<<< HEAD
         <script src="/js/jlinq.js"></script>
         <script>
             var sourceEntry   = document.getElementById("entry-template").innerHTML;
@@ -133,6 +190,52 @@
                 });
                 $('.tooltipped').tooltip({delay: 50});
                 offset = $('#navbar').height();
+=======
+        <script>
+            $( document ).ready(function(){
+                $(".button-collapse").sideNav();
+            });
+
+            var source   = document.getElementById("entry-template").innerHTML;
+            var template = Handlebars.compile(source);
+            Handlebars.registerHelper('render', function(aVal, aType) { return render({ trustAsHtml: (s) => { return s; }}, aVal, aType); } );
+            document.getElementById("entries").innerHTML = template({
+                ctgs: [
+                    {
+                        name: "name test",
+                        attrs: [
+                            {
+                                simplename: "simplename test",
+                                description: "description test",
+                                val: {
+                                    a:1, b: "a2a"
+                                },
+                                lastval: {
+                                    a:2, b: "a2a"
+                                },
+                                lastmoddate: String(new Date()),
+                                moddate: String(new Date()),
+                                lastcheck: String(new Date()),
+                                type: "simple"
+                            },
+                            {
+                                simplename: "simplename 2 test",
+                                description: "description  2test",
+                                val: [{
+                                    a:1, b: "a2a"
+                                }],
+                                lastval: [{
+                                    a:2, b: "a2a"
+                                }],
+                                lastmoddate: String(new Date()),
+                                moddate: String(new Date()),
+                                lastcheck: String(new Date()),
+                                type: "simple"
+                            }
+                        ]
+                    }
+                ]
+>>>>>>> 6f89cca23b488fa1da66264db98a1e9f1e5375cc
             });
         </script>
     </body>
