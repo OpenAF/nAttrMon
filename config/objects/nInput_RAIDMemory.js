@@ -11,6 +11,10 @@
  * </odoc>
  */
 var nInput_RAIDMemory = function(anMonitoredAFObjectKey, attributePrefix) {
+	if (isUnDef(getOPackPath("OpenCli"))) {
+        throw "OpenCli opack not installed.";
+	}
+	
 	// Set server if doesn't exist
 	if (isObject(anMonitoredAFObjectKey)) {
 		this.params = anMonitoredAFObjectKey;

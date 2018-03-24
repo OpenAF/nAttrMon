@@ -13,6 +13,10 @@
  * </odoc>
  */
 var nInput_CBPMRunningFlows = function(aMap) {
+    if (isUnDef(getOPackPath("OpenCli"))) {
+        throw "OpenCli opack not installed.";
+    }
+     
     if (isUnDef(aMap)) aMap = {};
 
     // If keys is not an array make it an array.

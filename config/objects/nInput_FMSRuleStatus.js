@@ -1,4 +1,8 @@
 var nInput_FMSRulesStatus = function(anMonitoredAFObjectKey, attributePrefix) {
+	if (isUnDef(getOPackPath("OpenCli"))) {
+		throw "OpenCli opack not installed.";
+	}
+	 
 	// Set server if doesn't exist
 	if (nattrmon.isObjectPool(anMonitoredAFObjectKey)) {
 		this.objectPoolKey = anMonitoredAFObjectKey;

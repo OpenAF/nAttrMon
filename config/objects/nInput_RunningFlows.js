@@ -22,6 +22,10 @@ Values for running status:
  * </odoc>
  */
 var nInput_RunningFlows = function(anMonitoredAFObjectKey, attributePrefix, anRunningStatus) {
+	if (isUnDef(getOPackPath("OpenCli"))) {
+        throw "OpenCli opack not installed.";
+	}
+	
 	if (isObject(anMonitoredAFObjectKey)) {
 		this.params = anMonitoredAFObjectKey;
 
