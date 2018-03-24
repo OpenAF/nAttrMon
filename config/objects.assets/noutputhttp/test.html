@@ -9,70 +9,101 @@
         <script src="js/nattrmon_js.js"></script>
         <script id="entry-template" type="text/x-handlebars-template">
             {{#each ctgs}}
-                <h5 class="sub-header" id="{{name}}">{{name}}</h5>
-                <div class="table-responsive">
-                    <table class="table striped">
-                        <thead>
-                            <tr>
-                                <th style="text-align:right">Description</th>
-                                <th>Value</th>
-                                <th style="text-align:right">Dates</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {{#each attrs}}
-                            <tr>
-                                <td align="right" style="white-space: nowrap; width: 1%">
-                                    <small>{{simplename}}</small>
-                                    <span ng-show="showme" class="animate-show"><br><small>{{{render description 'desc'}}}</small></span>
-                                </td>
-                                <td>
-                                    {{{render val type}}}
-                                    <span ng-show="showme" class="animate-show"><br><small><i>last value: {{{render lastval type}}} @{{{render lastmoddate 'date'}}} (<a href="/history.html{{extra}}&attr={{name}}">see more</a>)</i></small></span>
-                                </td>
-                                <td align="right" style="white-space: nowrap; width: 1%">
-                                    <small>Last modify: {{{render moddate 'date'}}}<span ng-show="showme" class="animate-show"><br>Last check: {{{render lastcheck 'date'}}}</small>
-                                </td>
-                            </tr>
-                            {{/each}}
-                        </tbody>
-                    </table>
+                <p id="{{name}}"></p>
+                <br>
+                <div class="card">
+                    <div class="card-title">&nbsp;{{name}}</div>
+                    <div class="table-responsive card-content">
+                        <table class="table striped">
+                            <thead>
+                                <tr>
+                                    <th style="text-align:right">Description</th>
+                                    <th>Value</th>
+                                    <th style="text-align:right">Dates</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each attrs}}
+                                <tr>
+                                    <td align="right" style="vertical-align: top; white-space: nowrap; width: 1%">
+                                        <small>{{simplename}}</small>
+                                        <span ng-show="showme" class="animate-show"><br><small>{{{render description 'desc'}}}</small></span>
+                                    </td>
+                                    <td>
+                                        {{{render val type}}}
+                                        <span ng-show="showme" class="animate-show"><br><small><i>last value: {{{render lastval type}}} @{{{render lastmoddate 'date'}}} (<a href="/history.html{{extra}}&attr={{name}}">see more</a>)</i></small></span>
+                                    </td>
+                                    <td align="right" style="white-space: nowrap; width: 1%">
+                                        <small>Last modify: {{{render moddate 'date'}}}<span ng-show="showme" class="animate-show"><br>Last check: {{{render lastcheck 'date'}}}</small>
+                                    </td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             {{/each}}
         </script>
+        <script id="category-template" type="text/x-handlebars-template">
+            {{#each ctgs}}
+                <li><a class="waves-effect" href="#{{name}}" id="linkCtgs" onclick="linkCtgs(event)">{{name}}</a></li>
+            {{/each}}
+        </script>
+        <script>                
+            function linkCtgs(event) {
+                event.preventDefault();
+                $(decodeURI(event.srcElement.hash).replace(/\//g, "\\/").replace(/ /g, "\\ "))[0].scrollIntoView();
+                scrollBy(0, -offset);
+            };
+        </script>
     </head>
     <body>
-        <nav class="grey lighten-5" role="navigation">
-            <div class="nav-wrapper">&nbsp;&nbsp;<a id="logo" href="/" class="brand-logo orange-text thin"><i class="icon-wedo-nattrmon" style="font-size:100%;color:darkorange"></i><small>Test <small><small>- nAttrMon</small></small></small></a>
-                <ul class="right hide-on-med-and-down waves-effect waves-light thin">
-                    <li><a href="/" class="orange-text">Warnings</a></li>
-                    <li><a href="/" class="orange-text">Now</a></li>
-                    <li><a href="/" class="orange-text">History</a></li>
-                    <li><a href="/" class="orange-text">Plugs</a></li>
-                </ul>
-        
-                <ul id="nav-mobile" class="side-nav waves-effect waves-light thin">
-                    <li><a href="/" class="orange-text">Warnings</a></li>
-                    <li><a href="/" class="orange-text">Now</a></li>
-                    <li><a href="/" class="orange-text">History</a></li>
-                    <li><a href="/" class="orange-text">Plugs</a></li>
-                </ul>
-                <a href="#" data-activates="nav-mobile" class="button-collapse orange-text thin"><i class="material-icons">menu</i></a>
-            </div>
-        </nav>
+        <span id="top"></span>
+        <div class="navbar-fixed" id="navbar"> 
+            <nav class="grey lighten-5" role="navigation">
+                <div class="nav-wrapper">&nbsp;&nbsp;<a id="logo" href="/" class="brand-logo orange-text thin"><i class="icon-wedo-nattrmon" style="font-size:100%;color:darkorange"></i><small>Test <small><small>- nAttrMon</small></small></small></a>
+                    <ul class="right hide-on-med-and-down waves-effect waves-light thin">
+                        <li><a href="/" class="orange-text">Warnings</a></li>
+                        <li><a href="/" class="orange-text">Now</a></li>
+                        <li><a href="/" class="orange-text">History</a></li>
+                        <li><a href="/" class="orange-text">Plugs</a></li>
+                    </ul>
+            
+                    <ul id="nav-mobile" class="side-nav waves-effect waves-light thin">
+                        <li><a href="/" class="orange-text">Warnings</a></li>
+                        <li><a href="/" class="orange-text">Now</a></li>
+                        <li><a href="/" class="orange-text">History</a></li>
+                        <li><a href="/" class="orange-text">Plugs</a></li>
+                    </ul>
+                    <a href="#" data-activates="nav-mobile" class="button-collapse orange-text thin"><i class="material-icons">menu</i></a>
+                </div>
+            </nav>
+        </div>
         <br/>
-        <div id="entries"></div>
+        <ul id="slide-out" class="side-nav">
+            <div id="categories"></div>
+        </ul>
+        <div class="row">
+            <div class="col s1 m1 l1">
+                <div class="fixed-action-btn" style="position: fixed; left: 40px; top: 80px">
+                    <a href="#" data-activates="slide-out" class="button-collapse tooltipped btn-floating btn-small waves-effect waves-light orange" data-position="right" data-delay="1000" data-tooltip="select a category"><i class="material-icons">keyboard_arrow_right</i></a><br><br>
+                    <a href="#top" class="btn-floating tooltipped btn-small waves-effect waves-light orange" data-position="right" data-delay="1000" data-tooltip="navigate to the top"><i class="material-icons">keyboard_arrow_up</i></a><br><br>
+                    <a href="#" class="btn-floating tooltipped btn-small waves-effect waves-light orange" data-position="right" data-delay="1000" data-tooltip="pause refresh"><i class="material-icons">pause</i></a>
+                </div>
+            </div>
+            <div class="col s11 m11 l11" id="entries">
+            </div>
+        </div>
 
         <script src="/js/jquery.js"></script>
         <script src="/js/handlebars.js"></script>
         <script src="/js/materialize.js"></script>
+        <script src="/js/jlinq.js"></script>
         <script>
-            $( document ).ready(function(){
-                $(".button-collapse").sideNav();
-            });
-
-            var source   = document.getElementById("entry-template").innerHTML;
-            var template = Handlebars.compile(source);
+            var sourceEntry   = document.getElementById("entry-template").innerHTML;
+            var templateEntry = Handlebars.compile(sourceEntry);
+            var sourceCtg     = document.getElementById("category-template").innerHTML;
+            var templateCtg   = Handlebars.compile(sourceCtg);           
             Handlebars.registerHelper('render', function(aVal, aType) { return render({ trustAsHtml: (s) => { return s; }}, aVal, aType); } );
 
             $.getJSON("/json", function(data) {
@@ -82,15 +113,26 @@
                 var warns = data.warnings;
                 
                 refresh(data);
-                var ctgs = nattrmonCtgs;
+                var ctgs = jlinq.from(nattrmonCtgs).sort("name").select();
                 var warnsHigh = Object.keys(nattrmonWarns['High']).length;
                 var warnsMedium = Object.keys(nattrmonWarns['Medium']).length;
                 var warnsLow = Object.keys(nattrmonWarns['Low']).length;
                 var warnsInfo = Object.keys(nattrmonWarns['Info']).length;
 
-                document.getElementById("entries").innerHTML = template({
+                document.getElementById("categories").innerHTML = templateCtg({
                     ctgs: ctgs
                 });
+                document.getElementById("entries").innerHTML = templateEntry({
+                    ctgs: ctgs
+                });
+            });
+
+            $( document ).ready(function(){
+                $(".button-collapse").sideNav({
+                    closeOnClick: true
+                });
+                $('.tooltipped').tooltip({delay: 50});
+                offset = $('#navbar').height();
             });
         </script>
     </body>

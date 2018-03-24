@@ -22,12 +22,15 @@ white-space: normal;
 }
 .nattributetable {
 border: 1px solid lightgray;
+color: #0000AA;
+vertical-align: top;
 }
 .nattributetablecell, .nattributetablehead {
 padding: 3px;
 border: 1px solid lightgray;
 font-size: small;
 text-align: center;
+vertical-align: top;
 }
 .nwarning_High {
 	background-color: red;
