@@ -5,3 +5,4 @@ config/validations/*
 config/*.snapshot
 util/nattrmonConfig.zip
 configTest
+nattrmon.yaml
