@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20180321'
+version: '20180325'
 dependencies:
   openaf: '>=20180317'
 files:
@@ -212,10 +212,10 @@ filesHash:
   config/objects/nInput_DB.js: 8ca14504cc55838c1534e8cd7107263113a16d22
   config/objects/nInput_EndPoints.js: 03084acddad1d42bd447ab5890dadac629681f96
   config/objects/nInput_Filesystem.js: 2522c3fa0cb229559b47e35360e50c72a2b82f0b
-  config/objects/nInput_FilesystemCount.js: e36218f7c2ffa39438f1c1d22ad982c04e0fd4a0
+  config/objects/nInput_FilesystemCount.js: 9404886daec28b17475f2b05ab4a9a8f2afe321d
   config/objects/nInput_FMSRuleStatus.js: a5e4f9a505865b394a81ae4bbbdd839c91d07902
   config/objects/nInput_IMMemory.js: 1b3570cb3c64005c6b731f837c0684cd22cb5403
-  config/objects/nInput_LogErrorAgg.js: 29b9201607432b841f41871a83475d9a25409215
+  config/objects/nInput_LogErrorAgg.js: 43e3809d524752c55f7c58403661beb8e623f52b
   config/objects/nInput_OSInfo.js: 3418957f8d9e4d47dba8dd1100d0d101337904b3
   config/objects/nInput_RAIDMemory.js: bf7945d3af630132abf94f737524f38b8a4f74bd
   config/objects/nInput_RemoteChannel.js: e785711e77e4ffa8363a5490afed77b14b0fd7b1
