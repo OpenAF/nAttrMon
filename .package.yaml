@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20180325'
+version: '20180326'
 dependencies:
   openaf: '>=20180317'
 files:
@@ -212,7 +212,7 @@ filesHash:
   config/objects/nInput_DB.js: 8ca14504cc55838c1534e8cd7107263113a16d22
   config/objects/nInput_EndPoints.js: 03084acddad1d42bd447ab5890dadac629681f96
   config/objects/nInput_Filesystem.js: 2522c3fa0cb229559b47e35360e50c72a2b82f0b
-  config/objects/nInput_FilesystemCount.js: 9404886daec28b17475f2b05ab4a9a8f2afe321d
+  config/objects/nInput_FilesystemCount.js: e36218f7c2ffa39438f1c1d22ad982c04e0fd4a0
   config/objects/nInput_FMSRuleStatus.js: a5e4f9a505865b394a81ae4bbbdd839c91d07902
   config/objects/nInput_IMMemory.js: 1b3570cb3c64005c6b731f837c0684cd22cb5403
   config/objects/nInput_LogErrorAgg.js: 43e3809d524752c55f7c58403661beb8e623f52b
@@ -223,7 +223,7 @@ filesHash:
   config/objects/nInput_Semaphores.js: 07fda9baaec06e10db832b10bdef3aad27dc9bec
   config/objects/nInput_Sessions.js: acf05b7a6e92da92cdc6d79bb7bdb1c61f90921a
   config/objects/nInput_Shell.js: 2b84085de7c592241d5e9ee72d207ca24e9d5ad9
-  config/objects/nOutput_Channels.js: 6e45ef1d91349b69a922ff3dc3faaa3d666d1962
+  config/objects/nOutput_Channels.js: c1a5b1ed62942766c4943326c6b43e2f5aaec157
   config/objects/nOutput_DSV.js: 9e31e336abe81917e4630a37a96fbc9d579b77d2
   config/objects/nOutput_EmailWarnings.js: 49e408614fd56b1a70a912a2b9cb886f550f350d
   config/objects/nOutput_ES.js: 87e611d5f884bf6f268389edd2ab8450cc737386
