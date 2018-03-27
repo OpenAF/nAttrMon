@@ -65,6 +65,7 @@ This channel provides access useful operational operations to manage a running n
 * **Clear an attribute** from nAttrMon.
 * **Close a warning** or force it's deletition. 
 * **Close all warnings** or force there deletition.
+* Check the current object **pool statistics**.
 
 ## List
 
@@ -127,6 +128,27 @@ The close warning operation will do one of two things depending of the value of 
 
 This operation is equivalent to the close warning operation but will apply to all existing warnings in nAttrMon.
 
+## Pool statistics
+
+| Permissions | Example |
+|:------------|:--------|
+| "r" | ```$ch("ops").get("poolStats");``` |
+
+nAttrMon can have several internal object pools which also manage access to external resources (e.g. database, SSH, etc...). You can check the current statistics of these pools with this operation. It will return a map for each internal object pool in use with nAttrMon each with the following information:
+
+| Property | Description |
+| -------- | ----------- |
+| **min** | Minimum number of objects to keep active. |
+| **max** | Maximum number of objects that can be active (if 0, no limit) |
+| **increment** | Number of objects to create whenever more objects than the current freeObjects is needed (will keep within the limits of max) |
+| **timeout** | The maximum timeout time in ms to declare an object unusable and create a new to replace it. |
+| **keepAliveTime** | The periodic time (in seconds) that the keep-alive function will be executed to ensure the object is still usable. |
+| **poolSize** | The number of internal objects currently in memory. |
+| **freeObjects** | The number of objects in the pool that are available to be used. |
+| **currentObjects** | The current number of objects in pool, in use or not. |
+
+----
+
 # Current values 
 
 | URL | Permissions | Example | 
@@ -134,6 +156,8 @@ This operation is equivalent to the close warning operation but will apply to al
 | http://my.host:8090/chs/cvals | "r" or "rw" | ``` $ch("cvals").createRemote("http://my.host:8090/chs/cvals"); ``` | 
 
 This channel provides access to the current attribute values.
+
+----
 
 # Last values 
 
@@ -143,6 +167,8 @@ This channel provides access to the current attribute values.
 
 This channel provides access to the last attribute values.
 
+----
+
 # Attributes
 
 | URL | Permissions | Example | 
@@ -150,7 +176,8 @@ This channel provides access to the last attribute values.
 | http://my.host:8090/chs/attrs | "r" or "rw" | ``` $ch("cvals").createRemote("http://my.host:8090/chs/attrs"); ``` | 
 
 This channel provides access to the current attributes list.
-[TOC]
+
+----
 
 # Warnings
 
@@ -159,6 +186,8 @@ This channel provides access to the current attributes list.
 | http://my.host:8090/chs/warns | "r" or "rw" | ``` $ch("cvals").createRemote("http://my.host:8090/chs/warns"); ``` | 
 
 This channel provides access to the current warnings list.
+
+----
 
 # Plugs
 
