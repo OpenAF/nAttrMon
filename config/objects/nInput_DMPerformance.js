@@ -40,11 +40,15 @@ nInput_DMPerformance.prototype.input = function(scope, args) {
                 var parent = this, resAr = [];
 
                 for(var j in this.params.queries) {
-                    var init, tDM, tDB, nDM, nDB, qdb, query;
+                    var init, pDM, tDM, tDB, nDM, nDB, qdb, query;
 
                     for(var ij = 0; ij < this.params.bestOf; ij++) {
                         nattrmon.useObject(aKey, function(aAf) {
+                            aAf.exec("Ping", {}); // Ensure it's connected before testing to avoid connection time
+
+                            init = now();
                             var qId = ow.waf.datamodel.getQueryId(aAf, parent.params.queries[j]); // Also ensures it's connected to the server
+                            pDM = now() - init;
 
                             try {
                                 init = now();
@@ -88,6 +92,7 @@ nInput_DMPerformance.prototype.input = function(scope, args) {
                         } else {
                             resAr.push({
                                 Query: j,
+                                "DataModel prepare time": pDM,
                                 "DataModel time": tDM,
                                 "DataModel rows": nDM,
                                 "Direct DB time": tDB,
