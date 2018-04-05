@@ -181,10 +181,10 @@ var nAttrMon = function(aConfigPath, debugFlag) {
     this.listOfWarnings.getCh().subscribe((new nWarning()).convertDates);
    
     // persistence
-	this.currentValues.storeAdd(this.getConfigPath() + "/nattrmon.cvals.snapshot", [ "name" ], true);
-	this.lastValues.storeAdd(this.getConfigPath() + "/nattrmon.lvals.snapshot", [ "name" ], true);
-	this.listOfAttributes.getCh().storeAdd(this.getConfigPath() + "/nattrmon.attrs.snapshot", [ "name" ], true);
 	this.listOfWarnings.getCh().storeAdd(this.getConfigPath() + "/nattrmon.warns.snapshot", [ "title" ], true);
+	this.listOfAttributes.getCh().storeAdd(this.getConfigPath() + "/nattrmon.attrs.snapshot", [ "name" ], true);
+	this.lastValues.storeAdd(this.getConfigPath() + "/nattrmon.lvals.snapshot", [ "name" ], true);
+	this.currentValues.storeAdd(this.getConfigPath() + "/nattrmon.cvals.snapshot", [ "name" ], true);
 };
 
 nAttrMon.prototype.getConfigPath = function() {
@@ -201,9 +201,9 @@ nAttrMon.prototype.genSnapshot = function() {
 		lastValues: ow.obj.fromArray2Obj(this.lastValues.getAll(), "name", true),
 		listOfAttributes: this.listOfAttributes.getAttributes(true),
 		listOfWarnings: this.listOfWarnings.getWarnings(true)
-	}
+	};
 	io.writeFileBytes(mainpath + "/nattrmon.snapshot", compress(snapshot));
-}
+};
 
 // Session function
 // ----------------
