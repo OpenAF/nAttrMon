@@ -7,7 +7,9 @@ validation:
    execArgs     :
       checks:
          - attrPattern      : "Server status/.+in error flows"
-           expr             : {{owFormat_dateDiff_inSeconds value.Date void void}} <= (24*60*60)
+           expr             : >
+              {{owFormat_dateDiff_inSeconds value.Date void void}} <= (24*60*60) &&
+              (! ('{{{escape value.Exception}}}'.match(/server shutdown/)) )
            warnLevel        : HIGH
            warnTitleTemplate: "Flow {{value.Category}} - {{value.Flow}} ({{value.Version}})"
            warnDescTemplate : "The flow {{value.Category}} - {{value.Flow}} ({{value.Version}}) ended in error at {{value.Date}} with run id {{value.[Run ID]}}, started by the user '{{value.User}}'. The exception was: '{{value.Exception}}'"
