@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20180405'
+version: '20180412'
 dependencies:
   openaf: '>=20180317'
 files:
@@ -188,7 +188,7 @@ filesHash:
   config/inputs.disabled/js/13.ListDirFiles.js: 036bbed7d54bc873a5437fa757af5e7b757b9345
   config/inputs.disabled/js/22.fraud.snapshots.js: 1af700aa9302c8a0b0a3e381dac357922d2d2a39
   config/inputs.disabled/js/41.fms.rulestatus.js: cd8b30f94543a6fa3ada1c455da4e0accc3ca770
-  config/inputs.disabled/yaml/01.ping.yaml: 28654d869c766481cfa8a7b577239de8cc560ca4
+  config/inputs.disabled/yaml/01.ping.yaml: fe3c634d7b0beff66a59484a315fcc205ffe1ca9
   config/inputs.disabled/yaml/01.test.yaml: 1f769bf740a9820d8ed8f4684f74c7e53611a765
   config/inputs.disabled/yaml/02.test.yaml: 054fc406e0948983e8dae951bc22859ad8ef5a43
   config/inputs.disabled/yaml/03.flows.yaml: a2add32a904a4621801c9046f10d43207cb7261e
