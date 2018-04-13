@@ -1,6 +1,6 @@
 input: 	
    name         : Ping servers
-   cron         : */1 * * * *
+   cron         : "*/1 * * * *"
    waitForFinish: true
    onlyOnEvent  : true
    execFrom     : nInput_AFPing
