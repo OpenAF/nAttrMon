@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20180412'
+version: '20180415'
 dependencies:
   openaf: '>=20180317'
 files:
@@ -300,7 +300,7 @@ filesHash:
   config/validations.disabled/yaml/01.somebodyTouched.yaml: 9e8bef8264e42fc5dd6f5d3356d292c762638f1a
   config/validations.disabled/yaml/01.validatePing.yaml: 0b19c480931ce1a5b154ebfb3f7820069f9fd654
   config/validations.disabled/yaml/01.validatePingPorts.yaml: 0212369d4ad2fc9f2126efa029cba4173cbec17a
-  config/validations.disabled/yaml/03.validateSemaphores.yaml: 4e6c3313132e8636abbe3e8c0c8fd63fe42ac225
+  config/validations.disabled/yaml/03.validateSemaphores.yaml: 22be51b8d900789f26c862a63e5a11bb004d04f0
   config/validations.disabled/yaml/05.validateErrorFlows.yaml: 57371fd7ae82b327f3b6e59ac51303c526f3a4c9
   config/validations.disabled/yaml/14.validateCompareTimes.yaml: f7ce84ebfa3e2c7bef73d152b87afe53856c4867
   lib/nattribute.js: 957b3e1e4d55c554e029229dae26e838df1da7b4
