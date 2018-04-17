@@ -19,9 +19,9 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20180415'
+version: '20180418'
 dependencies:
-  openaf: '>=20180317'
+  openaf: '>=20180418'
 files:
   - .gitignore
   - .package.yaml
@@ -57,6 +57,7 @@ files:
   - config/inputs.disabled/yaml/20.dmPerformance.yaml
   - config/move_files_from_the_disabled_folders.dummy
   - config/objects/nInput_AFPing.js
+  - config/objects/nInput_BPMNRunningFlows.js
   - config/objects/nInput_CBPMRunningFlows.js
   - config/objects/nInput_CBPMSemaphores.js
   - config/objects/nInput_Channel.js
@@ -208,6 +209,7 @@ filesHash:
   config/inputs.disabled/yaml/20.dmPerformance.yaml: 80f3270205d4bfe98afaef4013f2d2f23d6fbeb6
   config/move_files_from_the_disabled_folders.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
   config/objects/nInput_AFPing.js: fb1405a486d3a627488f746b791c373579c3a6bc
+  config/objects/nInput_BPMNRunningFlows.js: ec7d0f61b0f68293cc0fe0d514b60225dfbaa838
   config/objects/nInput_CBPMRunningFlows.js: 56572c7f789b5adcea07678e104e3cdd86ef7197
   config/objects/nInput_CBPMSemaphores.js: b8499174b7ca536c43c17e8cd5d6bd2df12db099
   config/objects/nInput_Channel.js: d7620bc8cea2215e5705ce79982e1303fb21c1dc
