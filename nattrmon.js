@@ -5,6 +5,7 @@ var LOGAUDIT_TEMPLATE = "AUDIT | User: {{request.user}} | Channel: {{name}} | Op
 var JAVA_ARGS = [ ];                          // Array of java arguments
 var LOGCONSOLE = false;                       // Create files or log to console
 var DEBUG = false;
+var WORKERS = __cpucores;
 
 // -------------------------------------------------------------------
 
@@ -21,7 +22,7 @@ if (io.fileExists(NATTRMON_HOME + "/nattrmon.yaml")) {
 	if (isDef(pms.LOGAUDIT)) LOGAUDIT = pms.LOGAUDIT;
 	if (isDef(pms.LOGAUDIT_TEMPLATE) && isString(pms.LOGAUDIT_TEMPLATE)) LOGAUDIT_TEMPLATE = pms.LOGAUDIT_TEMPLATE;
 	if (isDef(pms.LOGHK_HOWLONGAGOINMINUTES) && isNumber(pms.LOGHK_HOWLONGAGOINMINUTES)) LOGHK_HOWLONGAGOINMINUTES = pms.LOGHK_HOWLONGAGOINMINUTES; 
-	if (isDef(pms.NUMBER_WORKERS)) __cpucores = Number(pms.NUMBER_WORKERS);
+	if (isDef(pms.NUMBER_WORKERS)) { __cpucores = Number(pms.NUMBER_WORKERS); WORKERS = Number(pms.NUMBER_WORKERS); }
 	if (isDef(pms.LOG_ASYNC)) __logFormat.async = pms.LOG_ASYNC;
 	if (isDef(pms.DEBUG)) DEBUG = pms.DEBUG;	
 	if (isDef(pms.LOGCONSOLE)) LOGCONSOLE = pms.LOGCONSOLE;
@@ -152,6 +153,10 @@ var nAttrMon = function(aConfigPath, debugFlag) {
 	this.indexPlugThread = {};
 	this.sch = new ow.server.scheduler(); // schedule plugs thread pool
 	this.schList = {}; // schedule plugs list
+
+	plugin("Threads");
+	this.thread = new Threads();
+	thread.initScheduledThreadPool(WORKERS);
 
 	var nattrmon = this;
 
@@ -671,7 +676,8 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 
 		var uuid;
 		if (entry.aTime > 0 || isDef(entry.chSubscribe)) {
-			uuid = thread.addThread(function(uuid) {
+			//uuid = thread.addThread(function(uuid) {
+			var f = function(uuid) {
 				try {
 					var etry = parent.threadsSessions[uuid].entry;
 					if (isDef(etry.getCron()) &&
@@ -688,29 +694,31 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 				}
 
 				return true;
-			});
-			this.debug("Creating a thread for " + entry.getName() + " with uuid = " + uuid);
-
-			parent.threadsSessions[uuid] = {
-				"entry": this.plugs[aPlugType][iPlug],
-				"count": now()
 			};
-			parent.indexPlugThread[entry.getCategory() + "/" + entry.getName()] = uuid;
-		}
 
-		if (entry.aTime > 0) {
 			try {
 				if (entry.waitForFinish) {
 					this.debug("Starting with fixed rate for " + entry.getName() + " - " + entry.aTime);
-					thread.startWithFixedRate(entry.aTime);
+					uuid = this.thread.addScheduleThreadWithFixedDelay(f, entry.aTime);
+					//thread.startWithFixedRate(entry.aTime);
 				} else {
 					this.debug("Starting at fixed rate for " + entry.getName() + " - " + entry.aTime);
-					thread.startAtFixedRate(entry.aTime);
+					//thread.startAtFixedRate(entry.aTime);
+					uuid = this.thread.addScheduleThreadAtFixedRate(f, entry.aTime);
 				}
+				this.debug("Creating a thread for " + entry.getName() + " with uuid = " + uuid);
+
+				parent.threadsSessions[uuid] = {
+					"entry": this.plugs[aPlugType][iPlug],
+					"count": now()
+				};
+				parent.indexPlugThread[entry.getCategory() + "/" + entry.getName()] = uuid;
 			} catch(e) {
 				logErr("Problem starting thread for '" + entry.getName() + "' (uuid " + uuid + ") ");
 			}
-		} else {
+		}
+
+		if (entry.aTime <= 0) {
 			if (isDef(entry.chSubscribe)) {
 				var subs = function(aUUID) { 
 					return function(aCh, aOp, aK, aV) {					
