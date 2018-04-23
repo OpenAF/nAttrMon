@@ -156,7 +156,8 @@ var nAttrMon = function(aConfigPath, debugFlag) {
 
 	plugin("Threads");
 	this.thread = new Threads();
-	thread.initScheduledThreadPool(WORKERS);
+	this.thread.initScheduledThreadPool(WORKERS);
+	this.threads.push(this.thread);
 
 	var nattrmon = this;
 
@@ -671,9 +672,8 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
     for(var iPlug in this.plugs[aPlugType]) {
 		try {
 			var entry = this.plugs[aPlugType][iPlug];
-			var thread = new Threads();
 			var parent = this;
-			parent.thread = thread;
+			parent.thread = this.thread;
 
 			var uuid;
 			if (entry.aTime > 0 || isDef(entry.chSubscribe)) {
@@ -701,22 +701,25 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 					if (entry.aTime > 0) {
 						if (entry.waitForFinish) {
 							this.debug("Starting with fixed rate for " + entry.getName() + " - " + entry.aTime);
-							uuid = this.thread.addScheduleThreadWithFixedDelay(f, entry.aTime);
+							uuid = parent.thread.addScheduleThreadWithFixedDelay(f, entry.aTime);
 							//thread.startWithFixedRate(entry.aTime);
 						} else {
 							this.debug("Starting at fixed rate for " + entry.getName() + " - " + entry.aTime);
 							//thread.startAtFixedRate(entry.aTime);
-							uuid = this.thread.addScheduleThreadAtFixedRate(f, entry.aTime);
+							uuid = parent.thread.addScheduleThreadAtFixedRate(f, entry.aTime);
 						}
 					
 						this.debug("Creating a thread for " + entry.getName() + " with uuid = " + uuid);
-
-						parent.threadsSessions[uuid] = {
-							"entry": this.plugs[aPlugType][iPlug],
-							"count": now()
-						};
-						parent.indexPlugThread[entry.getCategory() + "/" + entry.getName()] = uuid;
+					} else {
+						uuid = genUUID();
+						this.debug("Creating subscriber for " + entry.getName() + " with uuid = " + uuid);
 					}
+
+					parent.threadsSessions[uuid] = {
+						"entry": this.plugs[aPlugType][iPlug],
+						"count": now()
+					};
+					parent.indexPlugThread[entry.getCategory() + "/" + entry.getName()] = uuid;					
 				} catch(e) {
 					logErr("Problem starting thread for '" + entry.getName() + "' (uuid " + uuid + ") ");
 				}
@@ -728,11 +731,17 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 						return function(aCh, aOp, aK, aV) {					
 							try {
 								var etry = parent.threadsSessions[aUUID].entry;
-								parent.debug("Subscriber " + aCh + " on '" + etry.getName() + "' (uuid " + aUUID + ") ");
-								var res = etry.exec(parent, { ch: aCh, op: aOp, k: aK, v: aV });
-								parent.addValues(etry.onlyOnEvent, res);
-								parent.threadsSessions[aUUID].count = now();
-								etry.touch();
+								var cont = true;
+								if (isDef(etry.getAttrPattern())) {
+									cont = (new RegExp(etry.getAttrPattern())).test(aK.name);
+;								}
+								if (cont) {
+									parent.debug("Subscriber " + aCh + " on '" + etry.getName() + "' (uuid " + aUUID + ") ");
+									var res = etry.exec(parent, { ch: aCh, op: aOp, k: aK, v: aV });
+									parent.addValues(etry.onlyOnEvent, res);
+									parent.threadsSessions[aUUID].count = now();
+									etry.touch();
+								}
 							} catch(e) {
 								logErr(etry.getName() + " | " + e);
 							}
@@ -780,8 +789,8 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 				}
 			}
 
-			this.threads.push(thread);
-			this.debug("Number of threads added: " + this.threads.length);
+			//this.threads.push(thread);
+			//this.debug("Number of threads added: " + this.threads.length);
 		} catch(e) {
 			logErr("Error loading plug: " + aPlugType + "::" + stringify(this.plugs[aPlugType][iPlug], void 0, "") + " | " + stringify(e));
 		}
