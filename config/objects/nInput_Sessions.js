@@ -9,6 +9,10 @@
  * </odoc>
  */
 var nInput_Sessions = function(aMap) {
+	if (isUnDef(getOPackPath("OpenCli"))) {
+        throw "OpenCli opack not installed.";
+	}
+	
 	if (isObject(aMap)) {
 		this.params = aMap;
 

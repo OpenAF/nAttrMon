@@ -10,6 +10,10 @@
  * </odoc>
  */
 var nInput_AFPing = function (anUrl, attributeName) {
+  if (isUnDef(getOPackPath("OpenCli"))) {
+    throw "OpenCli opack not installed.";
+  } 
+  
   if (isObject(anUrl)) {
     this.params = anUrl;
 
