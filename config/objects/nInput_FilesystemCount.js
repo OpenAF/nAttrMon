@@ -70,8 +70,8 @@ nInput_FilesystemCount.prototype.__parse = function(isLocal, ssh) {
 				"Min size": (isUnDef(minSize)) ? "n/a" : minSize,
 				"Max size": (isUnDef(maxSize)) ? "n/a" : maxSize,
 				"Avg size": (isUnDef(totalSize)) ? "n/a" : Math.round(totalSize / totalCount),
-				"Newest": (isUnDef(newModify)) ? "n/a" : new Date(newModify),
-				"Oldest": (isUnDef(oldModify)) ? "n/a" : new Date(oldModify)
+				"Newest": (isUnDef(newModify)) ? "n/a" : new Date((isLocal) ? newModify : ow.format.fromUnixDate(newModify)),
+				"Oldest": (isUnDef(oldModify)) ? "n/a" : new Date((isLocal) ? oldModify : ow.format.fromUnixDate(oldModify))
 			});
 		} catch (e) {
 			logErr("Error listing files on " + item.folder + " for " + this.attributename + " - " + e.message);

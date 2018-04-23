@@ -1,0 +1,24 @@
+input:
+  name    : DM performance
+  cron    : "0 */1 * * *"
+  execFrom: nInput_DMPerformance
+  execArgs:
+    keys   :
+      - Server A
+    bestOf : 3
+    queries:
+      Chart 1: 
+        SelectedFields:
+          - '({Key}) as "Key"'
+          - 'sum({Total Charges}) as "Total Charges (sum)"'
+          - 'sum({Voice Charge}) as "Voice Charge (sum)"'
+          - 'sum({SMS Charges}) as "SMS Charges (sum)"'
+          - 'sum({Data Charges}) as "Data Charges (sum)"'
+        Filters:
+          - ''
+        OrderClauses:
+          - '{Date} asc'
+        BindValues: {}
+        Options:
+          Context: Chart (1)
+          FetchMethod: FirstRows

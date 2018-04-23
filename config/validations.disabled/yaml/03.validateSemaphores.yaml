@@ -7,13 +7,13 @@ validation:
    execArgs     :
       checks:
          - attrPattern      : Semaphores  
-           expr             : '{{value}}' == 'red'
+           expr             : "'{{value}}' == 'red'"
            warnLevel        : HIGH
            warnTitleTemplate: "RED {{name}}"
            warnDescTemplate : "A RED semaphore for {{name}} was detected. This might stop RAID flows from running as expected. Please check more detail on <a href=\"http://allura.connectiv.local\">Allura</a>."
  
          - attrPattern      : Semaphores
-           expr             : '{{value}}' == 'yellow'
+           expr             : "'{{value}}' == 'yellow'"
            warnLevel        : LOW
            warnTitleTemplate: "Yellow {{name}}"
            warnDescTemplate : "A yellow semaphore for {{name}} was detected."

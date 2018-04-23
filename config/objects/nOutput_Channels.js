@@ -58,7 +58,8 @@ var nOutput_Channels = function(aMap) {
           "closeWarning": "Tries to close a warning. Use, as argument, { title: \"The warning title\" }",
           "closeAllWarnings": "Tries to delete all warnings. You will need to provide as argument { force: true }",
           "test": "Use 'list' to find out the plug type you need and plug name and build the arguments { type: 'inputs', name: 'name', args: { ... }}. The result will be error or the result of running the corresponding plug. Even if successull nAttrMon will NOT consider the result.",
-          "run": "Use 'list' to find out the plug type you need and plug name and build the arguments { type: 'inputs', name: 'name', args: { ... }}. The result will be error or the result of running the corresponding plug. If successfull nAttrMon will consider the result."
+          "run": "Use 'list' to find out the plug type you need and plug name and build the arguments { type: 'inputs', name: 'name', args: { ... }}. The result will be error or the result of running the corresponding plug. If successfull nAttrMon will consider the result.",
+          "poolsStats": "Use 'poolsStats' to obtain the current nAttrMon's object pools statistics"
         };
       },
 
@@ -292,6 +293,27 @@ var nOutput_Channels = function(aMap) {
             error: e
           };
         }
+        return resOp;
+      },
+
+      "poolStats": function(value) {
+        var resOp = {};
+
+        for(var i in nattrmon.objPools) {
+          var pool = nattrmon.objPools[i];
+
+          resOp[i] = {
+            min: pool.__min,
+            max: pool.__max,
+            increment: pool.__inc,
+            timeout: pool.__timeout,
+            keepAliveTime: pool.__keepaliveTime,
+            poolSize: pool.__pool.length,
+            freeObjects: pool.__currentFree,
+            currentSize: pool.__currentSize
+          };
+        }
+
         return resOp;
       }
     });
