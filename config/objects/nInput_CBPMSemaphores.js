@@ -9,6 +9,10 @@
  * </odoc>
  */
 var nInput_CBPMSemaphores = function(anMonitoredAFObjectKey, attributePrefix, dontIgnoreDuplicates) {
+	if (isUnDef(getOPackPath("OpenCli"))) {
+		throw "OpenCli opack not installed.";
+	}
+	 
 	// Set server if doesn't exist
 	// Is a monitored object or a pool?
 	if (isObject(anMonitoredAFObjectKey)) {
