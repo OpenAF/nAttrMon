@@ -1,0 +1,11 @@
+input:
+   name         : Abnormal loads
+   cron         : "*/1 * * * *"
+   waitForFinish: true
+   onlyOnEvent  : true
+   execFrom     : nInput_IMAbnormalLoadings
+   execArgs     :
+      chKeys : servers
+      days   : 7
+      exclude:
+         - Generate Cases

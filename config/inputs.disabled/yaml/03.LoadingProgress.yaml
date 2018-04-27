@@ -1,0 +1,9 @@
+input:
+   name         : Load progress
+   cron         : "*/1 * * * *"
+   waitForFinish: true
+   onlyOnEvent  : true
+   execFrom     : nInput_IMLoadingsProgress
+   execArgs     :
+      chKeys : servers
+      days   : 0.5
