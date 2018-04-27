@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20180415'
+version: '20180426'
 dependencies:
   openaf: '>=20180317'
 files:
@@ -208,11 +208,11 @@ filesHash:
   config/inputs.disabled/yaml/20.dmPerformance.yaml: 80f3270205d4bfe98afaef4013f2d2f23d6fbeb6
   config/move_files_from_the_disabled_folders.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
   config/objects/nInput_AFPing.js: fb1405a486d3a627488f746b791c373579c3a6bc
-  config/objects/nInput_CBPMRunningFlows.js: 56572c7f789b5adcea07678e104e3cdd86ef7197
+  config/objects/nInput_CBPMRunningFlows.js: cef9e90ddcd99758e751125be26687fa31758b8c
   config/objects/nInput_CBPMSemaphores.js: b8499174b7ca536c43c17e8cd5d6bd2df12db099
   config/objects/nInput_Channel.js: d7620bc8cea2215e5705ce79982e1303fb21c1dc
   config/objects/nInput_CompareTimes.js: 4b4f6cc1b5bb16e3ff3378fd849e0501d7d2461a
-  config/objects/nInput_DB.js: 8ca14504cc55838c1534e8cd7107263113a16d22
+  config/objects/nInput_DB.js: da8429c77d26a3174f56800a9087b6f0cc389e79
   config/objects/nInput_DMPerformance.js: 9f338c3a04922796de67ade39601b99419f16ee1
   config/objects/nInput_EndPoints.js: 03084acddad1d42bd447ab5890dadac629681f96
   config/objects/nOutput_H2.js: 4aa7668410f3bbf64b1c7cd3a8b6031e5367903d
@@ -312,11 +312,11 @@ filesHash:
   lib/ninput.js: cb1a2bc442a0a3ac9e6237fd02b445e31bd518cf
   lib/nmonitoredobject.js: da0b8a8590ce1534826750e2e70b3d6e4bee9f98
   lib/noutput.js: 097a89ae2ab12cb28d88034444a72d368464d14c
-  lib/nplug.js: 403ee2ffd217cc545ce8d943e648d833cadef5b7
+  lib/nplug.js: c7a978b5181fed02e331f7ea6eb8d15f8d58eb51
   lib/nvalidation.js: 252998540faca7913211029f1bdd4397beba3ce9
   lib/nwarning.js: 0b50703356670d2d9f92e5b466dc0c430b4ee19a
   lib/nwarnings.js: 40c5f4df490333f9270cbab4b8fa3789fb6e0f05
-  nattrmon.js: 7a23a44823397172ad83473d83d646ed4274d3b5
+  nattrmon.js: d277c4e5258f52377b8eb64e259f2fd8b0020331
   nattrmon.yaml.sample: b5a9bef5ccd653480ea690b2f5a882f5071d2b44
   README.md: 648ce4e29bbdc7b99f5cf8734cb1a7f0657789c7
   tests/inputDBTest.yml: c38616606dc5956e449189d11f8e661170f94dfb

@@ -99,7 +99,7 @@ nInput_CBPMRunningFlows.prototype.input = function(scope, args) {
                 return oo;
     
             //});
-            }));    
+            }, WORKERS));    
         //}
 
         res[templify(this.attrTemplate, {
