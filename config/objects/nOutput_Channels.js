@@ -296,13 +296,14 @@ var nOutput_Channels = function(aMap) {
         return resOp;
       },
 
-      "poolStats": function(value) {
-        var resOp = {};
+      "poolsStats": function(value) {
+        var resOp = { stats: [] };
 
         for(var i in nattrmon.objPools) {
           var pool = nattrmon.objPools[i];
 
-          resOp[i] = {
+          resOp.stats.push({
+            poolName: i,
             min: pool.__min,
             max: pool.__max,
             increment: pool.__inc,
@@ -311,7 +312,7 @@ var nOutput_Channels = function(aMap) {
             poolSize: pool.__pool.length,
             freeObjects: pool.__currentFree,
             currentSize: pool.__currentSize
-          };
+          });
         }
 
         return resOp;
