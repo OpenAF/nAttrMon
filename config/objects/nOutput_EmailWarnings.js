@@ -74,10 +74,16 @@ nOutput_EmailWarnings.prototype.output = function (scope, args, meta) {
 		if (isDef(this.include) && isArray(this.include) && this.include.indexOf(ws[wsi].title) < 0) shouldEval = false;
 		if (isDef(this.exclude) && isArray(this.exclude) && this.exclude.indexOf(ws[wsi].title) >= 0) shouldEval = false;
 		if (isDef(this.includeRE) && isArray(this.includeRE)) {
-			
+			shouldEval = false;
+			for(var irei in this.includeRE) {
+				if (ws[wsi].title.match(this.includeRE[irei])) shouldEval = true;
+			}
 		}
 		if (isDef(this.excludeRE) && isArray(this.excludeRE)) {
-
+			shouldEval = true;
+			for(var erei in this.excludeRE) {
+				if (ws[wsi].title.match(this.excludeRE[erei])) shouldEval = false;
+			}			
 		}		
 		if (shouldEval && !nattrmon.isNotified(ws[wsi].title, this.instanceId) && this.warnTypes.indexOf(ws[wsi].level) >= 0) {
 			shouldEmail = true;
