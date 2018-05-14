@@ -8,7 +8,7 @@ This output sends email notifications whenever a specific type or types of warni
 output:
    name         : Output EMail warning
    chSubscribe  : nattrmon::warnings
-   wairForFinish: true
+   waitForFinish: true
    onlyForEvent : true
    execFrom     : nOutput_EmailWarnings
    execArgs     : 
