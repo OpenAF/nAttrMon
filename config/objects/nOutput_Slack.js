@@ -48,8 +48,8 @@ nOutput_Slack.prototype.output = function(scope, args) {
                 if (!nattrmon.isNotified(w.title, parent.__notifyID) && isDef(notif.webhook) && w.level.toUpperCase() != "CLOSED") {
                     // Prepare message for notification
                     var aPreMessage = templify("_{{level}}_", w);
-                    var aTitle      = templify("{{title}}", w);
-                    var aValue      = templify("{{description}}\n\n_created on {{createdate}}_", w);
+                    var aTitle      = templify("{{{title}}}", w);
+                    var aValue      = templify("{{{description}}}\n\n_created on {{createdate}}_", w);
 
                     var color;
 
