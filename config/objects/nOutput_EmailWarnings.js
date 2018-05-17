@@ -19,6 +19,7 @@ var nOutput_EmailWarnings = function(aMap) {
 	this.port = (isUnDef(aMap.port)) ? void 0 : aMap.port;
 	this.credentials = (isUnDef(aMap.credentials)) ? void 0 : aMap.credentials;
 	this.warnTypes = (isUnDef(aMap.warnTypes)) ? [ "High" ] : aMap.warnTypes;
+	this.descriptionLimit = _$(aMap.descriptionLimit).isNumber().default(-1);
 	this.tls = aMap.tls;
 	this.debug = aMap.debug;
 	this.include = aMap.include;
@@ -129,6 +130,10 @@ nOutput_EmailWarnings.prototype.output = function (scope, args, meta) {
 						if (isDef(this.exclude) && isArray(this.exclude) && this.exclude.indexOf(owarns[i][j].title) >= 0) shouldEval = false;
 
 						if (shouldEval) {
+							if (isDef(this.descriptionLimit) && this.descriptionLimit > 0) {
+								owarns[i][j].description = owarns[i][j].description.substr(0, this.descriptionLimit - 1) + "...";
+							}
+							
 							list.push(owarns[i][j]);
 
 							if (!nattrmon.isNotified(owarns[i][j].title, this.instanceId) && 
