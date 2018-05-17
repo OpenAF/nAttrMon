@@ -1026,7 +1026,9 @@ ow.server.daemon(__sleepperiod, function() {
 
 	// Check all threads
 	for(var uuid in nattrmon.threadsSessions) {
-		if ( nattrmon.threadsSessions[uuid].entry.aTime > 0 && (now() - nattrmon.threadsSessions[uuid].count) >= (nattrmon.threadsSessions[uuid].entry.aTime * __stuckfactor) ) {
+		if ( isUnDef(nattrmon.threadsSessions[uuid].entry.getCron()) && 
+			 nattrmon.threadsSessions[uuid].entry.aTime > 0 && 
+			 (now() - nattrmon.threadsSessions[uuid].count) >= (nattrmon.threadsSessions[uuid].entry.aTime * __stuckfactor) ) {
 			log("nAttrmon found a stuck thread (" + uuid + " for '" + nattrmon.threadsSessions[uuid].entry.getName() + "')");
 			log("nAttrMon restarting process!!");
 			nattrmon.stop();
