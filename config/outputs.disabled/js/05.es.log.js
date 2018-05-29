@@ -5,7 +5,7 @@ $ch("__es").create(void 0, "elasticsearch", {
     //user : "myuser",
     //pass : "mypass",
     idKey: "id",
-    index: ow.ch.utils.getElasticIndex("nattrmon-logs")
+    index: ow.ch.utils.getElasticIndex("nattrmon-logs","yyyy.MM.dd") //Check getElasticIndex function, If a specific format is needed you can provide it as aFormat (see ow.format.fromDate)"
  });
  
  // Setting all nAttrmon logging to elastic
