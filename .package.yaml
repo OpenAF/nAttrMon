@@ -92,6 +92,7 @@ files:
   - config/objects/nOutput_Notifications.js
   - config/objects/nOutput_Oracle.js
   - config/objects/nOutput_RemoteChannel.js
+  - config/objects/nOutput_Slack.js
   - config/objects/nOutput_Stdout.js
   - config/objects/nValidation_AFPing.js
   - config/objects/nValidation_Generic.js
@@ -240,22 +241,23 @@ filesHash:
   config/objects/nInput_Shell.js: 2b84085de7c592241d5e9ee72d207ca24e9d5ad9
   config/objects/nOutput_Channels.js: 7f0a85c0e4c5f2b475699ba0a843ab258a7d472d
   config/objects/nOutput_DSV.js: 9e31e336abe81917e4630a37a96fbc9d579b77d2
-  config/objects/nOutput_EmailWarnings.js: 49e408614fd56b1a70a912a2b9cb886f550f350d
+  config/objects/nOutput_EmailWarnings.js: e01c707f0c38bb7cd3606405364a6faa8ef3165c
   config/objects/nOutput_ES.js: f17ecd7afc056126bb27823dab41d11c5da9b2d2
   config/objects/nOutput_H2.js: 4aa7668410f3bbf64b1c7cd3a8b6031e5367903d
   config/objects/nOutput_HTTP.js: 529313cfdb4afda1e9cda55508171369c63599be
   config/objects/nOutput_HTTP_JSON.js: 5e10f7d7b290afb6d8fbafa5efc054810b77c138
   config/objects/nOutput_Log.js: 69ef02bb37d306deb390f303a8bbf6e2234be792
-  config/objects/nOutput_Notifications.js: 53c73cac46e6bd99de0e8ec5bf6a7ca63590ff5e
+  config/objects/nOutput_Notifications.js: d1b65eee423b3755bde9136c90081c70f4c4f54e
   config/objects/nOutput_Oracle.js: ab0f2fe7958952437ae93030715633858462269f
   config/objects/nOutput_RemoteChannel.js: 0f96a41d0b2cc26216a40651062d40827fe2360e
+  config/objects/nOutput_Slack.js: 0a8d15038920ec34f3961fe3541621ea877cf6bc
   config/objects/nOutput_Stdout.js: 389169e32c1beb2a1f725de1d6cc92c7bce7ed22
   config/objects/nValidation_AFPing.js: f48325d605e693dee3ab2912224cda0fde11e490
   config/objects/nValidation_Generic.js: 296b74eede4817aadebf9cd36c3c250b7c1eeed9
   config/objects/nValidation_Semaphores.js: 97b6c1850b80d95cc92c1c50b05fdfa26467fd94
   config/objects/nValidation_Yellows.js: 942478fcd710e392add0b6ef6349ef51a895b764
   config/objects.assets/noutputemailwarnings/logo.png: ee5366a3aa207c69d5139e04e7a4523078b974ba
-  config/objects.assets/noutputemailwarnings/warningEmailTemplate.hbs: e5913675ad5adf1bd217a15de9148c65e39f3822
+  config/objects.assets/noutputemailwarnings/warningEmailTemplate.hbs: fa2df0dbae528d9544a5747d48af03f3e67ce60e
   config/objects.assets/noutputhttp/css/bootstrap-theme.min.css: fc6b4268fbd57ad95d2b41a1d4d6866f222fbdb2
   config/objects.assets/noutputhttp/css/bootstrap.min.css: ed29315e0ffb3f14382431f2724235bf67f44eb3
   config/objects.assets/noutputhttp/css/font-awesome.min.css: 05ea25bc9b3ac48993e1fee322d3bc94b49a6e22
@@ -299,7 +301,7 @@ filesHash:
   config/outputs.disabled/yaml/02.httpjson.yaml: 6d14637f7fff15b4d75481597bb9ae4f77f12665
   config/outputs.disabled/yaml/03.http.yaml: 24096733c110810674f6219dbb00ee96a2858b33
   config/outputs.disabled/yaml/03.pushChannels.yaml: 5c254a74d2a11109b0fc6db87fa8ef1b6a3b83cd
-  config/outputs.disabled/yaml/04.emailWarnings.yaml: 5b4705eb204fc63d2627ab3f5452fc697379568f
+  config/outputs.disabled/yaml/04.emailWarnings.yaml: bc3bcc5f0848a73c7cf326d76e1b0a6147aa5f95
   config/outputs.disabled/yaml/05.es.warnings.yaml: aa44686271bda1db413620227d6a179568d12bf5
   config/outputs.disabled/yaml/09.channels.yaml: f38c539f163ec3457267c55d4248237b76caee14
   config/outputs.disabled/yaml/4.csvFile.yaml: f60dfbca5b88b5225c676bafcd5ccbeb23c6930c
@@ -315,7 +317,7 @@ filesHash:
   config/validations.disabled/yaml/05.validateErrorFlows.yaml: 57371fd7ae82b327f3b6e59ac51303c526f3a4c9
   config/validations.disabled/yaml/14.validateCompareTimes.yaml: f7ce84ebfa3e2c7bef73d152b87afe53856c4867
   lib/nattribute.js: 957b3e1e4d55c554e029229dae26e838df1da7b4
-  lib/nattributes.js: b8e273085a57d414972d7a29505cb0faef753f94
+  lib/nattributes.js: c70ad6cb9ae57e4cbf48f4edd3b215bd8c453c02
   lib/nattributevalue.js: d6a378dba74922540bcc3e054222733f69d5cead
   lib/ninput.js: cb1a2bc442a0a3ac9e6237fd02b445e31bd518cf
   lib/nmonitoredobject.js: da0b8a8590ce1534826750e2e70b3d6e4bee9f98
@@ -323,9 +325,9 @@ filesHash:
   lib/nplug.js: c7a978b5181fed02e331f7ea6eb8d15f8d58eb51
   lib/nvalidation.js: 252998540faca7913211029f1bdd4397beba3ce9
   lib/nwarning.js: 0b50703356670d2d9f92e5b466dc0c430b4ee19a
-  lib/nwarnings.js: 40c5f4df490333f9270cbab4b8fa3789fb6e0f05
+  lib/nwarnings.js: e4991843cdaa0dd8a1a370a97cd450b2647c7ee6
   LICENSE: 7df059597099bb7dcf25d2a9aedfaf4465f72d8d
-  nattrmon.js: 4bff18585ed196c53d855880a403a058c6ad6c3c
+  nattrmon.js: 7d98603cbb32303cdff04f3a4628ed6ee1a9c495
   nattrmon.yaml.sample: b5a9bef5ccd653480ea690b2f5a882f5071d2b44
   README.md: 648ce4e29bbdc7b99f5cf8734cb1a7f0657789c7
   tests/inputDBTest.yml: c38616606dc5956e449189d11f8e661170f94dfb

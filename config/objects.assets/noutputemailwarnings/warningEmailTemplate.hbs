@@ -167,6 +167,13 @@
                         <small><b>Created</b>: <i>{{owFormat_fromDate createdate 'yyyy-MM-dd HH:mm:ss (z)'}}</i></small>
                     </td>
                 </tr>
+                {{#if extraMessage}}
+                <tr style="padding-bottom: 5px">
+                    <td colspan=4 style="border:0px;font-family: -apple-system-font, sans-serif;font-size: 85%;vertical-align: baseline;padding-left: 10px;padding-right: 10px; text-align: left; vertical-align: top; border-bottom: 1px dotted #f0f0f0;">
+                        <font color="#aaaaaa"><i>{{{extraMessage}}}</i></font>
+                    </td>
+                </tr>
+                {{/if}}
             {{/each}}
         </table>
         {{/if}}
