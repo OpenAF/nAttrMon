@@ -1,0 +1,10 @@
+input:
+   name         : RAID Schedulers
+   cron         : "*/1 * * * *"
+   waitForFinish: true
+   onlyOnEvent  : true
+   execFrom     : nInput_Schedulers
+   execArgs     :
+      keys        :
+       - Fraud
+       - CM
