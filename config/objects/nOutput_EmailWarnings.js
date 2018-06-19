@@ -20,7 +20,7 @@ var nOutput_EmailWarnings = function(aMap) {
 	this.credentials = (isUnDef(aMap.credentials)) ? void 0 : aMap.credentials;
 	this.warnTypes = (isUnDef(aMap.warnTypes)) ? [ "High" ] : aMap.warnTypes;
 	this.descriptionLimit = _$(aMap.descriptionLimit).isNumber().default(-1);
-	this.groupByTitleSimilarity = _$(aMap.groupByTitleSimilarity).isNumber().default(void 0);
+	this.groupBySimilarity = _$(aMap.groupBySimilarity).isNumber().default(void 0);
 	this.alertUntilBySimilarity = _$(aMap.alertUntilBySimilarity).isNumber().default(void 0);
 	this.tls = aMap.tls;
 	this.debug = aMap.debug;
@@ -137,16 +137,16 @@ nOutput_EmailWarnings.prototype.output = function (scope, args, meta) {
 								owarns[i][j].description = owarns[i][j].description.substr(0, this.descriptionLimit - 1) + "...";
 							}
 	
-							if (isDef(this.groupByTitleSimilarity) && this.groupByTitleSimilarity > 0) {
+							if (isDef(this.groupBySimilarity) && this.groupBySimilarity > 0) {
 								var parent = this;
 								var resDupls = $from($from(owarns[i]).select((r) => {
 									return { 
 										t: r.title, 
-										d: ow.format.string.distance(owarns[i][j].title, r.title),
+										d: ow.format.string.distance(owarns[i][j].description, r.description),
 										n: nattrmon.isNotified(r.title, parent.instanceId)
 									};
 								}))
-								.less("d", (owarns[i][j].title.length * (this.groupByTitleSimilarity/100)))
+								.less("d", (owarns[i][j].title.length * (this.groupBySimilarity/100)))
 								.notEquals("t", owarns[i][j].title)
 								.select();
 
@@ -156,11 +156,11 @@ nOutput_EmailWarnings.prototype.output = function (scope, args, meta) {
 									nattrmon.setNotified(v.t, parent.instanceId);
 								});
 
-								/*if (isDef(this.alertUntilBySimilarity) && this.alertUntilBySimilarity > 0) {
-								 	if (($from(resDupls).equals("n", true).count() + 1) >= this.alertUntilBySimilarity) {
+								if (isDef(this.alertUntilBySimilarity) && this.alertUntilBySimilarity > 0) {
+								 	if ($from(resDupls).equals("n", true).count() >= this.alertUntilBySimilarity) {
 										nattrmon.setNotified(owarns[i][j].title, this.instanceId);
 									}
-								}*/
+								}
 							}
 
 							if (!nattrmon.isNotified(owarns[i][j].title, this.instanceId) && 
