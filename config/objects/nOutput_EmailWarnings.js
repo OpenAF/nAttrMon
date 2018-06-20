@@ -137,14 +137,22 @@ nOutput_EmailWarnings.prototype.output = function (scope, args, meta) {
 								owarns[i][j].description = owarns[i][j].description.substr(0, this.descriptionLimit - 1) + "...";
 							}
 	
-							if (isDef(this.groupBySimilarity) && this.groupBySimilarity > 0) {
+							if (isDef(this.groupBySimilarity) && this.groupBySimilarity > 0 &&
+						        isDef(owarns[i][j].description) && owarns[i][j].description.length > 0) {
 								var parent = this;
-								var resDupls = $from($from(owarns[i]).select((r) => {
-									return { 
-										t: r.title, 
-										d: ow.format.string.distance(owarns[i][j].description, r.description),
-										n: nattrmon.isNotified(r.title, parent.instanceId)
-									};
+								var resDupls = $from($from(owarns[i]).notEquals("description", void 0).select((r) => {
+									if (owarns[i][j].description != "" && r.description != "")
+										return { 
+											t: r.title, 
+											d: ow.format.string.distance(owarns[i][j].description, r.description),
+											n: nattrmon.isNotified(r.title, parent.instanceId)
+										};
+									else
+										return {
+											t: r.title,
+											d: ow.format.string.distance(owarns[i][j].title, r.title),
+											n: nattrmon.isNotified(r.title, parent.instanceId)
+										};
 								}))
 								.less("d", (owarns[i][j].title.length * (this.groupBySimilarity/100)))
 								.notEquals("t", owarns[i][j].title)

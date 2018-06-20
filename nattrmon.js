@@ -604,10 +604,14 @@ nAttrMon.prototype.getHistoryValuesByEvents = function(anAttributeName, howManyE
  	}
 }
 
-nAttrMon.prototype.addValues = function(onlyOnEvent, aOrigValues) {
+nAttrMon.prototype.addValues = function(onlyOnEvent, aOrigValues, aOptionals) {
 	var count;
 
 	if (isUnDef(aOrigValues) || isUnDef(aOrigValues.attributes)) return;
+	var aMergeKeys = aOptionals.mergeKeys;
+	var sortKeys = aOptionals.sortKeys;
+
+	aMergeKeys = _$(aMergeKeys).isMap().default(void 0);
 
 	var aValues = aOrigValues.attributes;
 
@@ -619,6 +623,17 @@ nAttrMon.prototype.addValues = function(onlyOnEvent, aOrigValues) {
 				this.setAttribute(key, key + " description");
 			}
 
+			var sorting = (v) => {
+				if (isDef(sortKeys) && isDef(sortKeys[key]) && isArray(sortKeys[key]) && isArray(v.val)) {
+					var temp = $from(v.val);
+					for(var iii in sortKeys[key]) {
+						temp = temp.sort(sortKeys[key][iii]);
+					}
+					v.val = temp.select();
+				};
+				return v;
+			};
+
 			this.listOfAttributes.touchAttribute(key);
 
 			if(onlyOnEvent) {
@@ -627,17 +642,31 @@ nAttrMon.prototype.addValues = function(onlyOnEvent, aOrigValues) {
 					!(stringify((new nAttributeValue(av)).getValue()) == stringify(aValues[key])) ) {
 					var newAttr = new nAttributeValue(key, aValues[key]);
 					this.lastValues.set({"name": key}, (isDef(av) ? (new nAttributeValue(av)).getData() : (new nAttributeValue(key)).getData() )) ;
-					//this.lastValues[key] = (isUnDef(this.currentValues[key])) ? new nAttributeValue() : this.currentValues[key].clone();
-					this.currentValues.set({"name": key}, newAttr.getData());
-					//this.currentValues[key] = newAttr;
+					if (isDef(aMergeKeys) && isDef(aMergeKeys[key])) {
+						var t = newAttr.getData();
+						if (isObject(t.val) && !(isArray(t.val))) { t.val = [ t.val ]; };
+						if (isArray(t.val) && isDef(av)) {
+							t.val = _.concat(_.reject(av.val, aMergeKeys[key]), t.val);
+						}
+						if (isUnDef(this.currentValues.getSet({"name": key}, {"name": key}, sorting(t)))) this.currentValues.set({"name": key}, sorting(t));
+					} else {
+						this.currentValues.set({"name": key}, sorting(newAttr.getData()));
+					}
 				}
 			} else {
 				var av = this.currentValues.get({"name": key});
 				var newAttr = new nAttributeValue(key, aValues[key]);
 				this.lastValues.set({"name": key}, (isDef(av) ? (new nAttributeValue(av)).getData() : (new nAttributeValue(key)).getData() ));
-				//this.lastValues[key] = (isUnDef(this.currentValues[key])) ? new nAttributeValue() : this.currentValues[key].clone();
-				this.currentValues.set({"name": key}, newAttr.getData());
-				//this.currentValues[key] = newAttr;
+				if (isDef(aMergeKeys) && isDef(aMergeKeys[key])) {
+					var t = newAttr.getData();
+					if (isObject(t.val) && !(isArray(t.val))) { t.val = [ t.val ]; };
+					if (isArray(t.val) && isDef(av)) {
+						t.val = _.concat(_.reject(av.val, aMergeKeys[key]), t.val);
+					}
+					if (isUnDef(this.currentValues.getSet({"name": key}, {"name": key}, sorting(t)))) this.currentValues.set({"name": key}, sorting(t));
+				} else {
+					this.currentValues.set({"name": key}, sorting(newAttr.getData()));
+				}
 			}
 		}
 	}
@@ -687,7 +716,7 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 						}
 						parent.debug("Executing '" + etry.getName() + "' (" + uuid + ")");
 						var res = etry.exec(parent);
-						parent.addValues(etry.onlyOnEvent, res);
+						parent.addValues(etry.onlyOnEvent, res, { mergeKeys: etry.getMerge(), sortKeys: etry.getSort() });
 						parent.threadsSessions[uuid].count = now();
 						etry.touch();
 					} catch(e) {
@@ -738,7 +767,7 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 								if (cont) {
 									parent.debug("Subscriber " + aCh + " on '" + etry.getName() + "' (uuid " + aUUID + ") ");
 									var res = etry.exec(parent, { ch: aCh, op: aOp, k: aK, v: aV });
-									parent.addValues(etry.onlyOnEvent, res);
+									parent.addValues(etry.onlyOnEvent, res, { mergeKeys: etry.getMerge(), sortKeys: etry.getSort() });
 									parent.threadsSessions[aUUID].count = now();
 									etry.touch();
 								}
@@ -767,7 +796,7 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 								}
 								parent.debug("Executing '" + etry.getName() + "' (" + uuid + ")");
 								var res = etry.exec(parent);
-								parent.addValues(etry.onlyOnEvent, res);
+								parent.addValues(etry.onlyOnEvent, res, { mergeKeys: etry.getMerge(), sortKeys: etry.getSort() });
 								parent.threadsSessions[uuid].count = now();
 								etry.touch();
 							} catch(e) {
