@@ -890,7 +890,7 @@ nAttrMon.prototype.loadPlugs = function() {
 		if (io.fileExists(d + "/.nattrmonignore")) {
 			var t = io.readFileAsArray(d + "/.nattrmonignore")
 			return $from(t).notStarts("#").notEquals("").select((r) => {
-				var f = (d + "/" + r).trim();
+				var f = javaRegExp(javaRegExp(d + "/" + r).replace("(.+)( +#+.*)", "$1")).replaceAll("\\\\#", "#").trim();
 				return f;
 			});
 		} else {
