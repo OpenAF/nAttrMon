@@ -884,10 +884,27 @@ nAttrMon.prototype.addValidation = function(aValidationMeta, aValidationObject, 
 };
 
 nAttrMon.prototype.loadPlugs = function() {
-	this.loadPlugDir(this.configPath + "/objects", "objects");
-	this.loadPlugDir(this.configPath + "/inputs", "inputs");
-	this.loadPlugDir(this.configPath + "/validations", "validations");
-	this.loadPlugDir(this.configPath + "/outputs", "outputs");
+	var parent = this;
+
+	var getIgnoreList = (d) => {
+		if (io.fileExists(d + "/.nattrmonignore")) {
+			var t = io.readFileAsArray(d + "/.nattrmonignore")
+			return $from(t).notStarts("#").notEquals("").select((r) => {
+				var f = (d + "/" + r).trim();
+				return f;
+			});
+		} else {
+			return [];
+		}
+	};
+
+	var ignoreList = getIgnoreList(this.configPath);
+	parent.debug("Ignore list: " + stringify(ignoreList));
+
+	this.loadPlugDir(this.configPath + "/objects", "objects", ignoreList);
+	this.loadPlugDir(this.configPath + "/inputs", "inputs", ignoreList);
+	this.loadPlugDir(this.configPath + "/validations", "validations", ignoreList);
+	this.loadPlugDir(this.configPath + "/outputs", "outputs", ignoreList);
 };
 
 /**
@@ -915,7 +932,7 @@ nAttrMon.prototype.loadObject = function(yy, type) {
 	return yy;
 }
 
-nAttrMon.prototype.loadPlugDir = function(aPlugDir, aPlugDesc) {
+nAttrMon.prototype.loadPlugDir = function(aPlugDir, aPlugDesc, ignoreList) {
     var files = io.listFiles(aPlugDir).files;
 
     var dirs = [];
@@ -932,12 +949,20 @@ nAttrMon.prototype.loadPlugDir = function(aPlugDir, aPlugDesc) {
     dirs = dirs.sort();
     plugsjs = plugsjs.sort();
 
-    for (var i in dirs) {
-        this.loadPlugDir(dirs[i], aPlugDesc);
+    for (let i in dirs) {
+		var inc = true;
+		for(let ii in ignoreList) { 
+			if (ignoreList[ii].indexOf(dirs[i]) >= 0 || 
+			    dirs[i].match(new RegExp("^" + ignoreList[ii] + "$"))) inc = false; }
+        if (inc) { this.loadPlugDir(dirs[i], aPlugDesc, ignoreList); } else { logWarn("ignoring " + dirs[i]); }
     }
 
-    for (var i in plugsjs) {
-		this.loadPlug(plugsjs[i], aPlugDesc);	
+    for (let i in plugsjs) {
+		var inc = true;
+		for(let ii in ignoreList) { 
+			if (ignoreList[ii].indexOf(plugsjs[i]) >= 0 || 
+			    plugsjs[i].match(new RegExp("^" + ignoreList[ii] + "$"))) inc = false; }		
+		if (inc) { this.loadPlug(plugsjs[i], aPlugDesc, ignoreList); } else { logWarn("ignoring " + plugsjs[i]); }
     }
 }
 
