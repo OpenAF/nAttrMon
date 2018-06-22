@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20180618'
+version: '20180621'
 dependencies:
   openaf: '>=20180418'
 files:
@@ -182,7 +182,7 @@ files:
   - util/clean.yaml
   - util/loadDB2Elastic.js
 filesHash:
-  .gitignore: 1c16e9cbb9558d585d597c6340c20ecce2c8a314
+  .gitignore: 39785e9c0e444387c904a807d9e506a0215ca099
   config/inputs/move_files_from_inputs_disabled.dummy: b858cb282617fb0956d960215c8e84d1ccf909c6
   config/inputs.disabled/js/00.raid.init.js: d6c7847577ab7a88cf84e2d6ce24b2d0258213ef
   config/inputs.disabled/js/05.filesystemCount.js: e8d4d119ec2d022033309bc18de8a2dc3a9d66aa
@@ -241,8 +241,8 @@ filesHash:
   config/objects/nInput_Shell.js: 2b84085de7c592241d5e9ee72d207ca24e9d5ad9
   config/objects/nOutput_Channels.js: 7f0a85c0e4c5f2b475699ba0a843ab258a7d472d
   config/objects/nOutput_DSV.js: 9e31e336abe81917e4630a37a96fbc9d579b77d2
-  config/objects/nOutput_EmailWarnings.js: c308d286c690b115c900faa3473129cbc210050b
-  config/objects/nOutput_ES.js: f17ecd7afc056126bb27823dab41d11c5da9b2d2
+  config/objects/nOutput_EmailWarnings.js: 79840a52242e9674d640d4c670006c16b8716816
+  config/objects/nOutput_ES.js: 021e2a73f602e9457a5c57e037978a783d712072
   config/objects/nOutput_H2.js: 4aa7668410f3bbf64b1c7cd3a8b6031e5367903d
   config/objects/nOutput_HTTP.js: 529313cfdb4afda1e9cda55508171369c63599be
   config/objects/nOutput_HTTP_JSON.js: 5e10f7d7b290afb6d8fbafa5efc054810b77c138
@@ -301,7 +301,7 @@ filesHash:
   config/outputs.disabled/yaml/02.httpjson.yaml: 6d14637f7fff15b4d75481597bb9ae4f77f12665
   config/outputs.disabled/yaml/03.http.yaml: 24096733c110810674f6219dbb00ee96a2858b33
   config/outputs.disabled/yaml/03.pushChannels.yaml: 5c254a74d2a11109b0fc6db87fa8ef1b6a3b83cd
-  config/outputs.disabled/yaml/04.emailWarnings.yaml: bc3bcc5f0848a73c7cf326d76e1b0a6147aa5f95
+  config/outputs.disabled/yaml/04.emailWarnings.yaml: 5c90c3a8e87a03f3329b7d34a93285e9ab655a3d
   config/outputs.disabled/yaml/05.es.warnings.yaml: aa44686271bda1db413620227d6a179568d12bf5
   config/outputs.disabled/yaml/09.channels.yaml: f38c539f163ec3457267c55d4248237b76caee14
   config/outputs.disabled/yaml/4.csvFile.yaml: f60dfbca5b88b5225c676bafcd5ccbeb23c6930c
@@ -317,17 +317,17 @@ filesHash:
   config/validations.disabled/yaml/05.validateErrorFlows.yaml: 57371fd7ae82b327f3b6e59ac51303c526f3a4c9
   config/validations.disabled/yaml/14.validateCompareTimes.yaml: f7ce84ebfa3e2c7bef73d152b87afe53856c4867
   lib/nattribute.js: 957b3e1e4d55c554e029229dae26e838df1da7b4
-  lib/nattributes.js: b8e273085a57d414972d7a29505cb0faef753f94
+  lib/nattributes.js: 61a5abe4e3ff653910cef28e280858e3ee1f505c
   lib/nattributevalue.js: d6a378dba74922540bcc3e054222733f69d5cead
   lib/ninput.js: cb1a2bc442a0a3ac9e6237fd02b445e31bd518cf
   lib/nmonitoredobject.js: da0b8a8590ce1534826750e2e70b3d6e4bee9f98
   lib/noutput.js: 097a89ae2ab12cb28d88034444a72d368464d14c
-  lib/nplug.js: c7a978b5181fed02e331f7ea6eb8d15f8d58eb51
+  lib/nplug.js: 2f0d25159a81134de1893a10f6199376bb8d9c6f
   lib/nvalidation.js: 252998540faca7913211029f1bdd4397beba3ce9
   lib/nwarning.js: 0b50703356670d2d9f92e5b466dc0c430b4ee19a
   lib/nwarnings.js: e4991843cdaa0dd8a1a370a97cd450b2647c7ee6
   LICENSE: 7df059597099bb7dcf25d2a9aedfaf4465f72d8d
-  nattrmon.js: 7d98603cbb32303cdff04f3a4628ed6ee1a9c495
+  nattrmon.js: ad31035f96d5ea062790cc147b3e002c17a1a4c8
   nattrmon.yaml.sample: b5a9bef5ccd653480ea690b2f5a882f5071d2b44
   README.md: 648ce4e29bbdc7b99f5cf8734cb1a7f0657789c7
   tests/inputDBTest.yml: c38616606dc5956e449189d11f8e661170f94dfb
@@ -336,6 +336,6 @@ filesHash:
   tests/outputTest.yml: 0c4ba4176163e4aa9ff7fd4ae4128339d8384581
   tests/unitTest.js: 067565f7c1517b331684246f5c9a7949124417ea
   tests/unitTestYAML.js: 01fd646107421f0441b19cd966977ab7ac2eff37
-  util/backupConfig.yaml: f84a08a3c5c8aa50f5aa606585c1453901c20d84
+  util/backupConfig.yaml: cecdefad82f0c4e23d5341cb97bb6deccf6fd0ff
   util/clean.yaml: 616b7ddb24b12af7f1cbec473282decb57843869
   util/loadDB2Elastic.js: 190b68c03e71fa859df71429da4c31035f20ce94
