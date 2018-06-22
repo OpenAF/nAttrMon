@@ -154,7 +154,7 @@ nOutput_EmailWarnings.prototype.output = function (scope, args, meta) {
 											n: nattrmon.isNotified(r.title, parent.instanceId)
 										};
 								}))
-								.less("d", (owarns[i][j].title.length * (this.groupBySimilarity/100)))
+								.less("d", (owarns[i][j].description.length * (this.groupBySimilarity/100)))
 								.notEquals("t", owarns[i][j].title)
 								.select();
 

@@ -23,5 +23,5 @@ output:
       #  - Warning to include
       #exclude               :
       #  - Warning to exclude
-      #groupByTitleSimilarity: 10
+      #groupBySimilarity     : 10
       #descriptionLimit      : 20
