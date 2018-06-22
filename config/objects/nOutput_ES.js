@@ -106,9 +106,15 @@ nOutput_ES.prototype.addToES = function (aCh, aVal, useTitle) {
 
 
 	try {
-		var cont = true;
+		var cont = true, res;
 		if (isArray(data) && data.length == 0) cont = false;
-		if (cont) aCh.setAll(["id"], merge(data, this.stampMap));
+		if (cont) res = aCh.setAll(["id"], merge(data, this.stampMap));
+		if (isDef(res) && isDef(res.response)) {
+		   var t = jsonParse(res.response);
+		   if (isDef(t.errors) && t.errors) {
+			  logErr("Error on sending '" + $from(data).select((r)=>{return r.name}).join(", ") + "': " + stringify(t));
+		   }
+		}		
 	} catch (e) {
 		sprintErr(e + " -- " + stringify(data));
 	}
