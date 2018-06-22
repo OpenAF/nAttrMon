@@ -5,21 +5,23 @@ output:
    onlyForEvent : true
    execFrom     : nOutput_EmailWarnings
    execArgs     : 
-      to         : 
+      to                    : 
         - myemail@email.com
         - mycolleague@email.com
-      subject    : "[nattrmon] Sample"
-      from       : nattrmon@email.com
-      server     : smtp.email.com
-      port       : 465
-      credentials:
+      subject               : "[nattrmon] Sample"
+      from                  : nattrmon@email.com
+      server                : smtp.email.com
+      port                  : 465
+      credentials           :
         user    : mylogin
         password: mypassword
-      debug      : false
-      #warnTypes  :
+      debug                 : false
+      #warnTypes             :
       #  - High
       #  - Medium
-      #include    :
+      #include               :
       #  - Warning to include
-      #exclude    :
+      #exclude               :
       #  - Warning to exclude
+      #groupBySimilarity     : 10
+      #descriptionLimit      : 20

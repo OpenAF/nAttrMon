@@ -8,7 +8,7 @@ This output sends email notifications whenever a specific type or types of warni
 output:
    name         : Output EMail warning
    chSubscribe  : nattrmon::warnings
-   wairForFinish: true
+   waitForFinish: true
    onlyForEvent : true
    execFrom     : nOutput_EmailWarnings
    execArgs     : 
@@ -47,4 +47,6 @@ output:
 | warnTypes | Array | No | Defines a list of warning levels/types for which to trigger an email | 
 | include | Array | No | An array of warning titles to restrict which warnings should be displayed on the email and trigger the email |
 | exclude | Array | No | An array of warning titles to exclude from displaying on the email and triggering the email | 
+| groupBySimilarity | Number | No | If defined warnings that have the provided percentage similarity between their descriptions will be grouped and an extra message will be suffixed on the email template reducing the cluttering of similar warnings (usually 10% as good starting point). |
+| descriptionLimit | Number | No | If defined will limit the description size displayed on the email template replacing by '...' after the limit |
 

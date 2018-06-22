@@ -1,12 +1,10 @@
-ojob:
-   sequential: true
-
 jobs:
    # Set all global variables
    #
    - name: Init
      exec: >-
-        global.packPath = getOPackPath("nAttrMon") || "..";
+        global.packPath = getOPackPath("nAttrMon") || ".";
+        global.configPath = _$(args.config).default(packPath + "/config");
         global.configZIP = (isDef(params.filename)) ? params.filename : "nattrmonConfig-" + ow.loadFormat().fromDate(new Date(), "yyyyMMdd") + ".zip";
         log("Scanning " + global.packPath);
 
@@ -27,13 +25,13 @@ jobs:
         - Prepare ZIP
      exec: >-
         if (isDef(args.folder)) {
-           var files = listFilesRecursive(global.packPath + args.folder);
+           var files = listFilesRecursive(global.configPath + "/" + args.folder);
            for(var file in files) {
               if (files[file].isFile) {
-                var f = files[file].filepath.replace(global.packPath, "").replace(/\\+/g, "/").replace(/^\//, "");
+                var f = files[file].filepath.replace(global.configPath + "/", "").replace(/\\+/g, "/").replace(/^\//, "");
                 log("Including " + f + "...");
                 try {
-                  global.zip.putFile(f.replace(global.packPath + "/", ""), io.readFileBytes(files[file].filepath));
+                  global.zip.putFile(f.replace(global.configPath + "/", ""), io.readFileBytes(files[file].filepath));
                 } catch(e) {
                   logWarn(e.message);
                 }
@@ -49,14 +47,14 @@ jobs:
         - Prepare ZIP
      exec: >-
         var f = [ 
-           global.packPath + "/config/nattrmon.attrs.snapshot", 
-           global.packPath + "/config/nattrmon.cvals.snapshot",
-           global.packPath + "/config/nattrmon.lvals.snapshot"
+           global.configPath + "/nattrmon.attrs.snapshot", 
+           global.configPath + "/nattrmon.cvals.snapshot",
+           global.configPath + "/nattrmon.lvals.snapshot"
         ];
         for (var i in f) {
           try {
             log("Including " + f[i] + "...");
-            global.zip.putFile(f[i].replace(global.packPath + "/", ""), io.readFileBytes(f[i]));
+            global.zip.putFile(f[i].replace(global.configPath + "/", ""), io.readFileBytes(f[i]));
           } catch(e) {
             logWarn(e.message);
           }
@@ -93,11 +91,11 @@ todo:
    - Backup snapshots
    - name: Backup plug
      args: 
-       - folder: /config/inputs
-       - folder: /config/outputs
-       - folder: /config/validations  
-       - folder: /config/inputs.disabled
-       - folder: /config/outputs.disabled
-       - folder: /config/validations.disabled
+       - folder: inputs
+       - folder: outputs
+       - folder: validations  
+       - folder: inputs.disabled
+       - folder: outputs.disabled
+       - folder: validations.disabled
    - Write ZIP
    - Done

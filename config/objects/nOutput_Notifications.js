@@ -24,17 +24,18 @@ var nOutput_Notifications = function(aMap) {
         throw "You need to define a Pushover APIToken";
     }
 
-    this.params.__notifyID = genUUID();
     loadLib("pushover.js");
 
 	nOutput.call(this, this.output);
 };
 inherit(nOutput_Notifications, nOutput);
 
-nOutput_Notifications.prototype.output = function(scope, args) {
+nOutput_Notifications.prototype.output = function(scope, args, meta) {
     var res = [];
 
     if (isDef(this.params.notifications)) {
+        this.params.__notifyID = sha1(meta.aName);
+
         var warns = nattrmon.getWarnings(true).getCh().getAll();
         for(var inotif in this.params.notifications) {
             var notif = this.params.notifications[inotif];

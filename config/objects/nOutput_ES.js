@@ -107,7 +107,7 @@ nOutput_ES.prototype.addToES = function (aCh, aVal, useTitle) {
 
 	try {
 		var cont = true;
-		if (isArray(cont) && data.length == 0) cont = false;
+		if (isArray(data) && data.length == 0) cont = false;
 		if (cont) aCh.setAll(["id"], merge(data, this.stampMap));
 	} catch (e) {
 		sprintErr(e + " -- " + stringify(data));

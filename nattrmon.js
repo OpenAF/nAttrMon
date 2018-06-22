@@ -604,10 +604,14 @@ nAttrMon.prototype.getHistoryValuesByEvents = function(anAttributeName, howManyE
  	}
 }
 
-nAttrMon.prototype.addValues = function(onlyOnEvent, aOrigValues) {
+nAttrMon.prototype.addValues = function(onlyOnEvent, aOrigValues, aOptionals) {
 	var count;
 
 	if (isUnDef(aOrigValues) || isUnDef(aOrigValues.attributes)) return;
+	var aMergeKeys = aOptionals.mergeKeys;
+	var sortKeys = aOptionals.sortKeys;
+
+	aMergeKeys = _$(aMergeKeys).isMap().default(void 0);
 
 	var aValues = aOrigValues.attributes;
 
@@ -619,6 +623,17 @@ nAttrMon.prototype.addValues = function(onlyOnEvent, aOrigValues) {
 				this.setAttribute(key, key + " description");
 			}
 
+			var sorting = (v) => {
+				if (isDef(sortKeys) && isDef(sortKeys[key]) && isArray(sortKeys[key]) && isArray(v.val)) {
+					var temp = $from(v.val);
+					for(var iii in sortKeys[key]) {
+						temp = temp.sort(sortKeys[key][iii]);
+					}
+					v.val = temp.select();
+				};
+				return v;
+			};
+
 			this.listOfAttributes.touchAttribute(key);
 
 			if(onlyOnEvent) {
@@ -627,17 +642,31 @@ nAttrMon.prototype.addValues = function(onlyOnEvent, aOrigValues) {
 					!(stringify((new nAttributeValue(av)).getValue()) == stringify(aValues[key])) ) {
 					var newAttr = new nAttributeValue(key, aValues[key]);
 					this.lastValues.set({"name": key}, (isDef(av) ? (new nAttributeValue(av)).getData() : (new nAttributeValue(key)).getData() )) ;
-					//this.lastValues[key] = (isUnDef(this.currentValues[key])) ? new nAttributeValue() : this.currentValues[key].clone();
-					this.currentValues.set({"name": key}, newAttr.getData());
-					//this.currentValues[key] = newAttr;
+					if (isDef(aMergeKeys) && isDef(aMergeKeys[key])) {
+						var t = newAttr.getData();
+						if (isObject(t.val) && !(isArray(t.val))) { t.val = [ t.val ]; };
+						if (isArray(t.val) && isDef(av)) {
+							t.val = _.concat(_.reject(av.val, aMergeKeys[key]), t.val);
+						}
+						if (isUnDef(this.currentValues.getSet({"name": key}, {"name": key}, sorting(t)))) this.currentValues.set({"name": key}, sorting(t));
+					} else {
+						this.currentValues.set({"name": key}, sorting(newAttr.getData()));
+					}
 				}
 			} else {
 				var av = this.currentValues.get({"name": key});
 				var newAttr = new nAttributeValue(key, aValues[key]);
 				this.lastValues.set({"name": key}, (isDef(av) ? (new nAttributeValue(av)).getData() : (new nAttributeValue(key)).getData() ));
-				//this.lastValues[key] = (isUnDef(this.currentValues[key])) ? new nAttributeValue() : this.currentValues[key].clone();
-				this.currentValues.set({"name": key}, newAttr.getData());
-				//this.currentValues[key] = newAttr;
+				if (isDef(aMergeKeys) && isDef(aMergeKeys[key])) {
+					var t = newAttr.getData();
+					if (isObject(t.val) && !(isArray(t.val))) { t.val = [ t.val ]; };
+					if (isArray(t.val) && isDef(av)) {
+						t.val = _.concat(_.reject(av.val, aMergeKeys[key]), t.val);
+					}
+					if (isUnDef(this.currentValues.getSet({"name": key}, {"name": key}, sorting(t)))) this.currentValues.set({"name": key}, sorting(t));
+				} else {
+					this.currentValues.set({"name": key}, sorting(newAttr.getData()));
+				}
 			}
 		}
 	}
@@ -687,7 +716,7 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 						}
 						parent.debug("Executing '" + etry.getName() + "' (" + uuid + ")");
 						var res = etry.exec(parent);
-						parent.addValues(etry.onlyOnEvent, res);
+						parent.addValues(etry.onlyOnEvent, res, { mergeKeys: etry.getMerge(), sortKeys: etry.getSort() });
 						parent.threadsSessions[uuid].count = now();
 						etry.touch();
 					} catch(e) {
@@ -734,11 +763,11 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 								var cont = true;
 								if (isDef(etry.getAttrPattern())) {
 									cont = (new RegExp(etry.getAttrPattern())).test(aK.name);
-;								}
+								}
 								if (cont) {
 									parent.debug("Subscriber " + aCh + " on '" + etry.getName() + "' (uuid " + aUUID + ") ");
 									var res = etry.exec(parent, { ch: aCh, op: aOp, k: aK, v: aV });
-									parent.addValues(etry.onlyOnEvent, res);
+									parent.addValues(etry.onlyOnEvent, res, { mergeKeys: etry.getMerge(), sortKeys: etry.getSort() });
 									parent.threadsSessions[aUUID].count = now();
 									etry.touch();
 								}
@@ -767,7 +796,7 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 								}
 								parent.debug("Executing '" + etry.getName() + "' (" + uuid + ")");
 								var res = etry.exec(parent);
-								parent.addValues(etry.onlyOnEvent, res);
+								parent.addValues(etry.onlyOnEvent, res, { mergeKeys: etry.getMerge(), sortKeys: etry.getSort() });
 								parent.threadsSessions[uuid].count = now();
 								etry.touch();
 							} catch(e) {
@@ -855,10 +884,27 @@ nAttrMon.prototype.addValidation = function(aValidationMeta, aValidationObject, 
 };
 
 nAttrMon.prototype.loadPlugs = function() {
-	this.loadPlugDir(this.configPath + "/objects", "objects");
-	this.loadPlugDir(this.configPath + "/inputs", "inputs");
-	this.loadPlugDir(this.configPath + "/validations", "validations");
-	this.loadPlugDir(this.configPath + "/outputs", "outputs");
+	var parent = this;
+
+	var getIgnoreList = (d) => {
+		if (io.fileExists(d + "/.nattrmonignore")) {
+			var t = io.readFileAsArray(d + "/.nattrmonignore")
+			return $from(t).notStarts("#").notEquals("").select((r) => {
+				var f = javaRegExp(javaRegExp(d + "/" + r).replace("(.+)( +#+.*)", "$1")).replaceAll("\\\\#", "#").trim();
+				return f;
+			});
+		} else {
+			return [];
+		}
+	};
+
+	var ignoreList = getIgnoreList(this.configPath);
+	parent.debug("Ignore list: " + stringify(ignoreList));
+
+	this.loadPlugDir(this.configPath + "/objects", "objects", ignoreList);
+	this.loadPlugDir(this.configPath + "/inputs", "inputs", ignoreList);
+	this.loadPlugDir(this.configPath + "/validations", "validations", ignoreList);
+	this.loadPlugDir(this.configPath + "/outputs", "outputs", ignoreList);
 };
 
 /**
@@ -886,7 +932,7 @@ nAttrMon.prototype.loadObject = function(yy, type) {
 	return yy;
 }
 
-nAttrMon.prototype.loadPlugDir = function(aPlugDir, aPlugDesc) {
+nAttrMon.prototype.loadPlugDir = function(aPlugDir, aPlugDesc, ignoreList) {
     var files = io.listFiles(aPlugDir).files;
 
     var dirs = [];
@@ -903,12 +949,20 @@ nAttrMon.prototype.loadPlugDir = function(aPlugDir, aPlugDesc) {
     dirs = dirs.sort();
     plugsjs = plugsjs.sort();
 
-    for (var i in dirs) {
-        this.loadPlugDir(dirs[i], aPlugDesc);
+    for (let i in dirs) {
+		var inc = true;
+		for(let ii in ignoreList) { 
+			if (ignoreList[ii].indexOf(dirs[i]) >= 0 || 
+			    dirs[i].match(new RegExp("^" + ignoreList[ii] + "$"))) inc = false; }
+        if (inc) { this.loadPlugDir(dirs[i], aPlugDesc, ignoreList); } else { logWarn("ignoring " + dirs[i]); }
     }
 
-    for (var i in plugsjs) {
-		this.loadPlug(plugsjs[i], aPlugDesc);	
+    for (let i in plugsjs) {
+		var inc = true;
+		for(let ii in ignoreList) { 
+			if (ignoreList[ii].indexOf(plugsjs[i]) >= 0 || 
+			    plugsjs[i].match(new RegExp("^" + ignoreList[ii] + "$"))) inc = false; }		
+		if (inc) { this.loadPlug(plugsjs[i], aPlugDesc, ignoreList); } else { logWarn("ignoring " + plugsjs[i]); }
     }
 }
 
