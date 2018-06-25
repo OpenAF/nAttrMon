@@ -607,9 +607,11 @@ nAttrMon.prototype.getHistoryValuesByEvents = function(anAttributeName, howManyE
 nAttrMon.prototype.addValues = function(onlyOnEvent, aOrigValues, aOptionals) {
 	var count;
 
+	aOptionals = _$(aOptionals).default({});
+	
 	if (isUnDef(aOrigValues) || isUnDef(aOrigValues.attributes)) return;
-	var aMergeKeys = aOptionals.mergeKeys;
-	var sortKeys = aOptionals.sortKeys;
+	var aMergeKeys = _$(aOptionals.mergeKeys).default(void 0);
+	var sortKeys = _$(aOptionals.sortKeys).default(void 0);
 
 	aMergeKeys = _$(aMergeKeys).isMap().default(void 0);
 
