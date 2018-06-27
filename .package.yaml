@@ -1,4 +1,4 @@
-author: 'Nuno Aguiar, Andreia Brizida'
+author: 'Nuno Aguiar, Andreia Brizida, Jose Alves'
 scripts:
   posterase: ''
   postinstall: ''
@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20180624'
+version: '20180627'
 dependencies:
   openaf: '>=20180418'
 files:
