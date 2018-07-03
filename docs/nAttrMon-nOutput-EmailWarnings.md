@@ -51,4 +51,8 @@ output:
 | excludeRE | Array | No | Equivalent to _exclude_ but providing regular expressions for warning titles |
 | groupBySimilarity | Number | No | If defined warnings that have the provided percentage similarity between their descriptions will be grouped and an extra message will be suffixed on the email template reducing the cluttering of similar warnings (usually 10% as good starting point). |
 | descriptionLimit | Number | No | If defined will limit the description size displayed on the email template replacing by '...' after the limit |
+| tls | Boolean | No | Specifies that the connection to the SMTP server should use TLS (sometimes you might need also to specify secure = true depending on the server). |
+| secure | Boolean | No | Specifies that the connection to the SMTP server should be made using SSL. |
+| template | String | No | Provide an alternative handlebars template to config/objects.assets/noutputemailwarnings/warningEmailTemplate.hbs. The entry will be prefixed with config/objects.assets/noutputemailwarnings/ |
+| templateImages | Map | No | A map of images to be embeeded on the email. Each key refers to the cid that will be referenced on the template and the value is the image file prefixed with config/objects.assets/noutputemailwarnings. The "logo" reference will be always forced to point to the logo.png image. Please refer to each key of the map on the template in a similar form to: _&lt;img src="cid:myMapKey"&gt;_. |
 
