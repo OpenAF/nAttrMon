@@ -19,17 +19,23 @@ var nOutput_EmailWarnings = function(aMap) {
 	this.port = (isUnDef(aMap.port)) ? void 0 : aMap.port;
 	this.credentials = (isUnDef(aMap.credentials)) ? void 0 : aMap.credentials;
 	this.warnTypes = (isUnDef(aMap.warnTypes)) ? [ "High" ] : aMap.warnTypes;
-	this.descriptionLimit = _$(aMap.descriptionLimit).isNumber().default(-1);
-	this.groupBySimilarity = _$(aMap.groupBySimilarity).isNumber().default(void 0);
-	this.alertUntilBySimilarity = _$(aMap.alertUntilBySimilarity).isNumber().default(void 0);
+	this.descriptionLimit = _$(aMap.descriptionLimit).isNumber("descriptionLimit should be a number").default(-1);
+	this.groupBySimilarity = _$(aMap.groupBySimilarity).isNumber("groupBySimilarity should be a number").default(void 0);
+	this.alertUntilBySimilarity = _$(aMap.alertUntilBySimilarity).isNumber("alertUntilBySimilarity should be a number").default(void 0);
 	this.tls = aMap.tls;
+	this.secure = _$(aMap.secure).isBoolean("secure should be boolean").default(false);
 	this.debug = aMap.debug;
 	this.include = aMap.include;
 	this.exclude = aMap.exclude;
 
 	this.template = nattrmon.configPath + "/objects.assets/noutputemailwarnings/" + ((isUnDef(aMap.template)) ? "warningEmailTemplate.hbs" : aMap.template);
-	if (!(io.fileInfo(this.template).canonicalPath.startsWith(nattrmon.configPath + "/objects.assets/noutputemailwarnings/")))
+	if (!(io.fileExists(this.template))) {
+		logErr("Template " + this.template + " doesn't exist.");
 		this.template = nattrmon.configPath + "/objects.assets/noutputemailwarnings/warningEmailTemplate.hbs";
+	}		
+
+	this.templateImages = _$(aMap.templateImages).isMap("templateImages should be a map.").default({});
+	this.templateImages["logo"] = "logo.png";
 
 	this.htmlTemplate = ow.template.loadHBSs({
 		"nOutput_EmailWarnings": this.template
@@ -105,7 +111,7 @@ nOutput_EmailWarnings.prototype.output = function (scope, args, meta) {
 		}, this.lock);
 
 		if (doIt) {
-			email = new Email(this.mailserver, this.from, (isDef(this.credentials) && !this.tls), this.tls, true);
+			email = new Email(this.mailserver, this.from, (isDef(this.credentials) && !this.tls) || this.secure, this.tls, true);
 			if (isDef(this.port)) email.setPort(this.port);
 			if (isDef(this.credentials)) {
 				email.setCredentials(this.credentials.user, this.credentials.password);
@@ -196,7 +202,10 @@ nOutput_EmailWarnings.prototype.output = function (scope, args, meta) {
 	}
 
 	if (count == 0) return;
-	email.embedFile(nattrmon.configPath + "/objects.assets/noutputemailwarnings/logo.png", "logo");
+	//email.embedFile(nattrmon.configPath + "/objects.assets/noutputemailwarnings/logo.png", "logo");
+	for(let ii in this.templateImages) {
+		email.embedFile(nattrmon.configPath + "/objects.assets/noutputemailwarnings/" + this.templateImages[ii], ii);
+	}
 	var message = this.htmlTemplate("nOutput_EmailWarnings", data);
 
 	email.setHTML(message);
