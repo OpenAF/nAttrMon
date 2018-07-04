@@ -19,6 +19,7 @@ var nOutput_EmailWarnings = function(aMap) {
 	this.port = (isUnDef(aMap.port)) ? void 0 : aMap.port;
 	this.credentials = (isUnDef(aMap.credentials)) ? void 0 : aMap.credentials;
 	this.warnTypes = (isUnDef(aMap.warnTypes)) ? [ "High" ] : aMap.warnTypes;
+	this.warnTypesShow = (isUnDef(aMap.warnTypesShow)) ? [ "High", "Medium", "Low", "Info" ] : aMap.warnTypesShow;
 	this.descriptionLimit = _$(aMap.descriptionLimit).isNumber("descriptionLimit should be a number").default(-1);
 	this.groupBySimilarity = _$(aMap.groupBySimilarity).isNumber("groupBySimilarity should be a number").default(void 0);
 	this.alertUntilBySimilarity = _$(aMap.alertUntilBySimilarity).isNumber("alertUntilBySimilarity should be a number").default(void 0);
@@ -27,6 +28,8 @@ var nOutput_EmailWarnings = function(aMap) {
 	this.debug = aMap.debug;
 	this.include = aMap.include;
 	this.exclude = aMap.exclude;
+	this.includeRE = aMap.includeRE;
+	this.excludeRE = aMap.excludeRE;
 
 	this.template = nattrmon.configPath + "/objects.assets/noutputemailwarnings/" + ((isUnDef(aMap.template)) ? "warningEmailTemplate.hbs" : aMap.template);
 	if (!(io.fileExists(this.template))) {
@@ -53,7 +56,7 @@ var nOutput_EmailWarnings = function(aMap) {
 inherit(nOutput_EmailWarnings, nOutput);
 
 nOutput_EmailWarnings.prototype.output = function (scope, args, meta) {
-	if(isUnDef(meta.chSubscribe) && meta.chSubscribe == "nattrmon::warnings") 
+	if(isUnDef(meta.chSubscribe) || (meta.chSubscribe != "nattrmon::warnings")) 
 		throw "nOutput_EmailWarnings only supports chSubscribe: nattrmon::warnings";
 
 	if (args.op != "set" && args.op != "setall") return;
@@ -81,18 +84,18 @@ nOutput_EmailWarnings.prototype.output = function (scope, args, meta) {
 		var shouldEval = true;
 		if (isUnDef(ws[wsi]) || isUnDef(ws[wsi].level) || isUnDef(ws[wsi].title)) continue;
 		if (isUnDef(owarns[ws[wsi].level]) || $from(owarns[ws[wsi].level]).equals("title", ws[wsi].title).count() == 0) continue;
-		if (isDef(this.include) && isArray(this.include) && this.include.indexOf(ws[wsi].title) < 0) shouldEval = false;
-		if (isDef(this.exclude) && isArray(this.exclude) && this.exclude.indexOf(ws[wsi].title) >= 0) shouldEval = false;
+		if (isDef(this.include) && isArray(this.include) && this.include.indexOf(ws[wsi].title) < 0) { shouldEval = false; }
+		if (isDef(this.exclude) && isArray(this.exclude) && this.exclude.indexOf(ws[wsi].title) >= 0) { shouldEval = false; }
 		if (isDef(this.includeRE) && isArray(this.includeRE)) {
 			shouldEval = false;
 			for(var irei in this.includeRE) {
-				if (ws[wsi].title.match(this.includeRE[irei])) shouldEval = true;
+				if (ws[wsi].title.match(this.includeRE[irei])) { shouldEval = true; }
 			}
 		}
 		if (isDef(this.excludeRE) && isArray(this.excludeRE)) {
 			shouldEval = true;
 			for(var erei in this.excludeRE) {
-				if (ws[wsi].title.match(this.excludeRE[erei])) shouldEval = false;
+				if (ws[wsi].title.match(this.excludeRE[erei])) { shouldEval = false; }
 			}			
 		}		
 		if (shouldEval && !nattrmon.isNotified(ws[wsi].title, this.instanceId) && this.warnTypes.indexOf(ws[wsi].level) >= 0) {
@@ -137,6 +140,18 @@ nOutput_EmailWarnings.prototype.output = function (scope, args, meta) {
 						var shouldEval = true;
 						if (isDef(this.include) && isArray(this.include) && this.include.indexOf(owarns[i][j].title) < 0) shouldEval = false;
 						if (isDef(this.exclude) && isArray(this.exclude) && this.exclude.indexOf(owarns[i][j].title) >= 0) shouldEval = false;
+						if (isDef(this.includeRE) && isArray(this.includeRE)) {
+							shouldEval = false;
+							for(var irei in this.includeRE) {
+								if (owarns[i][j].title.match(this.includeRE[irei])) { shouldEval = true; }
+							}
+						}
+						if (isDef(this.excludeRE) && isArray(this.excludeRE)) {
+							shouldEval = true;
+							for(var erei in this.excludeRE) {
+								if (owarns[i][j].title.match(this.excludeRE[erei])) { shouldEval = false; }
+							}			
+						}		
 
 						if (shouldEval) {
 							if (isDef(this.descriptionLimit) && this.descriptionLimit > 0) {
@@ -178,7 +193,7 @@ nOutput_EmailWarnings.prototype.output = function (scope, args, meta) {
 							}
 
 							if (!nattrmon.isNotified(owarns[i][j].title, this.instanceId) && 
-								this.warnTypes.indexOf(owarns[i][j].level) >= 0) {
+								this.warnTypesShow.indexOf(owarns[i][j].level) >= 0) {
 									list.push(owarns[i][j]);
 									nattrmon.setNotified(owarns[i][j].title, this.instanceId);
 									count++;
