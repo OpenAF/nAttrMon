@@ -79,23 +79,59 @@ nInput_CBPMRunningFlows.prototype.input = function(scope, args) {
                         if (!String(e).match(/Cannot find the object/)) logErr("Can't retrieve instances, in " + aKey + ", for flow: " + r.flowName + " -- " + String(e));
                     }
                 });
-    
-                if (isDef(instances) && isArray(instances)) {          
-                    $from(instances).select((t) => {
+
+                if (isDef(instances) && isArray(instances)) {
+                	$from(instances).select((t) => {
                         if (ow.format.dateDiff.inHours(ow.format.fromWeDoDateToDate(t.instanceStartTime)) <= this.hoursToCheck) {
-                            oo.push({
-                                Category: r.flowCategory,
-                                Flow: r.flowName,
-                                Version: t.instanceVersion,
-                                "Run ID": t.instanceId,
-                                User: t.instanceStartUser,
-                                "Date": ow.format.fromWeDoDateToDate(t.instanceStartTime),
-                                Exception: t.instanceErrorMessage
-                            });
+                        	switch (t.instanceStatus) {
+                            	case 'FINISHED':
+                                	oo.push({
+                                    	Category: r.flowCategory,
+                                        Flow: r.flowName,
+                                        Version: t.instanceVersion,
+                                        "Run ID": t.instanceId,
+                                        User: t.instanceStartUser,
+                                        "Start Date": ow.format.fromWeDoDateToDate(t.instanceStartTime),
+                                        "End Date": ow.format.fromWeDoDateToDate(t.instanceEndTime)
+                                    });
+                                    break;
+                                case 'ERROR':
+                                	oo.push({
+                                    	Category: r.flowCategory,
+                                        Flow: r.flowName,
+                                        Version: t.instanceVersion,
+                                        "Run ID": t.instanceId,
+                                        User: t.instanceStartUser,
+                                        "Start Date": ow.format.fromWeDoDateToDate(t.instanceStartTime),
+                                        "End Date": ow.format.fromWeDoDateToDate(t.instanceEndTime),
+                                        Exception: t.instanceErrorMessage
+                                    });
+                                    break;
+                                case 'STARTED':
+                                	oo.push({
+                                    	Category: r.flowCategory,
+                                        Flow: r.flowName,
+                                        Version: t.instanceVersion,
+                                        "Run ID": t.instanceId,
+                                        User: t.instanceStartUser,
+                                        "Start Date": ow.format.fromWeDoDateToDate(t.instanceStartTime)
+                                    });
+                                    break;
+								default:
+                                	oo.push({
+                                    	Category: r.flowCategory,
+                                        Flow: r.flowName,
+                                        Version: t.instanceVersion,
+                                        "Run ID": t.instanceId,
+                                        User: t.instanceStartUser,
+                                        "Start Date": ow.format.fromWeDoDateToDate(t.instanceStartTime),
+                                        "End Date": (isUnDef(t.instanceEndTime)) ? "n/a" : ow.format.fromWeDoDateToDate(t.instanceEndTime)
+                                    });
+                            }
                         }
-                    });
-                }
-    
+                	});
+        		}
+
                 return oo;
     
             //});
