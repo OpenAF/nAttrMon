@@ -88,16 +88,16 @@ nInput_CBPMRunningFlows.prototype.input = function(scope, args) {
 
                                 switch (t.instanceStatus) {
                                         case 'ERROR':
-                                                if (isDef(t.instanceErrorMessage) && isDef(t.instanceEndTime)) {
-                                                        line = merge(line, { "End Date": ow.format.fromWeDoDateToDate(t.instanceEndTime), "Exception": t.instanceErrorMessage});
-                                                }
+                                                line = merge(line, { "End Date": (isUnDef(t.instanceEndTime)) ? "n/a" : ow.format.fromWeDoDateToDate(t.instanceEndTime), "Exception": (isUnDef(t.instanceErrorMessage)) ? "n/a" : t.instanceErrorMessage});
+                                                break;
+                                        case 'STARTED':
                                                 break;
                                         default:
                                                 if (isDef((t.instanceEndTime))) {
                                                         line = merge(line, {"End Date": ow.format.fromWeDoDateToDate(t.instanceEndTime)});
                                                 }
                                 }
-                                 oo.push(line);
+                                oo.push(line);
                         }
                 	});
         	}
