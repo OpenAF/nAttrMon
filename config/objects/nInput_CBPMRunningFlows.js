@@ -91,6 +91,7 @@ nInput_CBPMRunningFlows.prototype.input = function(scope, args) {
                                         Version: t.instanceVersion,
                                         "Run ID": t.instanceId,
                                         User: t.instanceStartUser,
+                                        "Status": t.instanceStatus,
                                         "Start Date": ow.format.fromWeDoDateToDate(t.instanceStartTime),
                                         "End Date": ow.format.fromWeDoDateToDate(t.instanceEndTime)
                                     });
@@ -102,6 +103,7 @@ nInput_CBPMRunningFlows.prototype.input = function(scope, args) {
                                         Version: t.instanceVersion,
                                         "Run ID": t.instanceId,
                                         User: t.instanceStartUser,
+                                        "Status": t.instanceStatus,
                                         "Start Date": ow.format.fromWeDoDateToDate(t.instanceStartTime),
                                         "End Date": ow.format.fromWeDoDateToDate(t.instanceEndTime),
                                         Exception: t.instanceErrorMessage
@@ -114,6 +116,7 @@ nInput_CBPMRunningFlows.prototype.input = function(scope, args) {
                                         Version: t.instanceVersion,
                                         "Run ID": t.instanceId,
                                         User: t.instanceStartUser,
+                                        "Status": t.instanceStatus,
                                         "Start Date": ow.format.fromWeDoDateToDate(t.instanceStartTime)
                                     });
                                     break;
@@ -124,6 +127,7 @@ nInput_CBPMRunningFlows.prototype.input = function(scope, args) {
                                         Version: t.instanceVersion,
                                         "Run ID": t.instanceId,
                                         User: t.instanceStartUser,
+                                        "Status": t.instanceStatus,
                                         "Start Date": ow.format.fromWeDoDateToDate(t.instanceStartTime),
                                         "End Date": (isUnDef(t.instanceEndTime)) ? "n/a" : ow.format.fromWeDoDateToDate(t.instanceEndTime)
                                     });
