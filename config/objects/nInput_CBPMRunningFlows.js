@@ -83,59 +83,24 @@ nInput_CBPMRunningFlows.prototype.input = function(scope, args) {
                 if (isDef(instances) && isArray(instances)) {
                 	$from(instances).select((t) => {
                         if (ow.format.dateDiff.inHours(ow.format.fromWeDoDateToDate(t.instanceStartTime)) <= this.hoursToCheck) {
-                        	switch (t.instanceStatus) {
-                            	case 'FINISHED':
-                                	oo.push({
-                                    	Category: r.flowCategory,
-                                        Flow: r.flowName,
-                                        Version: t.instanceVersion,
-                                        "Run ID": t.instanceId,
-                                        User: t.instanceStartUser,
-                                        "Status": t.instanceStatus,
-                                        "Start Date": ow.format.fromWeDoDateToDate(t.instanceStartTime),
-                                        "End Date": ow.format.fromWeDoDateToDate(t.instanceEndTime)
-                                    });
-                                    break;
-                                case 'ERROR':
-                                	oo.push({
-                                    	Category: r.flowCategory,
-                                        Flow: r.flowName,
-                                        Version: t.instanceVersion,
-                                        "Run ID": t.instanceId,
-                                        User: t.instanceStartUser,
-                                        "Status": t.instanceStatus,
-                                        "Start Date": ow.format.fromWeDoDateToDate(t.instanceStartTime),
-                                        "End Date": ow.format.fromWeDoDateToDate(t.instanceEndTime),
-                                        Exception: t.instanceErrorMessage
-                                    });
-                                    break;
-                                case 'STARTED':
-                                	oo.push({
-                                    	Category: r.flowCategory,
-                                        Flow: r.flowName,
-                                        Version: t.instanceVersion,
-                                        "Run ID": t.instanceId,
-                                        User: t.instanceStartUser,
-                                        "Status": t.instanceStatus,
-                                        "Start Date": ow.format.fromWeDoDateToDate(t.instanceStartTime)
-                                    });
-                                    break;
-								default:
-                                	oo.push({
-                                    	Category: r.flowCategory,
-                                        Flow: r.flowName,
-                                        Version: t.instanceVersion,
-                                        "Run ID": t.instanceId,
-                                        User: t.instanceStartUser,
-                                        "Status": t.instanceStatus,
-                                        "Start Date": ow.format.fromWeDoDateToDate(t.instanceStartTime),
-                                        "End Date": (isUnDef(t.instanceEndTime)) ? "n/a" : ow.format.fromWeDoDateToDate(t.instanceEndTime)
-                                    });
-                            }
+                                var line = { Category: r.flowCategory, Flow: r.flowName, Version: t.instanceVersion, "Run ID": t.instanceId,
+                                User: t.instanceStartUser, "Status": t.instanceStatus, "Start Date":ow.format.fromWeDoDateToDate(t.instanceStartTime)};
+
+                                switch (t.instanceStatus) {
+                                        case 'ERROR':
+                                                if (isDef(t.instanceErrorMessage) && isDef(t.instanceEndTime)) {
+                                                        line = merge(line, { "End Date": ow.format.fromWeDoDateToDate(t.instanceEndTime), "Exception": t.instanceErrorMessage});
+                                                }
+                                                break;
+                                        default:
+                                                if (isDef((t.instanceEndTime))) {
+                                                        line = merge(line, {"End Date": ow.format.fromWeDoDateToDate(t.instanceEndTime)});
+                                                }
+                                }
+                                 oo.push(line);
                         }
                 	});
-        		}
-
+        	}
                 return oo;
     
             //});
