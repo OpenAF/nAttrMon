@@ -79,23 +79,28 @@ nInput_CBPMRunningFlows.prototype.input = function(scope, args) {
                         if (!String(e).match(/Cannot find the object/)) logErr("Can't retrieve instances, in " + aKey + ", for flow: " + r.flowName + " -- " + String(e));
                     }
                 });
-    
-                if (isDef(instances) && isArray(instances)) {          
-                    $from(instances).select((t) => {
+
+                if (isDef(instances) && isArray(instances)) {
+                	$from(instances).select((t) => {
                         if (ow.format.dateDiff.inHours(ow.format.fromWeDoDateToDate(t.instanceStartTime)) <= this.hoursToCheck) {
-                            oo.push({
-                                Category: r.flowCategory,
-                                Flow: r.flowName,
-                                Version: t.instanceVersion,
-                                "Run ID": t.instanceId,
-                                User: t.instanceStartUser,
-                                "Date": ow.format.fromWeDoDateToDate(t.instanceStartTime),
-                                Exception: t.instanceErrorMessage
-                            });
+                                var line = { Category: r.flowCategory, Flow: r.flowName, Version: t.instanceVersion, "Run ID": t.instanceId,
+                                User: t.instanceStartUser, "Status": t.instanceStatus, "Start Date":ow.format.fromWeDoDateToDate(t.instanceStartTime)};
+
+                                switch (t.instanceStatus) {
+                                        case 'ERROR':
+                                                line = merge(line, { "End Date": (isUnDef(t.instanceEndTime)) ? "n/a" : ow.format.fromWeDoDateToDate(t.instanceEndTime), "Exception": (isUnDef(t.instanceErrorMessage)) ? "n/a" : t.instanceErrorMessage});
+                                                break;
+                                        case 'STARTED':
+                                                break;
+                                        default:
+                                                if (isDef((t.instanceEndTime))) {
+                                                        line = merge(line, {"End Date": ow.format.fromWeDoDateToDate(t.instanceEndTime)});
+                                                }
+                                }
+                                oo.push(line);
                         }
-                    });
-                }
-    
+                	});
+        	}
                 return oo;
     
             //});
