@@ -954,7 +954,7 @@ nAttrMon.prototype.loadPlugDir = function(aPlugDir, aPlugDesc, ignoreList) {
     for (let i in dirs) {
 		var inc = true;
 		for(let ii in ignoreList) { 
-			if (ignoreList[ii].indexOf(dirs[i]) >= 0 || 
+			if (dirs[i].indexOf(ignoreList[ii]) == 0 || 
 			    dirs[i].match(new RegExp("^" + ignoreList[ii] + "$"))) inc = false; }
         if (inc) { this.loadPlugDir(dirs[i], aPlugDesc, ignoreList); } else { logWarn("ignoring " + dirs[i]); }
     }
@@ -962,7 +962,7 @@ nAttrMon.prototype.loadPlugDir = function(aPlugDir, aPlugDesc, ignoreList) {
     for (let i in plugsjs) {
 		var inc = true;
 		for(let ii in ignoreList) { 
-			if (ignoreList[ii].indexOf(plugsjs[i]) >= 0 || 
+			if (plugsjs[i].indexOf(ignoreList[ii]) == 0 || 
 			    plugsjs[i].match(new RegExp("^" + ignoreList[ii] + "$"))) inc = false; }		
 		if (inc) { this.loadPlug(plugsjs[i], aPlugDesc, ignoreList); } else { logWarn("ignoring " + plugsjs[i]); }
     }
