@@ -11,6 +11,8 @@ The following is a list of the current objects base for Inputs, Outputs and Vali
 | Input | nInput_FMSRuleStatus | RAID | Gets each RAID FMS engine rule status (active, inactive, inactive by anti-flooding) |
 | Input | nInput_Filesystem | OS | Per unix mount point gets the total, used, free and % used space and inode totals (locally or remotely). |
 | Input | nInput_FilesystemCount | OS | Per filepath and filename regular expression filter, returns the total count and size, the min, max and avg size of existing files, the date of the newest file and oldest file (locally or remotely). |
+| Input | nInput_IMAbnormalLoadings | RAID | Checks for IM loadings that didn't process the expected number of records. | 
+| Input | nInput_IMLoadingsProgress | RAID | Monitor the specified IM block types loading progress by number of runs, min, max, avg records processed, etc. |
 | Input | nInput_IMMemory | RAID | Returns the current RAID instance reported IM memory. |
 | Input | nInput_LogErrorAgg | OS | Given a regular expression pattern returns the number of occurrences of that pattern in specific files (useful to aggregate the count of Java exceptions on a log file, for example).  |
 | Input | nInput_OSInfo | OS | Returns the operating system load, load average, free, swap and commit memory. |
@@ -21,6 +23,10 @@ The following is a list of the current objects base for Inputs, Outputs and Vali
 | Input | [nInput_Shell](nAttrMon-nInput-Shell) | OS | Executes (locally or remotely) and returns the output of a shell command (parsing or not the output as JSON). |
 | Input | [nInput_Channel](nAttrMon-nInput-Channel) | Input Channel | Receives attributes from another nAttrMon or OpenAF script. |
 | Input | [nInput_RemoteChannel](nAttrMon-nInput-RemoteChannel) | Input Channel | Retrieves attributes from another nAttrMon or OpenAF script through an OpenAF channel. | 
+| Input | nInput_Schedulers | RAID | Checks when each scheduler entry executed and when the next is scheduled to execute. | 
+| Input | nInput_CompareTimes | OS | Compares the time difference between a RAID application server and corresponding connected databases. |
+| Input | nInput_DMPerformance | RAID | Measure performance of Data Model queries vs direct database SQL queries. |
+| Input | nInput_EndPoints | OS | Check if a port or http endpoint si reachable within certain criteria (e.g. timeout, response, ...) |
 | Output | [nOutput_DSV](nAttrMon-nOutput-DSV) | Output DSV | Outputs a specific set of attributes or warnings to DSV/CSV files per date with automatic housekeeping. | 
 | Output | [nOutput_EmailWarnings](nAttrMon-nOutput-EmailWarnings) | Output Warning | If there is any new level HIGH warning (or any other combination) it will send an email with it. |
 | Output | nOutput_H2 | Output History | Records the attribute values and warnings on a H2 database. |
@@ -32,6 +38,8 @@ The following is a list of the current objects base for Inputs, Outputs and Vali
 | Output | [nOutput_Channels](nAttrMon-nOutput-Channels) | Output Channels | Exposes several OpenAF channels with attributes, values, warnings and plugs plus access to operational functionality. |
 | Output | [nOutput_RemoteChannel](nAttrMon-nOutput-Channel) | Output Channel | Pushes attribute values to a remote nAttrMon or OpenAF script through an OpenAF channel. |
 | Output | [nOutput_Notifications](nAttrMon-nOutput-Notifications) | Output Warnings | Sends push notifications triggered by warnings. |
+| Output | nOutput_ES | Output ES | Outputs attribute values and warnings to an ElasticSearch cluster. |
+| Output | nOutput_Slack | Output Slack | Outputs warnings to Slack. |
 | Validation | [nValidation_Generic](nAttrMon-nValidation-Generic) | Validation Generic | Simple generic validation for an attribute or any set of attribute patterns. |
 
 ## Object templates
