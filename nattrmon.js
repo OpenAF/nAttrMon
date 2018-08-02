@@ -762,9 +762,19 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 						return function(aCh, aOp, aK, aV) {					
 							try {
 								var etry = parent.threadsSessions[aUUID].entry;
-								var cont = true;
+								var cont = false;
 								if (isDef(etry.getAttrPattern())) {
-									cont = (new RegExp(etry.getAttrPattern())).test(aK.name);
+									var gap = etry.getAttrPattern();
+									if (isString(gap)) {
+										gap = [ gap ];
+									}
+									var api = 0;
+									while(api < gap.length && !cont) {
+										cont = (new RegExp(gap[api])).test(aK.name);
+										api++;
+									}
+								} else {
+									cont = true;
 								}
 								if (cont) {
 									parent.debug("Subscriber " + aCh + " on '" + etry.getName() + "' (uuid " + aUUID + ") ");
