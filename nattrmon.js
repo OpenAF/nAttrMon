@@ -602,7 +602,34 @@ nAttrMon.prototype.getHistoryValuesByEvents = function(anAttributeName, howManyE
 			return {};
 		}
  	}
-}
+};
+
+nAttrMon.prototype.posAttrProcessing = function (et, values) {
+	var toArray = _$(et.toArray).isMap("toArray needs to be a map. " + stringify(et,void 0,"")).default(void 0);
+	var stamp = _$(et.aStamp).isMap("stamp needs to be a map. " + stringify(et,void 0,"")).default(void 0);
+	// Stamp
+	if (isDef(stamp)) {
+		for(var key in values) {
+			values[key] = merge(values[key], stamp);
+		}
+	}
+
+	// Handle to array
+	if (isDef(toArray) &&
+		isDef(toArray.attrName)) {
+		var aFutureValues = {};
+		toArray.key = _$(toArray.key)
+					.isString("toArray key needs to be a string. " + stringify(toArray,void 0,""))
+					.default("key");
+		toArray.attrName = _$(toArray.attrName)
+						.isString("toArray attrName needs to be a string. " + stringify(toArray,void 0,""))
+						.$_("to Array attrName needs to be provided. " + stringify(toArray,void 0,""));
+		aFutureValues[toArray.attrName] = ow.obj.fromObj2Array(values, toArray.key);
+		values = aFutureValues;
+	}
+
+	return values;
+};
 
 nAttrMon.prototype.addValues = function(onlyOnEvent, aOrigValues, aOptionals) {
 	var count;
@@ -616,6 +643,7 @@ nAttrMon.prototype.addValues = function(onlyOnEvent, aOrigValues, aOptionals) {
 	aMergeKeys = _$(aMergeKeys).isMap().default(void 0);
 
 	var aValues = aOrigValues.attributes;
+	aValues = this.posAttrProcessing(aOptionals, aValues);
 
 	for(var key in aValues) {
 		if (key.length > 0) {
@@ -718,7 +746,7 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 						}
 						parent.debug("Executing '" + etry.getName() + "' (" + uuid + ")");
 						var res = etry.exec(parent);
-						parent.addValues(etry.onlyOnEvent, res, { mergeKeys: etry.getMerge(), sortKeys: etry.getSort() });
+						parent.addValues(etry.onlyOnEvent, res, { aStamp: etry.getStamp(), toArray: etry.getToArray(), mergeKeys: etry.getMerge(), sortKeys: etry.getSort() });
 						parent.threadsSessions[uuid].count = now();
 						etry.touch();
 					} catch(e) {
@@ -779,7 +807,7 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 								if (cont) {
 									parent.debug("Subscriber " + aCh + " on '" + etry.getName() + "' (uuid " + aUUID + ") ");
 									var res = etry.exec(parent, { ch: aCh, op: aOp, k: aK, v: aV });
-									parent.addValues(etry.onlyOnEvent, res, { mergeKeys: etry.getMerge(), sortKeys: etry.getSort() });
+									parent.addValues(etry.onlyOnEvent, res, { aStamp: etry.getStamp(), toArray: etry.getToArray(), mergeKeys: etry.getMerge(), sortKeys: etry.getSort() });
 									parent.threadsSessions[aUUID].count = now();
 									etry.touch();
 								}
@@ -808,7 +836,7 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 								}
 								parent.debug("Executing '" + etry.getName() + "' (" + uuid + ")");
 								var res = etry.exec(parent);
-								parent.addValues(etry.onlyOnEvent, res, { mergeKeys: etry.getMerge(), sortKeys: etry.getSort() });
+								parent.addValues(etry.onlyOnEvent, res, { aStamp: etry.getStamp(), toArray: etry.getToArray(), mergeKeys: etry.getMerge(), sortKeys: etry.getSort() });
 								parent.threadsSessions[uuid].count = now();
 								etry.touch();
 							} catch(e) {

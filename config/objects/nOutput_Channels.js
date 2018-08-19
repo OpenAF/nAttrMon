@@ -246,10 +246,11 @@ var nOutput_Channels = function(aMap) {
         logWarn("OPS | " + value.type + "::" + value.name + " | START | Test execution, ignoring result");
         try {
           var plug = $from(nattrmon.plugs[value.type]).equals("aName", value.name).at(0);
+          res = plug.exec(nattrmon, merge({
+            __dontCommit: true
+          }, value.args));
           resOp = {
-            testResult: plug.exec(nattrmon, merge({
-              __dontCommit: true
-            }, value.args))
+            testResult: nattrmon.posAttrProcessing(plug, res.attributes)
           };
           logWarn("OPS | " + value.type + "::" + value.name + " | END | Test execution, ignoring result");
         } catch (e) {
@@ -281,11 +282,12 @@ var nOutput_Channels = function(aMap) {
         logWarn("OPS | " + value.type + "::" + value.name + " | START | Test execution, ignoring result");
         try {
           var plug = $from(nattrmon.plugs[value.type]).equals("aName", value.name).at(0);
+          var res = plug.exec(nattrmon, value.args);
           resOp = {
-            runResult: plug.exec(nattrmon, value.args)
+            runResult: nattrmon.posAttrProcessing(plug, res.attributes)
           };
           logWarn("OPS | " + value.type + "::" + value.name + " | END | Test execution, ignoring result");
-          nattrmon.addValues(plug.onlyOnEvent, resOp.runResult);
+          nattrmon.addValues(plug.onlyOnEvent, res);
           logWarn("OPS | " + value.type + "::" + value.name + " | RESULT CONSIDERED | Executing and considering values");
         } catch (e) {
           logErr("OPS | " + value.type + "::" + value.name + " | Error executing plug: " + stringify(resOp));
