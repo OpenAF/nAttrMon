@@ -13,7 +13,7 @@ bugs:
   url: 'https://github.com/OpenAF/nAttrMon/issues'
 repository:
   type: http
-  url: 'https://raw.githubusercontent.com/OpenAF/nAttrMon/master'
+  url: 'https://openaf.io/opacks/nAttrMon.opack'
 description: Tool for RAID and solution functional monitoring.
 name: nAttrMon
 main: nattrmon.js
