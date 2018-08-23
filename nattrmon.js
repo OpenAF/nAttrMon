@@ -602,7 +602,54 @@ nAttrMon.prototype.getHistoryValuesByEvents = function(anAttributeName, howManyE
 			return {};
 		}
  	}
-}
+};
+
+nAttrMon.prototype.posAttrProcessing = function (et, values) {
+	var sortKeys;
+	var toArray = _$(et.toArray).isMap("toArray needs to be a map. " + stringify(et,void 0,"")).default(void 0);
+	var stamp = _$(et.aStamp).isMap("stamp needs to be a map. " + stringify(et,void 0,"")).default(void 0);
+	sortKeys = _$(et.sortKeys).isMap("sort needs to be a map. " + stringify(et,void 0,"")).default(void 0);
+	if (isDef(et.aSort) && isMap(et.aSort)) sortKeys = et.aSort;
+
+	// Utilitary functions
+	var sorting = (v) => {
+		if (isDef(sortKeys)) {
+			for(var key in v) {
+				if (isDef(sortKeys[key]) && isArray(sortKeys[key]) && isArray(v[key])) {
+					var temp = $from(v[key]);
+					for(var iii in sortKeys[key]) {
+						temp = temp.sort(sortKeys[key][iii]);
+					}
+					v[key].val = temp.select();
+				}
+			}
+		} 
+		return v;
+	};
+
+	// Stamp
+	if (isDef(stamp)) {
+		for(var key in values) {
+			values[key] = merge(values[key], stamp);
+		}
+	}
+
+	// Handle to array
+	if (isDef(toArray) &&
+		isDef(toArray.attrName)) {
+		var aFutureValues = {};
+		toArray.key = _$(toArray.key)
+					.isString("toArray key needs to be a string. " + stringify(toArray,void 0,""))
+					.default("key");
+		toArray.attrName = _$(toArray.attrName)
+						.isString("toArray attrName needs to be a string. " + stringify(toArray,void 0,""))
+						.$_("to Array attrName needs to be provided. " + stringify(toArray,void 0,""));
+		aFutureValues[toArray.attrName] = ow.obj.fromObj2Array(values, toArray.key);
+		values = aFutureValues;
+	}
+
+	return sorting(values);
+};
 
 nAttrMon.prototype.addValues = function(onlyOnEvent, aOrigValues, aOptionals) {
 	var count;
@@ -611,11 +658,11 @@ nAttrMon.prototype.addValues = function(onlyOnEvent, aOrigValues, aOptionals) {
 	
 	if (isUnDef(aOrigValues) || isUnDef(aOrigValues.attributes)) return;
 	var aMergeKeys = _$(aOptionals.mergeKeys).default(void 0);
-	var sortKeys = _$(aOptionals.sortKeys).default(void 0);
 
 	aMergeKeys = _$(aMergeKeys).isMap().default(void 0);
 
 	var aValues = aOrigValues.attributes;
+	aValues = this.posAttrProcessing(aOptionals, aValues);
 
 	for(var key in aValues) {
 		if (key.length > 0) {
@@ -624,17 +671,6 @@ nAttrMon.prototype.addValues = function(onlyOnEvent, aOrigValues, aOptionals) {
 			if (!this.listOfAttributes.exists(key)) {
 				this.setAttribute(key, key + " description");
 			}
-
-			var sorting = (v) => {
-				if (isDef(sortKeys) && isDef(sortKeys[key]) && isArray(sortKeys[key]) && isArray(v.val)) {
-					var temp = $from(v.val);
-					for(var iii in sortKeys[key]) {
-						temp = temp.sort(sortKeys[key][iii]);
-					}
-					v.val = temp.select();
-				};
-				return v;
-			};
 
 			this.listOfAttributes.touchAttribute(key);
 
@@ -650,9 +686,9 @@ nAttrMon.prototype.addValues = function(onlyOnEvent, aOrigValues, aOptionals) {
 						if (isArray(t.val) && isDef(av)) {
 							t.val = _.concat(_.reject(av.val, aMergeKeys[key]), t.val);
 						}
-						if (isUnDef(this.currentValues.getSet({"name": key}, {"name": key}, sorting(t)))) this.currentValues.set({"name": key}, sorting(t));
+						if (isUnDef(this.currentValues.getSet({"name": key}, {"name": key}, t))) this.currentValues.set({"name": key}, t);
 					} else {
-						this.currentValues.set({"name": key}, sorting(newAttr.getData()));
+						this.currentValues.set({"name": key}, newAttr.getData());
 					}
 				}
 			} else {
@@ -665,9 +701,9 @@ nAttrMon.prototype.addValues = function(onlyOnEvent, aOrigValues, aOptionals) {
 					if (isArray(t.val) && isDef(av)) {
 						t.val = _.concat(_.reject(av.val, aMergeKeys[key]), t.val);
 					}
-					if (isUnDef(this.currentValues.getSet({"name": key}, {"name": key}, sorting(t)))) this.currentValues.set({"name": key}, sorting(t));
+					if (isUnDef(this.currentValues.getSet({"name": key}, {"name": key}, t))) this.currentValues.set({"name": key}, t);
 				} else {
-					this.currentValues.set({"name": key}, sorting(newAttr.getData()));
+					this.currentValues.set({"name": key}, newAttr.getData());
 				}
 			}
 		}
@@ -718,7 +754,7 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 						}
 						parent.debug("Executing '" + etry.getName() + "' (" + uuid + ")");
 						var res = etry.exec(parent);
-						parent.addValues(etry.onlyOnEvent, res, { mergeKeys: etry.getMerge(), sortKeys: etry.getSort() });
+						parent.addValues(etry.onlyOnEvent, res, { aStamp: etry.getStamp(), toArray: etry.getToArray(), mergeKeys: etry.getMerge(), sortKeys: etry.getSort() });
 						parent.threadsSessions[uuid].count = now();
 						etry.touch();
 					} catch(e) {
@@ -779,7 +815,7 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 								if (cont) {
 									parent.debug("Subscriber " + aCh + " on '" + etry.getName() + "' (uuid " + aUUID + ") ");
 									var res = etry.exec(parent, { ch: aCh, op: aOp, k: aK, v: aV });
-									parent.addValues(etry.onlyOnEvent, res, { mergeKeys: etry.getMerge(), sortKeys: etry.getSort() });
+									parent.addValues(etry.onlyOnEvent, res, { aStamp: etry.getStamp(), toArray: etry.getToArray(), mergeKeys: etry.getMerge(), sortKeys: etry.getSort() });
 									parent.threadsSessions[aUUID].count = now();
 									etry.touch();
 								}
@@ -808,7 +844,7 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 								}
 								parent.debug("Executing '" + etry.getName() + "' (" + uuid + ")");
 								var res = etry.exec(parent);
-								parent.addValues(etry.onlyOnEvent, res, { mergeKeys: etry.getMerge(), sortKeys: etry.getSort() });
+								parent.addValues(etry.onlyOnEvent, res, { aStamp: etry.getStamp(), toArray: etry.getToArray(), mergeKeys: etry.getMerge(), sortKeys: etry.getSort() });
 								parent.threadsSessions[uuid].count = now();
 								etry.touch();
 							} catch(e) {

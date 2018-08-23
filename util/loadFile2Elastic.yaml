@@ -1,0 +1,126 @@
+jobs:
+  - name: Init
+    exec: |
+      global.numRecs = 0;
+      global.ELASTICSEARCH_URL  = _$(args.url).$_("Please provide an elastic search url=...");
+      global.ELASTICSEARCH_USER = _$(args.user).default(void 0);
+      global.ELASTICSEARCH_PASS = _$(args.pass).default(void 0);
+      global.ELASTICSEARCH_IDX  = _$(args.index).$_("Please provide an elastic search index=...");
+      //global.NUMTHREADS         = _$(args.threads).isNumber("Number of threads needs to be a number").default(getNumberOfCores());
+      global.BUFFER             = _$(args.bs).isNumber("Buffer size needs to be a number").default(100);
+      global.FILE               = _$(args.file).check(io.fileExists, "The provided file doesn't exist.").$_("You need to provide a file=...");
+      
+  - name: Read file
+    deps:
+      - name  : Init
+        onFail: exit(-1);
+    exec: |
+      $ch("elastic").create(1, "elasticsearch", {
+        index: global.ELASTICSEARCH_IDX,
+        idKey: "id",
+        url  : global.ELASTICSEARCH_URL,
+        user : global.ELASTICSEARCH_USER,
+        pass : global.ELASTICSEARCH_PASS
+      });
+      $ch("buffer").create(1, "buffer", {
+        bufferCh      : "elastic",
+        bufferIdxs    : [ "id" ],
+        bufferByNumber: global.BUFFER
+      });
+
+      var initTime = now();
+
+      var rstream = io.readFileStream(global.FILE);
+      var ops = []; var gdata = [];
+      ioStreamReadLines(rstream, (line) => {
+          var aVal = jsonParse(line);
+          var obj = {}; data = [];
+
+          var useTitle = isDef(aVal.title);
+          if (useTitle) {
+            obj = {
+              title: String(aVal.title.replace(/[\/ ]/g, "_")),
+              date : aVal.createdate
+            };
+          } else {
+            obj = {
+              name: String(aVal.name.replace(/[\/ ]/g, "_")),
+              date: aVal.date
+            };
+          }
+
+          try {
+            if (isArray(aVal.val)) {
+              for (var i in aVal.val) {
+                if (useTitle) {
+                  obj.id = sha1(obj.title + obj.date + i);
+                  obj[obj.title] = aVal.val[i];
+                } else {
+                  obj.id = sha1(obj.name + obj.date + i);
+                  obj[obj.name] = aVal.val[i];
+                }
+                traverse(obj, function (k, v, p, o) {
+                  if (v == null || v == "n/a") {
+                    delete o[k];
+                  } else {
+                    if (k.match(/[\/ ]/)) {
+                      o[k.replace(/[\/ ]/g, "_")] = o[k];
+                      delete o[k];
+                    }
+                  }
+                });
+                data.push(clone(obj));
+              }
+            } else {
+              if (useTitle) {
+                obj.id = sha1(obj.title + obj.date + i);
+                obj[obj.title] = aVal.val;
+              } else {
+                obj.id = sha1(obj.name + obj.date);
+                obj[obj.name] = aVal.val;
+              }
+              traverse(obj, function (k, v, p, o) {
+                if (v == null) {
+                  delete o[k];
+                } else {
+                  if (k.match(/[\/ ]/)) {
+                    o[k.replace(/[\/ ]/g, "_")] = o[k];
+                    delete o[k];
+                  }
+                }
+              });
+              data.push(clone(obj));
+            }
+          } catch (e) {
+            logErr(e + " - " + stringify(obj) + " - (" + stringify(aVal) + ")");
+          }
+
+          var res;
+          if (isArray(data) && data.length > 0) {
+            global.numRecs += data.length;
+            gdata = gdata.concat(data);
+            if (gdata.length >= global.BUFFER) {
+              lognl("#" + global.numRecs + " records...");
+              res = $ch("buffer").setAll(["id"] , gdata);
+              if (isDef(res) && isDef(res.errors) && res.errors) {
+                logErr("Error on sending '" + $from(gdata).select((r)=>{return r.name}).join(", ") + "': " + stringify(res));
+              }              
+              gdata = [];
+            }
+          }
+      });
+      if (isArray(gdata) && gdata.length > 0) {
+        res = $ch("buffer").setAll(["id"] , gdata);
+        if (isDef(res) && isDef(res.errors) && res.errors) {
+          logErr("Error on sending '" + $from(data).select((r)=>{return r.name}).join(", ") + "': " + stringify(res));
+        }      
+      }
+      var doneTime = now();
+
+      log("Number of records loaded #" + global.numRecs + " records (" + ow.format.elapsedTime(initTime, doneTime) + ").")
+
+      $ch("buffer").destroy();
+
+todo: 
+  - Init
+  - Read file
