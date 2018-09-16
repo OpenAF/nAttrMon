@@ -162,7 +162,7 @@ nOutput_EmailWarnings.prototype.output = function (scope, args, meta) {
 						        isDef(owarns[i][j].description) && owarns[i][j].description.length > 0) {
 								var parent = this;
 								var resDupls = $from($from(owarns[i]).notEquals("description", void 0).select((r) => {
-									if (owarns[i][j].description != "" && r.description != "")
+									if (owarns[i][j].description != "" && r.description != void 0 && r.description != "")
 										return { 
 											t: r.title, 
 											d: ow.format.string.distance(owarns[i][j].description, r.description),
