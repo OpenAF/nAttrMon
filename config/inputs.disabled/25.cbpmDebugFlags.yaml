@@ -1,0 +1,14 @@
+input: 	
+  name         : Flow debug 
+  cron         : "*/12 * * * *"
+  waitForFinish: true
+  onlyOnEvent  : true
+  execFrom     : nInput_CBPMDebugChecks
+  execArgs     : 
+    chKeys      : raidServers
+    attrTemplate: "Server/{{key}} CBPM debug flags"
+    #includes    :
+    #   - Flow A
+    #   - 18e81e5c-5519-8b95-31a6-e2271b2339b4
+    #excludes    :
+    #   - Flow B

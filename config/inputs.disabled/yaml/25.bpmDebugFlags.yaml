@@ -1,0 +1,14 @@
+input: 	
+  name         : Flow debug flags BPM
+  cron         : "*/12 * * * *"
+  waitForFinish: true
+  onlyOnEvent  : true
+  execFrom     : nInput_BPMDebugChecks
+  execArgs     : 
+    chKeys      : raidServers
+    attrTemplate: "Server/{{key}} BPM debug flags"
+    #includes    :
+    #   - Flow A
+    #   - 123
+    #excludes    :
+    #   - Flow B      
