@@ -26,7 +26,6 @@ files:
   - .gitignore
   - .package.yaml
   - config/inputs/move_files_from_inputs_disabled.dummy
-  - config/inputs.disabled/25.cbpmDebugFlags.yaml
   - config/inputs.disabled/js/00.raid.init.js
   - config/inputs.disabled/js/05.filesystemCount.js
   - config/inputs.disabled/js/07.logErrorAgg.js
@@ -60,6 +59,7 @@ files:
   - config/inputs.disabled/yaml/15.remote_nAttrMon.yaml
   - config/inputs.disabled/yaml/20.dmPerformance.yaml
   - config/inputs.disabled/yaml/25.bpmDebugFlags.yaml
+  - config/inputs.disabled/yaml/25.cbpmDebugFlags.yaml
   - config/move_files_from_the_disabled_folders.dummy
   - config/objects/nInput_AFPing.js
   - config/objects/nInput_BPMDebugChecks.js
@@ -176,7 +176,6 @@ files:
   - lib/nwarnings.js
   - LICENSE
   - nattrmon.js
-  - nattrmon.yaml
   - nattrmon.yaml.sample
   - README.md
   - tests/inputDBTest.yml
@@ -192,7 +191,6 @@ files:
 filesHash:
   .gitignore: 39785e9c0e444387c904a807d9e506a0215ca099
   config/inputs/move_files_from_inputs_disabled.dummy: b858cb282617fb0956d960215c8e84d1ccf909c6
-  config/inputs.disabled/25.cbpmDebugFlags.yaml: 41f75269252f5ec6900203472223099bd7512667
   config/inputs.disabled/js/00.raid.init.js: d6c7847577ab7a88cf84e2d6ce24b2d0258213ef
   config/inputs.disabled/js/05.filesystemCount.js: e8d4d119ec2d022033309bc18de8a2dc3a9d66aa
   config/inputs.disabled/js/07.logErrorAgg.js: 5d3c5c139c8aa224b8a6175d53c5d33113037588
@@ -226,6 +224,7 @@ filesHash:
   config/inputs.disabled/yaml/15.remote_nAttrMon.yaml: f042f233fac37d349890943ee6a3c3a0344015de
   config/inputs.disabled/yaml/20.dmPerformance.yaml: f84cf5ca17549658e0801b36202b1fa95e50a546
   config/inputs.disabled/yaml/25.bpmDebugFlags.yaml: 1b98caed366844383947a0caf05161f6b010ac7f
+  config/inputs.disabled/yaml/25.cbpmDebugFlags.yaml: 41f75269252f5ec6900203472223099bd7512667
   config/move_files_from_the_disabled_folders.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
   config/objects/nInput_AFPing.js: 97deedd158501c759d08a3e400ba4ae2c2f1461b
   config/objects/nInput_BPMDebugChecks.js: c08c14f2ababbda0da457126c34d909eb45855c1
@@ -325,7 +324,7 @@ filesHash:
   config/validations.disabled/js/04.validateErrorFlows.js: 9b7ff4c1cd03fe47082107d2c22250be1d45a2b4
   config/validations.disabled/js/30.validateYellows.js: 5d48afe1debcde73b91ca41fc74c99b51a8ce997
   config/validations.disabled/yaml/01.somebodyTouched.yaml: 9e8bef8264e42fc5dd6f5d3356d292c762638f1a
-  config/validations.disabled/yaml/01.validatePing.yaml: 0b19c480931ce1a5b154ebfb3f7820069f9fd654
+  config/validations.disabled/yaml/01.validatePing.yaml: bebb064516de2e4d5c6c38a098bcd85584bbc0fc
   config/validations.disabled/yaml/01.validatePingPorts.yaml: 0212369d4ad2fc9f2126efa029cba4173cbec17a
   config/validations.disabled/yaml/03.validateSemaphores.yaml: 22be51b8d900789f26c862a63e5a11bb004d04f0
   config/validations.disabled/yaml/05.validateErrorFlows.yaml: 57371fd7ae82b327f3b6e59ac51303c526f3a4c9
@@ -342,7 +341,6 @@ filesHash:
   lib/nwarnings.js: e4991843cdaa0dd8a1a370a97cd450b2647c7ee6
   LICENSE: 7df059597099bb7dcf25d2a9aedfaf4465f72d8d
   nattrmon.js: 632ce8555a1bffb65fba736da6ca328bb1e2096c
-  nattrmon.yaml: 86341e41a5aaed83b98fb64def9d0a4bbfbbb8bf
   nattrmon.yaml.sample: ac723b6985924d48eb14838c2b4f746966bc0d93
   README.md: 648ce4e29bbdc7b99f5cf8734cb1a7f0657789c7
   tests/inputDBTest.yml: c38616606dc5956e449189d11f8e661170f94dfb
