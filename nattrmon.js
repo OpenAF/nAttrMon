@@ -724,6 +724,13 @@ nAttrMon.prototype.getPlugs = function() {
 	return this.plugs;
 };
 
+nAttrMon.prototype.addAdHocExecution = function(aFunction, aDelay) {
+	var uuid = this.thread.addScheduleThread(aFunction, aDelay);
+	this.debug("Adding ad-hoc execution in " + aDelay + "ms for " + uuid);
+	log("DDD: Adding ad-hoc execution in " + aDelay + "ms for " + uuid);
+	return uuid;
+};
+
 nAttrMon.prototype.addSch = function(aName, aCronExpr, aFunc, waitForFinish) {
 	if (isDef(this.schList[aName])) {
 		this.sch.modifyEntry(this.schList[aName], aCronExpr, aFunc, waitForFinish);

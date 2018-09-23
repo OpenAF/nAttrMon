@@ -52,7 +52,7 @@ nValidation_Generic.prototype.pathMapper = function (path) {
         return current;
     };
 };
-
+ 
 nValidation_Generic.prototype.checkEntry = function(ret, k, v, args) {
     for (var i in this.params.checks) {
         var check = this.params.checks[i]; 
@@ -170,7 +170,26 @@ nValidation_Generic.prototype.checkEntry = function(ret, k, v, args) {
                                 }
                             });
                         }
-                        ret.push(new nWarning(warnLevel, warnTitle, warnDesc));
+                        if (isDef(check.healingArgs) && isObject(check.healingArgs)) {
+                            traverse(check.healingArgs, (aK, aV, aP, aO) => {
+                                if (isString(aO[aK]) && aK != "exec") {
+                                    aO[aK] = templify(aO[aK], data).replace(/\n/g, "");
+                                    try { 
+                                        aO[aK] = af.eval(aO[aK]);
+                                    } catch(e) {
+                                        if (check.debug) 
+                                            sprint({
+                                                execId: uuid,
+                                                healingArgs: {
+                                                    line: aO[aK],
+                                                    exception: e
+                                                }
+                                            });
+                                    }
+                                }
+                            });
+                        }
+                        ret.push(new nWarning(warnLevel, warnTitle, warnDesc, check.healingArgs));
                     }
                 }
             }
