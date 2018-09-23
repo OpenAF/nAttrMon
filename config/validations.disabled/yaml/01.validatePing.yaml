@@ -11,6 +11,14 @@ validation:
            warnLevel        : HIGH
            warnTitleTemplate: "RAID {{value.Name}} down"
            warnDescTemplate : "An AF ping to the {{value.Name}} RAID server failed. The server could be down or not responsive. Check the server status and restart if needed."
+           healingArgs      :
+              execArgs  :
+                key: "{{value.Name}}"
+              execAt    : "now() + (60000 * 5)"
+              execOJob  : ojobs/restartRAS.yaml
+              execExpire: "(10000 * 5)"
+              #execSH  : sh/restartRAS.sh
+              # ops channel can delete healingArgs
    
          - attribute        : "Server status/Ping"
            expr             : "{{value.Alive}} == true"
