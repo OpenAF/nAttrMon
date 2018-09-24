@@ -17,7 +17,7 @@ var nOutput_Channels = function(aMap) {
 
   if (isDef(aMap.httpSession)) hS = aMap.httpSession;
 
-  if (isDef(aMap.port) || !nattrmon.hasSessionData(hS)) {
+  if (!nattrmon.hasSessionData(hS)) {
     ow.loadServer();
     nattrmon.setSessionData(hS, ow.server.httpd.start(isUnDef(aMap.port) ? 8090 : aMap.port, aMap.host, aMap.keyStore, aMap.keyPassword));
   }
