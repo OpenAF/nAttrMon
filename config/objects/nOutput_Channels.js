@@ -321,11 +321,35 @@ var nOutput_Channels = function(aMap) {
       }
     });
 
-    nattrmon.currentValues.expose(httpd, "/chs/cvals", chAuth);
-    nattrmon.lastValues.expose(httpd, "/chs/lvals", chAuth);
-    $ch("nattrmon::attributes").expose(httpd, "/chs/attrs", chAuth);
-    $ch("nattrmon::warnings").expose(httpd, "/chs/warns", chAuth);
-    $ch("nattrmon::plugs").expose(httpd, "/chs/plugs", chAuth);
+    var addSuffix = (anArray, suffix) => {
+      return $from(anArray).select((r) => { return r + suffix; });
+    };
+
+    if (isDef(aMap.peers) && isArray(aMap.peers)) {
+      nattrmon.currentValues.peer(httpd, "/chs/cvals", addSuffix(aMap.peers, "/chs/cvals"), chAuth);
+    } else {
+      nattrmon.currentValues.expose(httpd, "/chs/cvals", chAuth);
+    }
+    if (isDef(aMap.peers) && isArray(aMap.peers)) {
+      nattrmon.lastValues.peer(httpd, "/chs/lvals", addSuffix(aMap.peers, "/chs/lvals"), chAuth);
+    } else {
+      nattrmon.lastValues.expose(httpd, "/chs/lvals", chAuth);
+    }
+    if (isDef(aMap.peers) && isArray(aMap.peers)) {
+      $ch("nattrmon::attributes").peer(httpd, "/chs/attrs", addSuffix(aMap.peers, "/chs/attrs"), chAuth);
+    } else {
+      $ch("nattrmon::attributes").expose(httpd, "/chs/attrs", chAuth);
+    }
+    if (isDef(aMap.peers) && isArray(aMap.peers)) {
+      $ch("nattrmon::warnings").peer(httpd, "/chs/warns", addSuffix(aMap.peers, "/chs/warns"), chAuth);
+    } else {
+      $ch("nattrmon::warnings").expose(httpd, "/chs/warns", chAuth);
+    }
+    if (isDef(aMap.peers) && isArray(aMap.peers)) {
+      $ch("nattrmon::plugs").peer(httpd, "/chs/plugs", addSuffix(aMap.peers, "/chs/plugs"), chAuth);
+    } else {
+      $ch("nattrmon::plugs").expose(httpd, "/chs/plugs", chAuth);
+    }
     $ch("nattrmon::ops").expose(httpd, "/chs/ops", chAuth);
 
   } else {

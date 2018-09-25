@@ -10,6 +10,7 @@ This output exposes nAttrMon internal channels and data externally (configurable
 | local | Map | No | Provides a list of login, password and corresponding permissions to access the channels | 
 | cAuth | Map | No | Equal no local (to be deprecated in the future) |
 | custom | String | No | Function that receives 4 arguments: u (user), p (password), s (HTTPd server object) and r (request map). If it returns true the user is authenticated, if returns false or fails the user is not authenticated. |
+| peers | Array | No | List of channels HTTP(s) URL prefixes to peer with other nAttrMons. |
 
 Example of use of the execArgs:
 
@@ -28,6 +29,9 @@ output:
         change:
           p: me 
           m: rw
+#      peers:
+#        - http://user:pass@nattrmon1:1234
+#        - http://user:pass@nattrmon2:1234
 #      custom: |
 #        // Custom has priority over local. Comment the entry you won't use.
 #        //
