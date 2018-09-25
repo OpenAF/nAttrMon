@@ -17,6 +17,14 @@ validation:
            warnLevel        : HIGH
            warnTitleTemplate: A test warning
            warnDescTemplate : This is just a test warning. 
+           healing          :
+              execArgs         :
+                 key: "{{value}}"
+              execOJob         : /some/path/config/ojobs/healProblem.yaml
+              #exec             : "sh('/some/path/config/shs/healProblem.sh ' + args.key)"
+              warnLevel        : HIGH
+              warnTitleTemplate: "Heal failed"
+              warnDescTemplate : "Heal for {{value}} failed with exception {{exception}}-"
    
          - attribute        : test3
            expr             : {{value.c}} == 3
@@ -37,6 +45,13 @@ validation:
 | checks.warnTitleTemplate | String | No | Upon warning creation/update the title template (handlebars) to use. See available handlebars entries below that can be used. |
 | checks.warnDescTemplate | String | No | Upon warning creation/update the description template (handlebars) to use. See available handlebars entries below that can be used. | 
 | checks.debug | Boolean | No | Will output, if true, to the stdout the expression evaluation and alarm creation/update or close. | 
+| checks.healing | Map | No | Provides entries for automated healing ojob or code execution. |
+| checks.healing.execArgs | Map | Yes | Provides a map of arguments to be provided to checks.healing.exec or checks.healing.execOJob. It processes handlebars entries described below. |
+| checks.healing.exec | String | No | A function body, that receives args (execArgs) as an argument, that should launch a self-healing process. |
+| checks.healing.execOJob | String | No | A oJob file, receiving execArgs, that should implement a self-healing process. |
+| checks.healing.warnLevel | String | Yes | A warning level template to generate in case exec or execOJob fail. See available handlebars entries below that can be used (including exception). |
+| checks.healing.warnTitleTemplate | String | Yes | A warning title template to generate in case exec or execOJob fail. See available handlebars entries below that can be used (including exception). |
+| checks.healing.warnDescTemplate | String | Yes | A warning description template to generate in case exec or execOJob fail. See available handlebars entries below that can be used (including exception). |
 
 ## Available template entries
 

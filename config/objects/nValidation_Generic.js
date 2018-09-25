@@ -181,7 +181,7 @@ nValidation_Generic.prototype.checkEntry = function(ret, k, v, args) {
 
                             var cHealing = clone(check.healing);
                             traverse(cHealing, (aK, aV, aP, aO) => {
-                                if (isString(aO[aK]) && aK != "exec" && !aK.startsWith("warn")) {
+                                if (isString(aO[aK]) && aK != "exec" && aK != "execOJob" && !aK.startsWith("warn")) {
                                     aO[aK] = templify(aO[aK], data).replace(/\n/g, "");
                                     try { 
                                         aO[aK] = af.eval(aO[aK]);

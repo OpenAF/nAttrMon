@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20180923'
+version: '20180925'
 dependencies:
   openaf: '>=20180823'
 files:
@@ -266,7 +266,7 @@ filesHash:
   config/objects/nOutput_Slack.js: 38d67701dd604cebc6329d46a59a5f6d54b8fd82
   config/objects/nOutput_Stdout.js: 389169e32c1beb2a1f725de1d6cc92c7bce7ed22
   config/objects/nValidation_AFPing.js: f48325d605e693dee3ab2912224cda0fde11e490
-  config/objects/nValidation_Generic.js: 296b74eede4817aadebf9cd36c3c250b7c1eeed9
+  config/objects/nValidation_Generic.js: 804a4026d5bbc84a95068f44495c0e34623ebaeb
   config/objects/nValidation_Semaphores.js: 97b6c1850b80d95cc92c1c50b05fdfa26467fd94
   config/objects/nValidation_Yellows.js: 942478fcd710e392add0b6ef6349ef51a895b764
   config/objects.assets/noutputemailwarnings/logo.png: ee5366a3aa207c69d5139e04e7a4523078b974ba
@@ -324,7 +324,7 @@ filesHash:
   config/validations.disabled/js/04.validateErrorFlows.js: 9b7ff4c1cd03fe47082107d2c22250be1d45a2b4
   config/validations.disabled/js/30.validateYellows.js: 5d48afe1debcde73b91ca41fc74c99b51a8ce997
   config/validations.disabled/yaml/01.somebodyTouched.yaml: 9e8bef8264e42fc5dd6f5d3356d292c762638f1a
-  config/validations.disabled/yaml/01.validatePing.yaml: bebb064516de2e4d5c6c38a098bcd85584bbc0fc
+  config/validations.disabled/yaml/01.validatePing.yaml: d1aff04e7b83d04e923450eba4f6e1704fbc6ea3
   config/validations.disabled/yaml/01.validatePingPorts.yaml: 0212369d4ad2fc9f2126efa029cba4173cbec17a
   config/validations.disabled/yaml/03.validateSemaphores.yaml: 22be51b8d900789f26c862a63e5a11bb004d04f0
   config/validations.disabled/yaml/05.validateErrorFlows.yaml: 57371fd7ae82b327f3b6e59ac51303c526f3a4c9
@@ -337,10 +337,10 @@ filesHash:
   lib/noutput.js: 097a89ae2ab12cb28d88034444a72d368464d14c
   lib/nplug.js: 1d27f2f72cb291e13716ecaa6f303bbfc5a4efea
   lib/nvalidation.js: 252998540faca7913211029f1bdd4397beba3ce9
-  lib/nwarning.js: 0b50703356670d2d9f92e5b466dc0c430b4ee19a
-  lib/nwarnings.js: e4991843cdaa0dd8a1a370a97cd450b2647c7ee6
+  lib/nwarning.js: a8022e42582a148df205f333e1c523a01f48eb06
+  lib/nwarnings.js: 991c435c0bfe48294fc3b53341d4a4703d07ec73
   LICENSE: 7df059597099bb7dcf25d2a9aedfaf4465f72d8d
-  nattrmon.js: 632ce8555a1bffb65fba736da6ca328bb1e2096c
+  nattrmon.js: 13d5093ec631d2b705d9e9d9f0d0cd8b5d74578a
   nattrmon.yaml.sample: ac723b6985924d48eb14838c2b4f746966bc0d93
   README.md: 648ce4e29bbdc7b99f5cf8734cb1a7f0657789c7
   tests/inputDBTest.yml: c38616606dc5956e449189d11f8e661170f94dfb
