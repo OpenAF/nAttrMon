@@ -35,7 +35,7 @@ var nValidation_Generic = function (aMap) {
 };
 inherit(nValidation_Generic, nValidation);
 
-nValidation_Generic.prototype.pathMapper = function (path) {
+nValidation_Generic.prototype.pathMapper = function(path) {
     if (path.indexOf('.') < 0) {
         return (obj) => {
             return obj[path];
@@ -53,6 +53,16 @@ nValidation_Generic.prototype.pathMapper = function (path) {
     };
 };
 
+nValidation_Generic.prototype.levelMapper = function(aLevel) {
+    switch (aLevel) {
+    case "HIGH": return nWarning.LEVEL_HIGH;
+    case "MEDIUM": return nWarning.LEVEL_MEDIUM;
+    case "LOW": return nWarning.LEVEL_LOW;
+    case "INFO": return nWarning.LEVEL_INFO;
+    default: return nWarning.LEVEL_INFO;
+    }
+};
+ 
 nValidation_Generic.prototype.checkEntry = function(ret, k, v, args) {
     for (var i in this.params.checks) {
         var check = this.params.checks[i]; 
@@ -65,14 +75,7 @@ nValidation_Generic.prototype.checkEntry = function(ret, k, v, args) {
             var uuid;
             if (check.debug) uuid = genUUID();
 
-            var warnLevel;
-            switch (check.warnLevel) {
-            case "HIGH": warnLevel = nWarning.LEVEL_HIGH; break;
-            case "MEDIUM": warnLevel = nWarning.LEVEL_MEDIUM; break;
-            case "LOW": warnLevel = nWarning.LEVEL_LOW; break;
-            case "INFO": warnLevel = nWarning.LEVEL_INFO; break;
-            default: warnLevel = nWarning.LEVEL_INFO; break;
-            }
+            var warnLevel = this.levelMapper(check.warnLevel);
 
             var vals = [];
             if (!(isArray(v.val))) vals = [v.val]; else vals = v.val;
@@ -170,7 +173,61 @@ nValidation_Generic.prototype.checkEntry = function(ret, k, v, args) {
                                 }
                             });
                         }
-                        ret.push(new nWarning(warnLevel, warnTitle, warnDesc));
+
+                        var warn = new nWarning(warnLevel, warnTitle, warnDesc);
+
+                        if (isDef(check.healing) && isObject(check.healing)) {
+                            var hc = sha1(stringify(check.healing, void 0, ""));
+
+                            var cHealing = clone(check.healing);
+                            traverse(cHealing, (aK, aV, aP, aO) => {
+                                if (isString(aO[aK]) && aK != "exec" && aK != "execOJob" && !aK.startsWith("warn")) {
+                                    aO[aK] = templify(aO[aK], data).replace(/\n/g, "");
+                                    try { 
+                                        aO[aK] = af.eval(aO[aK]);
+                                    } catch(e) {
+                                        if (check.debug) 
+                                            sprint({
+                                                execId: uuid,
+                                                healing: {
+                                                    line: aO[aK],
+                                                    exception: e
+                                                }
+                                            });
+                                    }
+                                }
+                            });
+
+                            if (!(nattrmon.isNotified(warnTitle, hc))) {
+                                try {
+                                    if (!(nattrmon.setNotified(warnTitle, hc))) {
+                                        if (isUnDef(warn.notified)) warn.notified = {};
+                                        warn.notified[hc] = true;
+                                    }
+                                    if (isDef(cHealing.exec)) {
+                                        logWarn("Running healing execution for '" + warnTitle + "'");
+                                        (new Function('args', cHealing.exec))(cHealing.execArgs);
+                                    }
+                                    if (isDef(cHealing.execOJob)) {
+                                        logWarn("Running healing ojob for '" + warnTitle + "'");
+                                        oJobRunFile(cHealing.execOJob, cHealing.execArgs);
+                                    }
+    
+                                } catch(e) {
+                                    logError("Healing job failed for '" + warnTitle + "' with exception: " + String(e));
+                                    if (cHealing.warnTitleTemplate) {
+                                        sprint(merge(data, { exceptionMessage: String(e) }));
+                                        var healWarnTitle = templify(cHealing.warnTitleTemplate, merge(data, { exceptionMessage: String(e) }));
+                                        var healWarnDesc = templify(cHealing.warnDescTemplate, merge(data, { exceptionMessage: String(e) }));
+                                        print(cHealing.warnDescTemplate);
+                                        print(healWarnDesc);
+                                        var healWarnLevel = this.levelMapper(cHealing.warnLevel);
+                                        ret.push(new nWarning(healWarnLevel, healWarnTitle, healWarnDesc));
+                                    }
+                                }
+                            }
+                        }
+                        ret.push(warn);
                     }
                 }
             }
