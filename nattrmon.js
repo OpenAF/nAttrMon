@@ -542,9 +542,12 @@ nAttrMon.prototype.setNotified = function(aTitle, aId, aValue) {
 	if (isUnDef(aId)) throw "Please provide a setNotified id";
 
 	var w = nattrmon.getWarnings(true).getWarningByName(aTitle);
+	if (isUnDef(w)) return false;
+
 	if (isUnDef(w.notified)) w.notified = {};
 	w.notified[aId] = aValue;
 	nattrmon.getWarnings(true).setWarningByName(aTitle, w);
+	return true; 
 };
 
 nAttrMon.prototype.isNotified = function(aTitle, aId) {
@@ -722,13 +725,6 @@ nAttrMon.prototype.addValues = function(onlyOnEvent, aOrigValues, aOptionals) {
  */
 nAttrMon.prototype.getPlugs = function() {
 	return this.plugs;
-};
-
-nAttrMon.prototype.addAdHocExecution = function(aFunction, aDelay) {
-	var uuid = this.thread.addScheduleThread(aFunction, aDelay);
-	this.debug("Adding ad-hoc execution in " + aDelay + "ms for " + uuid);
-	log("DDD: Adding ad-hoc execution in " + aDelay + "ms for " + uuid);
-	return uuid;
 };
 
 nAttrMon.prototype.addSch = function(aName, aCronExpr, aFunc, waitForFinish) {
