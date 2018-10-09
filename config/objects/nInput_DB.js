@@ -77,6 +77,9 @@ nInput_DB.prototype.input = function (scope, args) {
 						logErr("DB query = '" + templify(aSQL, data) + "'");
 						throw e;
 					}
+					
+					// Properly end transaction (issue #93)
+					aDb.rollback();
 					return true;
 				});
 			} else {
