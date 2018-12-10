@@ -124,8 +124,8 @@ var nAttrMon = function(aConfigPath, debugFlag) {
 	this.chCurrentValues = "nattrmon::cvals";
 	this.chLastValues = "nattrmon::lvals";
 
-	$ch(this.chCurrentValues).create();
-	$ch(this.chLastValues).create();
+	$ch(this.chCurrentValues).create(1, "simple");
+	$ch(this.chLastValues).create(1, "simple");
 	this.currentValues    = $ch(this.chCurrentValues);
 	this.lastValues       = $ch(this.chLastValues);
 
