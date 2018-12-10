@@ -36,6 +36,7 @@ jobs:
         clean(global.config + "/nattrmon_db");
         clean(global.config + "/nattrmon_db.mv.db");
         clean(global.config + "/nattrmon_db.trace.db");
+        clean(global.config + "/nattrmon.hist.db");
 
    # Cleaning pid file
    # 
