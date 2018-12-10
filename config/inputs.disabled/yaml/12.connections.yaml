@@ -38,6 +38,7 @@ input:
                "In use": r.InUse.length 
             }
         })
+        return true;
       });
 
       return ret;

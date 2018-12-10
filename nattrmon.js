@@ -374,8 +374,12 @@ nAttrMon.prototype.returnObject = function(aKey, anObj, aStatus) {
  * </odoc>
  */
 nAttrMon.prototype.useObject = function(aKey, aFunction) {
-	return this.objPools[aKey].use(aFunction);
-}
+	// Temporary until dependency OpenAF >= 20181210
+	return this.objPools[aKey].use(function(v) {
+		var res = aFunction(v);
+		if (isDef(res)) return res; else return true;
+	});
+};
 
 /**
  * <odoc>

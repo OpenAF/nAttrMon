@@ -11,6 +11,7 @@ input:
          var res = ow.format.dateDiff.inMinutes(ow.format.toDate(db.q("select current_date from dual").results[0].CURRENT_DATE, "yyyy-MM-dd HH:mm:ss.S"), new Date());
 
          ret["Database/Difference in minutes between App and DB"] = res;
+         return true;
       });
 
       return ret;
