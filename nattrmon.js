@@ -5,6 +5,9 @@ var LOGAUDIT_TEMPLATE = "AUDIT | User: {{request.user}} | Channel: {{name}} | Op
 var JAVA_ARGS = [ ];                          // Array of java arguments
 var LOGCONSOLE = false;                       // Create files or log to console
 var DEBUG = false;
+var BUFFERCHANNELS = false;
+var BUFFERBYNUMBER = 100;
+var BUFFERBYTIME = 1000;
 var WORKERS = __cpucores;
 
 // -------------------------------------------------------------------
@@ -18,6 +21,7 @@ var params = processExpr();
 if (io.fileExists(NATTRMON_HOME + "/nattrmon.yaml")) {
 	var pms = io.readFileYAML(NATTRMON_HOME + "/nattrmon.yaml");
 
+	if (isUnDef(pms) || pms == null) pms = {};
 	if (isDef(pms.JAVA_ARGS) && isArray(pms.JAVA_ARGS)) JAVA_ARGS = pms.JAVA_ARGS;
 	if (isDef(pms.LOGAUDIT)) LOGAUDIT = pms.LOGAUDIT;
 	if (isDef(pms.LOGAUDIT_TEMPLATE) && isString(pms.LOGAUDIT_TEMPLATE)) LOGAUDIT_TEMPLATE = pms.LOGAUDIT_TEMPLATE;
@@ -27,6 +31,10 @@ if (io.fileExists(NATTRMON_HOME + "/nattrmon.yaml")) {
 	if (isDef(pms.DEBUG)) DEBUG = pms.DEBUG;	
 	if (isDef(pms.LOGCONSOLE)) LOGCONSOLE = pms.LOGCONSOLE;
 	if (isUnDef(params.withDirectory) && isDef(pms.CONFIG)) params.withDirectory = pms.CONFIG;
+
+	if (isDef(pms.BUFFERCHANNELS)) BUFFERCHANNELS = pms.BUFFERCHANNELS;
+	if (isDef(pms.BUFFERBYNUMBER)) BUFFERBYNUMBER = pms.BUFFERBYNUMBER;
+	if (isDef(pms.BUFFERBYTIME))   BUFFERBYTIME = pms.BUFFERBYTIME;
 
 	print("Applying parameters:");
 	print(af.toYAML(pms));
@@ -127,12 +135,25 @@ var nAttrMon = function(aConfigPath, debugFlag) {
 	$ch(this.chCurrentValues).create(1, "simple");
 	$ch(this.chLastValues).create(1, "simple");
 
-	$ch(this.chCurrentValues + "::buffer").create(1, "buffer", {
-		bufferCh      : this.chCurrentValues,
-		bufferIdxs    : [ "name" ],
-		bufferByNumber: 100,
-		bufferByTime  : 1000
-	});
+	// Buffer cvals
+	if (BUFFERCHANNELS) {
+		$ch(this.chCurrentValues + "::buffer").create(1, "dummy");
+		$ch(this.chCurrentValues + "::__buffer").create(1, "buffer", {
+			bufferCh      : this.chCurrentValues + "::buffer",
+			bufferIdxs    : [ "name" ],
+			bufferByNumber: BUFFERBYNUMBER,
+			bufferByTime  : BUFFERBYTIME
+		});
+		var parent = this;
+		$ch(this.chCurrentValues).subscribe(function(aC, aO, aK, aV) {
+			aK = merge(aK, { t: nowNano() });
+			switch(aO) {
+			case "set"   : $ch(parent.chCurrentValues + "::__buffer").set(aK, aV);    break;
+			case "setall": $ch(parent.chCurrentValues + "::__buffer").setAll(aK, aV); break;
+			case "unset" : $ch(parent.chCurrentValues + "::__buffer").unset(aK);      break;
+			}
+		});
+	}
 
 	this.currentValues    = $ch(this.chCurrentValues);
 	this.lastValues       = $ch(this.chLastValues);
