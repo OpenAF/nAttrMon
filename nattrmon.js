@@ -126,6 +126,14 @@ var nAttrMon = function(aConfigPath, debugFlag) {
 
 	$ch(this.chCurrentValues).create(1, "simple");
 	$ch(this.chLastValues).create(1, "simple");
+
+	$ch(this.chCurrentValues + "::buffer").create(1, "buffer", {
+		bufferCh      : this.chCurrentValues,
+		bufferIdxs    : [ "name" ],
+		bufferByNumber: 100,
+		bufferByTime  : 1000
+	});
+
 	this.currentValues    = $ch(this.chCurrentValues);
 	this.lastValues       = $ch(this.chLastValues);
 
