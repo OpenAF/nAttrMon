@@ -155,17 +155,17 @@ nOutput_EmailWarnings.prototype.output = function (scope, args, meta) {
 
 						if (shouldEval) {
 							if (isDef(this.descriptionLimit) && this.descriptionLimit > 0) {
-								owarns[i][j].description = owarns[i][j].description.substr(0, this.descriptionLimit - 1) + "...";
+								owarns[i][j].description = String(owarns[i][j].description).substr(0, this.descriptionLimit - 1) + "...";
 							}
 	
 							if (isDef(this.groupBySimilarity) && this.groupBySimilarity > 0 &&
-						        isDef(owarns[i][j].description) && owarns[i][j].description.length > 0) {
+						        isDef(owarns[i][j].description) && String(owarns[i][j].description).length > 0) {
 								var parent = this;
 								var resDupls = $from($from(owarns[i]).notEquals("description", void 0).select((r) => {
 									if (owarns[i][j].description != "" && r.description != void 0 && r.description != "")
 										return { 
 											t: r.title, 
-											d: ow.format.string.distance(owarns[i][j].description, r.description),
+											d: ow.format.string.distance(String(owarns[i][j].description), r.description),
 											n: nattrmon.isNotified(r.title, parent.instanceId)
 										};
 									else
@@ -175,7 +175,7 @@ nOutput_EmailWarnings.prototype.output = function (scope, args, meta) {
 											n: nattrmon.isNotified(r.title, parent.instanceId)
 										};
 								}))
-								.less("d", (owarns[i][j].description.length * (this.groupBySimilarity/100)))
+								.less("d", (String(owarns[i][j].description).length * (this.groupBySimilarity/100)))
 								.notEquals("t", owarns[i][j].title)
 								.select();
 
