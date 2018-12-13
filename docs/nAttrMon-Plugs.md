@@ -1,7 +1,7 @@
 # Plugs <a href="/"><img align="right" src="images/logo.png"></a>
 
 nAttrMon plugs are a basic unit to add inputs, outputs and validations to nAttrMon. Plugs have a common set of parameters to affect their behavior:
-
+ 
 | Parameter | Type | Mandatory? | Description |
 |-----------|------|------------|-------------|
 | _name_ | String | Yes | Unique name of the plug independently of type (e.g. input, output, validation) |
@@ -20,5 +20,6 @@ nAttrMon plugs are a basic unit to add inputs, outputs and validations to nAttrM
 | _exec_ | String | No | The OpenAF execution code to execute this plug. This should be a function (if in JSON format) or it will be wrapped on a function (if in YAML/JSON format) with the arguments scope and args (for validations warns is also provided). | 
 | _execArgs_ | Map | No | A custom arguments map to be passed to the execution. Usually used with execFrom when the execution is not included on the plug. |
 | _execFrom_ | String | No | Name of nAttrMon object to be used for execution. Do control the necessary arguments with execArgs | 
+| _chHandleSetAll_ | Boolean | No | If a buffer channel (e.g. nattrmon::cvals::buffer or nattrmon::warns::buffer) is used with chSubscribe and the corresponding plug doesn't support the operation "setall" setting chHandleSetAll will interate over the setall values set simulating "set" operations. |
 
 Check out some examples of use in the [examples](Examples) page.

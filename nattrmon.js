@@ -850,7 +850,22 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 								}
 								if (cont) {
 									parent.debug("Subscriber " + aCh + " on '" + etry.getName() + "' (uuid " + aUUID + ") ");
-									var res = etry.exec(parent, { ch: aCh, op: aOp, k: aK, v: aV });
+									var res;
+									if (etry.chHandleSetAll && aOp == "setall") {
+										res = [];
+										for(var ii in aV) {
+											var r = etry.exec(parent, { ch: aCh, op: "set", k: ow.obj.filterKeys(aK, aV[ii]), v: aV[ii] });
+											if (isArray(r)) {
+												res = res.concat(r);
+											} else {
+												if (isObject(r)) {
+													res.push(r);
+												}
+											}
+										}
+									} else {
+										res = etry.exec(parent, { ch: aCh, op: aOp, k: aK, v: aV });
+									}
 									parent.addValues(etry.onlyOnEvent, res, { aStamp: etry.getStamp(), toArray: etry.getToArray(), mergeKeys: etry.getMerge(), sortKeys: etry.getSort() });
 									parent.threadsSessions[aUUID].count = now();
 									etry.touch();

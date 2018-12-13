@@ -253,8 +253,8 @@ filesHash:
   config/objects/nInput_Sessions.js: 2a80de271032389e017f0c247bac71ec1a368269
   config/objects/nInput_Shell.js: 2b84085de7c592241d5e9ee72d207ca24e9d5ad9
   config/objects/nOutput_Channels.js: 62be160e17a454dda236c909418e8b025a8fd0de
-  config/objects/nOutput_DSV.js: 9e31e336abe81917e4630a37a96fbc9d579b77d2
-  config/objects/nOutput_EmailWarnings.js: a3fe1a215564d1bb28a95f5c874eb9dfca0e19d2
+  config/objects/nOutput_DSV.js: b723aefe236bd464d215c52406cec796cd47d97f
+  config/objects/nOutput_EmailWarnings.js: 5da3f0ce38924b8ed620f13e73cf3d3b8866e0f6
   config/objects/nOutput_ES.js: 34c4c52ed962e118eb01f4bb6f4a8b46114ecf46
   config/objects/nOutput_H2.js: 4aa7668410f3bbf64b1c7cd3a8b6031e5367903d
   config/objects/nOutput_HTTP.js: 529313cfdb4afda1e9cda55508171369c63599be
@@ -264,7 +264,7 @@ filesHash:
   config/objects/nOutput_Oracle.js: ab0f2fe7958952437ae93030715633858462269f
   config/objects/nOutput_RemoteChannel.js: 8dcadaf89c78f31707c45d615a3941ce0547cd33
   config/objects/nOutput_Slack.js: 38d67701dd604cebc6329d46a59a5f6d54b8fd82
-  config/objects/nOutput_Stdout.js: 389169e32c1beb2a1f725de1d6cc92c7bce7ed22
+  config/objects/nOutput_Stdout.js: 2abf4e491d71fd53670c650768e5d6ab3dc7db51
   config/objects/nValidation_AFPing.js: f48325d605e693dee3ab2912224cda0fde11e490
   config/objects/nValidation_Generic.js: d3bc96705f2b62ee52e793def6cada60423ad087
   config/objects/nValidation_Semaphores.js: 97b6c1850b80d95cc92c1c50b05fdfa26467fd94
@@ -335,13 +335,13 @@ filesHash:
   lib/ninput.js: cb1a2bc442a0a3ac9e6237fd02b445e31bd518cf
   lib/nmonitoredobject.js: da0b8a8590ce1534826750e2e70b3d6e4bee9f98
   lib/noutput.js: 097a89ae2ab12cb28d88034444a72d368464d14c
-  lib/nplug.js: 079f723c2836b0d95098f68b2d615cdd4a72c83e
+  lib/nplug.js: e187a877067e2c867cfc6966fe1fd4d2d3376bbb
   lib/nvalidation.js: 252998540faca7913211029f1bdd4397beba3ce9
   lib/nwarning.js: a8022e42582a148df205f333e1c523a01f48eb06
   lib/nwarnings.js: b0749d5745b1ab64abb2e67b9727ed1da5e5a538
   LICENSE: 7df059597099bb7dcf25d2a9aedfaf4465f72d8d
-  nattrmon.js: 6dedc42a403c5144dc45347bc86037a288338937
-  nattrmon.yaml.sample: ac723b6985924d48eb14838c2b4f746966bc0d93
+  nattrmon.js: ed6eea62d5ec3213960e6c078b87c8cac52714a1
+  nattrmon.yaml.sample: b8c000429ca89273c58ee935917ccc27cbe232d0
   README.md: 648ce4e29bbdc7b99f5cf8734cb1a7f0657789c7
   tests/inputDBTest.yml: c38616606dc5956e449189d11f8e661170f94dfb
   tests/inputShellTest.yml: ce643955982cb16b53a8843acd3549466e5cddf5

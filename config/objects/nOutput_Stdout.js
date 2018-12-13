@@ -24,7 +24,7 @@ nOutput_Stdout.prototype.output = function(scope, args) {
 	};
 
 	var cvals = scope.getCurrentValues();
-	if (isDef(args.k) && isDef(args.v)) {
+	if (isDef(args.k) && isDef(args.v) && isDef(args.op) && args.op == "set") {
 		writeLine(makeLine(cvals[args.k.name]));
 	} else {
 		for(var key in cvals) {

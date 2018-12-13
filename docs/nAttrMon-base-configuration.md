@@ -16,6 +16,9 @@ On the main folder there is a nattrmon.yaml.sample that you can copy to nattrmon
 | **NUMBER_WORKERS** | Number | *2 times number of cores* | Number of base threads (workers) that nAttrMon should use. Change this if you have a less than 2 cores (it's suggested to have a minimum of 4 workers) or more than 4 cores (it's suggested not to have too many workers (~8) if there is other processes on the same machine to keep load controlled) |
 | **LOG_ASYNC** | Boolean | *true* | Determines if logging is asynchronous (default) or not. Turn it off if you need to see logging immediately even with a small global performance penality.|
 | **JAVA_ARGS** | String | | The extra java arguments (e.g. minimum and maximum memory) to be used in case of automatic restart. **NOTE:** *Changing this doesn't affect the normal startup java arguments. Usually OpenAF can automatically figure out the java arguments you used during the normal startup and reuse them. This setting just forces them.* |
+| **BUFFERCHANNELS** | Boolean | *false* | Turns on or off the extra buffer channels nattrmon::cvals::buffer and nattrmon::warns::buffer. When a plug subscribes theses channels instead of the original one the rate of execution will be paced by the parameters BUFFERBYNUMBER and BUFFERBYTIME. This is usefull for nAttrMon configurations with lots of attributes and constant output and validations. |
+| **BUFFERBYNUMBER** | Number | 100 | When BUFFERCHANNELS is turned on the buffer channels will only execute plugs that subscribe it when this number of changes is reached (or BUFFERBYTIME if the condition is true first). |
+| **BUFFERBYTIME** | Number | 1000 | When BUFFERCHANNELS is turned on the buffer channels will only execute plugs that subscribe it when this number of ms is reached (or BUFFERBYNUMBER if the condition is true first). |
 | **DEBUG** | Boolean | *false* | Turns debug on producing a lot more logging to help debug a plug configuration. |
 
 

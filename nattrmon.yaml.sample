@@ -27,3 +27,9 @@
 
 # Turn debugging of the nattrmon core on or off
 #DEBUG: true
+
+# Turn channel cvals and warns buffering on or off and configure it
+#
+#BUFFERCHANNELS: true
+#BUFFERBYNUMBER: 100
+#BUFFERBYTIME: 1000

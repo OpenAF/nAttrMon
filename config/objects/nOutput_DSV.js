@@ -31,11 +31,17 @@ inherit(nOutput_DSV, nOutput);
 /**
  */
 nOutput_DSV.prototype.output = function(scope, args) {
-	if (isDef(this.include) || isDef(this.exclude)) {
-		var k = ow.obj.getPath(args.k, this.idKey);
+	if (args.op == "set") {
+		if (isDef(this.include) || isDef(this.exclude)) {
+			var k = ow.obj.getPath(args.k, this.idKey);
 
-		if ((isDef(this.include) && this.include.indexOf(k) < 0) || 
-		    (isDef(this.exclude) && this.exclude.indexOf(k) >= 0 )) return;
+			if ((isDef(this.include) && this.include.indexOf(k) < 0) || 
+				(isDef(this.exclude) && this.exclude.indexOf(k) >= 0 )) return;
+		}
+	} else {
+		if (args.op == "setall" && (isDef(this.include) || isDef(this.exclude))) {
+			throw "Setall/Buffer channel subscription not supported with include/exclude arguments.";
+		}
 	}
 
 	var newd = new Date();

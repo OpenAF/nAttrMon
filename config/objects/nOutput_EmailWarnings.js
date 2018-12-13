@@ -56,7 +56,7 @@ var nOutput_EmailWarnings = function(aMap) {
 inherit(nOutput_EmailWarnings, nOutput);
 
 nOutput_EmailWarnings.prototype.output = function (scope, args, meta) {
-	if(isUnDef(meta.chSubscribe) || (meta.chSubscribe != "nattrmon::warnings")) 
+	if(isUnDef(meta.chSubscribe) || (meta.chSubscribe != "nattrmon::warnings") || (meta.chSubscribe != "nattrmon::warnings::buffer")) 
 		throw "nOutput_EmailWarnings only supports chSubscribe: nattrmon::warnings";
 
 	if (args.op != "set" && args.op != "setall") return;
