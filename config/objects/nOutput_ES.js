@@ -25,7 +25,7 @@ var nOutput_ES = function (aMap) {
 	if (isDef(this.include) && !isArray(this.include)) throw "Include needs to be an array";
 	if (isDef(this.exclude) && !isArray(this.exclude)) throw "Exclude needs to be an array";
 
-	this.considerSetAll = (isDef(aMap.considerSetAll)) ? aMap.considerSetAll : false;
+	this.considerSetAll = (isDef(aMap.considerSetAll)) ? aMap.considerSetAll : true;
 	this.stampMap = aMap.stampMap;
 
 	this.myUUID = genUUID();
@@ -130,13 +130,16 @@ nOutput_ES.prototype.output = function (scope, args) {
 	if (args.op == "set") {
 		k = [args.k];
 		v = [args.v];
+	} else {
+		k = args.k;
+		v = args.v;
 	}
 
 	for (var vi in v) {
 		var value = v[vi];
 		var isok = isDef(this.include) ? false : true;
 		var isWarns = (args.ch == "nattrmon::warnings");
-		var kk = (isWarns) ? k[vi].title : k[vi].name;
+		var kk = (isWarns) ? v[vi].title : v[vi].name;
 
 		if (isDef(this.include) && this.include.indexOf(kk) >= 0) isok = true;
 		if (isDef(this.exclude) && this.exclude.indexOf(kk) >= 0) isok = false;

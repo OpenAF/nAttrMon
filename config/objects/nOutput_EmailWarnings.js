@@ -218,7 +218,7 @@ nOutput_EmailWarnings.prototype.output = function (scope, args, meta) {
 
 	if (count == 0) return;
 	//email.embedFile(nattrmon.configPath + "/objects.assets/noutputemailwarnings/logo.png", "logo");
-	for(let ii in this.templateImages) {
+	for(var ii in this.templateImages) {
 		email.embedFile(nattrmon.configPath + "/objects.assets/noutputemailwarnings/" + this.templateImages[ii], ii);
 	}
 	var message = this.htmlTemplate("nOutput_EmailWarnings", data);
