@@ -338,9 +338,9 @@ filesHash:
   lib/nplug.js: e187a877067e2c867cfc6966fe1fd4d2d3376bbb
   lib/nvalidation.js: 252998540faca7913211029f1bdd4397beba3ce9
   lib/nwarning.js: a8022e42582a148df205f333e1c523a01f48eb06
-  lib/nwarnings.js: b0749d5745b1ab64abb2e67b9727ed1da5e5a538
+  lib/nwarnings.js: 782f9e44f4eeba340d8764e08894e410cad61d5c
   LICENSE: 7df059597099bb7dcf25d2a9aedfaf4465f72d8d
-  nattrmon.js: ed6eea62d5ec3213960e6c078b87c8cac52714a1
+  nattrmon.js: cef8f192648abcd62621aebb08208f9f2ee414f9
   nattrmon.yaml.sample: b8c000429ca89273c58ee935917ccc27cbe232d0
   README.md: 648ce4e29bbdc7b99f5cf8734cb1a7f0657789c7
   tests/inputDBTest.yml: c38616606dc5956e449189d11f8e661170f94dfb

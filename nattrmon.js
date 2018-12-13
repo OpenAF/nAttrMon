@@ -138,7 +138,7 @@ var nAttrMon = function(aConfigPath, debugFlag) {
 	// Buffer cvals
 	if (BUFFERCHANNELS) {
 		$ch(this.chCurrentValues + "::buffer").create(1, "dummy");
-		$ch(this.chCurrentValues + "::__buffer").create(1, "buffer", {
+		$ch(this.chCurrentValues + "::__bufferTransit").create(1, "buffer", {
 			bufferCh      : this.chCurrentValues + "::buffer",
 			bufferIdxs    : [ "name" ],
 			bufferByNumber: BUFFERBYNUMBER,
@@ -148,9 +148,9 @@ var nAttrMon = function(aConfigPath, debugFlag) {
 		$ch(this.chCurrentValues).subscribe(function(aC, aO, aK, aV) {
 			aK = merge(aK, { t: nowNano() });
 			switch(aO) {
-			case "set"   : $ch(parent.chCurrentValues + "::__buffer").set(aK, aV);    break;
-			case "setall": $ch(parent.chCurrentValues + "::__buffer").setAll(aK, aV); break;
-			case "unset" : $ch(parent.chCurrentValues + "::__buffer").unset(aK);      break;
+			case "set"   : $ch(parent.chCurrentValues + "::__bufferTransit").set(aK, aV);    break;
+			case "setall": $ch(parent.chCurrentValues + "::__bufferTransit").setAll(aK, aV); break;
+			case "unset" : $ch(parent.chCurrentValues + "::__bufferTransit").unset(aK);      break;
 			}
 		});
 	}
