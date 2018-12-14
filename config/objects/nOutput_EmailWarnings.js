@@ -56,7 +56,7 @@ var nOutput_EmailWarnings = function(aMap) {
 inherit(nOutput_EmailWarnings, nOutput);
 
 nOutput_EmailWarnings.prototype.output = function (scope, args, meta) {
-	if(isUnDef(meta.chSubscribe) || (meta.chSubscribe != "nattrmon::warnings") || (meta.chSubscribe != "nattrmon::warnings::buffer")) 
+	if(isUnDef(meta.chSubscribe) || (meta.chSubscribe != "nattrmon::warnings") && (meta.chSubscribe != "nattrmon::warnings::buffer")) 
 		throw "nOutput_EmailWarnings only supports chSubscribe: nattrmon::warnings";
 
 	if (args.op != "set" && args.op != "setall") return;
@@ -162,10 +162,10 @@ nOutput_EmailWarnings.prototype.output = function (scope, args, meta) {
 						        isDef(owarns[i][j].description) && String(owarns[i][j].description).length > 0) {
 								var parent = this;
 								var resDupls = $from($from(owarns[i]).notEquals("description", void 0).select((r) => {
-									if (owarns[i][j].description != "" && r.description != void 0 && r.description != "")
+									if (String(owarns[i][j].description) != "" && r.description != void 0 && r.description != "")
 										return { 
 											t: r.title, 
-											d: ow.format.string.distance(String(owarns[i][j].description), r.description),
+											d: ow.format.string.distance(String(owarns[i][j].description), String(r.description)),
 											n: nattrmon.isNotified(r.title, parent.instanceId)
 										};
 									else
