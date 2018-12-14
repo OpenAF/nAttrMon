@@ -49,7 +49,8 @@ nOutput_ES.prototype.addToES = function (aCh, aVal, useTitle) {
 	if (useTitle) {
 		obj = {
 			title: String(aVal.title.replace(/[\/ ]/g, "_")),
-			date: aVal.createdate
+			date: aVal.createdate,
+            level: aVal.level
 		};
 	} else {
 		obj = {
@@ -61,13 +62,9 @@ nOutput_ES.prototype.addToES = function (aCh, aVal, useTitle) {
 	try {
 		if (isArray(aVal.val)) {
 			for (var i in aVal.val) {
-				if (useTitle) {
-					obj.id = sha1(obj.title + obj.date + i);
-					obj[obj.title] = aVal.val[i];
-				} else {
-					obj.id = sha1(obj.name + obj.date + i);
-					obj[obj.name] = aVal.val[i];
-				}
+				obj.id = sha1(obj.name + obj.date + i);
+				obj[obj.name] = aVal.val[i];
+				
 				traverse(obj, function (k, v, p, o) {
 					if (v == null || v == "n/a") {
 						delete o[k];
@@ -82,8 +79,8 @@ nOutput_ES.prototype.addToES = function (aCh, aVal, useTitle) {
 			}
 		} else {
 			if (useTitle) {
-				obj.id = sha1(obj.title + obj.date + i);
-				obj[obj.title] = aVal.val;
+				obj.id = sha1(obj.title + obj.date + obj.level + i);
+				obj[obj.title] = aVal;
 			} else {
 				obj.id = sha1(obj.name + obj.date);
 				obj[obj.name] = aVal.val;
@@ -124,7 +121,7 @@ nOutput_ES.prototype.addToES = function (aCh, aVal, useTitle) {
  */
 nOutput_ES.prototype.output = function (scope, args) {
 	if (args.op != "setall" && args.op != "set") return;
-	if (args.op == "setall" && this.considerSetAll) return;
+	if (args.op == "setall" && !this.considerSetAll) return;
 
 	var k, v;
 	if (args.op == "set") {
@@ -138,7 +135,7 @@ nOutput_ES.prototype.output = function (scope, args) {
 	for (var vi in v) {
 		var value = v[vi];
 		var isok = isDef(this.include) ? false : true;
-		var isWarns = (args.ch == "nattrmon::warnings");
+		var isWarns = (args.ch == "nattrmon::warnings" || args.ch == "nattrmon::warnings::buffer");
 		var kk = (isWarns) ? v[vi].title : v[vi].name;
 
 		if (isDef(this.include) && this.include.indexOf(kk) >= 0) isok = true;

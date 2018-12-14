@@ -67,9 +67,9 @@ nValidation_Generic.prototype.checkEntry = function(ret, k, v, args) {
     for (var i in this.params.checks) {
         var check = this.params.checks[i]; 
 
-        if (isDef(k) && 
-            ((isDef(check.attribute) && k.name == check.attribute) || 
-             (isDef(check.attrPattern) && k.name.match(new RegExp(check.attrPattern))) 
+        if (isDef(v) && 
+            ((isDef(check.attribute) && v.name == check.attribute) || 
+             (isDef(check.attrPattern) && v.name.match(new RegExp(check.attrPattern))) 
             )
            ) {
             var uuid;
@@ -240,7 +240,14 @@ nValidation_Generic.prototype.validate = function(warns, scope, args) {
     var ret = [];
     
     if (isDef(args) && isDef(args.k) && isDef(args.v)) {
-        ret = this.checkEntry(ret, args.k, args.v, args);
+        if (args.op == "setall") {
+            for(var ii in args.v) {
+                ret = ret.concat(this.checkEntry(ret, args.k, args.v[ii], args));
+            }
+        }
+        if (args.op == "set") {
+            ret = this.checkEntry(ret, args.k, args.v, args);
+        }
     } else {
         var cvals = scope.getCurrentValues();
         for(var i in cvals) {

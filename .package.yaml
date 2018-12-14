@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20181213'
+version: '20181214'
 dependencies:
   openaf: '>=20180823'
 files:
@@ -255,7 +255,7 @@ filesHash:
   config/objects/nOutput_Channels.js: 62be160e17a454dda236c909418e8b025a8fd0de
   config/objects/nOutput_DSV.js: b723aefe236bd464d215c52406cec796cd47d97f
   config/objects/nOutput_EmailWarnings.js: 3c8731b157c71e3ffab41740ae48ac52ea073733
-  config/objects/nOutput_ES.js: db83a488f8ea5199496f35e40b893fa1b5d67297
+  config/objects/nOutput_ES.js: 5b3b420a66402553389f0721dd4b9c0a61bc5884
   config/objects/nOutput_H2.js: 4aa7668410f3bbf64b1c7cd3a8b6031e5367903d
   config/objects/nOutput_HTTP.js: 529313cfdb4afda1e9cda55508171369c63599be
   config/objects/nOutput_HTTP_JSON.js: 5e10f7d7b290afb6d8fbafa5efc054810b77c138
@@ -266,7 +266,7 @@ filesHash:
   config/objects/nOutput_Slack.js: 38d67701dd604cebc6329d46a59a5f6d54b8fd82
   config/objects/nOutput_Stdout.js: 2abf4e491d71fd53670c650768e5d6ab3dc7db51
   config/objects/nValidation_AFPing.js: f48325d605e693dee3ab2912224cda0fde11e490
-  config/objects/nValidation_Generic.js: d3bc96705f2b62ee52e793def6cada60423ad087
+  config/objects/nValidation_Generic.js: 29c893f6c48b521c5a8980fd616564827ee98e30
   config/objects/nValidation_Semaphores.js: 97b6c1850b80d95cc92c1c50b05fdfa26467fd94
   config/objects/nValidation_Yellows.js: 942478fcd710e392add0b6ef6349ef51a895b764
   config/objects.assets/noutputemailwarnings/logo.png: ee5366a3aa207c69d5139e04e7a4523078b974ba
