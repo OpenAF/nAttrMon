@@ -6,6 +6,7 @@ var JAVA_ARGS = [ ];                          // Array of java arguments
 var LOGCONSOLE = false;                       // Create files or log to console
 var DEBUG = false;
 var BUFFERCHANNELS = false;
+var CHPS = false;
 var BUFFERBYNUMBER = 100;
 var BUFFERBYTIME = 1000;
 var WORKERS = __cpucores;
@@ -30,6 +31,7 @@ if (io.fileExists(NATTRMON_HOME + "/nattrmon.yaml")) {
 	if (isDef(pms.LOG_ASYNC)) __logFormat.async = pms.LOG_ASYNC;
 	if (isDef(pms.DEBUG)) DEBUG = pms.DEBUG;	
 	if (isDef(pms.LOGCONSOLE)) LOGCONSOLE = pms.LOGCONSOLE;
+	if (iSDef(pms.CHPS)) CHPS = pms.CHPS;
 	if (isUnDef(params.withDirectory) && isDef(pms.CONFIG)) params.withDirectory = pms.CONFIG;
 
 	if (isDef(pms.BUFFERCHANNELS)) BUFFERCHANNELS = pms.BUFFERCHANNELS;
@@ -131,9 +133,11 @@ var nAttrMon = function(aConfigPath, debugFlag) {
 
 	this.chCurrentValues = "nattrmon::cvals";
 	this.chLastValues = "nattrmon::lvals";
+	this.chPS = "nattrmon::ps";
 
 	$ch(this.chCurrentValues).create(1, "simple");
 	$ch(this.chLastValues).create(1, "simple");
+	if (CHPS) $ch(this.chPS).create(1, "simple");
 
 	// Buffer cvals
 	if (BUFFERCHANNELS) {
@@ -789,7 +793,9 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 							return false;
 						}
 						parent.debug("Executing '" + etry.getName() + "' (" + uuid + ")");
+						if (CHPS) $ch(parent.chPS).set({ name: etry.getName(), uuid: uuid }, { name: etry.getName(), uuid: uuid, start: new Date() });
 						var res = etry.exec(parent);
+						if (CHPS) $ch(parent.chPS).unset({ name: etry.getName(), uuid: uuid });
 						parent.addValues(etry.onlyOnEvent, res, { aStamp: etry.getStamp(), toArray: etry.getToArray(), mergeKeys: etry.getMerge(), sortKeys: etry.getSort() });
 						parent.threadsSessions[uuid].count = now();
 						etry.touch();
@@ -849,6 +855,7 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 									cont = true;
 								}
 								if (cont) {
+									if (CHPS) $ch(parent.chPS).set({ name: etry.getName(), uuid: aUUID }, { name: etry.getName(), uuid: aUUID, start: new Date() });
 									parent.debug("Subscriber " + aCh + " on '" + etry.getName() + "' (uuid " + aUUID + ") ");
 									var res;
 									if (etry.chHandleSetAll && aOp == "setall") {
@@ -866,6 +873,7 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 									} else {
 										res = etry.exec(parent, { ch: aCh, op: aOp, k: aK, v: aV });
 									}
+									if (CHPS) $ch(parent.chPS).unset({ name: etry.getName(), uuid: aUUID });
 									parent.addValues(etry.onlyOnEvent, res, { aStamp: etry.getStamp(), toArray: etry.getToArray(), mergeKeys: etry.getMerge(), sortKeys: etry.getSort() });
 									parent.threadsSessions[aUUID].count = now();
 									etry.touch();
