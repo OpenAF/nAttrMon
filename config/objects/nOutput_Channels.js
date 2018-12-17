@@ -351,6 +351,7 @@ var nOutput_Channels = function(aMap) {
       $ch("nattrmon::plugs").expose(httpd, "/chs/plugs", chAuth);
     }
     $ch("nattrmon::ops").expose(httpd, "/chs/ops", chAuth);
+    $ch("nattrmon::ps").expose(httpd, "/chs/ps", chAuth);
 
   } else {
     throw "Need a http output defined.";
