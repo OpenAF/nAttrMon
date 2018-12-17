@@ -34,5 +34,5 @@
 #BUFFERBYNUMBER: 100
 #BUFFERBYTIME: 1000
 
-# Enables the channel that holds the current executing plugs
-#CHPS: true
+# Disables the channel that holds the current executing plugs
+#CHPS: false
