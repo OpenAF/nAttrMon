@@ -201,3 +201,12 @@ This channel provides access to the current warnings list.
 
 This channel provides access to the current plugs list.
 
+----
+
+# PS
+
+| URL | Permission | Example |
+|:----|:-----------|:--------|
+| http://myhosy:8090/chs/ps | "r" | ``` $ch("ps").createRemote("http://my.host:8090/chs/ps"); ``` |
+
+This channel provides the current list of plugs executing.

@@ -31,7 +31,7 @@ if (io.fileExists(NATTRMON_HOME + "/nattrmon.yaml")) {
 	if (isDef(pms.LOG_ASYNC)) __logFormat.async = pms.LOG_ASYNC;
 	if (isDef(pms.DEBUG)) DEBUG = pms.DEBUG;	
 	if (isDef(pms.LOGCONSOLE)) LOGCONSOLE = pms.LOGCONSOLE;
-	if (iSDef(pms.CHPS)) CHPS = pms.CHPS;
+	if (isDef(pms.CHPS)) CHPS = pms.CHPS;
 	if (isUnDef(params.withDirectory) && isDef(pms.CONFIG)) params.withDirectory = pms.CONFIG;
 
 	if (isDef(pms.BUFFERCHANNELS)) BUFFERCHANNELS = pms.BUFFERCHANNELS;
