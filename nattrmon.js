@@ -793,7 +793,7 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 							return false;
 						}
 						parent.debug("Executing '" + etry.getName() + "' (" + uuid + ")");
-						if (CHPS) $ch(parent.chPS).set({ name: etry.getName(), uuid: uuid }, { name: etry.getName(), uuid: uuid, start: new Date() });
+						if (CHPS) $ch(parent.chPS).set({ name: etry.getName(), uuid: uuid }, { name: etry.getName(), type: etry.type, uuid: uuid, start: new Date() });
 						var res = etry.exec(parent);
 						if (CHPS) $ch(parent.chPS).unset({ name: etry.getName(), uuid: uuid });
 						parent.addValues(etry.onlyOnEvent, res, { aStamp: etry.getStamp(), toArray: etry.getToArray(), mergeKeys: etry.getMerge(), sortKeys: etry.getSort() });
@@ -855,7 +855,7 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 									cont = true;
 								}
 								if (cont) {
-									if (CHPS) $ch(parent.chPS).set({ name: etry.getName(), uuid: aUUID }, { name: etry.getName(), uuid: aUUID, start: new Date() });
+									if (CHPS) $ch(parent.chPS).set({ name: etry.getName(), uuid: aUUID }, { name: etry.getName(), type: etry.type, uuid: aUUID, start: new Date() });
 									parent.debug("Subscriber " + aCh + " on '" + etry.getName() + "' (uuid " + aUUID + ") ");
 									var res;
 									if (etry.chHandleSetAll && aOp == "setall") {
@@ -902,7 +902,9 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 									return false;
 								}
 								parent.debug("Executing '" + etry.getName() + "' (" + uuid + ")");
+								if (CHPS) $ch(parent.chPS).set({ name: etry.getName(), uuid: uuid }, { name: etry.getName(), type: etry.type, uuid: uuid, start: new Date() });
 								var res = etry.exec(parent);
+								if (CHPS) $ch(parent.chPS).unset({ name: etry.getName(), uuid: uuid });
 								parent.addValues(etry.onlyOnEvent, res, { aStamp: etry.getStamp(), toArray: etry.getToArray(), mergeKeys: etry.getMerge(), sortKeys: etry.getSort() });
 								parent.threadsSessions[uuid].count = now();
 								etry.touch();

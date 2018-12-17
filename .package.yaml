@@ -342,7 +342,7 @@ filesHash:
   lib/nwarning.js: a8022e42582a148df205f333e1c523a01f48eb06
   lib/nwarnings.js: 782f9e44f4eeba340d8764e08894e410cad61d5c
   LICENSE: 7df059597099bb7dcf25d2a9aedfaf4465f72d8d
-  nattrmon.js: ddd1f9d870d9e030f9001c3f60e8a2ea0f31fa42
+  nattrmon.js: e37a5e184dcae3d2ccf8f5ac579e87ed05f5b56f
   nattrmon.yaml.sample: 4e9323b0aa8ce712e55f7b4f6cb8261845ce4d55
   README.md: 648ce4e29bbdc7b99f5cf8734cb1a7f0657789c7
   tests/inputDBTest.yml: c38616606dc5956e449189d11f8e661170f94dfb
