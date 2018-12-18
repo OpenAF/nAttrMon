@@ -2,7 +2,7 @@ validation:
    name         : Error flows validation
    description  : Simple validation to generate a warning if an error is found on a flow not older than a day.
    chSubscribe  : nattrmon::cvals
-   waitForFinish: true
+   waitForFinish: false
    execFrom     : nValidation_Generic
    execArgs     :
       checks:

@@ -2,7 +2,7 @@ validation:
    name         : Ping ports validation
    description  : Provides a simple validation for nInput_EndPoints
    chSubscribe  : nattrmon::cvals
-   waitForFinish: true
+   waitForFinish: false
    onlyOnEvent  : true
    execFrom     : nValidation_Generic
    execArgs     : 

@@ -2,7 +2,7 @@ validation:
    name         : Semaphore validation
    description  : Simple validation for nInput_CBPMSemaphores and nInput_BPMSemaphores
    chSubscribe  : nattrmon::cvals
-   waitForFinish: true
+   waitForFinish: false
    execFrom     : nValidation_Generic
    execArgs     :
       checks:

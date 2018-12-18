@@ -2,7 +2,7 @@ validation:
    name         : Compare times validation
    description  : Example of a simple validation for nInput_CompareTimes.
    chSubscribe  : nattrmon::cvals
-   waitForFinish: true
+   waitForFinish: false
    onlyOnEvent  : true
    execFrom     : nValidation_Generic
    execArgs     : 
