@@ -80,7 +80,7 @@ nOutput_ES.prototype.addToES = function (aCh, aVal, useTitle) {
 		} else {
 			if (useTitle) {
 				obj.id = sha1(obj.title + obj.date + obj.level + i);
-				obj[obj.title] = aVal;
+				obj = merge(obj, aVal);
 			} else {
 				obj.id = sha1(obj.name + obj.date);
 				obj[obj.name] = aVal.val;
