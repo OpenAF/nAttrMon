@@ -141,7 +141,8 @@ var nAttrMon = function(aConfigPath, debugFlag) {
 
 	// Buffer cvals
 	if (BUFFERCHANNELS) {
-		$ch(this.chCurrentValues + "::buffer").create(1, "dummy");
+		$ch(this.chCurrentValues).subscribe(ow.ch.utils.getBufferSubscriber(this.chCurrentValues, [ "name" ], BUFFERBYNUMBER, BUFFERBYTIME));
+		/*$ch(this.chCurrentValues + "::buffer").create(1, "dummy");
 		$ch(this.chCurrentValues + "::__bufferTransit").create(1, "buffer", {
 			bufferCh      : this.chCurrentValues + "::buffer",
 			bufferIdxs    : [ "name" ],
@@ -156,7 +157,7 @@ var nAttrMon = function(aConfigPath, debugFlag) {
 			case "setall": $ch(parent.chCurrentValues + "::__bufferTransit").setAll(aK, aV); break;
 			case "unset" : $ch(parent.chCurrentValues + "::__bufferTransit").unset(aK);      break;
 			}
-		});
+		});*/
 	}
 
 	this.currentValues    = $ch(this.chCurrentValues);
