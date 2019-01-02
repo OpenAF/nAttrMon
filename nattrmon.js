@@ -1019,7 +1019,7 @@ nAttrMon.prototype.loadPlugs = function() {
 	var ignoreList = getIgnoreList(this.configPath);
 	parent.debug("Ignore list: " + stringify(ignoreList));
 
-	if (isDef(COREOBJECTS)) this.loadPlugDir(COREOBJECTS, ignoreList);
+	if (isDef(COREOBJECTS)) this.loadPlugDir(COREOBJECTS, "objects", ignoreList);
 	this.loadPlugDir(this.configPath + "/objects", "objects", ignoreList);
 	this.loadPlugDir(this.configPath + "/inputs", "inputs", ignoreList);
 	this.loadPlugDir(this.configPath + "/validations", "validations", ignoreList);
