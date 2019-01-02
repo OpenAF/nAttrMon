@@ -36,3 +36,6 @@
 
 # Disables the channel that holds the current executing plugs
 #CHPS: false
+
+# Use a core objects folder before loading the config/objects folder
+# COREOBJECTS: /some/dir/objects

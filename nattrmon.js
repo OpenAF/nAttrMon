@@ -10,6 +10,7 @@ var CHPS = true;
 var BUFFERBYNUMBER = 100;
 var BUFFERBYTIME = 1000;
 var WORKERS = __cpucores;
+var COREOBJECTS = void 0;
 
 // -------------------------------------------------------------------
 
@@ -37,6 +38,8 @@ if (io.fileExists(NATTRMON_HOME + "/nattrmon.yaml")) {
 	if (isDef(pms.BUFFERCHANNELS)) BUFFERCHANNELS = pms.BUFFERCHANNELS;
 	if (isDef(pms.BUFFERBYNUMBER)) BUFFERBYNUMBER = pms.BUFFERBYNUMBER;
 	if (isDef(pms.BUFFERBYTIME))   BUFFERBYTIME = pms.BUFFERBYTIME;
+
+    if (isDef(pms.COREOBJECTS))    COREOBJECTS = pms.COREOBJECTS;
 
 	print("Applying parameters:");
 	print(af.toYAML(pms));
@@ -1016,6 +1019,7 @@ nAttrMon.prototype.loadPlugs = function() {
 	var ignoreList = getIgnoreList(this.configPath);
 	parent.debug("Ignore list: " + stringify(ignoreList));
 
+	if (isDef(COREOBJECTS)) this.loadPlugDir(COREOBJECTS, ignoreList);
 	this.loadPlugDir(this.configPath + "/objects", "objects", ignoreList);
 	this.loadPlugDir(this.configPath + "/inputs", "inputs", ignoreList);
 	this.loadPlugDir(this.configPath + "/validations", "validations", ignoreList);
