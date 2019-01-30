@@ -283,7 +283,7 @@ filesHash:
   config/objects/nInput_Semaphores.js: 9b0c0d8ca1b1c33d8faeaae89738360c8569534e
   config/objects/nInput_Sessions.js: 2a80de271032389e017f0c247bac71ec1a368269
   config/objects/nInput_Shell.js: 2b84085de7c592241d5e9ee72d207ca24e9d5ad9
-  config/objects/nOutput_Channels.js: d4fa1c0e10ceb54a99116fedd699fcdacbd82951
+  config/objects/nOutput_Channels.js: 90d11f158dc7ff218b8669dc7db3bd02f0e68188
   config/objects/nOutput_DSV.js: b723aefe236bd464d215c52406cec796cd47d97f
   config/objects/nOutput_EmailWarnings.js: 3d03f4482a20c310a97fa7d7c657dad6dfd993e6
   config/objects/nOutput_ES.js: 0c9d4d1c9482f2d1314d36e00bb50f92d0d16d50
