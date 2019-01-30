@@ -1007,7 +1007,7 @@ nAttrMon.prototype.loadPlugs = function() {
 	var getIgnoreList = (d) => {
 		if (io.fileExists(d + "/.nattrmonignore")) {
 			var t = io.readFileAsArray(d + "/.nattrmonignore")
-			return $from(t).notStarts("#").notEquals("").select((r) => {
+			return $from(t).notStarts("#").notEquals("").match("[a-zA-Z0-9]+").select((r) => {
 				var f = javaRegExp(javaRegExp(d + "/" + r).replace("(.+)( +#+.*)", "$1")).replaceAll("\\\\#", "#").trim();
 				return f;
 			});
