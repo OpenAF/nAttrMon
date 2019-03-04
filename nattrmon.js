@@ -6,7 +6,6 @@ var JAVA_ARGS = [ ];                          // Array of java arguments
 var LOGCONSOLE = false;                       // Create files or log to console
 var DEBUG = false;
 var BUFFERCHANNELS = false;
-var CHPS = true;
 var BUFFERBYNUMBER = 100;
 var BUFFERBYTIME = 1000;
 var WORKERS = __cpucores;
@@ -32,7 +31,6 @@ if (io.fileExists(NATTRMON_HOME + "/nattrmon.yaml")) {
 	if (isDef(pms.LOG_ASYNC)) __logFormat.async = pms.LOG_ASYNC;
 	if (isDef(pms.DEBUG)) DEBUG = pms.DEBUG;	
 	if (isDef(pms.LOGCONSOLE)) LOGCONSOLE = pms.LOGCONSOLE;
-	if (isDef(pms.CHPS)) CHPS = pms.CHPS;
 	if (isUnDef(params.withDirectory) && isDef(pms.CONFIG)) params.withDirectory = pms.CONFIG;
 
 	if (isDef(pms.BUFFERCHANNELS)) BUFFERCHANNELS = pms.BUFFERCHANNELS;
@@ -140,7 +138,7 @@ var nAttrMon = function(aConfigPath, debugFlag) {
 
 	$ch(this.chCurrentValues).create(1, "simple");
 	$ch(this.chLastValues).create(1, "simple");
-	if (CHPS) $ch(this.chPS).create(1, "simple");
+	$ch(this.chPS).create(1, "simple");
 
 	// Buffer cvals
 	if (BUFFERCHANNELS) {
@@ -789,7 +787,8 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 			var uuid;
 			if (entry.aTime > 0 || isDef(entry.chSubscribe)) {
 				//uuid = thread.addThread(function(uuid) {
-				var f = function(uuid) {
+				var f;
+				if (entry.aTime > 0) f = function(uuid) {
 					var chpsi = new Date();
 					try {
 						var etry = parent.threadsSessions[uuid].entry;
@@ -798,7 +797,14 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 							return false;
 						}
 						parent.debug("Executing '" + etry.getName() + "' (" + uuid + ")");
-						if (CHPS) $ch(parent.chPS).set({ name: etry.getName(), uuid: uuid, start: chpsi }, { name: etry.getName(), type: etry.type, uuid: uuid, start: chpsi });
+						if (etry.waitForFinish && 
+							$from($ch(parent.chPS).getAll())
+							.equals("name", etry.getName())
+							.equals("type", etry.type)
+							.equals("uuid", uuid).any()) {
+							return true;
+						}
+						$ch(parent.chPS).set({ name: etry.getName(), uuid: uuid, start: chpsi }, { name: etry.getName(), type: etry.type, uuid: uuid, start: chpsi });
 						var res = etry.exec(parent);
 						parent.addValues(etry.onlyOnEvent, res, { aStamp: etry.getStamp(), toArray: etry.getToArray(), mergeKeys: etry.getMerge(), sortKeys: etry.getSort() });
 						parent.threadsSessions[uuid].count = now();
@@ -806,7 +812,7 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 					} catch(e) {
 						logErr(etry.getName() + " | " + e);
 					} finally {
-						if (CHPS) $ch(parent.chPS).unset({ name: etry.getName(), uuid: uuid, start: chpsi });
+						$ch(parent.chPS).unset({ name: etry.getName(), uuid: uuid, start: chpsi });
 					}
 
 					return true;
@@ -862,7 +868,7 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 									cont = true;
 								}
 								if (cont) {
-									if (CHPS) $ch(parent.chPS).set({ name: etry.getName(), uuid: aUUID, start: chpsi }, { name: etry.getName(), type: etry.type, uuid: aUUID, start: chpsi });
+									$ch(parent.chPS).set({ name: etry.getName(), uuid: aUUID, start: chpsi }, { name: etry.getName(), type: etry.type, uuid: aUUID, start: chpsi });
 									parent.debug("Subscriber " + aCh + " on '" + etry.getName() + "' (uuid " + aUUID + ") ");
 									var res;
 									if (etry.chHandleSetAll && aOp == "setall") {
@@ -887,7 +893,7 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 							} catch(e) {
 								logErr(etry.getName() + " | " + e);
 							} finally {
-								if (CHPS && cont) $ch(parent.chPS).unset({ name: etry.getName(), uuid: aUUID, start: chpsi });
+								if (cont) $ch(parent.chPS).unset({ name: etry.getName(), uuid: aUUID, start: chpsi });
 							}
 						};
 					};
@@ -911,9 +917,16 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 								}
 								parent.debug("Executing '" + etry.getName() + "' (" + uuid + ")");
 								var chpsi = new Date();
-								if (CHPS) $ch(parent.chPS).set({ name: etry.getName(), uuid: uuid, start: chpsi }, { name: etry.getName(), type: etry.type, uuid: uuid, start: chpsi });
+								if (etry.waitForFinish && 
+								    $from($ch(parent.chPS).getAll())
+								    .equals("name", etry.getName())
+								    .equals("type", etry.type)
+								    .equals("uuid", uuid).any()) {
+								    return true;
+								}
+								$ch(parent.chPS).set({ name: etry.getName(), uuid: uuid, start: chpsi }, { name: etry.getName(), type: etry.type, uuid: uuid, start: chpsi });
 								var res = etry.exec(parent);
-								if (CHPS) $ch(parent.chPS).unset({ name: etry.getName(), uuid: uuid, start: chpsi });
+								$ch(parent.chPS).unset({ name: etry.getName(), uuid: uuid, start: chpsi });
 								parent.addValues(etry.onlyOnEvent, res, { aStamp: etry.getStamp(), toArray: etry.getToArray(), mergeKeys: etry.getMerge(), sortKeys: etry.getSort() });
 								parent.threadsSessions[uuid].count = now();
 								etry.touch();
