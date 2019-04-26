@@ -129,7 +129,7 @@ ow.template.addHelper("escape", (s) => { return s.replace(/['"]/g, "\\$1"); });
 // Main object ----------------------------------------------------------------------------------
 // ----------------------------------------------------------------------------------------------
 
-var nAttrMon = function(aConfigPath, debugFlag) {
+const nAttrMon = function(aConfigPath, debugFlag) {
 	plugin("Threads");
 
 	this.chCurrentValues = "nattrmon::cvals";
@@ -143,22 +143,6 @@ var nAttrMon = function(aConfigPath, debugFlag) {
 	// Buffer cvals
 	if (BUFFERCHANNELS) {
 		$ch(this.chCurrentValues).subscribe(ow.ch.utils.getBufferSubscriber(this.chCurrentValues, [ "name" ], BUFFERBYNUMBER, BUFFERBYTIME));
-		/*$ch(this.chCurrentValues + "::buffer").create(1, "dummy");
-		$ch(this.chCurrentValues + "::__bufferTransit").create(1, "buffer", {
-			bufferCh      : this.chCurrentValues + "::buffer",
-			bufferIdxs    : [ "name" ],
-			bufferByNumber: BUFFERBYNUMBER,
-			bufferByTime  : BUFFERBYTIME
-		});
-		var parent = this;
-		$ch(this.chCurrentValues).subscribe(function(aC, aO, aK, aV) {
-			aK = merge(aK, { t: nowNano() });
-			switch(aO) {
-			case "set"   : $ch(parent.chCurrentValues + "::__bufferTransit").set(aK, aV);    break;
-			case "setall": $ch(parent.chCurrentValues + "::__bufferTransit").setAll(aK, aV); break;
-			case "unset" : $ch(parent.chCurrentValues + "::__bufferTransit").unset(aK);      break;
-			}
-		});*/
 	}
 
 	this.currentValues    = $ch(this.chCurrentValues);
@@ -785,8 +769,8 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 			parent.thread = this.thread;
 
 			var uuid;
+			// Time based or initial meta for channel subscriber
 			if (entry.aTime > 0 || isDef(entry.chSubscribe)) {
-				//uuid = thread.addThread(function(uuid) {
 				var f;
 				if (entry.aTime > 0) f = function(uuid) {
 					var chpsi = new Date();
@@ -805,7 +789,22 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 							return true;
 						}
 						$ch(parent.chPS).set({ name: etry.getName(), uuid: uuid, start: chpsi }, { name: etry.getName(), type: etry.type, uuid: uuid, start: chpsi });
-						var res = etry.exec(parent);
+						var res;
+						if (isDef(etry.killAfterMinutes) && isNumber(etry.killAfterMinutes)) {
+							$tb()
+							.stopWhen(() => {
+								sleep(500);
+								if (ow.format.dateDiff.inMinutes(chpsi) >= etry.killAfterMinutes) {
+									logErr("Stopping " + etry.getName() + " due to timeout (executed for more than " + ow.format.dateDiff.inMinutes(chpsi) + " minutes)");
+									return true;
+								} else {
+									return false;
+								}
+							})
+							.exec(() => { res = etry.exec(parent); return res; });
+						} else {
+							res = etry.exec(parent);
+						}	
 						parent.addValues(etry.onlyOnEvent, res, { aStamp: etry.getStamp(), toArray: etry.getToArray(), mergeKeys: etry.getMerge(), sortKeys: etry.getSort() });
 						parent.threadsSessions[uuid].count = now();
 						etry.touch();
@@ -823,10 +822,8 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 						if (entry.waitForFinish) {
 							this.debug("Starting with fixed rate for " + entry.getName() + " - " + entry.aTime);
 							uuid = parent.thread.addScheduleThreadWithFixedDelay(f, entry.aTime);
-							//thread.startWithFixedRate(entry.aTime);
 						} else {
 							this.debug("Starting at fixed rate for " + entry.getName() + " - " + entry.aTime);
-							//thread.startAtFixedRate(entry.aTime);
 							uuid = parent.thread.addScheduleThreadAtFixedRate(f, entry.aTime);
 						}
 					
@@ -846,7 +843,9 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 				}
 			}
 
+			// If not time based
 			if (entry.aTime <= 0) {
+				// If channel subscriber
 				if (isDef(entry.chSubscribe)) {
 					var subs = function(aUUID) { 
 						return function(aCh, aOp, aK, aV) {		
@@ -871,10 +870,32 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 									$ch(parent.chPS).set({ name: etry.getName(), uuid: aUUID, start: chpsi }, { name: etry.getName(), type: etry.type, uuid: aUUID, start: chpsi });
 									parent.debug("Subscriber " + aCh + " on '" + etry.getName() + "' (uuid " + aUUID + ") ");
 									var res;
+
+									var execRes = (aobj, amap) => {
+										var r;
+										if (isDef(etry.killAfterMinutes) && isNumber(etry.killAfterMinutes)) {
+											$tb()
+											.stopWhen(() => {
+												sleep(500);
+												if (ow.format.dateDiff.inMinutes(chpsi) >= etry.killAfterMinutes) {
+													logErr("Stopping " + etry.getName() + " due to timeout (executed for more than " + ow.format.dateDiff.inMinutes(chpsi) + " minutes)");
+													return true;
+												} else {
+													return false;
+												}
+											})
+											.exec(() => { r = etry.exec(aobj, amap); return true; });
+										} else {
+											r = etry.exec(aobj, amap);
+										}
+										
+										return r;
+									};
+
 									if (etry.chHandleSetAll && aOp == "setall") {
 										res = [];
 										for(var ii in aV) {
-											var r = etry.exec(parent, { ch: aCh, op: "set", k: ow.obj.filterKeys(aK, aV[ii]), v: aV[ii] });
+											var r = execRes(parent, { ch: aCh, op: "set", k: ow.obj.filterKeys(aK, aV[ii]), v: aV[ii] });
 											if (isArray(r)) {
 												res = res.concat(r);
 											} else {
@@ -884,7 +905,7 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 											}
 										}
 									} else {
-										res = etry.exec(parent, { ch: aCh, op: aOp, k: aK, v: aV });
+										res = execRes(parent, { ch: aCh, op: aOp, k: aK, v: aV });
 									}
 									parent.addValues(etry.onlyOnEvent, res, { aStamp: etry.getStamp(), toArray: etry.getToArray(), mergeKeys: etry.getMerge(), sortKeys: etry.getSort() });
 									parent.threadsSessions[aUUID].count = now();
@@ -907,6 +928,7 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 						$ch(entry.chSubscribe).subscribe(subs(uuid));
 					}
 				} else {
+				    // If cron based
 					if (isDef(entry.getCron())) {
 						var f = function(uuid) {
 							try {
@@ -925,7 +947,22 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 								    return true;
 								}
 								$ch(parent.chPS).set({ name: etry.getName(), uuid: uuid, start: chpsi }, { name: etry.getName(), type: etry.type, uuid: uuid, start: chpsi });
-								var res = etry.exec(parent);
+								var res;
+								if (isDef(etry.killAfterMinutes) && isNumber(etry.killAfterMinutes)) {
+									$tb()
+									.stopWhen(() => {
+										sleep(500);
+										if (ow.format.dateDiff.inMinutes(chpsi) >= etry.killAfterMinutes) {
+											logErr("Stopping " + etry.getName() + " due to timeout (executed for more than " + ow.format.dateDiff.inMinutes(chpsi) + " minutes)");
+											return true;
+										} else {
+											return false;
+										}
+									})
+									.exec(() => { res = etry.exec(parent); return true; });
+								} else {
+									res = etry.exec(parent);
+								}							
 								$ch(parent.chPS).unset({ name: etry.getName(), uuid: uuid, start: chpsi });
 								parent.addValues(etry.onlyOnEvent, res, { aStamp: etry.getStamp(), toArray: etry.getToArray(), mergeKeys: etry.getMerge(), sortKeys: etry.getSort() });
 								parent.threadsSessions[uuid].count = now();
@@ -948,9 +985,6 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 					}
 				}
 			}
-
-			//this.threads.push(thread);
-			//this.debug("Number of threads added: " + this.threads.length);
 		} catch(e) {
 			logErr("Error loading plug: " + aPlugType + "::" + stringify(this.plugs[aPlugType][iPlug], void 0, "") + " | " + stringify(e));
 		}
@@ -1168,8 +1202,8 @@ var __stuckfactor = 500;
 
 // Option stop
 if (isDef(params.stop)) {
-        pidKill(ow.server.getPid(NATTRMON_HOME + "/nattrmon.pid"));
-        exit(1);
+	pidKill(ow.server.getPid(NATTRMON_HOME + "/nattrmon.pid"));
+	exit(1);
 }
 
 ow.server.checkIn(NATTRMON_HOME + "/nattrmon.pid", function(aPid) {
