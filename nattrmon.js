@@ -4,6 +4,7 @@ var LOGAUDIT = true;                          // Set to false to turn it off
 var LOGAUDIT_TEMPLATE = "AUDIT | User: {{request.user}} | Channel: {{name}} | Operation: {{op}} | Key: {{{key}}}";
 var JAVA_ARGS = [ ];                          // Array of java arguments
 var LOGCONSOLE = false;                       // Create files or log to console
+var MAXPLUGEXECUTE_TIME = void 0;             // Max default time for plug execution
 var DEBUG = false;
 var BUFFERCHANNELS = false;
 var BUFFERBYNUMBER = 100;
@@ -31,6 +32,7 @@ if (io.fileExists(NATTRMON_HOME + "/nattrmon.yaml")) {
 	if (isDef(pms.LOG_ASYNC)) __logFormat.async = pms.LOG_ASYNC;
 	if (isDef(pms.DEBUG)) DEBUG = pms.DEBUG;	
 	if (isDef(pms.LOGCONSOLE)) LOGCONSOLE = pms.LOGCONSOLE;
+	if (isDef(pms.MAXPLUGEXECUTE_TIME)) MAXPLUGEXECUTE_TIME = pms.MAXPLUGEXECUTE_TIME;
 	if (isUnDef(params.withDirectory) && isDef(pms.CONFIG)) params.withDirectory = pms.CONFIG;
 
 	if (isDef(pms.BUFFERCHANNELS)) BUFFERCHANNELS = pms.BUFFERCHANNELS;
