@@ -66,22 +66,26 @@ nInput_DB.prototype.input = function (scope, args) {
 			};
 
 			// Get result for monitoredObject or object pool
-			if (isDefined(parent.objectPoolKey)) {
-				nattrmon.useObject(parent.objectPoolKey, function (aDb) {
-					try {
-						if (isDef(aDb.convertDates)) aDb.convertDates(true);
-						res = aDb.q(templify(aSQL, data)).results;
-						//res = (useparam) ? aDb.qs(aSQL, [String(lastcheck)], true).results : aDb.q(aSQL).results;
-					} catch (e) {
-						logErr("Error while retriving DB query from '" + parent2.objectPoolKey + "': " + e.message);
-						logErr("DB query = '" + templify(aSQL, data) + "'");
-						throw e;
-					}
-					
-					// Properly end transaction (issue #93)
-					aDb.rollback();
-					return true;
-				});
+			if (isDef(parent.objectPoolKey)) {
+				if (nattrmon.isObjectPool(parent.objectPoolKey)) {
+					nattrmon.useObject(parent.objectPoolKey, function (aDb) {
+						try {
+							if (isDef(aDb.convertDates)) aDb.convertDates(true);
+							res = aDb.q(templify(aSQL, data)).results;
+							//res = (useparam) ? aDb.qs(aSQL, [String(lastcheck)], true).results : aDb.q(aSQL).results;
+						} catch (e) {
+							logErr("Error while retriving DB query from '" + parent2.objectPoolKey + "': " + e.message);
+							logErr("DB query = '" + templify(aSQL, data) + "'");
+							throw e;
+						}
+						
+						// Properly end transaction (issue #93)
+						aDb.rollback();
+						return true;
+					});
+				} else {
+					logWarn("Object pool key = '" + parent.objectPoolKey + "' not found.");
+				}
 			} else {
 				sync(function () {
 					//res = (useparam) ? parent2.db.qs(aSQL, [String(lastcheck)], true).results : parent2.db.q(aSQL).results;
@@ -90,7 +94,7 @@ nInput_DB.prototype.input = function (scope, args) {
 			}
 
 			// Handle result
-			if (isUndefined(res)) {
+			if (isUnDef(res)) {
 				ret[i] = undefined;
 			} else {
 				if (res.length == 1 && Object.keys(res[0]).length == 1) {
