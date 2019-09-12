@@ -22,6 +22,8 @@ var nOutput_ES = function (aMap) {
 	this.include = aMap.include;
 	this.exclude = aMap.exclude;
 
+	this.unique = aMap.unique;
+
 	if (isDef(this.include) && !isArray(this.include)) throw "Include needs to be an array";
 	if (isDef(this.exclude) && !isArray(this.exclude)) throw "Exclude needs to be an array";
 
@@ -62,7 +64,7 @@ nOutput_ES.prototype.addToES = function (aCh, aVal, useTitle) {
 	try {
 		if (isArray(aVal.val)) {
 			for (var i in aVal.val) {
-				obj.id = sha1(obj.name + obj.date + i);
+				obj.id = sha1(obj.name + (this.unique ? "" : obj.date) + i);
 				obj[obj.name] = aVal.val[i];
 				
 				traverse(obj, function (k, v, p, o) {
@@ -79,10 +81,10 @@ nOutput_ES.prototype.addToES = function (aCh, aVal, useTitle) {
 			}
 		} else {
 			if (useTitle) {
-				obj.id = sha1(obj.title + obj.date + obj.level + i);
+				obj.id = sha1(obj.title + (this.unique ? obj.createdate : obj.date) + obj.level);
 				obj = merge(obj, aVal);
 			} else {
-				obj.id = sha1(obj.name + obj.date);
+				obj.id = sha1(obj.name + (this.unique ? "" : obj.date));
 				obj[obj.name] = aVal.val;
 			}
 			traverse(obj, function (k, v, p, o) {
