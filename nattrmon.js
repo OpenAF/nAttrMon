@@ -175,6 +175,7 @@ const nAttrMon = function(aConfigPath, debugFlag) {
 	this.indexPlugThread = {};
 	this.sch = new ow.server.scheduler(); // schedule plugs thread pool
 	this.schList = {}; // schedule plugs list
+	this.ignoreList = [];
 
 	plugin("Threads");
 	this.thread = new Threads();
@@ -784,9 +785,9 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 
 			var uuid;
 			// Time based or initial meta for channel subscriber
-			if (entry.aTime > 0 || isDef(entry.chSubscribe)) {
+			if (entry.aTime >= 0 || isDef(entry.chSubscribe)) {
 				var f;
-				if (entry.aTime > 0) f = function(uuid) {
+				if (entry.aTime >= 0) f = function(uuid) {
 					var chpsi = new Date();
 					try {
 						var etry = parent.threadsSessions[uuid].entry;
@@ -844,16 +845,21 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 						this.debug("Creating a thread for " + entry.getName() + " with uuid = " + uuid);
 					} else {
 						uuid = genUUID();
-						this.debug("Creating subscriber for " + entry.getName() + " with uuid = " + uuid);
+						if (isDef(entry.chSubscribe)) {
+							this.debug("Creating subscriber for " + entry.getName() + " with uuid = " + uuid);
+						}
 					}
 
 					parent.threadsSessions[uuid] = {
 						"entry": this.plugs[aPlugType][iPlug],
 						"count": now()
 					};
-					parent.indexPlugThread[entry.getCategory() + "/" + entry.getName()] = uuid;					
+					parent.indexPlugThread[entry.getCategory() + "/" + entry.getName()] = uuid;		
+
+					// One-time execution
+					if (entry.aTime == 0) f(uuid);		
 				} catch(e) {
-					logErr("Problem starting thread for '" + entry.getName() + "' (uuid " + uuid + ") ");
+					logErr("Problem starting thread for '" + entry.getName() + "' (uuid " + uuid + "): " + String(e));
 				}
 			}
 
@@ -1066,15 +1072,32 @@ nAttrMon.prototype.loadPlugs = function() {
 	var parent = this;
 
 	var getIgnoreList = (d) => {
+		var res = [];
 		if (io.fileExists(d + "/.nattrmonignore")) {
 			var t = io.readFileAsArray(d + "/.nattrmonignore")
-			return $from(t).notStarts("#").notEquals("").match("[a-zA-Z0-9]+").select((r) => {
+			res = $from(t).notStarts("#").notEquals("").match("[a-zA-Z0-9]+").select((r) => {
 				var f = javaRegExp(javaRegExp(d + "/" + r).replace("(.+)( +#+.*)", "$1")).replaceAll("\\\\#", "#").trim();
 				return f;
 			});
 		} else {
-			return [];
+			res = [];
 		}
+
+		if (io.fileExists(d + "/nattrmonignore.js")) {
+			logInfo("Executing '" + d + "/nattrmonignore.js'...");
+			var fn = require(d + "/nattrmonignore.js");
+			if (isUnDef(fn.getIgnoreList) || !isFunction(fn.getIgnoreList)) {
+				logErr("nattrmonignore.js doesn't have a getIgnoreList function.");
+			} else {
+				var tmpRes = fn.getIgnoreList();
+				tmpRes.forEach((r) => {
+					var f = javaRegExp(javaRegExp(d + "/" + r).replace("(.+)( +#+.*)", "$1")).replaceAll("\\\\#", "#").trim();
+					res.push(f);
+				});
+			}
+		}
+
+		return res;
 	};
 
 	var ignoreList = getIgnoreList(this.configPath);
@@ -1134,7 +1157,10 @@ nAttrMon.prototype.loadPlugDir = function(aPlugDir, aPlugDesc, ignoreList) {
 		for(let ii in ignoreList) { 
 			if (dirs[i].indexOf(ignoreList[ii]) == 0 || 
 			    dirs[i].match(new RegExp("^" + ignoreList[ii] + "$"))) inc = false; }
-        if (inc) { this.loadPlugDir(dirs[i], aPlugDesc, ignoreList); } else { logWarn("ignoring " + dirs[i]); }
+        if (inc) { this.loadPlugDir(dirs[i], aPlugDesc, ignoreList); } else { 
+			logWarn("ignoring " + dirs[i]); 
+			this.ignoreList.push(dirs[i]);
+		}
     }
 
     for (let i in plugsjs) {
@@ -1142,9 +1168,12 @@ nAttrMon.prototype.loadPlugDir = function(aPlugDir, aPlugDesc, ignoreList) {
 		for(let ii in ignoreList) { 
 			if (plugsjs[i].indexOf(ignoreList[ii]) == 0 || 
 			    plugsjs[i].match(new RegExp("^" + ignoreList[ii] + "$"))) inc = false; }		
-		if (inc) { this.loadPlug(plugsjs[i], aPlugDesc, ignoreList); } else { logWarn("ignoring " + plugsjs[i]); }
+		if (inc) { this.loadPlug(plugsjs[i], aPlugDesc, ignoreList); } else { 
+			logWarn("ignoring " + plugsjs[i]);
+			this.ignoreList.push(plugsjs[i]);
+		}
     }
-}
+};
 
 nAttrMon.prototype.loadPlug = function (aPlugFile, aPlugDesc) {
 	if (isUnDef(aPlugDesc)) aPlugDesc = "";

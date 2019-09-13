@@ -1,0 +1,7 @@
+(function() {
+    exports.getIgnoreList = function() {
+        return [
+            "inputs/01.test.yaml"
+        ];
+    };
+})();

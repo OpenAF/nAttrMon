@@ -1,0 +1,10 @@
+input: 	
+   name         : nAttrMon List of ignored plugs
+   timeInterval : 0
+   waitForFinish: true
+   onlyOnEvent  : true
+   exec         : >
+      var ret = {};
+      ret["nAttrMon/List of ignored plugs"] = $from(nattrmon.ignoreList).select((r) => { return { plugs: r }});
+
+      return ret;
