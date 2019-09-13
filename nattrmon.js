@@ -1,16 +1,17 @@
 // Initialization
 var LOGHK_HOWLONGAGOINMINUTES = 30 * 24 * 60; // How long to keep logs
-var LOGAUDIT = true;                          // Set to false to turn it off
-var LOGAUDIT_TEMPLATE = "AUDIT | User: {{request.user}} | Channel: {{name}} | Operation: {{op}} | Key: {{{key}}}";
-var JAVA_ARGS = [ ];                          // Array of java arguments
-var LOGCONSOLE = false;                       // Create files or log to console
-var MAXPLUGEXECUTE_TIME = void 0;             // Max default time for plug execution
-var DEBUG = false;
-var BUFFERCHANNELS = false;
-var BUFFERBYNUMBER = 100;
-var BUFFERBYTIME = 1000;
-var WORKERS = __cpucores;
-var COREOBJECTS = void 0;
+var LOGAUDIT                  = true;         // Set to false to turn it off
+var LOGAUDIT_TEMPLATE         = "AUDIT | User: {{request.user}} | Channel: {{name}} | Operation: {{op}} | Key: {{{key}}}";
+var JAVA_ARGS                 = [ ];          // Array of java arguments
+var LOGCONSOLE                = false;        // Create files or log to console
+var MAXPLUGEXECUTE_TIME       = void 0;       // Max default time for plug execution
+var DEBUG                     = false;
+var BUFFERCHANNELS            = false;
+var BUFFERBYNUMBER            = 100;
+var BUFFERBYTIME              = 1000;
+var WORKERS                   = __cpucores;
+var COREOBJECTS               = void 0;
+var NEED_CH_PERSISTENCE       = true;
 
 // -------------------------------------------------------------------
 
@@ -208,11 +209,13 @@ const nAttrMon = function(aConfigPath, debugFlag) {
 	this.listOfAttributes.getCh().subscribe((new nAttribute()).convertDates);
     this.listOfWarnings.getCh().subscribe((new nWarning()).convertDates);
    
-    // persistence
-	this.listOfWarnings.getCh().storeAdd(this.getConfigPath() + "/nattrmon.warns.snapshot", [ "title" ], true);
-	this.listOfAttributes.getCh().storeAdd(this.getConfigPath() + "/nattrmon.attrs.snapshot", [ "name" ], true);
-	this.lastValues.storeAdd(this.getConfigPath() + "/nattrmon.lvals.snapshot", [ "name" ], true);
-	this.currentValues.storeAdd(this.getConfigPath() + "/nattrmon.cvals.snapshot", [ "name" ], true);
+	// persistence
+	if (NEED_CH_PERSISTENCE) {
+		this.listOfWarnings.getCh().storeAdd(this.getConfigPath() + "/nattrmon.warns.snapshot", [ "title" ], true);
+		this.listOfAttributes.getCh().storeAdd(this.getConfigPath() + "/nattrmon.attrs.snapshot", [ "name" ], true);
+		this.lastValues.storeAdd(this.getConfigPath() + "/nattrmon.lvals.snapshot", [ "name" ], true);
+		this.currentValues.storeAdd(this.getConfigPath() + "/nattrmon.cvals.snapshot", [ "name" ], true);
+	}
 };
 
 nAttrMon.prototype.getConfigPath = function() {
@@ -238,11 +241,11 @@ nAttrMon.prototype.genSnapshot = function() {
 
 nAttrMon.prototype.setSessionData = function(aKey, aObject) {
 	this.sessionData[aKey] = aObject;
-}
+};
 
 nAttrMon.prototype.getSessionData = function(aKey) {
 	return this.sessionData[aKey];
-}
+};
 
 nAttrMon.prototype.hasSessionData = function(aKey) {
 	if(isUnDef(this.getSessionData(aKey))) {
@@ -250,13 +253,13 @@ nAttrMon.prototype.hasSessionData = function(aKey) {
 	} else {
 		return true;
 	}
-}
+};
 
 // Debug functions
 // ---------------
 nAttrMon.prototype.setDebug = function(aDebugFlag) {
 	this.debugFlag = aDebugFlag;
-}
+};
 
 // Monitored objects
 // -----------------
@@ -264,12 +267,12 @@ nAttrMon.prototype.setDebug = function(aDebugFlag) {
 nAttrMon.prototype.addMonitoredObject = function(aKey, anObject) {
 	this.monitoredObjects[aKey] = new nMonitoredObject(aKey, anObject);
 	return this.getMonitoredObject(aKey);
-}
+};
 
 nAttrMon.prototype.getMonitoredObject = function(aKey) {
   	if (this.hasMonitoredObject(aKey))
 		return this.monitoredObjects[aKey].getObject();
-}
+};
 
 nAttrMon.prototype.hasMonitoredObject = function(aKey) {
 	if(isUnDef(this.monitoredObjects[aKey])) {
@@ -277,23 +280,18 @@ nAttrMon.prototype.hasMonitoredObject = function(aKey) {
 	} else {
 		return true;
 	}
-}
+};
 
 nAttrMon.prototype.monitoredObjectsTest = function() {
 	for(var o in this.monitoredObjects) {
 		this.monitoredObjects[o].test();
 	}
-}
+};
 
-/**
- * [declareMonitoredObjectDirty description]
- * @param  {[type]} aKey [description]
- * @return {[type]}      [description]
- */
 nAttrMon.prototype.declareMonitoredObjectDirty = function(aKey) {
 	this.monitoredObjects[aKey].setDirty();
 	this.monitoredObjects[aKey].test();
-}
+};
 
 // Object pools
 // ------------
@@ -309,21 +307,22 @@ nAttrMon.prototype.isObjectPool = function(aKey) {
 		return true;
 	else
 		return false;
-}
+};
 
 /**
  * <odoc>
- * <key>nattrmon.addObjectPool(aKey, aOWObjPool, aCat)</key>
+ * <key>nattrmon.addObjectPool(aKey, aOWObjPool, aCat, aLifeCycle)</key>
  * Given a aOWObjPool (created, but not started, from ow.obj.pool) starts it and adds it to nattrmon
  * with the provided aKey. Later objects can be requested and returned using nattrmon.leaseObject and
- * nattrmon.returnObject. Optionally you can provide a aCat category.
+ * nattrmon.returnObject. Optionally you can provide a aCat category and/or aLifeCycle map (limit, fn and last).
  * </odoc>
  */
-nAttrMon.prototype.addObjectPool = function(aKey, aOWObjPool, aCat) {
+nAttrMon.prototype.addObjectPool = function(aKey, aOWObjPool, aCat, aLifeCycle) {
 	this.objPools[aKey] = aOWObjPool.start();
 	this.objPoolsCat[aKey] = aCat;
 	this.objPoolsAssociations[aKey] = {};
-}
+	return this;
+};
 
 /**
  * <odoc>
@@ -333,15 +332,23 @@ nAttrMon.prototype.addObjectPool = function(aKey, aOWObjPool, aCat) {
  */
 nAttrMon.prototype.getObjectPool = function(aKey) {
 	return this.objPools[aKey];
-}
+};
 
+/**
+ * <odoc>
+ * <key>nattrmon.delObjectPool(aKey) : nattrmon</key>
+ * Deletes the object pool for the provided aKey.
+ * </odoc>
+ */
 nAttrMon.prototype.delObjectPool = function(aKey) {
     this.objPools[aKey].stop();
 	//deleteFromArray(this.objPools, this.objPools.indexOf(aKey));
 	delete this.objPools[aKey];
 	delete this.objPoolsCat[aKey];
 	delete this.objPoolsAssociations[aKey];
-}
+
+	return this;
+};
 
 /**
  * <odoc>
@@ -364,7 +371,7 @@ nAttrMon.prototype.getObjectPoolKeys = function(aCat) {
 	}
 
 	return res;
-}
+};
 
 /**
  * <odoc>
@@ -374,7 +381,7 @@ nAttrMon.prototype.getObjectPoolKeys = function(aCat) {
  */
 nAttrMon.prototype.leaseObject = function(aKey) {
 	return this.objPools[aKey].checkOut();
-}
+};
 
 /**
  * <odoc>
@@ -385,7 +392,7 @@ nAttrMon.prototype.leaseObject = function(aKey) {
  */
 nAttrMon.prototype.returnObject = function(aKey, anObj, aStatus) {
 	return this.objPools[aKey].checkIn(anObj, aStatus);
-}
+};
 
 /**
  * <odoc>
@@ -396,10 +403,15 @@ nAttrMon.prototype.returnObject = function(aKey, anObj, aStatus) {
  */
 nAttrMon.prototype.useObject = function(aKey, aFunction) {
 	// Temporary until dependency OpenAF >= 20181210
-	return this.objPools[aKey].use(function(v) {
-		var res = aFunction(v);
-		if (isDef(res)) return res; else return true;
-	});
+	if (isUnDef(this.objPools[aKey])) {
+		logWarn("Object pool '" + aKey + "' doesn't exist.");
+		return false;
+	} else {
+		return this.objPools[aKey].use(function(v) {
+			var res = aFunction(v);
+			if (isDef(res)) return res; else return true;
+		});
+	}
 };
 
 /**
