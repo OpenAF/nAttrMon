@@ -1084,7 +1084,7 @@ nAttrMon.prototype.loadPlugs = function() {
 		}
 
 		if (io.fileExists(d + "/nattrmonignore.js")) {
-			logInfo("Executing '" + d + "/nattrmonignore.js'...");
+			log("Executing '" + d + "/nattrmonignore.js'...");
 			var fn = require(d + "/nattrmonignore.js");
 			if (isUnDef(fn.getIgnoreList) || !isFunction(fn.getIgnoreList)) {
 				logErr("nattrmonignore.js doesn't have a getIgnoreList function.");
