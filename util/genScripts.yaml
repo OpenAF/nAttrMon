@@ -1,0 +1,82 @@
+ojob:
+  async: true
+
+todo:
+  - Get configuration
+  - Generate watchdog
+  - Generate restart script
+
+jobs:
+  #------------------------
+  - name: Get configuration
+    exec: |
+      args.path = _$(args.path).default(getOPackPath("nAttrMon"));
+      
+      if (isDef(args.elastic) && args.elastic.toLowerCase() == "true") global.elastic = true; else global.elastic = false;
+      if (isDef(args.slack) && args.slack.toLowerCase() == "true") global.slack = true; else global.slack = false;
+      if (isDef(args.channels) && args.channels.toLowerCase() == "true") global.channels = true; else global.channels = false;
+
+      if (!io.fileExists(args.path + "/nattrmon.yaml")) throw "Please create the file " + args.path + "/nattrmon.yaml";
+      global.path = args.path;
+
+      var config = io.readFileYAML(args.path + "/nattrmon.yaml");
+      global.configPath = _$(config.CONFIG).default(args.path + "/config");
+      global.configArgs = _$(config.JAVA_ARGS).default("");
+
+  #------------------------
+  - name: Generate watchdog
+    deps:
+      - Get configuration
+    exec: |
+      ow.loadTemplate(); ow.loadFormat();
+      var keepInit = false, initStr = "";
+      if (io.fileExists(global.path + "/watchdog.yaml")) {
+        keepInit = true;
+        initStr = io.readFileString(global.path + "/watchdog.yaml").replace(/#### Begin Initialization\n((.*\n)+)#### End Initialization(.*\n)+/g, "$1");
+        initStr = initStr.replace(/\n$/, "");
+      }
+      io.writeFileString(global.path + "/watchdog.yaml", ow.template.parseHBS(global.path + "/util/watchdog.yaml.hbs", {
+        folder: global.path,
+        folderConfig: global.configPath,
+        elastic: global.elastic,
+        slack: global.slack,
+        channels: global.channels,
+        java: String(ow.format.getJavaHome() + java.io.File.separator + "bin" + java.io.File.separator + "java").replace(/\\/g, "\\\\"),
+        openaf: getOpenAFJar(),
+        initArgs: global.configArgs,
+        init: keepInit,
+        initText: initStr
+      }));
+
+      if (!ow.format.isWindows()) log("ADD TO CRON: You can add to cron the following line:\n" + "*/5 * * * *\t" + String(ow.format.getJavaHome() + java.io.File.separator + "bin" + java.io.File.separator + "java").replace(/\\/g, "\\\\") + " -jar " + getOpenAFJar() + " --ojob -e " + global.path + "/watchdog.yaml\n");
+
+  #------------------------------
+  - name: Generate restart script
+    deps:
+      - Get configuration
+    exec: |
+      ow.loadFormat(); var cmds = {};
+      if (ow.format.isWindows()) {
+        cmds["start"] = "\"" + getOpenAFPath().replace(/\\/g, "\\\\") + "ojob.bat\" " + global.path + java.io.File.separator + "watchdog.yaml";
+        cmds["stop"] = "\"" + getOpenAFPath().replace(/\\/g, "\\\\") + "ojob.bat\" " + global.path + java.io.File.separator + "watchdog.yaml STOP=true";
+      } else {  
+        cmds["start"] = "\"" + getOpenAFPath() + "ojob\" " + global.path + java.io.File.separator + "watchdog.yaml";
+        cmds["stop"] = "\"" + getOpenAFPath() + "ojob\" " + global.path + java.io.File.separator + "watchdog.yaml STOP=true";
+      }
+
+      var lines = [];
+      lines.push(cmds["stop"]);
+      lines.push(cmds["start"]);
+      if (ow.format.isWindows()) {
+        io.writeFileString(global.path + "/restart.bat", lines.join("\n"));
+
+        io.writeFileString(global.path + "/start.bat", cmds["start"]);
+        io.writeFileString(global.path + "/stop.bat", cmds["stop"]);
+      } else {
+        io.writeFileString(global.path + "/restart.sh", lines.join("\n"));
+        $sh("chmod u+x " + global.path + "/restart.sh").get();
+        io.writeFileString(global.path + "/start.sh", cmds["start"]);
+        $sh("chmod u+x " + global.path + "/start.sh").get();
+        io.writeFileString(global.path + "/stop.sh", cmds["stop"]);
+        $sh("chmod u+x " + global.path + "/stop.sh").get();        
+      }

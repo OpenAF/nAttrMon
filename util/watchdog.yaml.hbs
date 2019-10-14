@@ -1,0 +1,151 @@
+#### Begin Initialization
+{{#if init}}
+{{{initText}}}
+{{else}}
+init:
+  # Change these settings if you add ELASTIC=true to the genScripts.yaml parameters
+  elastic:
+    url   : &ELASTIC_URL    http://my.elastic
+    index : &ELASTIC_INDEX  nattrmon-logs
+    format: &ELASTIC_FORMAT "yyyy.mm.dd"
+    host  : &ELASTIC_HOST   nAttrMon
+    stamp : &ELASTIC_STAMP
+      environment: development
+
+  # Change these settings if you add CHANNELS=true to the genScripts.yaml parameters
+  channels:
+    url   : &CHANNELS_URL   http://change:me@127.0.0.1/8090
+
+  # Change these settings if you add SLACK=true to the genScripts.yaml parameters
+  slack:
+    url   : &SLACK_URL      https://hooks.slack.com/services/ABCDE/FGHIJ/abc123
+{{/if}}
+#### End Initialization
+
+####
+# Author            : Nuno Aguiar
+# How to run        : ojob watchdog.yaml (in crontab every x minutes)
+# oPack dependencies: latest ojob-common; latest notifications;
+####
+
+include:
+  - oJobWatchDog.yaml
+  - oJobES.yaml
+  - notificationsSlack.yaml
+
+ojob:
+  logToFile   :
+    logFolder            : {{folder}}/watchdog.logs
+    HKhowLongAgoInMinutes: 10080                  # keep logs for 7 days
+    setLogOff            : true
+  logToConsole: false
+  logJobs     : false
+  logArgs     : false
+  unique      :
+    pidFile     : {{folder}}/watchdog.pid
+    killPrevious: true
+  checkStall  :
+    everySeconds    : 1
+    killAfterSeconds: 60    
+
+todo:
+  {{#if elastic}}
+  #----------------------
+  - name: Start Log to ES
+    args:
+      url   : *ELASTIC_URL
+      index : *ELASTIC_INDEX
+      format: *ELASTIC_FORMAT
+      host  : *ELASTIC_HOST
+      stamp : *ELASTIC_STAMP
+  {{else}}
+  ##----------------------
+  #- name: Start Log to ES
+  #  args:
+  #    url   : *ELASTIC_URL
+  #    index : *ELASTIC_INDEX
+  #    format: *ELASTIC_FORMAT
+  #    host  : *ELASTIC_HOST
+  #    stamp : *ELASTIC_STAMP
+  {{/if}}
+
+  - Watchdog for nAttrMon
+
+jobs:
+  {{#if slack}}
+  #---------------------
+  - name: Bark via Slack
+    args:
+      webHookURL: &SLACK_URL
+    exec: |
+      var dogmsg = "*" + args.nameOfDog + "* ";
+      if (args.__watchdog.phase == "stop" || args.__watchdog.phase == "start") {
+        if (args.__watchdog.phase == "stop") args.message = dogmsg + " stopping...\n";
+        if (args.__watchdog.phase == "start") args.message = dogmsg + " starting...\n";
+        if (args.__watchdog.checks.pid) args.message += "_due to missing process for pid_";
+        if (args.__watchdog.checks.custom) args.message += "_due to fail on custom validation_";
+        if (args.__watchdog.checks.logs.lines.length > 0) args.message += "_due to detected messages on log_";
+
+        oJobRunJob("Send Slack", args);
+      }
+  {{else}}
+  ##---------------------
+  #- name: Bark via Slack
+  #  args:
+  #    webHookURL: &SLACK_URL
+  #  exec: |
+  #    var dogmsg = "*" + args.nameOfDog + "* ";
+  #    if (args.__watchdog.phase == "stop" || args.__watchdog.phase == "start") {
+  #      if (args.__watchdog.phase == "stop") args.message = dogmsg + " stopping...\n";
+  #      if (args.__watchdog.phase == "start") args.message = dogmsg + " starting...\n";
+  #      if (args.__watchdog.checks.pid) args.message += "_due to missing process for pid_";
+  #      if (args.__watchdog.checks.custom) args.message += "_due to fail on custom validation_";
+  #      if (args.__watchdog.checks.logs.lines.length > 0) args.message += "_due to detected messages on log_";
+  #
+  #      oJobRunJob("Send Slack", args);
+  #    }  
+  {{/if}}
+
+  #----------------------------
+  - name: Watchdog for nAttrMon
+    to  :
+      - oJob WatchDog
+    args:
+      nameOfDog   : nAttrMon dog
+      quiet       : false
+      {{#if slack}}jobToNotify : Bark via Slack{{else}}#jobToNotify : Bark via Slack{{/if}}
+      cmdToStart  : "nohup \"{{java}}\" {{initArgs}} -jar {{openaf}} -f {{folder}}/nattrmon.js 2>&1 > {{folder}}/nattrmon.log &"
+      workDirStart: {{folder}}
+
+      checks      :
+        pid   :
+          file  : {{folder}}/nattrmon.pid
+
+        log   :
+          folder  : {{folderConfig}}/log
+          fileRE  : "log-.+\\.log"
+          histFile: {{folderConfig}}/log/.watchdog.nattrmon.history  # where to keep track of what was previously saw on the log file
+          stringRE:
+            - java\.lang\.OutOfMemory
+
+        {{#if channels}}
+        custom:
+          exec: |
+            try {
+              $ch("cvals").createRemote(args.init.channels.CHANNELS_URL + "/chs/cvals");
+              return $ch("cvals").size() >= 0;
+            } catch(e) {
+              logErr("Error: " + String(e));
+              return false;
+            }        
+        {{else}}
+        #custom:
+        #  exec: |
+        #    try {
+        #      $ch("cvals").createRemote(args.init.channels.CHANNELS_URL + "/chs/cvals");
+        #      return $ch("cvals").size() >= 0;
+        #    } catch(e) {
+        #      logErr("Error: " + String(e));
+        #      return false;
+        #    }
+        {{/if}}

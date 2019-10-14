@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20190915'
+version: '20191014'
 dependencies:
   openaf: '>=20190801'
 files:
@@ -219,8 +219,10 @@ files:
   - tests/unitTestYAML.js
   - util/backupConfig.yaml
   - util/clean.yaml
+  - util/genScripts.yaml
   - util/loadDB2Elastic.js
   - util/loadFile2Elastic.yaml
+  - util/watchdog.yaml.hbs
 filesHash:
   .gitignore: 39785e9c0e444387c904a807d9e506a0215ca099
   config/inputs/move_files_from_inputs_disabled.dummy: b858cb282617fb0956d960215c8e84d1ccf909c6
@@ -417,5 +419,7 @@ filesHash:
   tests/unitTestYAML.js: 01fd646107421f0441b19cd966977ab7ac2eff37
   util/backupConfig.yaml: cecdefad82f0c4e23d5341cb97bb6deccf6fd0ff
   util/clean.yaml: 616b7ddb24b12af7f1cbec473282decb57843869
+  util/genScripts.yaml: f282944617381c70f9e9641d90039ca03a84326b
   util/loadDB2Elastic.js: 190b68c03e71fa859df71429da4c31035f20ce94
   util/loadFile2Elastic.yaml: 8ba828ece6a9796db21a691f2b32ad21a2caf214
+  util/watchdog.yaml.hbs: 9e57dbc1ad0b03492461c4c312d73a1d8f2f7c39
