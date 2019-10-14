@@ -132,7 +132,7 @@ jobs:
         custom:
           exec: |
             try {
-              $ch("cvals").createRemote(args.init.channels.CHANNELS_URL + "/chs/cvals");
+              $ch("cvals").createRemote(args.init.channels.url + "/chs/cvals");
               return $ch("cvals").size() >= 0;
             } catch(e) {
               logErr("Error: " + String(e));
@@ -142,7 +142,7 @@ jobs:
         #custom:
         #  exec: |
         #    try {
-        #      $ch("cvals").createRemote(args.init.channels.CHANNELS_URL + "/chs/cvals");
+        #      $ch("cvals").createRemote(args.init.channels.url + "/chs/cvals");
         #      return $ch("cvals").size() >= 0;
         #    } catch(e) {
         #      logErr("Error: " + String(e));
