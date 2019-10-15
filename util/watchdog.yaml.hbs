@@ -3,7 +3,7 @@
 {{{initText}}}
 {{else}}
 init:
-  # Change these settings if you add ELASTIC=true to the genScripts.yaml parameters
+  # Change these settings if you add elastic=true to the genScripts.yaml parameters
   elastic:
     url   : &ELASTIC_URL    http://my.elastic
     index : &ELASTIC_INDEX  nattrmon-logs
@@ -12,11 +12,11 @@ init:
     stamp : &ELASTIC_STAMP
       environment: development
 
-  # Change these settings if you add CHANNELS=true to the genScripts.yaml parameters
+  # Change these settings if you add channels=true to the genScripts.yaml parameters
   channels:
-    url   : &CHANNELS_URL   http://change:me@127.0.0.1/8090
+    url   : &CHANNELS_URL   http://change:me@127.0.0.1:8090
 
-  # Change these settings if you add SLACK=true to the genScripts.yaml parameters
+  # Change these settings if you add slack=true to the genScripts.yaml parameters
   slack:
     url   : &SLACK_URL      https://hooks.slack.com/services/ABCDE/FGHIJ/abc123
 {{/if}}

@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20191014'
+version: '20191015'
 dependencies:
   openaf: '>=20190801'
 files:
@@ -422,4 +422,4 @@ filesHash:
   util/genScripts.yaml: f282944617381c70f9e9641d90039ca03a84326b
   util/loadDB2Elastic.js: 190b68c03e71fa859df71429da4c31035f20ce94
   util/loadFile2Elastic.yaml: 8ba828ece6a9796db21a691f2b32ad21a2caf214
-  util/watchdog.yaml.hbs: a707dae24973fb374f08c41387914e3d077d8e76
+  util/watchdog.yaml.hbs: 73f633d9b03461ddd308f58d85d6f783e697ad90
