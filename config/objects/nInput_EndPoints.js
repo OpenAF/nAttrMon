@@ -2,10 +2,10 @@
  * <odoc>
  * <key>nattrmon.nInput_EndPoints(aMap) : nInput</key>
  * Tests a HTTP/HTTPs endpoint or a TCP port for reachability/expected availability. aMap is composed of:\
- *    - urls    (a map of attribute names, each with a mandatory url and optional method (e.g. GET, PUT, POST, ...), expected responseCode (e.g. 200, 401, ...), expected responseContentType (e.g. text/plain, ...), expected responseRegExp (content regular expression match), expected responseJsonMatch and debug boolean flag)\
- *    - ports   (a map of attribute names, each with a mandatory address and port and optionally a timeout)\
- *    - chUrls  (a channel name for the urls equivalent entries)\
- *    - chPorts (a channel name for the ports equivalent entries)\
+ *    - urls           (a map of attribute names, each with a mandatory url and optional method (e.g. GET, PUT, POST, ...) and optional includeLatency (boolean), expected responseCode (e.g. 200, 401, ...), expected responseContentType (e.g. text/plain, ...), expected responseRegExp (content regular expression match), expected responseJsonMatch and debug boolean flag)\
+ *    - ports          (a map of attribute names, each with a mandatory address and port and optionally a timeout and optional includeLatency (boolean))\
+ *    - chUrls         (a channel name for the urls equivalent entries)\
+ *    - chPorts        (a channel name for the ports equivalent entries)\
  * </odoc>
  */
 var nInput_EndPoints = function(aMap) {
@@ -21,13 +21,13 @@ inherit(nInput_EndPoints, nInput);
 
 nInput_EndPoints.prototype.testURL = function(anEntry) {
     if (isDef(anEntry.url)) {
-        var canDoIt = false;
+        var canDoIt = false, lat;
         var h = new ow.obj.http();
         var method = (isDef(anEntry.method)) ? anEntry.method.toUpperCase() : "GET";
         var errorMessage = "n/a";
         try {
             if (isDef(anEntry.login) && isDef(anEntry.password)) h.login(anEntry.login, anEntry.password);
-            var res = h.exec(anEntry.url, method);
+            var res = h.exec(anEntry.url, method, void 0, void 0, void 0, anEntry.timeout);
 
             if (anEntry.debug) print(anEntry.url + "\n" + stringify(res));
 
@@ -40,6 +40,7 @@ nInput_EndPoints.prototype.testURL = function(anEntry) {
             if (isDef(anEntry.responseJsonMatch)   && !($stream([jsonParse(res.response)]).anyMatch(anEntry.responseJsonMatch)))
                throw "Couldn't find a match for " + stringify(anEntry.responseJsonMatch, void 0, "") + " on JSON response " + stringify(jsonParse(res.response), void 0, "");
 
+            if (isDef(anEntry.includeLatency) && anEntry.includeLatency) lat = ow.format.testURLLatency(anEntry.url, anEntry.timeout);
             canDoIt = true;
         } catch(e) {
             errorMessage = String(e);
@@ -48,7 +49,8 @@ nInput_EndPoints.prototype.testURL = function(anEntry) {
 
         return {
             result: canDoIt,
-            errorMessage: errorMessage
+            errorMessage: errorMessage,
+            latencyInMs: lat
         };
     }
 };
@@ -59,11 +61,13 @@ nInput_EndPoints.prototype.testPort = function(anEntry) {
     if (isDef(anEntry.address) && isDef(anEntry.port)) {
         var canDoIt = false;
         var errorMessage = "n/a";
+        var lat;
 
         try {
             var s = new java.net.Socket();
             s.connect(new java.net.InetSocketAddress(anEntry.address, anEntry.port), anEntry.timeout);
             s.close();
+            if (isDef(anEntry.includeLatency) && anEntry.includeLatency) lat = ow.format.testPortLatency(anEntry.address, anEntry.port, anEntry.timeout);
             canDoIt = true;
         } catch(e) {
             errorMessage = String(e);
@@ -72,7 +76,8 @@ nInput_EndPoints.prototype.testPort = function(anEntry) {
 
         return {
             result: canDoIt,
-            errorMessage: errorMessage
+            errorMessage: errorMessage,
+            latencyInMs: lat
         };
     }
 };

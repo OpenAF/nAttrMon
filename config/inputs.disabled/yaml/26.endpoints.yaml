@@ -1,0 +1,20 @@
+input: 	
+  name         : Test yahoo
+  cron         : "*/10 * * * * *"
+  waitForFinish: true
+  onlyOnEvent  : true
+  execFrom     : nInput_EndPoints
+  execArgs     :
+    ports:
+      Yahoo:
+        address       : www.yahoo.com
+        port          : 443
+        timeout       : 2000
+        #includeLatency: true
+
+    urls:
+      Yahoo URL:
+        url           : https://www.yahoo.com
+        method        : get
+        responseCode  : 200
+        #includeLatency: true

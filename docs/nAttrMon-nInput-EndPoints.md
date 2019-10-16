@@ -20,6 +20,7 @@ input:
            responseCode       : 200
            responseContentType: application/json
            responseRegExp     : Lisbon
+           #includeLatency     : true
 
         APIs/Test put:
            debug              : true
@@ -36,6 +37,7 @@ input:
            address            : www.metaweather.com
            port               : 80
            timeout            : 2000
+           #includeLatency     : true
 
         APIs/Test port:
            address            : httpbin.org
@@ -55,10 +57,12 @@ input:
 | urls.[attr].responseRegExp | RegExp | No | If defined tests if the HTTP response content matches the provided regular expression. |
 | urls.[attr].responseJsonMatch | Map | No | If defined tests if the provided map matches any entry of the JSON parsed HTTP response. |
 | urls.[attr].debug | Boolean | No | If true will output to stdout the result of testing the provided url. |
+| urls.[attr].includeLatency | Boolean | No | If true the returning attribute will also include a field 'latencyInMs'. |
 | ports | Map | No | A map of attribute names, each with a mandatory address and port and optionally a timeout. |
 | ports.[attr].address | String | Yes | The TCP address to test for reachability. |
 | ports.[attr].port | Number | Yes | The TCP port to test for reachability. |
 | ports.[attr].timeout | Number | No | The timeout, in ms, for the TCP connection test (defaults to 1500ms). |
+| ports.[attr].includeLatency | Boolean | No | If true the returning attribute will also include a field 'latencyInMs'. |
 | chUrls | String | No | A channel name for the urls argument equivalent entries on a channel. |
 | chPorts | String | No | A channel name for the ports argument equivalent entries on a channel. |
 

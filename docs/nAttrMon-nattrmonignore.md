@@ -11,6 +11,7 @@ Each mechanism has pros and cons:
 |-----------|------|------|
 | ***.disabled** | - File location determines if it's in use or not.<br>- Enables shipment of sample plugs. | - Harder to keep a source versioned config where only small disables/enables are required per environment.<br>- Can get messy between sample plugs and customized disabled plugs. |
 | **.nattrmonignore** | - One file easy to ignore on source versioned configs.<br>- Textual description with comment/uncomment capability. | - Not immediately visible what is enabled and disabled.<br>- When using regular expressions can be powerfull and also "ambiguous". |
+| **nattrmonignore.js** | - One file easy to ignore on source versioned configs.<br>- Can deal with all types of scenarios since it's programmable (e.g. calling external services). | - Not visible what is enabled and disabled.<br>- Code legibility affects understanding of what its being ignored and why. |
 
 Both mechanisms co-exist and can be used when the pros/cons are right for each case.
 

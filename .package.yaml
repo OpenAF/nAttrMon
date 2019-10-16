@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20191015'
+version: '20191016'
 dependencies:
   openaf: '>=20190801'
 files:
@@ -61,6 +61,7 @@ files:
   - config/inputs.disabled/yaml/20.dmPerformance.yaml
   - config/inputs.disabled/yaml/25.bpmDebugFlags.yaml
   - config/inputs.disabled/yaml/25.cbpmDebugFlags.yaml
+  - config/inputs.disabled/yaml/26.endpoints.yaml
   - config/move_files_from_the_disabled_folders.dummy
   - config/nattrmonignore.js.sample
   - config/objects/nInput_AFPing.js
@@ -73,6 +74,7 @@ files:
   - config/objects/nInput_CompareTimes.js
   - config/objects/nInput_DB.js
   - config/objects/nInput_DMPerformance.js
+  - config/objects/nInput_DPStats.js
   - config/objects/nInput_EndPoints.js
   - config/objects/nInput_Filesystem.js
   - config/objects/nInput_FilesystemCount.js
@@ -141,6 +143,7 @@ files:
   - config/objects.assets/noutputhttp/now.html
   - config/objects.assets/noutputhttp/plugs.html
   - config/objects.disabled/move_files_from_objects.dummy
+  - config/outputs/09.channels.yaml
   - config/outputs/move_files_from_outputs_disabled.dummy
   - config/outputs.disabled/00.init.js
   - config/outputs.disabled/1.oracleoutput.js
@@ -261,6 +264,7 @@ filesHash:
   config/inputs.disabled/yaml/20.dmPerformance.yaml: f84cf5ca17549658e0801b36202b1fa95e50a546
   config/inputs.disabled/yaml/25.bpmDebugFlags.yaml: 1b98caed366844383947a0caf05161f6b010ac7f
   config/inputs.disabled/yaml/25.cbpmDebugFlags.yaml: 41f75269252f5ec6900203472223099bd7512667
+  config/inputs.disabled/yaml/26.endpoints.yaml: 67daa7b569aeb764cc38f62da68fb24e643edc62
   config/move_files_from_the_disabled_folders.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
   config/nattrmonignore.js.sample: dad08a2c3a4fdba2f45c5d357aa2ebb7971d73e5
   config/objects/nInput_AFPing.js: 97deedd158501c759d08a3e400ba4ae2c2f1461b
@@ -273,7 +277,8 @@ filesHash:
   config/objects/nInput_CompareTimes.js: 5c95c1387549e405031414b430c98951ed591d1c
   config/objects/nInput_DB.js: 1adb3910021be6076a567dee21d1add553f1212f
   config/objects/nInput_DMPerformance.js: 3d0f27b87f5b1a004e32559b0076c3cbfdf5d064
-  config/objects/nInput_EndPoints.js: 03084acddad1d42bd447ab5890dadac629681f96
+  config/objects/nInput_DPStats.js: 4d082bc2d5c297a38529f6f67de14449e7dc2e50
+  config/objects/nInput_EndPoints.js: 12f22ce1b4e43fa796b0a4350bfb92a9197ec9c9
   config/objects/nInput_Filesystem.js: 2522c3fa0cb229559b47e35360e50c72a2b82f0b
   config/objects/nInput_FilesystemCount.js: e36218f7c2ffa39438f1c1d22ad982c04e0fd4a0
   config/objects/nInput_FMSRuleStatus.js: a751fa64817c47bcac24d7b4bcdbfe699abb30c8
@@ -341,6 +346,7 @@ filesHash:
   config/objects.assets/noutputhttp/now.html: 8f2b1434fe87b1f7d64acf26b1a7c64c9573f085
   config/objects.assets/noutputhttp/plugs.html: e2a863265e8a9d96a4e9e4459658dc4668020e4f
   config/objects.disabled/move_files_from_objects.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
+  config/outputs/09.channels.yaml: f38c539f163ec3457267c55d4248237b76caee14
   config/outputs/move_files_from_outputs_disabled.dummy: b858cb282617fb0956d960215c8e84d1ccf909c6
   config/outputs.disabled/00.init.js: 2fc376d4557dc91ec036f115661c7634f7f8f0eb
   config/outputs.disabled/1.oracleoutput.js: 0f7ce56148ba6772216ce4402f5509077c30af6e
@@ -378,12 +384,12 @@ filesHash:
   docs/nAttrMon-base-configuration.md: 9b43d2438426c389a975a5440c27a7d1621169b7
   docs/nAttrMon-folder-structure.md: e4d0a5eebcfcb249bfd50876627a2404ce9712a3
   docs/nAttrMon-Interconnect.md: f1e6b7ad77bfe0255c1e4cad585f82aef568c17c
-  docs/nAttrMon-nattrmonignore.md: 7446e94d90b19269bf36a4a246cb69033955d1f8
+  docs/nAttrMon-nattrmonignore.md: 8999db1d1a36a421effbb5ecefb3a45312ba09cf
   docs/nAttrMon-nInput-BPMDebugChecks.md: f8a275544c1a6f49be7f02c2933cc84f50340407
   docs/nAttrMon-nInput-CBPMDebugChecks.md: 2fca473c18895ae3733faaa708ec3dd2a7a11fa3
   docs/nAttrMon-nInput-Channel.md: 17c5dd783dd84287e140d8b8447d9a3cd8b66bdf
   docs/nAttrMon-nInput-DMPerformance.md: 4e4ce3425e6f6c37c7490ff802b8feee6f4f4687
-  docs/nAttrMon-nInput-EndPoints.md: ed1c63698a82217bc664bce5397f8775020fe053
+  docs/nAttrMon-nInput-EndPoints.md: 91a4f2d42ef3ee3dcaa91593eaeab9a0642f27ba
   docs/nAttrMon-nInput-RemoteChannel.md: f06ee03a094f55d0dceb5ec6bec31e7e8525a2f2
   docs/nAttrMon-nInput-Shell.md: 93010657719591531c6e02fd157fb85189279ce9
   docs/nAttrMon-nOutput-Channels.md: fb2484ee0fc9d8ba01c785a949194f72db20682f
