@@ -1085,15 +1085,19 @@ nAttrMon.prototype.loadPlugs = function() {
 
 		if (io.fileExists(d + "/nattrmonignore.js")) {
 			log("Executing '" + d + "/nattrmonignore.js'...");
-			var fn = require(d + "/nattrmonignore.js");
-			if (isUnDef(fn.getIgnoreList) || !isFunction(fn.getIgnoreList)) {
-				logErr("nattrmonignore.js doesn't have a getIgnoreList function.");
-			} else {
-				var tmpRes = fn.getIgnoreList();
-				tmpRes.forEach((r) => {
-					var f = javaRegExp(javaRegExp(d + "/" + r).replace("(.+)( +#+.*)", "$1")).replaceAll("\\\\#", "#").trim();
-					res.push(f);
-				});
+			try {
+				var fn = require(d + "/nattrmonignore.js");
+				if (isUnDef(fn.getIgnoreList) || !isFunction(fn.getIgnoreList)) {
+					logErr("nattrmonignore.js doesn't have a getIgnoreList function.");
+				} else {
+					var tmpRes = fn.getIgnoreList();
+					tmpRes.forEach((r) => {
+						var f = javaRegExp(javaRegExp(d + "/" + r).replace("(.+)( +#+.*)", "$1")).replaceAll("\\\\#", "#").trim();
+						res.push(f);
+					});
+				}
+			} catch(e) {
+				logErr("Problem with nattrmonignore.js: " + String(e));
 			}
 		}
 
