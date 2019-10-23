@@ -964,6 +964,7 @@ nAttrMon.prototype.execPlugs = function(aPlugType) {
 								    .equals("name", etry.getName())
 								    .equals("type", etry.type)
 								    .equals("uuid", uuid).any()) {
+									parent.debug("Already executing '" + etry.getName() + "' (" + uuid +")");
 								    return true;
 								}
 								$ch(parent.chPS).set({ name: etry.getName(), uuid: uuid, start: chpsi }, { name: etry.getName(), type: etry.type, uuid: uuid, start: chpsi });

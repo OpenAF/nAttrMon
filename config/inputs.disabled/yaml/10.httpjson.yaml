@@ -1,0 +1,34 @@
+input: 	
+  name         : Get public IP info
+  cron         : "*/5 * * * * *"
+  waitForFinish: true
+  onlyOnEvent  : false
+  execFrom     : nInput_HTTPJson
+  execArgs     :
+
+    requests: 
+
+      ifconfig service/Current public IP:
+        url : https://ifconfig.com/json
+        path: ip
+      
+      ifconfig service/Details:
+        url : https://ifconfig.co/json
+        fn  : |
+          delete json.user_agent;
+          return json;
+
+      ifconfig service/User agent:
+        url : https://ifconfig.co/json
+        path: user_agent
+
+      test service/Echo:
+        url    : https://httpbin.org/post
+        method : post
+        options:
+          urlEncode: true
+          uriQuery : true
+        data   :
+          hello: world
+        idx    :
+          a: 123

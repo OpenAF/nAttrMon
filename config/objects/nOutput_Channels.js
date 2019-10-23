@@ -279,14 +279,14 @@ var nOutput_Channels = function(aMap) {
           };
         }
 
-        logWarn("OPS | " + value.type + "::" + value.name + " | START | Test execution, ignoring result");
+        logWarn("OPS | " + value.type + "::" + value.name + " | START | Test execution, considering result");
         try {
           var plug = $from(nattrmon.plugs[value.type]).equals("aName", value.name).at(0);
           var res = plug.exec(nattrmon, value.args);
           resOp = {
             runResult: nattrmon.posAttrProcessing(plug, res.attributes)
           };
-          logWarn("OPS | " + value.type + "::" + value.name + " | END | Test execution, ignoring result");
+          logWarn("OPS | " + value.type + "::" + value.name + " | END | Test execution, considering result");
           nattrmon.addValues(plug.onlyOnEvent, res, { aStamp: plug.getStamp(), toArray: plug.getToArray(), mergeKeys: plug.getMerge(), sortKeys: plug.getSort() });
           logWarn("OPS | " + value.type + "::" + value.name + " | RESULT CONSIDERED | Executing and considering values");
         } catch (e) {
