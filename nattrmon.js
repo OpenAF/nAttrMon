@@ -11,6 +11,7 @@ var BUFFERBYNUMBER            = 100;
 var BUFFERBYTIME              = 1000;
 var WORKERS                   = __cpucores;
 var COREOBJECTS               = void 0;
+var COREOBJECTS_LAZYLOADING   = false;
 var NEED_CH_PERSISTENCE       = true;
 
 // -------------------------------------------------------------------
@@ -40,7 +41,8 @@ if (io.fileExists(NATTRMON_HOME + "/nattrmon.yaml")) {
 	if (isDef(pms.BUFFERBYNUMBER)) BUFFERBYNUMBER = pms.BUFFERBYNUMBER;
 	if (isDef(pms.BUFFERBYTIME))   BUFFERBYTIME = pms.BUFFERBYTIME;
 
-    if (isDef(pms.COREOBJECTS))    COREOBJECTS = pms.COREOBJECTS;
+	if (isDef(pms.COREOBJECTS))    COREOBJECTS = pms.COREOBJECTS;
+	if (isDef(pms.COREOBJECTS_LAZYLOADING)) COREOBJECTS_LAZYLOADING = pms.COREOBJECTS_LAZYLOADING;
 
 	print("Applying parameters:");
 	print(af.toYAML(pms));
@@ -1106,10 +1108,34 @@ nAttrMon.prototype.loadPlugs = function() {
 	};
 
 	var ignoreList = getIgnoreList(this.configPath);
+	this.ignoreList = ignoreList;
 	parent.debug("Ignore list: " + stringify(ignoreList));
 
-	if (isDef(COREOBJECTS)) this.loadPlugDir(COREOBJECTS, "objects", ignoreList);
-	this.loadPlugDir(this.configPath + "/objects", "objects", ignoreList);
+	if (!COREOBJECTS_LAZYLOADING) {
+		if (isDef(COREOBJECTS)) 
+			this.loadPlugDir(COREOBJECTS, "objects", ignoreList);
+		else
+			this.loadPlugDir(this.configPath + "/objects", "objects", ignoreList);
+	} else {
+		this.objectsPath = {};
+		var parent = this;
+		if (isDef(COREOBJECTS)) {
+			$from(listFilesRecursive(COREOBJECTS))
+			.equals("isFile", true)
+			.sort("canonicalPath")
+			.select(r => { 
+				parent.objectsPath[r.filename] = r.filepath;
+			});
+		} else {
+			$from(listFilesRecursive(this.configPath + "/objects"))
+			.equals("isFile", true)
+			.sort("canonicalPath")
+			.select(r => { 
+				parent.objectsPath[r.filename] = r.filepath;
+			});
+		}
+	}
+
 	this.loadPlugDir(this.configPath + "/inputs", "inputs", ignoreList);
 	this.loadPlugDir(this.configPath + "/validations", "validations", ignoreList);
 	this.loadPlugDir(this.configPath + "/outputs", "outputs", ignoreList);
@@ -1132,6 +1158,18 @@ nAttrMon.prototype.loadObject = function(yy, type) {
 	if (isUnDef(yy.execArgs)) yy.execArgs = {};
 	//if (!(isArray(yy.execArgs))) yy.execArgs = yy.execArgs;
 	if (isDef(yy.execFrom)) {
+		if (COREOBJECTS_LAZYLOADING && type != "objects") {
+			var aPath;
+			if (isDef(COREOBJECTS)) {
+				aPath = COREOBJECTS + "/" + yy.execFrom + ".js";
+			} else {
+				aPath = this.configPath + "/objects/" + yy.execFrom + ".js";
+			}
+			if (!(this.isOnIgnoreList(aPath))) {
+				this.debug("Lazy loading object " + aPath);
+				this.loadPlug(aPath, "objects", this.ignoreList);
+			}
+		}
 		var o = eval(yy.execFrom);
 		yy.exec = Object.create(o.prototype);
 		o.apply(yy.exec, [yy.execArgs]);
@@ -1180,12 +1218,42 @@ nAttrMon.prototype.loadPlugDir = function(aPlugDir, aPlugDesc, ignoreList) {
     }
 };
 
-nAttrMon.prototype.loadPlug = function (aPlugFile, aPlugDesc) {
+nAttrMon.prototype.isOnIgnoreList = function(aPath, ignoreList) {
+	_$(aPath, "path").isString().$_();
+
+	var inc = false;
+	for(let ii in ignoreList) { 
+		if (aPath.indexOf(ignoreList[ii]) == 0 || 
+			aPath.match(new RegExp("^" + ignoreList[ii] + "$"))) inc = true; }
+
+	return inc;
+};
+
+nAttrMon.prototype.loadPlug = function (aPlugFile, aPlugDesc, ignoreList) {
 	if (isUnDef(aPlugDesc)) aPlugDesc = "";
 
 	if (aPlugFile.match(/\.js$/)) {
 		if (aPlugDesc != "objects") log("Loading " + aPlugDesc + ": " + aPlugFile);
 		try {
+			if (COREOBJECTS_LAZYLOADING && aPlugDesc != "objects") {
+				var str = io.readFileString(aPlugFile);
+				try {
+					var ars = str.match(/new (nInput|nOutput|nValidation)([^\(]+)\(/g);
+					for (var ii in ars) {
+						var ar = args[ii].match(/new (nInput|nOutput|nValidation)([^\(]+)\(/);
+						if (isDef(ar) && isDef(ar[1]) && isDef(ar[2])) {
+							var p = this.objectsPath[ar[1] + ar[2] + ".js"];
+
+							if (!(this.isOnIgnoreList(p))) {
+								this.debug("Lazy loading object " + p);
+								this.loadPlug(p, "objects", ignoreList);
+							}
+						}
+					}
+				} catch(e) {
+					logErr("Problem on object lazy loading triggered by '" + aPlugFile + "': " + String(e));
+				}
+			}
 			af.load(aPlugFile);
 		} catch (e) {
 			logErr("Error loading " + aPlugDesc + " (" + aPlugFile + "): " + e);
