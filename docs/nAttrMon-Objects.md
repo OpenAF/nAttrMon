@@ -5,12 +5,15 @@ The following is a list of the current objects base for Inputs, Outputs and Vali
 | Type | Name | Category | Description |
 |-----:|------|----------|-------------|
 | Input | nInput_AFPing | RAID | Executes the RAID Ping AF operation to determine if an instance is responsive. |
+| Input | [nInput_BPMDebugChecks](nAttrMon-nInput-BPMDebugChecks) | RAID | Checks the database & memory debug levels and any existing trace execution on BPM flows. |
+| Input | [nInput_CBPMDebugChecks](nAttrMon-nInput-CBPMDebugChecks) | RAID | Checks the database & memory debug levels on CBPM flows. |
 | Input | nInput_CBPMSemaphores | RAID | Checks the values of RAID's instance semaphores. |
 | Input | nInput_DB | DB | Executes a SQL query and returns the result as input. |
 | Input | [nInput_EndPoints](nAttrMon-nInput-EndPoints) | OS | Test for reachability/expected availability of HTTP(s) URLs or TCP ports. |
 | Input | nInput_FMSRuleStatus | RAID | Gets each RAID FMS engine rule status (active, inactive, inactive by anti-flooding) |
 | Input | nInput_Filesystem | OS | Per unix mount point gets the total, used, free and % used space and inode totals (locally or remotely). |
 | Input | nInput_FilesystemCount | OS | Per filepath and filename regular expression filter, returns the total count and size, the min, max and avg size of existing files, the date of the newest file and oldest file (locally or remotely). |
+| Input | [nInput_HTTPJson](nAttrMon-nInput-HTTPJson) | OS | Retrieves a json parsed content from a HTTP/HTTPs external URL and makes it the content of the corresponding attribute. It allows to apply a selector or even a function to filter the results to be stored on the attribute. |
 | Input | nInput_IMAbnormalLoadings | RAID | Checks for IM loadings that didn't process the expected number of records. | 
 | Input | nInput_IMLoadingsProgress | RAID | Monitor the specified IM block types loading progress by number of runs, min, max, avg records processed, etc. |
 | Input | nInput_IMMemory | RAID | Returns the current RAID instance reported IM memory. |

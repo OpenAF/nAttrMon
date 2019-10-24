@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20191023'
+version: '20191024'
 dependencies:
   openaf: '>=20190901'
 files:
@@ -401,7 +401,7 @@ filesHash:
   docs/nAttrMon-nOutput-Notifications.md: 1c2543fc71ed4f6231413f8aa70c671e6c520308
   docs/nAttrMon-nOutput_RemoteChannel.md: 51f4218d9660a3692bf6f4db8c6e31c60117909a
   docs/nAttrMon-nValidation-Generic.md: e993a89be4ea27616efcf84dc82cc57b15c25360
-  docs/nAttrMon-Objects.md: bd5f0af32755cd80b8d3a0a0f318d0075cd92610
+  docs/nAttrMon-Objects.md: 332f4c1a75e21f4a0f5593e95f896c73265eda86
   docs/nAttrMon-Plugs.md: 8c3547f6fc2cc08de3dafb3033ebb37256e03c31
   docs/nAttrMon-template-helpers.md: 3eb72bd86df5952348c62399a611c817d94f7552
   docs/nAttrMon-Warnings.md: a12916c10b7b9ddd45380d89f28763999b764bad
@@ -417,7 +417,7 @@ filesHash:
   lib/nwarning.js: a8022e42582a148df205f333e1c523a01f48eb06
   lib/nwarnings.js: 775b1a2412d8224d56deaae0fa3217a7f1d33b1b
   LICENSE: 7df059597099bb7dcf25d2a9aedfaf4465f72d8d
-  nattrmon.js: 7bc6f55c72c3e8fa2488964d1a07714ac3e55227
+  nattrmon.js: de06f1824247787bf29dd71226b7eebcee034a39
   nattrmon.yaml.sample: add1e491c792897f33309b0f14406ef31b266fab
   README.md: 648ce4e29bbdc7b99f5cf8734cb1a7f0657789c7
   tests/inputDBTest.yml: c38616606dc5956e449189d11f8e661170f94dfb

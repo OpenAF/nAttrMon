@@ -1240,7 +1240,7 @@ nAttrMon.prototype.loadPlug = function (aPlugFile, aPlugDesc, ignoreList) {
 				try {
 					var ars = str.match(/new (nInput|nOutput|nValidation)([^\(]+)\(/g);
 					for (var ii in ars) {
-						var ar = args[ii].match(/new (nInput|nOutput|nValidation)([^\(]+)\(/);
+						var ar = ars[ii].match(/new (nInput|nOutput|nValidation)([^\(]+)\(/);
 						if (isDef(ar) && isDef(ar[1]) && isDef(ar[2])) {
 							var p = this.objectsPath[ar[1] + ar[2] + ".js"];
 
