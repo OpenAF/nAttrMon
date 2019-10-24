@@ -187,6 +187,7 @@ files:
   - docs/nAttrMon-nInput-Channel.md
   - docs/nAttrMon-nInput-DMPerformance.md
   - docs/nAttrMon-nInput-EndPoints.md
+  - docs/nAttrMon-nInput-HTTPJson.md
   - docs/nAttrMon-nInput-RemoteChannel.md
   - docs/nAttrMon-nInput-Shell.md
   - docs/nAttrMon-nOutput-Channels.md
@@ -391,6 +392,7 @@ filesHash:
   docs/nAttrMon-nInput-Channel.md: 17c5dd783dd84287e140d8b8447d9a3cd8b66bdf
   docs/nAttrMon-nInput-DMPerformance.md: 4e4ce3425e6f6c37c7490ff802b8feee6f4f4687
   docs/nAttrMon-nInput-EndPoints.md: 91a4f2d42ef3ee3dcaa91593eaeab9a0642f27ba
+  docs/nAttrMon-nInput-HTTPJson.md: c61e9ccca1b8bcfa4374198badeb3479fd829154
   docs/nAttrMon-nInput-RemoteChannel.md: f06ee03a094f55d0dceb5ec6bec31e7e8525a2f2
   docs/nAttrMon-nInput-Shell.md: 93010657719591531c6e02fd157fb85189279ce9
   docs/nAttrMon-nOutput-Channels.md: fb2484ee0fc9d8ba01c785a949194f72db20682f
