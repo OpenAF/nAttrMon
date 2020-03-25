@@ -305,7 +305,7 @@ filesHash:
   config/objects/nOutput_HTTP.js: 529313cfdb4afda1e9cda55508171369c63599be
   config/objects/nOutput_HTTP_JSON.js: 5e10f7d7b290afb6d8fbafa5efc054810b77c138
   config/objects/nOutput_Log.js: 69ef02bb37d306deb390f303a8bbf6e2234be792
-  config/objects/nOutput_Notifications.js: 7214dc3b603d7a44f6460d94f8391399312497b8
+  config/objects/nOutput_Notifications.js: 1e5cabdd01f3c6b4e7f68bf7259a0256c9963985
   config/objects/nOutput_Oracle.js: ab0f2fe7958952437ae93030715633858462269f
   config/objects/nOutput_RemoteChannel.js: 8dcadaf89c78f31707c45d615a3941ce0547cd33
   config/objects/nOutput_Slack.js: 38d67701dd604cebc6329d46a59a5f6d54b8fd82

@@ -57,7 +57,7 @@ nOutput_Notifications.prototype.output = function(scope, args, meta) {
             var parent = this;
 
             selec.select((w) => {
-                if (!nattrmon.isNotified(w.title, parent.__notifyID) && isDef(notif.userID)) {
+                if (!nattrmon.isNotified(w.title, parent.params.__notifyID) && isDef(notif.userID)) {
                     // Prepare message for notification
                     var message = templify(notif.message, { warn: w });
                     try {
