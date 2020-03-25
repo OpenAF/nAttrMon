@@ -67,7 +67,7 @@ nOutput_Notifications.prototype.output = function(scope, args, meta) {
 
                         // Notify that was been sent successfully
                         //w.notified[parent.__notifyID] = true;
-                        nattrmon.setNotified(w.title, parent.__notifyID);
+                        nattrmon.setNotified(w.title, parent.params.__notifyID);
                         //nattrmon.getWarnings(true).setWarningByName(w.title, w);
                     } catch(e) {
                         logErr("nOutput_Notifications: [" + stringify(notif, void 0, "") + "] " + String(e));
