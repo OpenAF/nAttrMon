@@ -1,0 +1,18 @@
+output:
+  name       : Test output
+  chSubscribe: nattrmon::cvals
+  execFrom   : nOutput_DSV
+  execArgs   :
+    # filename         : myCSVFile.csv
+    folder             : /myData/myCSVs
+    # filenameTemplate   : "myCSV-{{timedate}}.csv"
+    # fileDateFormat     : "myCSV\\d{4}-\\d{2}-\\d{2}\\.csv"
+    # howLongAgoInMinutes: 7200
+    # dontCompress       : true
+    # include            :
+    #    - Attr 1
+    #    - Attr 2
+    # exclude            :
+    #    - Attr 3
+    headerTemplate     : "Date Time; Attr 1; Attr 2"
+    outputTemplate     : "{{datetime}}; {{values.[Attr 1].val}}: {{values.[Attr 2].val}}"

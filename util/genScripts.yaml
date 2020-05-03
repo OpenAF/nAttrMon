@@ -20,6 +20,8 @@ jobs:
       global.path = args.path;
 
       var config = io.readFileYAML(args.path + "/nattrmon.yaml");
+      config = _$(config).default({});
+      
       global.configPath = _$(config.CONFIG).default(args.path + "/config");
       global.configArgs = _$(config.JAVA_ARGS).default("");
 

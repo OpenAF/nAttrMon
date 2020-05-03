@@ -16,9 +16,11 @@ var nInput_OSInfo = function(aMap) {
 	}
 
 	if (isUnDef(this.params.attrTemplate)) this.params.attrTemplate = "Server status/OS";
-}
+	nInput.call(this, this.input);
+};
+inherit(nInput_OSInfo, nInput);
 
-nInput_OSInfo.prototype.exec = function(scope, args) {
+nInput_OSInfo.prototype.input = function(scope, args) {
 	var ret = {};
 	var load = -1;
 	var loadAvg  = -1;
