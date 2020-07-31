@@ -46,7 +46,7 @@ nInput_AFPing.prototype.ping = function (n, u) {
     var a = new AF(u, this.timeout);
     var r = a.exec("Ping", {
       "a": 1
-    });
+    }, void 0, true);
     if (r.a == 1) res = true;
     a.close();
   } catch (e) {
