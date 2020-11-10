@@ -24,7 +24,7 @@ var nInput_Shell = function(aCommand, isJson, attributeName) {
     	this.cmd = aCommand;
     	this.parseJson = isJson;
     	this.name = "";
-		this.attrTemplate = (isUndefined(attributeName)) ? "Server status/" + aCommand : attributeName;
+		this.attrTemplate = (isUnDef(attributeName)) ? "Server status/" + aCommand : attributeName;
 	}
 
 	nInput.call(this, this.input);
@@ -38,6 +38,7 @@ nInput_Shell.prototype.input = function(scope, args) {
 
 	if (isDef(this.params.chKeys) || isDef(this.params.keys)) {
 		var res = [], attrname;
+		_$(this.cmd).isString().$_(); // Ensure cmd is string for ssh
 
 		if (isDef(this.params.chKeys)) this.params.keys = $stream($ch(this.params.chKeys).getKeys()).map("key").toArray();
 
@@ -68,11 +69,14 @@ nInput_Shell.prototype.input = function(scope, args) {
 		ret[attrname] = res;
 	} else {
 		var attrname = templify(this.attrTemplate, { name: this.name });
+		var value = $sh(templify(this.cmd)).get(0);
+
+		value = (isDef(value.stdin) ? value.stdin : "") + (isDef(value.stdout) ? value.stdout : "");
 
 		if (this.parseJson) {
-			ret[attrname] = jsonParse(sh(templify(this.cmd)));
+			ret[attrname] = jsonParse(value);
 		} else {
-			ret[attrname] = sh(templify(this.cmd));
+			ret[attrname] = value;
 		}
 	}
 
