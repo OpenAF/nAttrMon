@@ -1,6 +1,6 @@
 output:
-  name         : Output ES warnings
-  chSubscribe  : nattrmon::warnings
+  name         : Output ES values
+  chSubscribe  : nattrmon::cvals
   waitForFinish: true
   onlyOnEvent  : true
   execFrom     : nOutput_ES
@@ -11,7 +11,7 @@ output:
     #index: 
     #considerSetAll: false 
     #funcIndex: "ow.ch.utils.getElasticIndex('nattrmon-attrs',\"yyyy.ww\")" note: Check getElasticIndex function, If a specific format is needed you can provide it as aFormat (see ow.format.fromDate)"
-    funcIndex: "ow.ch.utils.getElasticIndex('nattrmon-warns')"
+    funcIndex: "ow.ch.utils.getElasticIndex('nattrmon-attrs')"
     #index: nattrs
     stampMap : 
       region: US
