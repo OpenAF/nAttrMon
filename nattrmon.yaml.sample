@@ -44,3 +44,6 @@
 #CH_PERSISTENCE_PATH: /another/path
 # Indicate if nattrmon snapshot persistence should be turned off (default turned on)
 #NEED_CH_PERSISTENCE: false
+
+# Control how core objects are loaded (defaults to false)
+#COREOBJECTS_LAZYLOADING: true
