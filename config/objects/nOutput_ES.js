@@ -108,12 +108,15 @@ nOutput_ES.prototype.addToES = function (aCh, aVal, useTitle) {
 		var cont = true, res;
 		if (isArray(data) && data.length == 0) cont = false;
 		if (cont) res = aCh.setAll(["id"], merge(data, this.stampMap));
-		if (isDef(res) && isDef(res.response)) {
+		if (isMap(res) && isDef(res.response)) {
 		   var t = jsonParse(res.response);
 		   if (isDef(t.errors) && t.errors) {
 			  logErr("Error on sending '" + $from(data).select((r)=>{return r.name}).join(", ") + "': " + stringify(t));
 		   }
 		}		
+		if (isMap(res) && isDef(res.error)) {
+			logErr("Error on sending '" + res.error + "'");
+		}
 	} catch (e) {
 		sprintErr(e + " -- " + stringify(data));
 	}
