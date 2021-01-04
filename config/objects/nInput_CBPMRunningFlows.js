@@ -91,6 +91,7 @@ nInput_CBPMRunningFlows.prototype.input = function(scope, args) {
                                                 line = merge(line, { "End Date": (isUnDef(t.instanceEndTime)) ? "n/a" : ow.format.fromWeDoDateToDate(t.instanceEndTime), "Exception": (isUnDef(t.instanceErrorMessage)) ? "n/a" : t.instanceErrorMessage});
                                                 break;
                                         case 'STARTED':
+						line = merge(line, {"Started how long ago(min)" : ow.format.dateDiff.inMinutes(ow.format.fromWeDoDateToDate(t.instanceStartTime), new Date())});
                                                 break;
                                         default:
                                                 if (isDef((t.instanceEndTime))) {
