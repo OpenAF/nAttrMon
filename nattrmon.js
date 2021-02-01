@@ -19,11 +19,12 @@ var NEED_CH_PERSISTENCE       = true;
 // check version
 af.getVersion() >= "20170101" || (print("Version " + af.getVersion() + ". You need OpenAF version 20170101 to run.")) || exit(-1);
 
-var NATTRMON_HOME = getOPackPath("nAttrMon") || ".";
 var params = processExpr();
+var NATTRMON_HOME = getOPackPath("nAttrMon") || ".";
+var NATTRMON_SUBHOME = params.withHome || NATTRMON_HOME;
 
-if (io.fileExists(NATTRMON_HOME + "/nattrmon.yaml")) {
-	var pms = io.readFileYAML(NATTRMON_HOME + "/nattrmon.yaml");
+if (io.fileExists(NATTRMON_SUBHOME + "/nattrmon.yaml")) {
+	var pms = io.readFileYAML(NATTRMON_SUBHOME + "/nattrmon.yaml");
 
 	if (isUnDef(pms) || pms == null) pms = {};
 	if (isDef(pms.JAVA_ARGS) && isArray(pms.JAVA_ARGS)) JAVA_ARGS = pms.JAVA_ARGS;
@@ -224,6 +225,14 @@ const nAttrMon = function(aConfigPath, debugFlag) {
 nAttrMon.prototype.getConfigPath = function() {
 	return this.configPath;
 };
+
+nAttrMon.prototype.shutdown = function(aCode) {
+	aCode = _$(aCode, "aCode").isNumber().default(0);
+
+	log("Shutting down... (exit code = " + aCode + ")");
+	nattrmon.stop();
+	exit(aCode);
+}
 
 // Snapshot functions
 // ------------------
@@ -1308,7 +1317,7 @@ nAttrMon.prototype.loadPlug = function (aPlugFile, aPlugDesc, ignoreList) {
 var nattrmon;
 
 if (isUnDef(params.withDirectory)) {
-	nattrmon = new nAttrMon(NATTRMON_HOME + "/config", params.debug || DEBUG);
+	nattrmon = new nAttrMon(NATTRMON_SUBHOME + "/config", params.debug || DEBUG);
 } else {
 	nattrmon = new nAttrMon(params.withDirectory, params.debug || DEBUG);
 }
@@ -1318,11 +1327,11 @@ var __stuckfactor = 500;
 
 // Option stop
 if (isDef(params.stop)) {
-	pidKill(ow.server.getPid(NATTRMON_HOME + "/nattrmon.pid"));
+	pidKill(ow.server.getPid(NATTRMON_SUBHOME + "/nattrmon.pid"));
 	exit(1);
 }
 
-ow.server.checkIn(NATTRMON_HOME + "/nattrmon.pid", function(aPid) {
+ow.server.checkIn(NATTRMON_SUBHOME + "/nattrmon.pid", function(aPid) {
 	if (isDef(params.restart)) {
 		log("Killing process " + ow.server.getPid(aPid));
                 if (!pidKill(ow.server.getPid(aPid), false)) 
@@ -1349,7 +1358,7 @@ if (isDef(params.status)) {
 }
 
 nattrmon.start();
-log("nAttrMon started.");
+log("nAttrMon started (main=" + NATTRMON_HOME + "; home=" + NATTRMON_SUBHOME + ").");
 
 ow.server.daemon(__sleepperiod, function() {
 	// Check main health
