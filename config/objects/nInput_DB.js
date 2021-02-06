@@ -116,7 +116,7 @@ nInput_DB.prototype.input = function (scope, args) {
 			}
 		}
 		return 1;
-	}, WORKERS);
+	}, __NAM_WORKERS);
 	ow.template.delHelper("toDate");
 	//ow.template.delHelper("debug");
 
