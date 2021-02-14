@@ -1,0 +1,73 @@
+ojob:
+  daemon: true
+
+todo:
+- Done
+- Init
+- nAM Start
+- nAM ToDo
+
+jobs:
+- name: Done
+  type: shutdown
+  exec: |
+    global.nattrmon.stop();
+    log("nAttrMon stopped.");
+    print(new Date() + " | Stopping.");
+
+- name: nAM ToDo
+  deps: nAM Start
+  to  : nAM Add Plugs
+  args:
+    - output:
+        name    : Output HTTP
+        execFrom: nOutput_HTTP
+        execArgs:
+          port : 8888
+          title: Test
+    - output:
+        name    : Output JSON
+        execFrom: nOutput_HTTP_JSON
+        execArgs:
+          port: 8888
+
+- name: nAM Add Plugs
+  exec: |
+    sync(() => {
+      if (isDef(args.output)) {
+        var r = global.nattrmon.loadObject(args.output, "output");
+        global.nattrmon.addOutput(r, r.exec);
+      }
+      if (isDef(args.input)) {
+        var r = global.nattrmon.loadObject(args.input, "input");
+        global.nattrmon.addInput(r, r.exec);
+      }
+      if (isDef(args.validation)) {
+        var r = global.nattrmon.loadObject(args.validation, "validation");
+        global.nattrmon.addValidation(r, r.exec);
+      }
+    }, global.nattrmon);
+
+- name: nAM Start
+  deps: Init
+  exec: |
+    global.nattrmon.start();
+    log("nAttrMon started (main=" + global.NATTRMON_HOME + "; home=" + global.NATTRMON_SUBHOME + ").");
+
+- name: Init
+  exec: |
+    global.NATTRMON_HOME = getEnv("NATTRMON_HOME");
+    if (isUnDef(global.NATTRMON_HOME)) global.NATTRMON_HOME = getOPackPath("nAttrMon") || ".";
+    global.NATTRMON_SUBHOME = getEnv("NATTRMON_DIR");
+    if (isUnDef(global.NATTRMON_SUBHOME)) global.NATTRMON_SUBHOME = args.withHome || global.NATTRMON_HOME;
+
+    loadLib(global.NATTRMON_HOME + "/lib/nmain.js");
+
+    if (isDef(args.__NAM_DEBUG)) global.__NAM_DEBUG = Boolean(args.__NAM_DEBUG);
+    if (isDef(args.__NAM_LOGCONSOLE)) global.__NAM_LOGCONSOLE = Boolean(args.__NAM_LOGCONSOLE); else global.__NAM_LOGCONSOLE = true;
+
+    if (isUnDef(args.withDirectory)) {
+      global.nattrmon = new nAttrMon(global.NATTRMON_SUBHOME + "/config", args.__NAM_DEBUG || __NAM_DEBUG);
+    } else {
+      global.nattrmon = new nAttrMon(args.withDirectory, args.__NAM_DEBUG || __NAM_DEBUG);
+    }

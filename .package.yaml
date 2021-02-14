@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20201110'
+version: '20210213'
 dependencies:
   openaf: '>=20201110'
 files:
@@ -206,15 +206,18 @@ files:
   - lib/nattributes.js
   - lib/nattributevalue.js
   - lib/ninput.js
+  - lib/nmain.js
   - lib/nmonitoredobject.js
   - lib/noutput.js
   - lib/nplug.js
+  - lib/ntmplhelpers.js
   - lib/nvalidation.js
   - lib/nwarning.js
   - lib/nwarnings.js
   - LICENSE
   - nattrmon.js
   - nattrmon.yaml.sample
+  - oJob_nAttrMon.yaml
   - README.md
   - tests/inputDBTest.yml
   - tests/inputShellTest.yml
@@ -272,14 +275,14 @@ filesHash:
   config/move_files_from_the_disabled_folders.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
   config/nattrmonignore.js.sample: dad08a2c3a4fdba2f45c5d357aa2ebb7971d73e5
   config/objects/nInput_AFPing.js: 3960a6ca8a15ba4ff71a61894fe8307db5b32326
-  config/objects/nInput_BPMDebugChecks.js: c08c14f2ababbda0da457126c34d909eb45855c1
+  config/objects/nInput_BPMDebugChecks.js: 6e1042ba95cc3374d3516be2202538529344769f
   config/objects/nInput_BPMNRunningFlows.js: 86da2d78b524d42ac4ab9598820605bbbfb24c57
-  config/objects/nInput_CBPMDebugChecks.js: 0ab31695f8ce974d83eec771b445884b851b93f9
-  config/objects/nInput_CBPMRunningFlows.js: bd3041bfa4374987b0d66db152632355451293ca
+  config/objects/nInput_CBPMDebugChecks.js: 737f33ddd852309d0322f57e7adeeb307627652f
+  config/objects/nInput_CBPMRunningFlows.js: 016ea114e943dfb4f5af0fe91e61a3718852cbb2
   config/objects/nInput_CBPMSemaphores.js: 75a0892cdad21aee8762d6d1346548bf6d42b59b
   config/objects/nInput_Channel.js: 50c33108574630f6da6850f4e7f93f34a8632a62
   config/objects/nInput_CompareTimes.js: 5c95c1387549e405031414b430c98951ed591d1c
-  config/objects/nInput_DB.js: 1adb3910021be6076a567dee21d1add553f1212f
+  config/objects/nInput_DB.js: 7c93aec10cf242292a481a5a2065ebb4a458c074
   config/objects/nInput_DMPerformance.js: 3d0f27b87f5b1a004e32559b0076c3cbfdf5d064
   config/objects/nInput_EndPoints.js: 12f22ce1b4e43fa796b0a4350bfb92a9197ec9c9
   config/objects/nInput_Filesystem.js: 2522c3fa0cb229559b47e35360e50c72a2b82f0b
@@ -412,15 +415,18 @@ filesHash:
   lib/nattributes.js: f28cee64a735e0e6ae3b520bbc59f74e6203e1db
   lib/nattributevalue.js: d6a378dba74922540bcc3e054222733f69d5cead
   lib/ninput.js: cb1a2bc442a0a3ac9e6237fd02b445e31bd518cf
+  lib/nmain.js: 503d25243fc53313ab9373de371411af3dfdedc6
   lib/nmonitoredobject.js: da0b8a8590ce1534826750e2e70b3d6e4bee9f98
   lib/noutput.js: 097a89ae2ab12cb28d88034444a72d368464d14c
-  lib/nplug.js: afa94b6ae33e912ee174a955605f23d747385cea
+  lib/nplug.js: d9a6ffcd4c9999cff6364ff40dd9a38dbac680e8
+  lib/ntmplhelpers.js: 181c0d774f7a9b52790a343bfdeb4c0627bc9d09
   lib/nvalidation.js: 252998540faca7913211029f1bdd4397beba3ce9
   lib/nwarning.js: a8022e42582a148df205f333e1c523a01f48eb06
-  lib/nwarnings.js: 775b1a2412d8224d56deaae0fa3217a7f1d33b1b
+  lib/nwarnings.js: 3eb81e81a80227e8c48d2ea000749a4a762c6699
   LICENSE: 7df059597099bb7dcf25d2a9aedfaf4465f72d8d
-  nattrmon.js: 77d5c0fce60e8e81ed27e65ea8f11415c5b7597a
+  nattrmon.js: 0577704f46097906a7f715fd8bc8c913278e8b08
   nattrmon.yaml.sample: 522498649d73241f392eb212f1894c7e41852415
+  oJob_nAttrMon.yaml: aaace601a0a5a7afcbfb4c5734b900a5c6fa17b3
   README.md: 648ce4e29bbdc7b99f5cf8734cb1a7f0657789c7
   tests/inputDBTest.yml: c38616606dc5956e449189d11f8e661170f94dfb
   tests/inputShellTest.yml: ce643955982cb16b53a8843acd3549466e5cddf5
