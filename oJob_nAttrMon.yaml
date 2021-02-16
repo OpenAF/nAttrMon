@@ -1,65 +1,138 @@
-ojob:
-  daemon: true
+# oJob_nAttrMon.yaml __NAM_DEBUG=1 __NAM_NEED_CH_PERSISTENCE=
+#ojob:
+#  daemon: true
 
 todo:
-- Done
-- Init
-- nAM Start
-- nAM ToDo
+- nAttrMon Prepare shutdown
+- nAttrMon Init
+- nAttrMon ToDo
+- nAttrMon Start
+- nAttrMon Stop
 
 jobs:
-# ----------
-- name: Done
+# -------------------------------
+- name: nAttrMon Prepare shutdown
   type: shutdown
   exec: |
     global.nattrmon.stop();
     log("nAttrMon stopped.");
     print(new Date() + " | Stopping.");
 
-# --------------
-- name: nAM ToDo
-  deps: nAM Start
-  to  : nAM Add Plugs
-  args:
-    - output:
-        name    : Output HTTP
-        execFrom: nOutput_HTTP
-        execArgs:
-          port : 8888
-          title: Test
-    - output:
-        name    : Output JSON
-        execFrom: nOutput_HTTP_JSON
-        execArgs:
-          port: 8888
-
 # -------------------
-- name: nAM Add Plugs
+- name: nAttrMon Stop
   exec: |
-    sync(() => {
-      if (isDef(args.output)) {
-        var r = global.nattrmon.loadObject(args.output, "output");
-        global.nattrmon.addOutput(r, r.exec);
+    $ch()
+    .list()
+    .filter(r => r.startsWith("nattrmon::"))
+    .forEach(r => {
+      global.nattrmon.debug("Waiting for " + r + "...");
+      $ch(r).waitForJobs();
+    });
+    global.nattrmon.debug("Stopping...");
+    exit(0);
+
+- name: teste
+  lang: python
+  exec: |
+    from datetime import datetime
+
+    now = datetime.now()
+
+    current_time = now.strftime("%H:%M:%S")
+    args['set'] = { "Test": current_time }
+
+# --------------
+- name: nAttrMon ToDo
+  deps: nAttrMon Init
+  to  : nAttrMon Add Plugs
+  args:
+    - input :
+        name    : Test
+        #timeInterval: -1
+        execJob : teste
+          
+    - input:
+        name    : Test 2
+        exec    : |
+          sleep(2500, true);
+          return { "Test2": "coisos" }
+
+    - output:
+        name       : Output test
+        chSubscribe: nattrmon::cvals
+        exec       : |
+          _$(args.v, "args.v").$_();
+          yprint(args.v);
+    # - output:
+    #     name    : Output JSON
+    #     execFrom: nOutput_HTTP_JSON
+    #     execArgs:
+    #       port: 8888
+
+    # - output:
+    #     name    : Output HTTP
+    #     execFrom: nOutput_HTTP
+    #     execArgs:
+    #       port : 8888
+    #       title: Test
+
+# -----------------------
+- name    : nAttrMon Add Plugs
+  typeArgs:
+    single: true
+  exec    : |
+    var fnJob = j => {
+      if (isMap(j) && isDef(j.execJob) && isUnDef(j.exec)) {
+        j.exec  = "var r = $job('teste', args);\n";
+        j.exec += "if (isMap(r)) {\n";
+        j.exec += "   if (isDef(r.set)) {\n";
+        j.exec += "      r = r.set;\n";
+        j.exec += "   } else {\n";
+        j.exec += "     delete r.objId; delete r.__id; delete r.execid;\n";
+        j.exec += "   };\n";
+        j.exec += "} return r;\n";
       }
-      if (isDef(args.input)) {
-        var r = global.nattrmon.loadObject(args.input, "input");
-        global.nattrmon.addInput(r, r.exec);
+
+      return j;
+    };
+
+    if (isDef(args.output)) {
+      args.output = fnJob(args.output);
+      var r = global.nattrmon.loadObject(args.output, "output");
+      global.nattrmon.addOutput(r, r.exec);
+    }
+    if (isDef(args.input)) {
+      args.input = fnJob(args.input);
+      if (isUnDef(args.input.timeInterval) && isUnDef(args.input.chSubscribe) && isUnDef(args.input.cron)) {
+        args.input.chSubscribe = "nattrmon::trigger";
       }
-      if (isDef(args.validation)) {
-        var r = global.nattrmon.loadObject(args.validation, "validation");
-        global.nattrmon.addValidation(r, r.exec);
-      }
-    }, global.nattrmon);
+      var r = global.nattrmon.loadObject(args.input, "input");
+      global.nattrmon.addInput(r, r.exec);
+    }
+    if (isDef(args.validation)) {
+      args.validation = fnJob(args.validation);
+      var r = global.nattrmon.loadObject(args.validation, "validation");
+      global.nattrmon.addValidation(r, r.exec);
+    }
 
 # ---------------
-- name: nAM Start
-  deps: Init
+- name: nAttrMon Start
+  deps: nAttrMon Init
   exec: |
-    global.nattrmon.start();
+    global.nattrmon.debug("nAttrMon exec input plugs");
+    global.nattrmon.execPlugs(global.nattrmon.PLUGINPUTS);
+    global.nattrmon.debug("nAttrMon exec output plugs");
+    global.nattrmon.execPlugs(global.nattrmon.PLUGOUTPUTS);
+    global.nattrmon.debug("nAttrMon exec validation plugs");
+    global.nattrmon.execPlugs(global.nattrmon.PLUGVALIDATIONS);
+
+    global.nattrmon.debug("nAttrMon restoring snapshot");
     log("nAttrMon started (main=" + global.NATTRMON_HOME + "; home=" + global.NATTRMON_SUBHOME + ").");
 
-# ----------
-- name: Init
+    $ch("nattrmon::trigger").set(1, 1);
+
+# --------------
+- name: nAttrMon Init
   exec: |
     global.NATTRMON_HOME = getEnv("NATTRMON_HOME");
     if (isUnDef(global.NATTRMON_HOME)) global.NATTRMON_HOME = getOPackPath("nAttrMon") || ".";
@@ -69,6 +142,7 @@ jobs:
     loadLib(global.NATTRMON_HOME + "/lib/nmain.js");
 
     if (isDef(args.__NAM_DEBUG)) global.__NAM_DEBUG = Boolean(args.__NAM_DEBUG);
+    if (isDef(args.__NAM_NEED_CH_PERSISTENCE)) global.__NAM_NEED_CH_PERSISTENCE = Boolean(args.__NAM_NEED_CH_PERSISTENCE);
     if (isDef(args.__NAM_LOGCONSOLE)) global.__NAM_LOGCONSOLE = Boolean(args.__NAM_LOGCONSOLE); else global.__NAM_LOGCONSOLE = true;
 
     if (isUnDef(args.withDirectory)) {
@@ -76,3 +150,8 @@ jobs:
     } else {
       global.nattrmon = new nAttrMon(args.withDirectory, args.__NAM_DEBUG || __NAM_DEBUG);
     }
+
+    global.nattrmon.debug("nAttrMon start load plugs");
+    global.nattrmon.loadPlugs();
+
+    $ch("nattrmon::trigger").create();
