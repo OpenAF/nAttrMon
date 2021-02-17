@@ -41,15 +41,14 @@ jobs:
     current_time = now.strftime("%H:%M:%S")
     args['set'] = { "Test": current_time }
 
-# --------------
+# -------------------
 - name: nAttrMon ToDo
   deps: nAttrMon Init
   to  : nAttrMon Add Plugs
   args:
     - input :
-        name    : Test
-        #timeInterval: -1
-        execJob : teste
+       name    : Test
+       execJob : teste
           
     - input:
         name    : Test 2
@@ -76,7 +75,7 @@ jobs:
     #       port : 8888
     #       title: Test
 
-# -----------------------
+# ----------------------------
 - name    : nAttrMon Add Plugs
   typeArgs:
     single: true
@@ -115,7 +114,7 @@ jobs:
       global.nattrmon.addValidation(r, r.exec);
     }
 
-# ---------------
+# --------------------
 - name: nAttrMon Start
   deps: nAttrMon Init
   exec: |
@@ -131,7 +130,7 @@ jobs:
 
     $ch("nattrmon::trigger").set(1, 1);
 
-# --------------
+# -------------------
 - name: nAttrMon Init
   exec: |
     global.NATTRMON_HOME = getEnv("NATTRMON_HOME");
@@ -141,14 +140,27 @@ jobs:
 
     loadLib(global.NATTRMON_HOME + "/lib/nmain.js");
 
+    if (isDef(args.__NAM_LOGHK_HOWLONGAGOINMINUTE)) global.__NAM_LOGHK_HOWLONGAGOINMINUTE = Number(args.__NAM_LOGHK_HOWLONGAGOINMINUTE);
+    if (isDef(args.__NAM_LOGAUDIT)) global.__NAM_LOGAUDIT = Boolean(args.__NAM_LOGAUDIT);
+    if (isDef(args.__NAM_LOGAUDIT_TEMPLATE)) global.__NAM_LOGAUDIT_TEMPLATE = String(args.__NAM_LOGAUDIT_TEMPLATE);
+    if (isDef(args.__NAM_JAVA_ARGS)) global.__NAM_JAVA_ARGS = String(args.__NAM_JAVA_ARGS).split(",");
+    if (isDef(args.__NAM_MAXPLUGEXECUTE_TIME)) global.__NAM_MAXPLUGEXECUTE_TIME = Number(args.__NAM_MAXPLUGEXECUTE_TIME);
+    if (isDef(args.__NAM_BUFFERCHANNELS)) global.__NAM_BUFFERCHANNELS = Boolean(args.__NAM_BUFFERCHANNELS);
+    if (isDef(args.__NAM_BUFFERBYNUMBER)) global.__NAM_BUFFERBYNUMBER = Number(args.__NAM_BUFFERBYNUMBER);
+    if (isDef(args.__NAM_BUFFERBYTIME)) global.__NAM_BUFFERBYTIME = Number(args.__NAM_BUFFERBYTIME);
+    if (isDef(args.__NAM_NUMBER_WORKERS)) __cpucores = Number(args.__NAM_NUMBER_WORKERS);
+    if (isDef(args.__NAM_COREOBJECTS)) global.__NAM_COREOBJECTS = String(args.__NAM_COREOBJECTS);
+    if (isDef(args.__NAM_COREOBJECTS_LAZYLOADING)) global.__NAM_COREOBJECTS_LAZYLOADING = Boolean(args.__NAM_COREOBJECTS_LAZYLOADING);
     if (isDef(args.__NAM_DEBUG)) global.__NAM_DEBUG = Boolean(args.__NAM_DEBUG);
     if (isDef(args.__NAM_NEED_CH_PERSISTENCE)) global.__NAM_NEED_CH_PERSISTENCE = Boolean(args.__NAM_NEED_CH_PERSISTENCE);
     if (isDef(args.__NAM_LOGCONSOLE)) global.__NAM_LOGCONSOLE = Boolean(args.__NAM_LOGCONSOLE); else global.__NAM_LOGCONSOLE = true;
+    if (isDef(args.__NAM_LOG_ASYNC)) __logFormat.async = Boolean(args.__NAM_LOG_ASYNC); else global.__NAM_LOGCONSOLE = true;
+    if (isDef(args.__NAM_MAXPLUGEXECUTE_TIME)) global.__NAM_MAXPLUGEXECUTE_TIME = Number(args.__NAM_MAXPLUGEXECUTE_TIME);
 
     if (isUnDef(args.withDirectory)) {
-      global.nattrmon = new nAttrMon(global.NATTRMON_SUBHOME + "/config", args.__NAM_DEBUG || __NAM_DEBUG);
+      global.nattrmon = new nAttrMon(global.NATTRMON_SUBHOME + "/config", global.__NAM_DEBUG);
     } else {
-      global.nattrmon = new nAttrMon(args.withDirectory, args.__NAM_DEBUG || __NAM_DEBUG);
+      global.nattrmon = new nAttrMon(args.withDirectory, global.__NAM_DEBUG);
     }
 
     global.nattrmon.debug("nAttrMon start load plugs");
