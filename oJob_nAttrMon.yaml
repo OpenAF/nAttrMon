@@ -2,18 +2,36 @@
 #ojob:
 #  daemon: true
 
-todo:
-- nAttrMon Prepare shutdown
-- nAttrMon Init
-- nAttrMon ToDo
-- nAttrMon Start
-- nAttrMon Stop
+#todo:
+#- nAttrMon Prepare shutdown
+#- nAttrMon Init
+#- nAttrMon ToDo
+#- nAttrMon Start
+#- nAttrMon Stop
 
 jobs:
 # -------------------------------
 - name: nAttrMon Prepare shutdown
   type: shutdown
   exec: |
+    global.nattrmon.stop();
+    log("nAttrMon stopped.");
+    print(new Date() + " | Stopping.");
+
+# -------------------------
+- name: nAttrMon Run Single
+  from:
+  - nAttrMon Start
+  - nAttrMon Stop Single
+  exec: |
+    $ch()
+    .list()
+    .filter(r => r.startsWith("nattrmon::"))
+    .forEach(r => {
+      global.nattrmon.debug("Waiting for " + r + "...");
+      $ch(r).waitForJobs();
+    });
+    global.nattrmon.debug("Stopping...");
     global.nattrmon.stop();
     log("nAttrMon stopped.");
     print(new Date() + " | Stopping.");
