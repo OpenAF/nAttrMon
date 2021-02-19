@@ -22,7 +22,6 @@ jobs:
 - name: nAttrMon Run Single
   from:
   - nAttrMon Start
-  - nAttrMon Stop Single
   exec: |
     ["nattrmon::trigger", "nattrmon::lvals", "nattrmon::cvals", "nattrmon::attributes", "nattrmon::warnings", "nattrmon::plugs", "nattrmon::ps"]
     .filter(r => r.startsWith("nattrmon::"))
