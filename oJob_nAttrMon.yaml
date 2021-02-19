@@ -24,12 +24,12 @@ jobs:
   - nAttrMon Start
   - nAttrMon Stop Single
   exec: |
-    $ch()
-    .list()
+    ["nattrmon::trigger", "nattrmon::lvals", "nattrmon::cvals", "nattrmon::attributes", "nattrmon::warnings", "nattrmon::plugs", "nattrmon::ps"]
     .filter(r => r.startsWith("nattrmon::"))
     .forEach(r => {
       global.nattrmon.debug("Waiting for " + r + "...");
       $ch(r).waitForJobs();
+      sleep(50, true);
     });
     global.nattrmon.debug("Stopping...");
     global.nattrmon.stop();
@@ -151,9 +151,9 @@ jobs:
 # -------------------
 - name: nAttrMon Init
   exec: |
-    global.NATTRMON_HOME = getEnv("NATTRMON_HOME");
+    global.NATTRMON_HOME = args.NATTRMON_HOME || getEnv("NATTRMON_HOME");
     if (isUnDef(global.NATTRMON_HOME)) global.NATTRMON_HOME = getOPackPath("nAttrMon") || ".";
-    global.NATTRMON_SUBHOME = getEnv("NATTRMON_DIR");
+    global.NATTRMON_SUBHOME = args.NATTRMON_DIR || getEnv("NATTRMON_DIR");
     if (isUnDef(global.NATTRMON_SUBHOME)) global.NATTRMON_SUBHOME = args.withHome || global.NATTRMON_HOME;
 
     loadLib(global.NATTRMON_HOME + "/lib/nmain.js");
@@ -171,8 +171,8 @@ jobs:
     if (isDef(args.__NAM_COREOBJECTS_LAZYLOADING)) global.__NAM_COREOBJECTS_LAZYLOADING = Boolean(args.__NAM_COREOBJECTS_LAZYLOADING);
     if (isDef(args.__NAM_DEBUG)) global.__NAM_DEBUG = Boolean(args.__NAM_DEBUG);
     if (isDef(args.__NAM_NEED_CH_PERSISTENCE)) global.__NAM_NEED_CH_PERSISTENCE = Boolean(args.__NAM_NEED_CH_PERSISTENCE);
-    if (isDef(args.__NAM_LOGCONSOLE)) global.__NAM_LOGCONSOLE = Boolean(args.__NAM_LOGCONSOLE); else global.__NAM_LOGCONSOLE = true;
-    if (isDef(args.__NAM_LOG_ASYNC)) __logFormat.async = Boolean(args.__NAM_LOG_ASYNC); else global.__NAM_LOGCONSOLE = true;
+    if (isDef(args.__NAM_LOGCONSOLE)) global.__NAM_LOGCONSOLE = Boolean(args.__NAM_LOGCONSOLE); else global.__NAM_LOGCONSOLE = false;
+    if (isDef(args.__NAM_LOG_ASYNC)) __logFormat.async = Boolean(args.__NAM_LOG_ASYNC); else global.__NAM_LOG_ASYNC = true;
     if (isDef(args.__NAM_MAXPLUGEXECUTE_TIME)) global.__NAM_MAXPLUGEXECUTE_TIME = Number(args.__NAM_MAXPLUGEXECUTE_TIME);
 
     if (isUnDef(args.withDirectory)) {
