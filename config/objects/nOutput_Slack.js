@@ -45,7 +45,7 @@ nOutput_Slack.prototype.output = function(scope, args, meta) {
             var parent = this;
 
             selec.select((w) => {
-                if (!nattrmon.isNotified(w.title, parent.__notifyID) && isDef(notif.webhook) && w.level.toUpperCase() != "CLOSED") {
+                if (!nattrmon.isNotified(w.title, parent.params.__notifyID) && isDef(notif.webhook) && w.level.toUpperCase() != "CLOSED") {
                     // Prepare message for notification
                     var aPreMessage = templify("_{{level}}_", w);
                     var aTitle      = templify("{{{title}}}", w);
@@ -82,7 +82,7 @@ nOutput_Slack.prototype.output = function(scope, args, meta) {
                          });
 
                         // Notify that was been sent successfully
-                        nattrmon.setNotified(w.title, parent.__notifyID);
+                        nattrmon.setNotified(w.title, parent.params.__notifyID);
                     } catch(e) {
                         logErr("nOutput_Slack: [" + stringify(notif, void 0, "") + "] " + String(e));
                     }
