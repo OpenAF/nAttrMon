@@ -54,11 +54,15 @@ nInput_Sessions.prototype.__getSessions = function(aKey, scope) {
 				}
 			});
 		} else {
-			ses = s.exec("StatusReport", {}).Services["wedo.jaf.services.sessions.SessionManagerBase"];
-            if (isMap(ses) && isDef(ses.Services) && isDef(ses.Services["wedo.jaf.services.sessions.SessionManagerBase"])) {
-				ses = ses.Services["wedo.jaf.services.sessions.SessionManagerBase"];
-				ses = (isDef(ses) ? ses = ses.SessionManager.Sessions : []);
-				parseResult = true;
+			try {
+				ses = s.exec("StatusReport", {}).Services["wedo.jaf.services.sessions.SessionManagerBase"];
+				if (isMap(ses) && isDef(ses.Services) && isDef(ses.Services["wedo.jaf.services.sessions.SessionManagerBase"])) {
+					ses = ses.Services["wedo.jaf.services.sessions.SessionManagerBase"];
+					ses = (isDef(ses) ? ses = ses.SessionManager.Sessions : []);
+					parseResult = true;
+				}
+			} catch(e) {
+				logErr("Error while retrieving sessions: " + e.message);
 			}
 		}
 		

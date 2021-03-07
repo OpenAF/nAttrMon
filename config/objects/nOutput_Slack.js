@@ -53,7 +53,7 @@ nOutput_Slack.prototype.output = function(scope, args, meta) {
 
                     var color;
 
-                    switch(v.level.toUpperCase()) {
+                    switch(w.level.toUpperCase()) {
                     case "HIGH":
                         color = "#FF0000";
                         aPreMessage = ":bomb: " + aPreMessage;
@@ -72,7 +72,7 @@ nOutput_Slack.prototype.output = function(scope, args, meta) {
                     }
                     
                     try {
-                        ow.obj.rest.jsonCreate(notif.webhook, {}, {
+                        $rest().post(notif.webhook, {
                             pretext : aPreMessage,
                             fallback: aPreMessage,
                             color   : color,
