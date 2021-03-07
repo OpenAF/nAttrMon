@@ -60,7 +60,7 @@ nInput_AFPing.prototype.ping = function (n, u) {
     return {
       "Name": n,
       "Alive": res,
-      "Error": String(e) 
+      "Error": String(err) 
     };
 }
 
