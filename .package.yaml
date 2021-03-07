@@ -295,7 +295,7 @@ filesHash:
   config/objects/nInput_RunningFlows.js: 7d8d77a702b4f9f2f719679052cba240798fa5f8
   config/objects/nInput_Schedulers.js: bd12d875fbca06f105dc77c32630e27813a674d2
   config/objects/nInput_Semaphores.js: 9b0c0d8ca1b1c33d8faeaae89738360c8569534e
-  config/objects/nInput_Sessions.js: c606fa64644c3e650e013272d7b699b223c10566
+  config/objects/nInput_Sessions.js: be986c8aa06dcf82df61fe3c8323748cc4f2bf96
   config/objects/nInput_Shell.js: 2b84085de7c592241d5e9ee72d207ca24e9d5ad9
   config/objects/nOutput_Channels.js: ed785ef8b3b9b01c91436590e8d2ef48a956456c
   config/objects/nOutput_DSV.js: b723aefe236bd464d215c52406cec796cd47d97f
@@ -308,7 +308,7 @@ filesHash:
   config/objects/nOutput_Notifications.js: 1e5cabdd01f3c6b4e7f68bf7259a0256c9963985
   config/objects/nOutput_Oracle.js: ab0f2fe7958952437ae93030715633858462269f
   config/objects/nOutput_RemoteChannel.js: 8dcadaf89c78f31707c45d615a3941ce0547cd33
-  config/objects/nOutput_Slack.js: 38d67701dd604cebc6329d46a59a5f6d54b8fd82
+  config/objects/nOutput_Slack.js: 23e160d73a9433c8225d825a645e50753bcdf988
   config/objects/nOutput_Stdout.js: 2abf4e491d71fd53670c650768e5d6ab3dc7db51
   config/objects/nValidation_AFPing.js: f48325d605e693dee3ab2912224cda0fde11e490
   config/objects/nValidation_Generic.js: 29c893f6c48b521c5a8980fd616564827ee98e30

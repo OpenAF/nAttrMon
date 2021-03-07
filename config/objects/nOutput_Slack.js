@@ -7,7 +7,7 @@
  *    - notifications.warnLevel (String)   The warn level for which this entry will send a notification (if not defined defaults to HIGH).\
  *    - notifications.warnTitle (RegExp)   A regular expression for the warn titles to trigger this notification (if not defined defaults to all).\
  *    - notifications.webhook   (String)   A pushover user id.\
- *    - notifications.message   (Template) A template where the variable "warn" is provided as each warning entry (e.g. title, description, ...).\
+ *    (deprecated) - notifications.message   (Template) A template where the variable "warn" is provided as each warning entry (e.g. title, description, ...).\
  * \
  * </odoc>
  */
@@ -18,7 +18,7 @@ var nOutput_Slack = function(aMap) {
 };
 inherit(nOutput_Slack, nOutput);
 
-nOutput_Slack.prototype.output = function(scope, args) {
+nOutput_Slack.prototype.output = function(scope, args, meta) {
     var res = [];
 
     if (isDef(this.params.notifications)) {

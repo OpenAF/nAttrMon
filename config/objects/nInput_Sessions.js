@@ -37,12 +37,12 @@ nInput_Sessions.prototype.__getSessions = function(aKey, scope) {
 
 	try {
 		if (isDef(aKey)) {
-			nattrmon.useObject(aKey, function(s) {
+			nattrmon.useObject(aKey, s => {
 				try {
 					ses = s.exec("StatusReport", {});
 					if (isMap(ses) && isDef(ses.Services) && isDef(ses.Services["wedo.jaf.services.sessions.SessionManagerBase"])) {
 						ses = ses.Services["wedo.jaf.services.sessions.SessionManagerBase"];
-						ses = (isDef(ses)) ? ses = ses.SessionManager.Sessions : [];
+						ses = (isDef(ses) ? ses = ses.SessionManager.Sessions : []);
 						parseResult = true;
 						return true;
 					} else {
@@ -57,7 +57,7 @@ nInput_Sessions.prototype.__getSessions = function(aKey, scope) {
 			ses = s.exec("StatusReport", {}).Services["wedo.jaf.services.sessions.SessionManagerBase"];
             if (isMap(ses) && isDef(ses.Services) && isDef(ses.Services["wedo.jaf.services.sessions.SessionManagerBase"])) {
 				ses = ses.Services["wedo.jaf.services.sessions.SessionManagerBase"];
-				ses = (isDef(ses)) ? ses = ses.SessionManager.Sessions : [];
+				ses = (isDef(ses) ? ses = ses.SessionManager.Sessions : []);
 				parseResult = true;
 			}
 		}
