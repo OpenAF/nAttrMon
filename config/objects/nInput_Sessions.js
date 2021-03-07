@@ -33,15 +33,21 @@ inherit(nInput_Sessions, nInput);
 
 nInput_Sessions.prototype.__getSessions = function(aKey, scope) {
 	var retSes = {};
-        var ses;
+    var ses, parseResult = false;
 
 	try {
-		if (isDefined(aKey)) {
+		if (isDef(aKey)) {
 			nattrmon.useObject(aKey, function(s) {
 				try {
-					ses = s.exec("StatusReport", {}).Services["wedo.jaf.services.sessions.SessionManagerBase"];
-					ses = (isDef(ses)) ? ses = ses.SessionManager.Sessions : {};
-					return true;
+					ses = s.exec("StatusReport", {});
+					if (isMap(ses) && isDef(ses.Services) && isDef(ses.Services["wedo.jaf.services.sessions.SessionManagerBase"])) {
+						ses = ses.Services["wedo.jaf.services.sessions.SessionManagerBase"];
+						ses = (isDef(ses)) ? ses = ses.SessionManager.Sessions : [];
+						parseResult = true;
+						return true;
+					} else {
+						return false;
+					}
 				} catch(e) {
 					logErr("Error while retrieving sessions using '" + aKey + "': " + e.message);
 					return false;
@@ -49,19 +55,27 @@ nInput_Sessions.prototype.__getSessions = function(aKey, scope) {
 			});
 		} else {
 			ses = s.exec("StatusReport", {}).Services["wedo.jaf.services.sessions.SessionManagerBase"];
-                        ses = (isDef(ses)) ? ses = ses.SessionManager.Sessions : {};
+            if (isMap(ses) && isDef(ses.Services) && isDef(ses.Services["wedo.jaf.services.sessions.SessionManagerBase"])) {
+				ses = ses.Services["wedo.jaf.services.sessions.SessionManagerBase"];
+				ses = (isDef(ses)) ? ses = ses.SessionManager.Sessions : [];
+				parseResult = true;
+			}
 		}
 		
-	  	retSes = $from(ses).select(function(r) {
- 			r["Name"] = aKey; 
-			r["Start Time"] = ow.format.fromWeDoDateToDate(r["Start Time"]);
- 			return {
-               "Name": aKey,
- 			   "Username": r.Username,
- 			   "Id": r.Id,
-		       "Start Time": r["Start Time"]
-            };
-		});
+		if (parseResult) {
+			retSes = $from(ses).select(r => {
+				r["Name"] = aKey; 
+			    r["Start Time"] = ow.format.fromWeDoDateToDate(r["Start Time"]);
+				return {
+				  "Name": aKey,
+				  "Username": r.Username,
+				  "Id": r.Id,
+				  "Start Time": r["Start Time"]
+			   };
+		   });
+		} else {
+			throw "can't parse results";
+		}
 	} catch(e) {
 		logErr("Error while retrieving sessions using '" + aKey + "': " + e.message);
 	}
