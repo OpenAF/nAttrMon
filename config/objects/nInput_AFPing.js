@@ -41,7 +41,7 @@ var nInput_AFPing = function (anUrl, attributeName) {
 inherit(nInput_AFPing, nInput);
 
 nInput_AFPing.prototype.ping = function (n, u) {
-  var res = false;
+  var res = false, err = void 0;
   try {
     var a = new AF(u, this.timeout);
     var r = a.exec("Ping", {
@@ -51,6 +51,7 @@ nInput_AFPing.prototype.ping = function (n, u) {
     a.close();
   } catch (e) {
     res = false;
+    err = e;
   }
 
   if (this.single)
@@ -58,7 +59,8 @@ nInput_AFPing.prototype.ping = function (n, u) {
   else
     return {
       "Name": n,
-      "Alive": res
+      "Alive": res,
+      "Error": String(e) 
     };
 }
 
