@@ -11,10 +11,9 @@
  * \
  * </odoc>
  */
-var nOutput_Slack = function(aMap) {
+ var nOutput_Slack = function(aMap) {
     this.params = aMap;
-
-	nOutput.call(this, this.output);
+    nOutput.call(this, this.output);
 };
 inherit(nOutput_Slack, nOutput);
 
@@ -47,9 +46,8 @@ nOutput_Slack.prototype.output = function(scope, args, meta) {
             selec.select((w) => {
                 if (!nattrmon.isNotified(w.title, parent.params.__notifyID) && isDef(notif.webhook) && w.level.toUpperCase() != "CLOSED") {
                     // Prepare message for notification
-                    var aPreMessage = templify("_{{level}}_", w);
-                    var aTitle      = templify("{{{title}}}", w);
-                    var aValue      = templify("{{{description}}}\n\n_created on {{createdate}}_", w);
+                    var aPreMessage = templify("*_{{level}}_ | {{{title}}}*\n{{{description}}}", w);
+                    var aContext    = templify("_created on {{createdate}}_", w);
 
                     var color;
 
@@ -70,17 +68,21 @@ nOutput_Slack.prototype.output = function(scope, args, meta) {
                         aPreMessage = ":information_source: " + aPreMessage;
                         break;
                     }
-                    
-                    try {
-                        $rest().post(notif.webhook, {
-                            pretext : aPreMessage,
-                            fallback: aPreMessage,
-                            color   : color,
-                            fields  : [
-                               { title: aTitle, value: aValue, short: false }
-                            ]
-                         });
 
+                    try {
+                        var restMsg = { blocks: [
+                               {
+                                  type: "section",
+                                  text: { type: "mrkdwn", text: aPreMessage }
+                               },
+                               {
+                                  type: "context",
+                                  elements: [ { type: "mrkdwn", text: aContext } ]
+                               }
+                        ] };
+
+                        var restReply = $rest().post(notif.webhook, restMsg);
+                        if (restReply != "ok") logWarn("Reply from Slack was not expected: " + stringify(restReply, ""));
                         // Notify that was been sent successfully
                         nattrmon.setNotified(w.title, parent.params.__notifyID);
                     } catch(e) {
