@@ -38,24 +38,76 @@ nInput_Shell.prototype.input = function(scope, args) {
 
 	if (isDef(this.params.chKeys) || isDef(this.params.keys)) {
 		var res = [], attrname;
+		var parent = this;
 
-		if (isDef(this.params.chKeys)) this.params.keys = $stream($ch(this.params.chKeys).getKeys()).map("key").toArray();
+		if (isDef(this.params.chKeys)) this.params.keys = $ch(this.params.chKeys).getKeys().map(r => r.key); 
 
-		for(var i in this.params.keys) {
-			nattrmon.useObject(this.params.keys[i], (ssh) => {
-				if (this.parseJson) {
-					res.push({
-						key: this.params.keys[i],
-						result: jsonParse(ssh.exec(templify(this.cmd)))
-					});
-				} else {
-					res.push({
-						key: this.params.keys[i],
-						result: ssh.exec(templify(this.cmd))
-					});
+		for(var i in this.params.keys) { 
+			var v = $ch(this.params.chKeys).get({ key: this.params.keys[i] });
+			switch(v.type) {
+			case "kube":
+				if (isUnDef(getOPackPath("Kube"))) {
+					throw "Kube opack not installed.";
+				} 
+
+				var s = $sec(v.secRepo, v.secBucket, v.secBucketPass);
+				var k = s.getObj(v.secObjKey);
+				if (isUnDef(k) || isUnDef(k.getNamespaces)) {
+					throw "The secObjKey = '" + v.secObjKey + "' is not a valid Kube object.";
 				}
-			});
 
+				var epods = [];
+				if (isUnDef(v.pod)) {
+					if (isDef(v.podTemplate)) {
+						var pods = k.getPods(v.namespace);
+						epods = $from(pods)
+								.equals("Kind", "Pod")
+								.match("Metadata.Name", v.podTemplate)
+								.select(r => r.Metadata.Name);
+					} else {
+						throw "No pod determined for '" + v.secObjKey + "'";
+					}
+				} else {
+					epods = [ v.pod ];
+				}
+			
+				epods.forEach(pod => {
+					try {
+						var rr = String(k.exec(v.namespace, pod, [ templify(parent.cmd) ], void 0, true));
+						if (parent.parseJson) {
+							res.push({
+								key: parent.params.keys[i],
+								result: jsonParse(rr, true)
+							});
+						} else {
+							res.push({
+								key: parent.params.keys[i],
+								result: rr
+							});
+						}
+						;
+					} catch(e) {
+						logErr("nInput_Shell | Error on namespace '"+ v.namespace + "', pod '" + pod + "': " + String(e));
+					}
+				});
+				
+				break;
+			case "ssh":
+			default:
+				nattrmon.useObject(this.params.keys[i], (ssh) => {
+					if (this.parseJson) {
+						res.push({
+							key: this.params.keys[i],
+							result: jsonParse(ssh.exec(templify(this.cmd)), true)
+						});
+					} else {
+						res.push({
+							key: this.params.keys[i],
+							result: ssh.exec(templify(this.cmd))
+						});
+					}
+				});
+			}
 		}
 
 		if (this.params.keys.length == 1) {
@@ -70,7 +122,7 @@ nInput_Shell.prototype.input = function(scope, args) {
 		var attrname = templify(this.attrTemplate, { name: this.name });
 
 		if (this.parseJson) {
-			ret[attrname] = jsonParse(sh(templify(this.cmd)));
+			ret[attrname] = jsonParse(sh(templify(this.cmd)), true);
 		} else {
 			ret[attrname] = sh(templify(this.cmd));
 		}
