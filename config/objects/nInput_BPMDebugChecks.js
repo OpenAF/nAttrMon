@@ -116,7 +116,7 @@ nInput_BPMDebugChecks.prototype.input = function(scope, args) {
 
             return oo;
     
-        }, WORKERS));    
+        }, __NAM_WORKERS));    
 
         res[templify(this.attrTemplate, {
             key: aKey
