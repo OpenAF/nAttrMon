@@ -21,7 +21,7 @@ mainJob: ''
 license: Apache 2.0 license
 version: '20210308'
 dependencies:
-  openaf: '>=20200502'
+  openaf: '>=20201110'
 files:
   - .gitignore
   - .package.yaml
