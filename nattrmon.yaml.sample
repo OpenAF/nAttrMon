@@ -39,3 +39,8 @@
 
 # Use a core objects folder before loading the config/objects folder
 # COREOBJECTS: /some/dir/objects
+
+# Use another path for the nattrmon snapshots (if not defined it will default to the CONFIG path)
+#CH_PERSISTENCE_PATH: /another/path
+# Indicate if nattrmon snapshot persistence should be turned off (default turned on)
+#NEED_CH_PERSISTENCE: false

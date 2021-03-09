@@ -13,6 +13,7 @@ var WORKERS                   = __cpucores;
 var COREOBJECTS               = void 0;
 var COREOBJECTS_LAZYLOADING   = false;
 var NEED_CH_PERSISTENCE       = true;
+var CH_PERSISTENCE_PATH       = void 0;
 
 // -------------------------------------------------------------------
 
@@ -43,6 +44,8 @@ if (io.fileExists(NATTRMON_HOME + "/nattrmon.yaml")) {
 
 	if (isDef(pms.COREOBJECTS))    COREOBJECTS = pms.COREOBJECTS;
 	if (isDef(pms.COREOBJECTS_LAZYLOADING)) COREOBJECTS_LAZYLOADING = pms.COREOBJECTS_LAZYLOADING;
+
+	if (isDef(pms.CH_PERSISTENCE_PATH)) CH_PERSISTENCE_PATH = pms.CH_PERSISTENCE_PATH;
 
 	print("Applying parameters:");
 	print(af.toYAML(pms));
@@ -214,15 +217,19 @@ const nAttrMon = function(aConfigPath, debugFlag) {
    
 	// persistence
 	if (NEED_CH_PERSISTENCE) {
-		this.listOfWarnings.getCh().storeAdd(this.getConfigPath() + "/nattrmon.warns.snapshot", [ "title" ], true);
-		this.listOfAttributes.getCh().storeAdd(this.getConfigPath() + "/nattrmon.attrs.snapshot", [ "name" ], true);
-		this.lastValues.storeAdd(this.getConfigPath() + "/nattrmon.lvals.snapshot", [ "name" ], true);
-		this.currentValues.storeAdd(this.getConfigPath() + "/nattrmon.cvals.snapshot", [ "name" ], true);
+		this.listOfWarnings.getCh().storeAdd(this.getSnapshotPath() + "/nattrmon.warns.snapshot", [ "title" ], true);
+		this.listOfAttributes.getCh().storeAdd(this.getSnapshotPath() + "/nattrmon.attrs.snapshot", [ "name" ], true);
+		this.lastValues.storeAdd(this.getSnapshotPath() + "/nattrmon.lvals.snapshot", [ "name" ], true);
+		this.currentValues.storeAdd(this.getSnapshotPath() + "/nattrmon.cvals.snapshot", [ "name" ], true);
 	}
 };
 
 nAttrMon.prototype.getConfigPath = function() {
 	return this.configPath;
+};
+
+nAttrMon.prototype.getSnapshotPath = function() {
+	return (isUnDef(CH_PERSISTENCE_PATH) ? this.getConfigPath() : CH_PERSISTENCE_PATH);
 };
 
 // Snapshot functions
