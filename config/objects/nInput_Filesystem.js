@@ -17,6 +17,7 @@ nInput_Filesystem = function (aMap) {
 	} else {
 		this.params = {};
 	}
+	if (!isArray(this.params.volumeNames) || this.params.volumeNames.length == 0) throw "No volumeNames defined.";
 
 	nInput.call(this, this.input);
 };
@@ -75,22 +76,70 @@ nInput_Filesystem.prototype.__parseCmd = function (resSpace, resINode) {
 nInput_Filesystem.prototype.input = function (scope, args) {
 	var dfs = [];
 	var ret = {};
+	var parent = this;
 
 	try {
 		var resSpace, resINode;
 
 		if (isDef(this.params.chKeys) || isDef(this.params.keys)) {
-			if (isDef(this.params.chKeys)) this.params.keys = $stream($ch(this.params.chKeys).getKeys()).map("key").toArray();
+			if (isDef(this.params.chKeys)) this.params.keys = $ch(this.params.chKeys).getKeys().map(r => r.key); 
 
 			for (var i in this.params.keys) {
-				nattrmon.useObject(this.params.keys[i], (ssh) => {
-					resSpace = ssh.exec("df -P");
-					resINode = ssh.exec("df -i -P");
-				});
-				dfs.push({
-					key: this.params.keys[i],
-					result: this.__parseCmd(resSpace, resINode)
-				});
+				var v = $ch(this.params.chKeys).get({ key: this.params.keys[i] });
+				switch(v.type) {
+				case "kube":
+					if (isUnDef(getOPackPath("Kube"))) {
+						throw "Kube opack not installed.";
+					} 
+					var s = $sec(v.secRepo, v.secBucket, v.secBucketPass);
+					var k = s.getObj(v.secObjKey);
+					if (isUnDef(k) || isUnDef(k.getNamespaces)) {
+						throw "The secObjKey = '" + v.secObjKey + "' is not a valid Kube object.";
+					}
+
+					var epods = [];
+					if (isUnDef(v.pod)) {
+						if (isDef(v.podTemplate)) {
+							var pods = k.getPods(v.namespace);
+							epods = $from(pods)
+							        .equals("Kind", "Pod")
+							        .match("Metadata.Name", v.podTemplate)
+						          	.select(r => r.Metadata.Name);
+						} else {
+							throw "No pod determined for '" + v.secObjKey + "'";
+						}
+					} else {
+						epods = [ v.pod ];
+					}
+				
+					epods.forEach(pod => {
+						try {
+							resSpace = String( k.exec(v.namespace, pod, "df -P", void 0, true) );
+							resINode = String( k.exec(v.namespace, pod, "df -i -P", void 0, true) );
+
+							dfs.push({
+								key: parent.params.keys[i],
+								pod: pod,
+								result: parent.__parseCmd(resSpace, resINode)
+							});
+						} catch(e) {
+							logErr("nInput_Filesystem | Error on namespace '"+ v.namespace + "', pod '" + pod + "': " + String(e));
+						}
+					})
+
+					break;
+				case "ssh":
+				default   :
+					// Default SSH
+					nattrmon.useObject(this.params.keys[i], (ssh) => {
+						resSpace = ssh.exec("df -P");
+						resINode = ssh.exec("df -i -P");
+					});
+					dfs.push({
+						key: this.params.keys[i],
+						result: this.__parseCmd(resSpace, resINode)
+					});
+				}
 			}
 
 			if (this.params.keys.length == 1) {
