@@ -8,6 +8,7 @@ todo:
 - nAM ToDo
 
 jobs:
+# ----------
 - name: Done
   type: shutdown
   exec: |
@@ -15,6 +16,7 @@ jobs:
     log("nAttrMon stopped.");
     print(new Date() + " | Stopping.");
 
+# --------------
 - name: nAM ToDo
   deps: nAM Start
   to  : nAM Add Plugs
@@ -31,6 +33,7 @@ jobs:
         execArgs:
           port: 8888
 
+# -------------------
 - name: nAM Add Plugs
   exec: |
     sync(() => {
@@ -48,12 +51,14 @@ jobs:
       }
     }, global.nattrmon);
 
+# ---------------
 - name: nAM Start
   deps: Init
   exec: |
     global.nattrmon.start();
     log("nAttrMon started (main=" + global.NATTRMON_HOME + "; home=" + global.NATTRMON_SUBHOME + ").");
 
+# ----------
 - name: Init
   exec: |
     global.NATTRMON_HOME = getEnv("NATTRMON_HOME");
