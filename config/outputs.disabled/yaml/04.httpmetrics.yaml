@@ -1,0 +1,13 @@
+output:
+   name         : Output Metrics
+   description  : Outputs attributes, warnings, current and previous values in a JSON representation through HTTP.
+   execFrom     : nOutput_HTTP_Metrics
+   execArgs     :
+   #   includeSelf: false
+   #   includeCVals: true
+   #   includeLVals: false
+   #   includeWarns: true
+   #   nameSelf    : "nattrmon"
+   #   nameCVals   : "nattrmon_cval"
+   #   nameLVals   : "nattrmon_lval"
+   #   nameWarns   : "nattrmon_warn"

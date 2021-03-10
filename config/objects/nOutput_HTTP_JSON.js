@@ -15,10 +15,15 @@ var nOutput_HTTP_JSON = function (aMap) {
 
 	if (isDef(aMap.httpSession)) hS = aMap.httpSession;
 
-	if (isDef(aPort) || !nattrmon.hasSessionData(hS)) {
-		nattrmon.setSessionData(hS,
-			ow.server.httpd.start(isUnDef(aPort) ? 8090 : aPort, aMap.host, aMap.keyStore, aMap.keyPassword));
-	}
+    if (nattrmon.hasSessionData(hS)) {
+        if (isNumber(aPort) && aPort != nattrmon.getSessionData(hS).getPort()) {
+            nattrmon.setSessionData(hS,
+                ow.server.httpd.start(aPort, aMap.host, aMap.keyStore, aMap.keyPassword));
+        }
+    } else {
+        nattrmon.setSessionData(hS,
+            ow.server.httpd.start(isUnDef(aPort) ? 8090 : aPort, aMap.host, aMap.keyStore, aMap.keyPassword));
+    }
 
 	// Get server
 	var httpd = nattrmon.getSessionData(hS);

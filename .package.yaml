@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20210308'
+version: '20210309'
 dependencies:
   openaf: '>=20201110'
 files:
@@ -99,6 +99,7 @@ files:
   - config/objects/nOutput_ES.js
   - config/objects/nOutput_H2.js
   - config/objects/nOutput_HTTP.js
+  - config/objects/nOutput_HTTP_HealthZ.js
   - config/objects/nOutput_HTTP_JSON.js
   - config/objects/nOutput_HTTP_Metrics.js
   - config/objects/nOutput_Log.js
@@ -147,17 +148,19 @@ files:
   - config/objects.assets/noutputhttp/plugs.html
   - config/objects.disabled/move_files_from_objects.dummy
   - config/outputs/move_files_from_outputs_disabled.dummy
-  - config/outputs.disabled/00.init.js
-  - config/outputs.disabled/1.oracleoutput.js
+  - config/outputs.disabled/js/00.init.js
   - config/outputs.disabled/js/05.es.log.js
   - config/outputs.disabled/js/09.channels.js
+  - config/outputs.disabled/js/1.oracleoutput.js
   - config/outputs.disabled/js/4.logFile.js
+  - config/outputs.disabled/yaml/00.httphealthz.yaml
   - config/outputs.disabled/yaml/01.h2output.yaml
   - config/outputs.disabled/yaml/02.httpjson.yaml
   - config/outputs.disabled/yaml/03.http.yaml
   - config/outputs.disabled/yaml/03.pushChannels.yaml
   - config/outputs.disabled/yaml/04.csvFile.yaml
   - config/outputs.disabled/yaml/04.emailWarnings.yaml
+  - config/outputs.disabled/yaml/04.httpmetrics.yaml
   - config/outputs.disabled/yaml/05.es.values.yaml
   - config/outputs.disabled/yaml/05.es.warnings.yaml
   - config/outputs.disabled/yaml/09.channels.yaml
@@ -309,9 +312,10 @@ filesHash:
   config/objects/nOutput_EmailWarnings.js: 3d03f4482a20c310a97fa7d7c657dad6dfd993e6
   config/objects/nOutput_ES.js: 14aa4b466e5e6a326cbedf151b4a4a83b4a2b557
   config/objects/nOutput_H2.js: 4aa7668410f3bbf64b1c7cd3a8b6031e5367903d
-  config/objects/nOutput_HTTP.js: 529313cfdb4afda1e9cda55508171369c63599be
-  config/objects/nOutput_HTTP_JSON.js: 5e10f7d7b290afb6d8fbafa5efc054810b77c138
-  config/objects/nOutput_HTTP_Metrics.js: ec1f6dd48b33d1bb5fdd50c49b7b12c76faab8e6
+  config/objects/nOutput_HTTP.js: ad61ae236ae7ff73d22de86f4bc396ef0a4f2cbc
+  config/objects/nOutput_HTTP_HealthZ.js: 40ce7cea91d16ddf090a2ad54efb185a92847764
+  config/objects/nOutput_HTTP_JSON.js: cebc4008afd3b8b112664b1dd8d20a226d334e8e
+  config/objects/nOutput_HTTP_Metrics.js: fd586f2404151946c8a64ce6c67f455e90c69981
   config/objects/nOutput_Log.js: 69ef02bb37d306deb390f303a8bbf6e2234be792
   config/objects/nOutput_Notifications.js: 1e5cabdd01f3c6b4e7f68bf7259a0256c9963985
   config/objects/nOutput_Oracle.js: ab0f2fe7958952437ae93030715633858462269f
@@ -358,17 +362,19 @@ filesHash:
   config/objects.assets/noutputhttp/plugs.html: e2a863265e8a9d96a4e9e4459658dc4668020e4f
   config/objects.disabled/move_files_from_objects.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
   config/outputs/move_files_from_outputs_disabled.dummy: b858cb282617fb0956d960215c8e84d1ccf909c6
-  config/outputs.disabled/00.init.js: 2fc376d4557dc91ec036f115661c7634f7f8f0eb
-  config/outputs.disabled/1.oracleoutput.js: 0f7ce56148ba6772216ce4402f5509077c30af6e
+  config/outputs.disabled/js/00.init.js: 2fc376d4557dc91ec036f115661c7634f7f8f0eb
   config/outputs.disabled/js/05.es.log.js: 4d8281c73e5094a41177570ba3544297f11520fc
   config/outputs.disabled/js/09.channels.js: 90b095b9c68e01b3aa724a8c370391f6d75cadf5
+  config/outputs.disabled/js/1.oracleoutput.js: 0f7ce56148ba6772216ce4402f5509077c30af6e
   config/outputs.disabled/js/4.logFile.js: 64e401aa6e0ee55a2abbc3fd8fe72b965e8b9ddb
+  config/outputs.disabled/yaml/00.httphealthz.yaml: 8756c424d211921e94f1657b2f9adacc4c436ec4
   config/outputs.disabled/yaml/01.h2output.yaml: 49d7992bfbcf70ea667d6aeb4f0c71e7c16a1067
   config/outputs.disabled/yaml/02.httpjson.yaml: 6d14637f7fff15b4d75481597bb9ae4f77f12665
   config/outputs.disabled/yaml/03.http.yaml: 707437f882185eaeaf82a6bab58b8485b0c3c937
   config/outputs.disabled/yaml/03.pushChannels.yaml: 8f4314f85f2db6eac80c4402d03149e1d834f933
   config/outputs.disabled/yaml/04.csvFile.yaml: f6e206baae5f761c7eac40f343017950dc1ebdbe
   config/outputs.disabled/yaml/04.emailWarnings.yaml: 6e53a9aa2761d51072d33dd9b45efc59779f40c4
+  config/outputs.disabled/yaml/04.httpmetrics.yaml: e0ab2e8cf6332eacd6a3622a3c9d1a467fbe6c3d
   config/outputs.disabled/yaml/05.es.values.yaml: aa44686271bda1db413620227d6a179568d12bf5
   config/outputs.disabled/yaml/05.es.warnings.yaml: aae14cc418d27202c3511fb897efdab1d1d2dac4
   config/outputs.disabled/yaml/09.channels.yaml: f38c539f163ec3457267c55d4248237b76caee14
@@ -419,7 +425,7 @@ filesHash:
   lib/nattributes.js: f28cee64a735e0e6ae3b520bbc59f74e6203e1db
   lib/nattributevalue.js: d6a378dba74922540bcc3e054222733f69d5cead
   lib/ninput.js: cb1a2bc442a0a3ac9e6237fd02b445e31bd518cf
-  lib/nmain.js: 61fb148105601c5ab23e40222722d9909d16bf67
+  lib/nmain.js: ae948824d99df0d72e8e53972ff8cbeeafa5b3d5
   lib/nmonitoredobject.js: da0b8a8590ce1534826750e2e70b3d6e4bee9f98
   lib/noutput.js: 097a89ae2ab12cb28d88034444a72d368464d14c
   lib/nplug.js: d9a6ffcd4c9999cff6364ff40dd9a38dbac680e8

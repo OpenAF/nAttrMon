@@ -1,0 +1,8 @@
+output:
+   name         : Output HealthZ
+   description  : Exposes a /healthz, /livez and /readyz endpoints
+   execFrom     : nOutput_HTTP_HealthZ
+   execArgs     :
+    #  includeHealthZ: true
+    #  includeLiveZ  : true
+    #  includeReadyZ : true

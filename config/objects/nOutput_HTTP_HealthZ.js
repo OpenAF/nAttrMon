@@ -1,4 +1,4 @@
-var nOutput_HTTP_Metrics = function (aMap) {
+var nOutput_HTTP_HealthZ = function (aMap) {
 	var AUDIT_TEMPLATE = "AUDIT HTTP | {{method}} {{uri}} {{reply.status}} {{reply.mimetype}} ({{header.remote-addr}}; {{header.user-agent}})";
 
     ow.loadMetrics();
@@ -8,15 +8,9 @@ var nOutput_HTTP_Metrics = function (aMap) {
 		if (isDef(aMap.port)) aPort = aMap.port;
 		this.audit = (isDef(aMap.audit) ? aMap.audit : true);
 		this.auditTemplate = (isDef(aMap.auditTemplate) ? aMap.auditTemplate : AUDIT_TEMPLATE);
-        this.includeSelf  = _$(aMap.includeSelf, "includeSelf").isBoolean().default(false);
-        this.includeCVals = _$(aMap.includeCVals, "includeCVals").isBoolean().default(true);
-        this.includeLVals = _$(aMap.includeLVals, "includeLVals").isBoolean().default(false);
-        this.includeWarns = _$(aMap.includeWarns, "includeWarns").isBoolean().default(true);
-
-        this.nameSelf  = _$(aMap.nameSelf, "nameSelf").isString().default("nattrmon");
-        this.nameCVals = _$(aMap.nameCVals, "nameCVals").isString().default("nattrmon_cval");
-        this.nameLVals = _$(aMap.nameLVals, "nameLVals").isString().default("nattrmon_lval");
-        this.nameWarns = _$(aMap.nameWarns, "nameWarns").isString().default("nattrmon_warn");
+        this.includeHealthZ  = _$(aMap.includeHealthZ, "includeHealthZ").isBoolean().default(true);
+        this.includeLiveZ    = _$(aMap.includeLiveZ, "includeLiveZ").isBoolean().default(true);
+        this.includeReadyZ   = _$(aMap.includeReadyZ, "includeReadyZ").isBoolean().default(true);
 	} else {
 		aPort = aMap;
 	}
@@ -65,23 +59,41 @@ var nOutput_HTTP_Metrics = function (aMap) {
 	// Add function to server
 	//httpd.addEcho("/echo");
     var parent = this;
-	ow.server.httpd.route(httpd, ow.server.httpd.mapWithExistingRoutes(httpd, {
-		"/metrics": function (req) {
-            var res = "";
-			switch (req.params.op) {
-            default:
-                if (parent.includeSelf)  res += ow.metrics.fromObj2OpenMetrics(ow.metrics.getAll(), parent.nameSelf);
-                if (parent.includeCVals) res += _parse(nattrmon.getCurrentValues(), parent.nameCVals);
-                if (parent.includeLVals) res += _parse(nattrmon.getLastValues(), parent.nameLVals);
-                if (parent.includeWarns) res += _parse(nattrmon.getWarnings(), parent.nameWarns);
-                break;
-			}
-			var hres = ow.server.httpd.reply(res, 200, "application/openmetrics-text", {});
-            hres.data = String(hres.data).replace(/\n+/g, "\n");
-			auditAccess(req, hres);
-			return hres;
-		}
-	}), function (r) {
+    var routes = {};
+    if (parent.includeHealthZ) {
+        routes["/healthz"] = function(req) {
+            var hres = ow.server.httpd.reply("OK", 200, "text/plain", {});
+            auditAccess(req, hres);
+            return hres;
+        }
+    }
+    if (parent.includeLiveZ) {
+        routes["/livez"] = function(req) {
+            var hres;
+            try {
+                $ch(nattrmon.chPS).size();
+                hres = ow.server.httpd.reply("OK", 200, "text/plain", {});
+            } catch(e) {
+                hres = ow.server.httpd.reply("Internal Server Error", 500, "text/plain", {});
+            } 
+            auditAccess(req, hres);
+            return hres;
+        }
+    }
+    if (parent.includeReadyZ) {
+        routes["/readyz"] = function(req) {
+            if (nattrmon.alive) {
+                var hres = ow.server.httpd.reply("OK", 200, "text/plain", {});
+                auditAccess(req, hres);
+                return hres;
+            } else {
+                var hres = ow.server.httpd.reply("Not ready", 503, "text/plain", {});
+                auditAccess(req, hres);
+                return hres;
+            }
+        }
+    }
+	ow.server.httpd.route(httpd, ow.server.httpd.mapWithExistingRoutes(httpd, routes), function (r) {
 		var hres = ow.server.httpd.reply("", 200, "text/plain", {});
 		auditAccess(r, hres);
 		return hres;
@@ -89,8 +101,8 @@ var nOutput_HTTP_Metrics = function (aMap) {
 
 	nOutput.call(this, this.output);
 };
-inherit(nOutput_HTTP_Metrics, nOutput);
+inherit(nOutput_HTTP_HealthZ, nOutput);
 
-nOutput_HTTP_Metrics.prototype.output = function (scope, args) {
+nOutput_HTTP_HealthZ.prototype.output = function (scope, args) {
 	//this.refresh(scope);
 };
