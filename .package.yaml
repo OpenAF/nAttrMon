@@ -100,6 +100,7 @@ files:
   - config/objects/nOutput_H2.js
   - config/objects/nOutput_HTTP.js
   - config/objects/nOutput_HTTP_JSON.js
+  - config/objects/nOutput_HTTP_Metrics.js
   - config/objects/nOutput_Log.js
   - config/objects/nOutput_Notifications.js
   - config/objects/nOutput_Oracle.js
@@ -310,6 +311,7 @@ filesHash:
   config/objects/nOutput_H2.js: 4aa7668410f3bbf64b1c7cd3a8b6031e5367903d
   config/objects/nOutput_HTTP.js: 529313cfdb4afda1e9cda55508171369c63599be
   config/objects/nOutput_HTTP_JSON.js: 5e10f7d7b290afb6d8fbafa5efc054810b77c138
+  config/objects/nOutput_HTTP_Metrics.js: ec1f6dd48b33d1bb5fdd50c49b7b12c76faab8e6
   config/objects/nOutput_Log.js: 69ef02bb37d306deb390f303a8bbf6e2234be792
   config/objects/nOutput_Notifications.js: 1e5cabdd01f3c6b4e7f68bf7259a0256c9963985
   config/objects/nOutput_Oracle.js: ab0f2fe7958952437ae93030715633858462269f
