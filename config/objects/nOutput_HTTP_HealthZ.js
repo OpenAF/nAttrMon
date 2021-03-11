@@ -13,6 +13,7 @@ var nOutput_HTTP_HealthZ = function (aMap) {
         this.includeReadyZ   = _$(aMap.includeReadyZ, "includeReadyZ").isBoolean().default(true);
 	} else {
 		aPort = aMap;
+        aMap = {};
 	}
 
 	// Set server if doesn't exist

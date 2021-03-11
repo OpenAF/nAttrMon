@@ -19,6 +19,7 @@ var nOutput_HTTP_Metrics = function (aMap) {
         this.nameWarns = _$(aMap.nameWarns, "nameWarns").isString().default("nattrmon_warn");
 	} else {
 		aPort = aMap;
+		aMap = {};
 	}
 
 	// Set server if doesn't exist
