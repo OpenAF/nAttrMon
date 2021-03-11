@@ -25,6 +25,7 @@ var nOutput_EmailWarnings = function(aMap) {
 	this.alertUntilBySimilarity = _$(aMap.alertUntilBySimilarity).isNumber("alertUntilBySimilarity should be a number").default(void 0);
 	this.tls = aMap.tls;
 	this.secure = _$(aMap.secure).isBoolean("secure should be boolean").default(false);
+	if (isBoolean(aMap.useTLS)) this.useTLS = aMap.useTLS; // Old bug support
 	this.debug = aMap.debug;
 	this.include = aMap.include;
 	this.exclude = aMap.exclude;
@@ -114,7 +115,11 @@ nOutput_EmailWarnings.prototype.output = function (scope, args, meta) {
 		}, this.lock);
 
 		if (doIt) {
-			email = new Email(this.mailserver, this.from, (isDef(this.credentials) && !this.tls) || this.secure, this.tls, true);
+			if (isDef(this.useTLS)) {
+				email = new Email(this.mailserver, this.from, this.secure, this.useTLS, true);
+			} else {
+				email = new Email(this.mailserver, this.from, (isDef(this.credentials) && !this.tls) || this.secure, this.tls, true);
+			}
 			if (isDef(this.port)) email.setPort(this.port);
 			if (isDef(this.credentials)) {
 				email.setCredentials(this.credentials.user, this.credentials.password);
