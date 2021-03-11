@@ -3,8 +3,10 @@ var nOutput_HTTP_Metrics = function (aMap) {
 
     ow.loadMetrics();
 
-	var aPort;
-	if (isObject(aMap)) {
+	var aPort = 8090;
+	if (isNumber(aMap)) aMap = { port: aMap }; 
+	if (isUnDef(aMap) || isNull(aMap)) aMap = { port: aPort };
+	if (isMap(aMap)) {
 		if (isDef(aMap.port)) aPort = aMap.port;
 		this.audit = (isDef(aMap.audit) ? aMap.audit : true);
 		this.auditTemplate = (isDef(aMap.auditTemplate) ? aMap.auditTemplate : AUDIT_TEMPLATE);
@@ -17,10 +19,7 @@ var nOutput_HTTP_Metrics = function (aMap) {
         this.nameCVals = _$(aMap.nameCVals, "nameCVals").isString().default("nattrmon_cval");
         this.nameLVals = _$(aMap.nameLVals, "nameLVals").isString().default("nattrmon_lval");
         this.nameWarns = _$(aMap.nameWarns, "nameWarns").isString().default("nattrmon_warn");
-	} else {
-		aPort = aMap;
-		aMap = {};
-	}
+	} 
 
 	// Set server if doesn't exist
 	var hS = "httpd";

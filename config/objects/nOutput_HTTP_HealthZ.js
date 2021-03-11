@@ -3,7 +3,9 @@ var nOutput_HTTP_HealthZ = function (aMap) {
 
     ow.loadMetrics();
 
-	var aPort;
+	var aPort = 8090;
+    if (isNumber(aMap)) aMap = { port: aMap }; 
+    if (isUnDef(aMap) || isNull(aMap)) aMap = { port: aPort };
 	if (isObject(aMap)) {
 		if (isDef(aMap.port)) aPort = aMap.port;
 		this.audit = (isDef(aMap.audit) ? aMap.audit : true);
@@ -11,10 +13,7 @@ var nOutput_HTTP_HealthZ = function (aMap) {
         this.includeHealthZ  = _$(aMap.includeHealthZ, "includeHealthZ").isBoolean().default(true);
         this.includeLiveZ    = _$(aMap.includeLiveZ, "includeLiveZ").isBoolean().default(true);
         this.includeReadyZ   = _$(aMap.includeReadyZ, "includeReadyZ").isBoolean().default(true);
-	} else {
-		aPort = aMap;
-        aMap = {};
-	}
+	} 
 
 	// Set server if doesn't exist
 	var hS = "httpd";
