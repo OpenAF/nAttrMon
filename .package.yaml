@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20210309'
+version: '20210310'
 dependencies:
   openaf: '>=20201110'
 files:
@@ -425,7 +425,7 @@ filesHash:
   lib/nattributes.js: f28cee64a735e0e6ae3b520bbc59f74e6203e1db
   lib/nattributevalue.js: d6a378dba74922540bcc3e054222733f69d5cead
   lib/ninput.js: cb1a2bc442a0a3ac9e6237fd02b445e31bd518cf
-  lib/nmain.js: fc83f2903dd75de644c28d0960025e4d071bb619
+  lib/nmain.js: af9e4a977234c5d2a2df39c72dfb5ae4b05a8c4e
   lib/nmonitoredobject.js: da0b8a8590ce1534826750e2e70b3d6e4bee9f98
   lib/noutput.js: 097a89ae2ab12cb28d88034444a72d368464d14c
   lib/nplug.js: d9a6ffcd4c9999cff6364ff40dd9a38dbac680e8
