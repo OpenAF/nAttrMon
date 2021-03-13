@@ -76,7 +76,7 @@ var nOutput_HTTP_Metrics = function (aMap) {
                 if (parent.includeWarns) res += _parse(nattrmon.getWarnings(), parent.nameWarns);
                 break;
 			}
-			var hres = ow.server.httpd.reply(res, 200, "application/openmetrics-text", {});
+			var hres = ow.server.httpd.reply(res, 200, "text/plain", {});
             hres.data = String(hres.data).replace(/\n+/g, "\n");
 			auditAccess(req, hres);
 			return hres;
