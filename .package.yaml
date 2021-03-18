@@ -154,6 +154,7 @@ files:
   - config/outputs.disabled/js/09.channels.js
   - config/outputs.disabled/js/1.oracleoutput.js
   - config/outputs.disabled/js/4.logFile.js
+  - config/outputs.disabled/yaml/00.httpAll.yaml
   - config/outputs.disabled/yaml/00.httphealthz.yaml
   - config/outputs.disabled/yaml/01.h2output.yaml
   - config/outputs.disabled/yaml/02.httpjson.yaml
@@ -308,7 +309,7 @@ filesHash:
   config/objects/nInput_Semaphores.js: 9b0c0d8ca1b1c33d8faeaae89738360c8569534e
   config/objects/nInput_Sessions.js: eb6f26629da062d0be7cd6cf7284372d1363123d
   config/objects/nInput_Shell.js: 5f783611f7343df7b4950cfb9b67a3207e894999
-  config/objects/nOutput_Channels.js: ed785ef8b3b9b01c91436590e8d2ef48a956456c
+  config/objects/nOutput_Channels.js: 2b7f049d3f148d942cde76e475a2190912c9f472
   config/objects/nOutput_DSV.js: b723aefe236bd464d215c52406cec796cd47d97f
   config/objects/nOutput_EmailWarnings.js: 42eb355a69b629c8f43386ef88480adff55acb90
   config/objects/nOutput_ES.js: 14aa4b466e5e6a326cbedf151b4a4a83b4a2b557
@@ -349,7 +350,7 @@ filesHash:
   config/objects.assets/noutputhttp/fonts/icon.svg: 3890f01fd40b7ac222f232f7ee7ac9f43a249953
   config/objects.assets/noutputhttp/fonts/icon.ttf: 35f955b5810ecdddfdcf3d6c0140186882a19bdb
   config/objects.assets/noutputhttp/fonts/icon.woff: 24762bf06bbde956f97836f84d9af098f237c44f
-  config/objects.assets/noutputhttp/history.html: 7dde5f5088c736a2927f27b4d67018e0b8e7c438
+  config/objects.assets/noutputhttp/history.html: 9b452f7aa9571068a0575ba15bf959f6e33de803
   config/objects.assets/noutputhttp/index.html: c636d5c12223d2b4d4b5503544930c8bc3c0bb53
   config/objects.assets/noutputhttp/js/angular-animate.min.js: 648e2ca79c0c074b2b61042e91d31b353ad290d3
   config/objects.assets/noutputhttp/js/angular.min.js: d0e3fccc46957eeaaf5611075a2015b410b64725
@@ -360,8 +361,8 @@ filesHash:
   config/objects.assets/noutputhttp/js/nattrmon_js.js: 183bc1c0e18aa62259d2e4a9a10697c810ae60ca
   config/objects.assets/noutputhttp/js/retina.min.js: da44a409a0907960a6526cf35807ecaf61059223
   config/objects.assets/noutputhttp/logout.html: e3fa307085316ed4f60ae110516a7e415d286a75
-  config/objects.assets/noutputhttp/now.html: 8f2b1434fe87b1f7d64acf26b1a7c64c9573f085
-  config/objects.assets/noutputhttp/plugs.html: e2a863265e8a9d96a4e9e4459658dc4668020e4f
+  config/objects.assets/noutputhttp/now.html: 29e069e0ca11447171233122b35d9ff90c543634
+  config/objects.assets/noutputhttp/plugs.html: d21d71a50b103bddc0025df40370e2a68c577f64
   config/objects.disabled/move_files_from_objects.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
   config/outputs/move_files_from_outputs_disabled.dummy: b858cb282617fb0956d960215c8e84d1ccf909c6
   config/outputs.disabled/js/00.init.js: 2fc376d4557dc91ec036f115661c7634f7f8f0eb
@@ -369,6 +370,7 @@ filesHash:
   config/outputs.disabled/js/09.channels.js: 90b095b9c68e01b3aa724a8c370391f6d75cadf5
   config/outputs.disabled/js/1.oracleoutput.js: 0f7ce56148ba6772216ce4402f5509077c30af6e
   config/outputs.disabled/js/4.logFile.js: 64e401aa6e0ee55a2abbc3fd8fe72b965e8b9ddb
+  config/outputs.disabled/yaml/00.httpAll.yaml: 22e95df5691fe90c897afe4df2d3784a7ac54438
   config/outputs.disabled/yaml/00.httphealthz.yaml: 8756c424d211921e94f1657b2f9adacc4c436ec4
   config/outputs.disabled/yaml/01.h2output.yaml: 49d7992bfbcf70ea667d6aeb4f0c71e7c16a1067
   config/outputs.disabled/yaml/02.httpjson.yaml: 6d14637f7fff15b4d75481597bb9ae4f77f12665
