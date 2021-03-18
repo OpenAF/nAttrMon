@@ -177,38 +177,9 @@ files:
   - config/validations.disabled/yaml/03.validateSemaphores.yaml
   - config/validations.disabled/yaml/05.validateErrorFlows.yaml
   - config/validations.disabled/yaml/14.validateCompareTimes.yaml
-  - docs/Examples.md
-  - docs/images/interconnect-incoming.png
-  - docs/images/interconnect-outgoing.png
   - docs/images/logo.png
   - docs/images/nAttrMon.png
   - docs/images/nAttrMon.xcf
-  - docs/index.md
-  - docs/Init-Examples.md
-  - docs/nAttrMon-Auditing.md
-  - docs/nAttrMon-base-configuration.md
-  - docs/nAttrMon-folder-structure.md
-  - docs/nAttrMon-Interconnect.md
-  - docs/nAttrMon-nattrmonignore.md
-  - docs/nAttrMon-nInput-BPMDebugChecks.md
-  - docs/nAttrMon-nInput-CBPMDebugChecks.md
-  - docs/nAttrMon-nInput-Channel.md
-  - docs/nAttrMon-nInput-DMPerformance.md
-  - docs/nAttrMon-nInput-EndPoints.md
-  - docs/nAttrMon-nInput-HTTPJson.md
-  - docs/nAttrMon-nInput-RemoteChannel.md
-  - docs/nAttrMon-nInput-Shell.md
-  - docs/nAttrMon-nOutput-Channels.md
-  - docs/nAttrMon-nOutput-DSV.md
-  - docs/nAttrMon-nOutput-EmailWarnings.md
-  - docs/nAttrMon-nOutput-Notifications.md
-  - docs/nAttrMon-nOutput_RemoteChannel.md
-  - docs/nAttrMon-nValidation-Generic.md
-  - docs/nAttrMon-Objects.md
-  - docs/nAttrMon-Plugs.md
-  - docs/nAttrMon-template-helpers.md
-  - docs/nAttrMon-Warnings.md
-  - docs/_config.yml
   - lib/nattribute.js
   - lib/nattributes.js
   - lib/nattributevalue.js
@@ -393,38 +364,9 @@ filesHash:
   config/validations.disabled/yaml/03.validateSemaphores.yaml: 816f0dbf1a1bc73752e2778a79a123ce2e0e14bc
   config/validations.disabled/yaml/05.validateErrorFlows.yaml: f731dc209dda8d2f060cc00bd780e5d387a4045a
   config/validations.disabled/yaml/14.validateCompareTimes.yaml: bdb52db703195dfe5fcd732f95a16333f8eed56b
-  docs/Examples.md: 10d82b02ce5cdbd312176140cb219bf269fa8ea4
-  docs/images/interconnect-incoming.png: 962c83aa192f07ad8459888d1f1f367230a43ec9
-  docs/images/interconnect-outgoing.png: a601911491062d20eaa3b14fb47063ff882ffe68
   docs/images/logo.png: ee5366a3aa207c69d5139e04e7a4523078b974ba
   docs/images/nAttrMon.png: 298fb1bb1e7c004b6204069d2a3319fbdebedea0
   docs/images/nAttrMon.xcf: ae00e462f4b6c18adc55b6ddc4900ab3e0ffac35
-  docs/index.md: 898fa1ecfa858e059b46576554f311c47bb50f1e
-  docs/Init-Examples.md: 3dd50f362aabe7de7d5d94c0e1bdd12fb4e7ef43
-  docs/nAttrMon-Auditing.md: 204375de1893334914c60d52df85d8b89e78c623
-  docs/nAttrMon-base-configuration.md: 9b43d2438426c389a975a5440c27a7d1621169b7
-  docs/nAttrMon-folder-structure.md: e4d0a5eebcfcb249bfd50876627a2404ce9712a3
-  docs/nAttrMon-Interconnect.md: f1e6b7ad77bfe0255c1e4cad585f82aef568c17c
-  docs/nAttrMon-nattrmonignore.md: 8999db1d1a36a421effbb5ecefb3a45312ba09cf
-  docs/nAttrMon-nInput-BPMDebugChecks.md: f8a275544c1a6f49be7f02c2933cc84f50340407
-  docs/nAttrMon-nInput-CBPMDebugChecks.md: 2fca473c18895ae3733faaa708ec3dd2a7a11fa3
-  docs/nAttrMon-nInput-Channel.md: 17c5dd783dd84287e140d8b8447d9a3cd8b66bdf
-  docs/nAttrMon-nInput-DMPerformance.md: 4e4ce3425e6f6c37c7490ff802b8feee6f4f4687
-  docs/nAttrMon-nInput-EndPoints.md: 91a4f2d42ef3ee3dcaa91593eaeab9a0642f27ba
-  docs/nAttrMon-nInput-HTTPJson.md: c61e9ccca1b8bcfa4374198badeb3479fd829154
-  docs/nAttrMon-nInput-RemoteChannel.md: f06ee03a094f55d0dceb5ec6bec31e7e8525a2f2
-  docs/nAttrMon-nInput-Shell.md: 93010657719591531c6e02fd157fb85189279ce9
-  docs/nAttrMon-nOutput-Channels.md: fb2484ee0fc9d8ba01c785a949194f72db20682f
-  docs/nAttrMon-nOutput-DSV.md: c0465178bd3b0d125b4c9e4c3627f763590fa130
-  docs/nAttrMon-nOutput-EmailWarnings.md: 8460593d2568754e9603024520b5664b709e0ac9
-  docs/nAttrMon-nOutput-Notifications.md: 1c2543fc71ed4f6231413f8aa70c671e6c520308
-  docs/nAttrMon-nOutput_RemoteChannel.md: 51f4218d9660a3692bf6f4db8c6e31c60117909a
-  docs/nAttrMon-nValidation-Generic.md: e993a89be4ea27616efcf84dc82cc57b15c25360
-  docs/nAttrMon-Objects.md: 332f4c1a75e21f4a0f5593e95f896c73265eda86
-  docs/nAttrMon-Plugs.md: 8c3547f6fc2cc08de3dafb3033ebb37256e03c31
-  docs/nAttrMon-template-helpers.md: 3eb72bd86df5952348c62399a611c817d94f7552
-  docs/nAttrMon-Warnings.md: a12916c10b7b9ddd45380d89f28763999b764bad
-  docs/_config.yml: f728a1adea89e86f0a71e50bd234e6a510a8c23f
   lib/nattribute.js: 957b3e1e4d55c554e029229dae26e838df1da7b4
   lib/nattributes.js: f28cee64a735e0e6ae3b520bbc59f74e6203e1db
   lib/nattributevalue.js: d6a378dba74922540bcc3e054222733f69d5cead
@@ -441,7 +383,7 @@ filesHash:
   nattrmon.js: 0577704f46097906a7f715fd8bc8c913278e8b08
   nattrmon.yaml.sample: d3358e316e84b31dcab07d11d1957742815bee33
   oJob_nAttrMon.yaml: 83537a71b5c4a5a4e90ffa55870301a3424cecbf
-  README.md: 648ce4e29bbdc7b99f5cf8734cb1a7f0657789c7
+  README.md: b0fd23513e7f58f34f33aa9f393c188fd8b009a0
   tests/inputDBTest.yml: c38616606dc5956e449189d11f8e661170f94dfb
   tests/inputShellTest.yml: ce643955982cb16b53a8843acd3549466e5cddf5
   tests/nattrmonTester.js: 1676171ab793cdb67da4de3e033aee110aa8ef20
