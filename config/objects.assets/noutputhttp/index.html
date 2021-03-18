@@ -49,6 +49,7 @@
                     var refreshTimeout = data.data.refresh;
                     $scope.refreshActive = false;
                     $scope.loading = true;
+                    $scope.showLogout = (document.cookie.indexOf("nattrmon_auth=1") >= 0);
 
                     JsonService.getJson().then(function(d) {
                         refresh(d.data);
@@ -151,7 +152,10 @@
                         </li>
                         <li>
                             <a href="plugs.html{{extra}}">Plugs</a>
-                        </li>                         
+                        </li>      
+                        <li ng-if="showLogout">
+                            <a href="logout.html">Logout</a>
+                        </li>                   
                     </ul>
                 </div>
             </div>

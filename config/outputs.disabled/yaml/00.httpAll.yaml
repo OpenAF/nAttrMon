@@ -1,0 +1,72 @@
+common: &COMMON
+  #keyStore   : /some/folder/ssl.jks
+  #keyPassword: 797AD06F0FB6E1E6F4B17EB182670494D3EA259B24245847062CCA0C5D023F26
+  authType : basic
+  authLocal:
+    nattrmon: 
+      p: nattrmon
+      m: r
+    change:
+      p: me 
+      m: rw
+  #authCustom: |
+  #   // Custom has priority over local. Comment the entry you won't use.
+  #   //
+  #   // u - user
+  #   // p - password
+  #   // s - server object
+  #   // r - request object (e.g. uri, method, header["remote-addr"], header["user-agent"], ...)
+  #         
+  #   // Forced user & password
+  #   if (u == "nattrmon" && p == "nattrmon") return true;
+  #
+  #   // Users from a ldap or active directory
+  #   try {
+  #     new ow.server.ldap("ldap://my.auth.ldap:389", u + "@my.domain", p);
+  #     return true;
+  #   } catch(e) {
+  #     tlogErr("AUDIT | {{user}} authentication refused ({{message}}).", { user: u, message: e.message });
+  #   }
+  #
+  #   return false;
+
+output:
+  # -----------------------------
+  - name         : Output HealthZ
+    description  : Exposes a /healthz, /livez and /readyz endpoints
+    execFrom     : nOutput_HTTP_HealthZ
+    execArgs     :
+    #  <<            : *COMMON
+    #  includeHealthZ: true
+    #  includeLiveZ  : true
+    #  includeReadyZ : true
+
+  # --------------------------
+  - name         : Output JSON
+    description  : Outputs attributes, warnings, current and previous values in a JSON representation through HTTP.
+    execFrom     : nOutput_HTTP_JSON
+    execArgs     : *COMMON
+
+  # --------------------------
+  - name         : Output HTTP
+    description  : >
+      Provides a very basic web site for read-only access to the inputs and warnings generated. It uses the nOutput_HTTPJSON to
+      retrieve the necessary data when needed.
+    execFrom     : nOutput_HTTP
+    execArgs     : 
+      <<   : *COMMON
+      title: Some title
+
+  # ------------------------------
+  - name         : Output Channels
+    description  : |
+      Provides, on the same nOutput_HTTPJSON or nOutput_HTTP port or other, access to the nAttrMon specific OpenAF channels like: /chs/ops,
+      /chs/cvals, /chs/pvals and /chs/attr.
+    execFrom     : nOutput_Channels
+    execArgs     : *COMMON
+
+  # -----------------------------
+  - name         : Output Metrics
+    description  : Outputs attributes, warnings, current and previous values in a JSON representation through HTTP.
+    execFrom     : nOutput_HTTP_Metrics
+    execArgs     : *COMMON

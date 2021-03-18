@@ -26,8 +26,11 @@ var nOutput_Channels = function(aMap) {
   var httpd = nattrmon.getSessionData(hS);
 
   if (isDef(aMap.cAuth)) cauth_perms = aMap.cAuth;
+  if (isDef(aMap.auth)) cauth_perms = aMap.auth;
   if (isDef(aMap.local)) cauth_perms = aMap.local;
+  if (isDef(aMap.authLocal)) cauth_perms = aMap.authLocal;
   if (isDef(aMap.custom)) cauth_func = aMap.custom;
+  if (isDef(aMap.authCustom)) cauth_func = aMap.authCustom;
 
   if (isDef(httpd)) {
     // Channel authentication
