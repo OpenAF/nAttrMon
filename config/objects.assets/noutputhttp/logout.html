@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="nattrmonApp">
+<body>
+    <script>
+        var xmlhttp; 
+        if (window.XMLHttpRequest) xmlhttp=new XMLHttpRequest();
+        else xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+        xmlhttp.onreadystatechange=() => { if (xmlhttp.readyState==4) location.reload(); }
+        xmlhttp.open("GET","/",true);
+        xmlhttp.setRequestHeader("Authorization","Basic ");
+        xmlhttp.send();
+    </script>
+</body>
+</html>

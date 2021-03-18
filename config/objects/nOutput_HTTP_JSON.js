@@ -1,14 +1,23 @@
 var nOutput_HTTP_JSON = function (aMap) {
 	var AUDIT_TEMPLATE = "AUDIT HTTP | {{method}} {{uri}} {{reply.status}} {{reply.mimetype}} ({{header.remote-addr}}; {{header.user-agent}})";
 
-	var aPort;
-	if (isObject(aMap)) {
+	var aPort = 8090;
+	if (isMap(aMap)) {
 		if (isDef(aMap.port)) aPort = aMap.port;
 		this.audit = (isDef(aMap.audit) ? aMap.audit : true);
 		this.auditTemplate = (isDef(aMap.auditTemplate) ? aMap.auditTemplate : AUDIT_TEMPLATE);
 	} else {
-		aPort = aMap;
+		if (isNumber(aMap)) aPort = Number(aMap);
+		aMap = {};
+		this.audit = true;
+		this.auditTemplate = AUDIT_TEMPLATE;
 	}
+	
+	var hauth_perms, hauth_func;
+	var hauth_type = _$(aMap.authType, "hauthType").isString().default("none");
+	if (isDef(aMap.auth)) hauth_perms = aMap.auth;
+	if (isDef(aMap.authLocal)) hauth_perms = aMap.authLocal;
+	if (isDef(aMap.authCustom)) hauth_func = aMap.authCustom;
 
 	// Set server if doesn't exist
 	var hS = "httpd";
@@ -28,7 +37,24 @@ var nOutput_HTTP_JSON = function (aMap) {
 	// Get server
 	var httpd = nattrmon.getSessionData(hS);
 
-	var auditAccess = (aReq, aReply) => {
+    var fnAuth = function(u, p, s, r) {
+		if (isDef(hauth_func) && isString(hauth_func)) {
+		  return (new Function('u', 'p', 's', 'r', hauth_func))(u, p, s, r);
+		} else {
+		  if (isDef(hauth_perms) && isDef(hauth_perms[u])) {
+			if (p == hauth_perms[u].p) {
+			  r.channelPermission = (isDef(hauth_perms[u].m) ? hauth_perms[u].m : "r");
+			  return true;
+			} else {
+			  return false;
+			}
+		  } else {
+			return false;
+		  }
+		}
+	};
+
+	var preProcess = (aReq, aReply) => {
 		var data = merge(aReq, { 
 			reply: {
 				status  : aReply.status,
@@ -40,6 +66,23 @@ var nOutput_HTTP_JSON = function (aMap) {
 		} catch(e) {
 			logErr("Error on auditing access: " + String(e));
 		}
+
+		var res = aReply;
+		res.header = _$(res.header).default({});
+		if (isDef(hauth_perms) && hauth_type != "none") {
+			if (hauth_type == "basic") {
+				res = ow.server.httpd.authBasic("nattrmon", httpd, aReq, fnAuth, () => {
+					return aReply;
+				}, hss => {
+					return hss.reply("Not authorized.", "text/plain", ow.server.httpd.codes.UNAUTHORIZED);
+				});
+			}
+			res.header["Set-Cookie"] = "nattrmon_auth=1";
+		} else {
+			res.header["Set-Cookie"] = "nattrmon_auth=0";
+		}
+
+		return res;
 	}
 
 	// Add function to server
@@ -89,13 +132,11 @@ var nOutput_HTTP_JSON = function (aMap) {
 					break;
 			}
 			var hres = httpd.replyOKJSON(stringify(res));
-			auditAccess(req, hres);
-			return hres;
+			return preProcess(req, hres);
 		}
 	}), function (r) {
 		var hres = httpd.replyOKJSON(stringify({}));
-		auditAccess(r, hres);
-		return hres;
+		return preProcess(r, hres);
 	});
 
 	nOutput.call(this, this.output);
