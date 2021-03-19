@@ -1,14 +1,36 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="nattrmonApp">
+<html>
+<head>
+    <script src="js/jquery.min.js"></script>
+</head>
 <body>
     <script>
-        var xmlhttp; 
-        if (window.XMLHttpRequest) xmlhttp=new XMLHttpRequest();
-        else xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-        xmlhttp.onreadystatechange=() => { if (xmlhttp.readyState==4) location.reload(); }
-        xmlhttp.open("GET","/",true);
-        xmlhttp.setRequestHeader("Authorization","Basic ");
-        xmlhttp.send();
+        var isIE = false;
+        try {
+            if (navigator.userAgent.toLowerCase().indexOf("msie") >= 0) isIE = true;
+        } catch(e) {
+            isIE = false;    
+        };
+ 
+        if (isIE) {
+            // Logoff Internet Explorer
+            document.execCommand("ClearAuthenticationCache");
+            window.location = "/logout.html";
+        } else {
+            $.ajax({
+                username  : '-u',
+                password  : '-p',
+                url       : '/',
+                type      : 'GET',
+                beforeSend: xhr => {
+                    xhr.setRequestHeader('Authorization', 'Basic AAAAAAAAAAAAAAAAAAA=');
+                },
+                error     : err => {
+                    window.location = window.location.protocol + '//-u:-p@' + window.location.host + "/logout.html";
+                    window.location = window.location.protocol + '//' + window.location.host + "/logout.html";
+                }
+            });
+        }
     </script>
 </body>
 </html>

@@ -1,6 +1,6 @@
 // aTitle, aRefreshTime, aPort
 var nOutput_HTTP = function (aMap) {
-	var AUDIT_TEMPLATE = "AUDIT HTTP | {{method}} {{uri}} {{reply.status}} {{reply.mimetype}} ({{header.remote-addr}}; {{header.user-agent}})";
+	var AUDIT_TEMPLATE = "AUDIT HTTP | {{method}} {{uri}} {{{user}}} {{reply.status}} {{reply.mimetype}} ({{header.remote-addr}}; {{header.user-agent}})";
 
 	var aTitle = isDef(aMap.title) ? aMap.title : "Untitled";
 	var aPort = isDef(aMap.port) ? aMap.port : 8090;
@@ -33,14 +33,18 @@ var nOutput_HTTP = function (aMap) {
 
 	// Get server
 	var httpd = nattrmon.getSessionData(hS);
+	var parent = this;
 	this.title = aTitle;
 	
-    var fnAuth = function(u, p, s, r) {
+    var fnAuth = function(u, p, s, r) { 
+		u = String(u);
+	    p = String(p);
+
 		if (isDef(hauth_func) && isString(hauth_func)) {
 		  return (new Function('u', 'p', 's', 'r', hauth_func))(u, p, s, r);
 		} else {
 		  if (isDef(hauth_perms) && isDef(hauth_perms[u])) {
-			if (p == hauth_perms[u].p) {
+			if (p == Packages.openaf.AFCmdBase.afc.dIP(hauth_perms[u].p)) {
 			  r.channelPermission = (isDef(hauth_perms[u].m) ? hauth_perms[u].m : "r");
 			  return true;
 			} else {
@@ -59,35 +63,56 @@ var nOutput_HTTP = function (aMap) {
 	});
 
 	var preProcess = (aReq, aReply) => {
-		var data = merge(aReq, { 
-			reply: {
-				status  : aReply.status,
-				mimetype: aReply.mimetype
-			}
-	    });
-		try { 
-			tlog(this.auditTemplate, data);
-		} catch(e) {
-			logErr("Error on auditing access: " + String(e));
-		}
-
-		var res = aReply;
+		var res = aReply, user = "";
 		res.header = _$(res.header).default({});
 		if (isDef(hauth_perms) && hauth_type != "none") {
 			if (hauth_type == "basic") {
-				res = ow.server.httpd.authBasic("nattrmon", httpd, aReq, fnAuth, () => {
-					return aReply;
+				res = ow.server.httpd.authBasic("nattrmon", httpd, aReq, (u, p, s, r) => {
+					if (isString(u)) user = u;
+					if (!isString(u) || !isString(p)) return false;
+					return fnAuth(user, p, s, r); 
+				}, () => { try {
+					var data = merge(aReq, { 
+						reply: {
+							status  : aReply.status,
+							mimetype: aReply.mimetype
+						},
+						user: "'" + user + "'"
+					});
+					try { 
+						tlog(parent.auditTemplate, data);
+					} catch(e) {
+						logErr("Error on auditing access: " + String(e));
+					}
+					return aReply; } catch(e) {sprintErr(e)}
 				}, hss => {
+					if (user != "") tlogWarn(parent.auditTemplate, merge(aReq, {
+						method: "AUTH_FAILED",
+						user  : "'" + user + "'",
+						reply : { status: 401, mimetype: "text/plain" }
+					}));
 					return hss.reply("Not authorized.", "text/plain", ow.server.httpd.codes.UNAUTHORIZED);
 				});
 			}
 			res.header["Set-Cookie"] = "nattrmon_auth=1";
 		} else {
 			res.header["Set-Cookie"] = "nattrmon_auth=0";
+			var data = merge(aReq, { 
+				reply: {
+					status  : aReply.status,
+					mimetype: aReply.mimetype
+				}, 
+				user : ""
+			});
+			try { 
+				tlog(parent.auditTemplate, data);
+			} catch(e) {
+				logErr("Error on auditing access: " + String(e));
+			}
 		}
 
 		return res;
-	};
+	}
 
 	// Add function to server
 	ow.server.httpd.route(httpd, ow.server.httpd.mapWithExistingRoutes(httpd, {
@@ -108,7 +133,7 @@ var nOutput_HTTP = function (aMap) {
 			if (r.uri == "/") r.uri = "/index.html";
 			var hres = ow.server.httpd.replyFile(httpd, path + "/objects.assets/noutputhttp", "/", r.uri);			
 			return preProcess(r, hres);
-		},
+		}
 	}), function (r) {
 		if (r.uri == "/") r.uri = "/index.html";
 		var hres = ow.server.httpd.replyFile(httpd, path + "/objects.assets/noutputhttp", "/", r.uri);
