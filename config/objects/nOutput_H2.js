@@ -43,11 +43,13 @@ nOutput_H2.prototype.connect = function(force) {
 		nattrmon.addMonitoredObject("h2",
 			function() {
 				try {
-					af.rm(databasefile + ".lock.db");
+					io.rm(databasefile + ".lock.db");
+					log("Output_H2 | Connecting to " + databasefile);
+					return new DB("org.h2.Driver", "jdbc:h2:" + databasefile + ";auto_server=true;auto_server_port=" + port, parent.user, parent.pass);
 				} catch(e) {
+					logErr("H2 | " + stringify(e));
+					throw e;
 				}
-				log("Output_H2 | Connecting to " + databasefile);
-				return new DB("org.h2.Driver", "jdbc:h2:" + databasefile + ";MVCC=TRUE;auto_server=true;auto_server_port=" + port, parent.user, parent.pass);
 			}
 		);
 	}
