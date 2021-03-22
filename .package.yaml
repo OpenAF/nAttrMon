@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20210318'
+version: '20210321'
 dependencies:
   openaf: '>=20201110'
 files:
@@ -280,11 +280,11 @@ filesHash:
   config/objects/nInput_Semaphores.js: 9b0c0d8ca1b1c33d8faeaae89738360c8569534e
   config/objects/nInput_Sessions.js: eb6f26629da062d0be7cd6cf7284372d1363123d
   config/objects/nInput_Shell.js: 5f783611f7343df7b4950cfb9b67a3207e894999
-  config/objects/nOutput_Channels.js: 2b7f049d3f148d942cde76e475a2190912c9f472
+  config/objects/nOutput_Channels.js: 1292e4a06420d594c9849d27208776598251e483
   config/objects/nOutput_DSV.js: b723aefe236bd464d215c52406cec796cd47d97f
   config/objects/nOutput_EmailWarnings.js: 42eb355a69b629c8f43386ef88480adff55acb90
   config/objects/nOutput_ES.js: 14aa4b466e5e6a326cbedf151b4a4a83b4a2b557
-  config/objects/nOutput_H2.js: 4aa7668410f3bbf64b1c7cd3a8b6031e5367903d
+  config/objects/nOutput_H2.js: 01082a7d69167f4e3df6fd11b619855d5dc11ba6
   config/objects/nOutput_HTTP.js: cb990e387ce74ab2845c12487be6a3ccb2dba3b2
   config/objects/nOutput_HTTP_HealthZ.js: 570c5ae615a2ecbc3f304bda850549f0649bb704
   config/objects/nOutput_HTTP_JSON.js: d8a7c5ff8683e9fef18471673b54c24228df2d4d

@@ -16,10 +16,14 @@ var nOutput_Channels = function(aMap) {
   var hS = "httpd";
 
   if (isDef(aMap.httpSession)) hS = aMap.httpSession;
+  aMap.port = _$(aMap.port, "port").isNumber().default(8090);
 
-  if (!nattrmon.hasSessionData(hS) || isDef(aMap.port)) {
-    ow.loadServer();
-    nattrmon.setSessionData(hS, ow.server.httpd.start(isUnDef(aMap.port) ? 8090 : aMap.port, aMap.host, aMap.keyStore, aMap.keyPassword));
+  if (nattrmon.hasSessionData(hS)) {
+    if (aMap.port != nattrmon.getSessionData(hS).getPort()) {
+       nattrmon.setSessionData(hS, ow.server.httpd.start(aMap.port, aMap.host, aMap.keyStore, aMap.keyPassword));
+    }
+  } else {
+    nattrmon.setSessionData(hS, ow.server.httpd.start(aMap.port, aMap.host, aMap.keyStore, aMap.keyPassword));
   }
 
   // Get server
