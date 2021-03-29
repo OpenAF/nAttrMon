@@ -117,7 +117,11 @@ nInput_Filesystem.prototype.input = function (scope, args) {
 							resSpace = String( k.exec(v.namespace, pod, "df -P") );
 							resINode = String( k.exec(v.namespace, pod, "df -i -P") );
 
-							ddfs.push( merge({ key: parent.params.keys[i], pod: pod }, parent.__parseCmd(resSpace, resINode)) );
+							var rr = parent.__parseCmd(resSpace, resINode).map(r => {
+								var res = { key: parent.params.keys[i], pod: pod };
+								return merge(res, r);
+							});
+							ddfs = ddfs.concat(rr);
 						} catch(e) {
 							logErr("nInput_Filesystem | Error on namespace '"+ v.namespace + "', pod '" + pod + "': " + String(e));
 						}
@@ -131,11 +135,15 @@ nInput_Filesystem.prototype.input = function (scope, args) {
 						resSpace = ssh.exec("df -P");
 						resINode = ssh.exec("df -i -P");
 					});
-					ddfs.push( merge({ key: this.params.keys[i] }, this.__parseCmd(resSpace, resINode)) );
+					var rr = this.__parseCmd(resSpace, resINode).map(r => {
+						var res = { key: this.params.keys[i] };
+						return merge(res, r);
+					});
+					ddfs = ddfs.concat(rr);
 				}
 			}
 
-			if (this.params.keys.length == 1) {
+			if (this.params.keys.length == 1 && ddfs.length == 1) {
 				attrname = templify(this.params.attrTemplate, {
 					name: this.name,
 					key: this.params.keys[0]
