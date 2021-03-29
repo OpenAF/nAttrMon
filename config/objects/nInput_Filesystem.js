@@ -30,8 +30,8 @@ nInput_Filesystem.prototype.__parseCmd = function (resSpace, resINode) {
 
 	for (var j in this.params.volumeNames) {
 		var vname = this.params.volumeNames[j];
-		var space;
-		var inode;
+		var space = {};
+		var inode = {};
 
 		for (var i in linesSpace) {
 			if (linesSpace[i].match(new RegExp("^" + vname))) {
@@ -74,7 +74,7 @@ nInput_Filesystem.prototype.__parseCmd = function (resSpace, resINode) {
 };
 
 nInput_Filesystem.prototype.input = function (scope, args) {
-	var dfs = [];
+	var ddfs = [];
 	var ret = {};
 	var parent = this;
 
@@ -117,11 +117,7 @@ nInput_Filesystem.prototype.input = function (scope, args) {
 							resSpace = String( k.exec(v.namespace, pod, "df -P") );
 							resINode = String( k.exec(v.namespace, pod, "df -i -P") );
 
-							dfs.push({
-								key: parent.params.keys[i],
-								pod: pod,
-								result: parent.__parseCmd(resSpace, resINode)
-							});
+							ddfs.push( merge({ key: parent.params.keys[i], pod: pod }, parent.__parseCmd(resSpace, resINode)) );
 						} catch(e) {
 							logErr("nInput_Filesystem | Error on namespace '"+ v.namespace + "', pod '" + pod + "': " + String(e));
 						}
@@ -135,10 +131,7 @@ nInput_Filesystem.prototype.input = function (scope, args) {
 						resSpace = ssh.exec("df -P");
 						resINode = ssh.exec("df -i -P");
 					});
-					dfs.push({
-						key: this.params.keys[i],
-						result: this.__parseCmd(resSpace, resINode)
-					});
+					ddfs.push( merge({ key: this.params.keys[i] }, this.__parseCmd(resSpace, resINode)) );
 				}
 			}
 
@@ -147,21 +140,21 @@ nInput_Filesystem.prototype.input = function (scope, args) {
 					name: this.name,
 					key: this.params.keys[0]
 				});
-				dfs = dfs[0].result;
+				ddfs = ddfs[0].result;
 			} else {
 				attrname = templify(this.params.attrTemplate, {
 					name: this.name
 				});
 			}
 
-			ret[attrname] = dfs;
+			ret[attrname] = ddfs;
 		} else {
 			resSpace = sh("df -P");
 			resINode = sh("df -i -P");
 
-			dfs = this.__parseCmd(resSpace, resINode);
+			ddfs = this.__parseCmd(resSpace, resINode);
 			
-			ret[templify(this.params.attrTemplate)] = dfs;
+			ret[templify(this.params.attrTemplate)] = ddfs;
 		}
 
 	} catch (e) {
