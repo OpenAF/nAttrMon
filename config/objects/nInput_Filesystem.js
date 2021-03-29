@@ -114,8 +114,8 @@ nInput_Filesystem.prototype.input = function (scope, args) {
 				
 					epods.forEach(pod => {
 						try {
-							resSpace = String( k.exec(v.namespace, pod, "df -P", void 0, true) );
-							resINode = String( k.exec(v.namespace, pod, "df -i -P", void 0, true) );
+							resSpace = String( k.exec(v.namespace, pod, "df -P") );
+							resINode = String( k.exec(v.namespace, pod, "df -i -P") );
 
 							dfs.push({
 								key: parent.params.keys[i],
