@@ -5,7 +5,7 @@
 #todo:
 #- nAttrMon Prepare shutdown
 #- nAttrMon Init
-#- nAttrMon ToDo
+#- Add plugs
 #- nAttrMon Start
 #- nAttrMon Stop
 
@@ -47,50 +47,6 @@ jobs:
     });
     global.nattrmon.debug("Stopping...");
     exit(0);
-
-# - name: teste
-#   lang: python
-#   exec: |
-#     from datetime import datetime
-
-#     now = datetime.now()
-
-#     current_time = now.strftime("%H:%M:%S")
-#     args['set'] = { "Test": current_time }
-
-# -------------------
-- name: nAttrMon ToDo
-  deps: nAttrMon Init
-  to  : nAttrMon Add Plugs
-  args:
-    - input :
-       name    : Test
-       execJob : teste
-          
-    - input:
-        name    : Test 2
-        exec    : |
-          sleep(2500, true);
-          return { "Test2": "coisos" }
-
-    - output:
-        name       : Output test
-        chSubscribe: nattrmon::cvals
-        exec       : |
-          _$(args.v, "args.v").$_();
-          yprint(args.v);
-    # - output:
-    #     name    : Output JSON
-    #     execFrom: nOutput_HTTP_JSON
-    #     execArgs:
-    #       port: 8888
-
-    # - output:
-    #     name    : Output HTTP
-    #     execFrom: nOutput_HTTP
-    #     execArgs:
-    #       port : 8888
-    #       title: Test
 
 # ----------------------------
 - name    : nAttrMon Add Plugs
