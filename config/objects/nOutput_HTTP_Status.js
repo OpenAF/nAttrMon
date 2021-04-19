@@ -19,6 +19,9 @@ var nOutput_HTTP_Status = function (aMap) {
     this.yellowLevels   = _$(aMap.yellowLevels, "yellowLevels").isArray().default(["MEDIUM"]);
     this.greenLevels    = _$(aMap.greenLevels, "greenLevels").isArray().default(["LOW", "INFO"]);
     this.controls       = _$(aMap.controls, "controls").isArray().default(__);
+	this.redText        = _$(aMap.redText, "redText").isString().default("NOT OK");
+    this.yellowText     = _$(aMap.yellowText, "yellowText").isString().default("Issues");
+    this.greenText      = _$(aMap.greenText, "greenText").isString().default("OK");
 
     this.levelsIncluded = this.levelsIncluded.map(r => r.toUpperCase());
     this.redLevels      = this.redLevels.map(r => r.toUpperCase());
@@ -168,10 +171,10 @@ nOutput_HTTP_Status.prototype.status = function() {
         });
     }
                   
-    var apath = this.path + "/objects.assets/noutputstatus";
-    var red = io.readFileString(apath + "/red.md");
-    var yellow = io.readFileString(apath + "/yellow.md");
-    var green = io.readFileString(apath + "/green.md");
+	var apath  = this.path + "/objects.assets/noutputstatus";
+    var red    = templify(io.readFileString(apath + "/red.md"),    { redText: this.redText });
+    var yellow = templify(io.readFileString(apath + "/yellow.md"), { yellowText: this.yellowText });
+    var green  = templify(io.readFileString(apath + "/green.md"),  { greenText: this.greenText });
 
     var out = $from(cwarns)
               .sort("title")

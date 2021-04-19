@@ -1,1 +1,1 @@
-<span style="font-weight: bold; background-color: yellow; color: black">&nbsp;&nbsp;Partially available&nbsp;&nbsp;</span>
+<span style="font-weight: bold; background-color: yellow; color: black">&nbsp;&nbsp;{{yellowText}}&nbsp;&nbsp;</span>

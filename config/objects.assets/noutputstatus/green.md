@@ -1,1 +1,1 @@
-<span style="font-weight: bold; background-color: green; color: white">&nbsp;&nbsp;Available&nbsp;&nbsp;</span>
+<span style="font-weight: bold; background-color: green; color: white">&nbsp;&nbsp;{{greenText}}&nbsp;&nbsp;</span>
