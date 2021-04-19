@@ -1,0 +1,1 @@
+<span style="font-weight: bold; background-color: green; color: white">&nbsp;&nbsp;Available&nbsp;&nbsp;</span>
