@@ -14,6 +14,11 @@
     this.redText        = _$(aMap.redText, "redText").isString().default("NOT OK");
     this.yellowText     = _$(aMap.yellowText, "yellowText").isString().default("Issues");
     this.greenText      = _$(aMap.greenText, "greenText").isString().default("OK");
+    this.format         = _$(aMap.format, "format").isString().default("html");
+
+    if (this.format == "html" && isUnDef(this.file)) {
+        throw "Please provide a 'file' arg";
+    }
 
     this.levelsIncluded = this.levelsIncluded.map(r => r.toUpperCase());
     this.redLevels      = this.redLevels.map(r => r.toUpperCase());
@@ -54,9 +59,24 @@ nOutput_HTMLStatus.prototype.output = function(scope, args) {
     }
                   
     var apath  = this.path + "/objects.assets/noutputstatus";
-    var red    = templify(io.readFileString(apath + "/red.md"),    { redText: this.redText });
-    var yellow = templify(io.readFileString(apath + "/yellow.md"), { yellowText: this.yellowText });
-    var green  = templify(io.readFileString(apath + "/green.md"),  { greenText: this.greenText });
+    var red, yellow, green;
+
+    switch(this.format) {
+    case "slon" :
+    case "prettyjson": 
+    case "json" :
+    case "table":
+    case "yaml" :
+        red    = this.redText;
+        yellow = this.yellowText;
+        green  = this.greenText;
+        break;
+    case "html":
+    default  :
+        red    = templify(io.readFileString(apath + "/red.md"),    { redText: this.redText });
+        yellow = templify(io.readFileString(apath + "/yellow.md"), { yellowText: this.yellowText });
+        green  = templify(io.readFileString(apath + "/green.md"),  { greenText: this.greenText });
+    }
 
     var out = $from(cwarns)
               .sort("title")
@@ -71,9 +91,36 @@ nOutput_HTMLStatus.prototype.output = function(scope, args) {
                 };
               });
 
-    var md = templify(io.readFileString(apath + "/status.md"), {
-        statuses: out,
-        date    : (new Date()).toISOString()
-    })
-    io.writeFileString(this.file, ow.template.html.genStaticVersion4MD(md));
+    var pout = "";
+    if (this.format == "html") {
+        var md = templify(io.readFileString(apath + "/status.md"), {
+            statuses: out,
+            date    : (new Date()).toISOString()
+        });
+        pout = ow.template.html.genStaticVersion4MD(md);
+    }
+
+    if (this.format == "yaml") {
+        pout = af.toYAML({ status: out, update: (new Date()).toISOString() });
+    }
+
+    if (this.format == "json" || this.format == "prettyjson") {
+        pout = stringify({ status: out, update: (new Date()).toISOString() }, __, (this.format == "prettyjson" ? __ : ""));
+    }
+
+    if (this.format == "slon") {
+        pout = ow.format.toSLON({ status: out, update: (new Date()).toISOString() })
+    }
+
+    if (this.format == "table") {
+        pout = printTable(out, __, __, isUnDef(this.file), (isDef(this.file) ? "plain" : "utf")) + "\nUpdate: " + (new Date()).toISOString();
+    }
+
+    if (isDef(this.file)) {
+        io.writeFileString(this.file, pout);
+    } else {
+        print("");
+        print(pout);
+        print("");
+    }
 };

@@ -16,7 +16,7 @@ jobs:
   exec: |
     global.nattrmon.stop();
     log("nAttrMon stopped.");
-    print(new Date() + " | Stopping.");
+    //print(new Date() + " | Stopping.");
 
 # -------------------------
 - name: nAttrMon Run Single
@@ -31,9 +31,9 @@ jobs:
       sleep(50, true);
     });
     global.nattrmon.debug("Stopping...");
-    global.nattrmon.stop();
-    log("nAttrMon stopped.");
-    print(new Date() + " | Stopping.");
+    //global.nattrmon.stop();
+    //log("nAttrMon stopped.");
+    //print(new Date() + " | Stopping.");
 
 # -------------------
 - name: nAttrMon Stop

@@ -294,7 +294,7 @@ filesHash:
   config/objects/nOutput_EmailWarnings.js: 42eb355a69b629c8f43386ef88480adff55acb90
   config/objects/nOutput_ES.js: 14aa4b466e5e6a326cbedf151b4a4a83b4a2b557
   config/objects/nOutput_H2.js: 01082a7d69167f4e3df6fd11b619855d5dc11ba6
-  config/objects/nOutput_HTMLStatus.js: 3c79f7711a9553b11b95c8c1782aefd1dcd8c130
+  config/objects/nOutput_HTMLStatus.js: 34b4a28f92872a00821938a1b8a70220fe586dd6
   config/objects/nOutput_HTTP.js: cb990e387ce74ab2845c12487be6a3ccb2dba3b2
   config/objects/nOutput_HTTP_HealthZ.js: 570c5ae615a2ecbc3f304bda850549f0649bb704
   config/objects/nOutput_HTTP_JSON.js: d8a7c5ff8683e9fef18471673b54c24228df2d4d
@@ -400,7 +400,7 @@ filesHash:
   nattrmon.js: 0577704f46097906a7f715fd8bc8c913278e8b08
   nattrmon.yaml.sample: d3358e316e84b31dcab07d11d1957742815bee33
   nAttrmon_single.yaml.sample: 9ebe2f279f32fe95d9fdc1b8bb2f35725d68ef63
-  oJob_nAttrMon.yaml: 893902f683dcb512e23e1a62e6be480de9c7ecd2
+  oJob_nAttrMon.yaml: 2af3947eb1b5486bb29ba4c4d451c3aa640be315
   README.md: b0fd23513e7f58f34f33aa9f393c188fd8b009a0
   tests/inputDBTest.yml: c38616606dc5956e449189d11f8e661170f94dfb
   tests/inputShellTest.yml: ce643955982cb16b53a8843acd3549466e5cddf5
