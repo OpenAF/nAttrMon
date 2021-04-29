@@ -292,7 +292,7 @@ filesHash:
   config/objects/nInput_Semaphores.js: 9b0c0d8ca1b1c33d8faeaae89738360c8569534e
   config/objects/nInput_Sessions.js: eb6f26629da062d0be7cd6cf7284372d1363123d
   config/objects/nInput_Shell.js: 5f783611f7343df7b4950cfb9b67a3207e894999
-  config/objects/nOutput_Channels.js: 1292e4a06420d594c9849d27208776598251e483
+  config/objects/nOutput_Channels.js: 52345d9d8aa49a381d2b45e119768866515b4139
   config/objects/nOutput_DSV.js: b723aefe236bd464d215c52406cec796cd47d97f
   config/objects/nOutput_EmailWarnings.js: 42eb355a69b629c8f43386ef88480adff55acb90
   config/objects/nOutput_ES.js: 14aa4b466e5e6a326cbedf151b4a4a83b4a2b557
@@ -309,7 +309,7 @@ filesHash:
   config/objects/nOutput_RemoteChannel.js: 8dcadaf89c78f31707c45d615a3941ce0547cd33
   config/objects/nOutput_Slack.js: 313a4f210ec3bd8471de32dc6e19aa32cb7e8210
   config/objects/nOutput_Stdout.js: 2abf4e491d71fd53670c650768e5d6ab3dc7db51
-  config/objects/nOutput_WarnsHistory.js: 3a05b649d11734fcdf7aa1c77f2a5ad833b12dd7
+  config/objects/nOutput_WarnsHistory.js: 7634a5ad57297289e5c13eca8993b5fb8bc13d51
   config/objects/nValidation_AFPing.js: f48325d605e693dee3ab2912224cda0fde11e490
   config/objects/nValidation_Generic.js: 29c893f6c48b521c5a8980fd616564827ee98e30
   config/objects/nValidation_Semaphores.js: 97b6c1850b80d95cc92c1c50b05fdfa26467fd94
@@ -404,7 +404,7 @@ filesHash:
   LICENSE: 7df059597099bb7dcf25d2a9aedfaf4465f72d8d
   nattrmon.js: 0577704f46097906a7f715fd8bc8c913278e8b08
   nattrmon.yaml.sample: d3358e316e84b31dcab07d11d1957742815bee33
-  nAttrmon_single.yaml.sample: 9ebe2f279f32fe95d9fdc1b8bb2f35725d68ef63
+  nAttrmon_single.yaml.sample: ad2adb104d43947cda661e8bf1ee915fa6fdc3ea
   oJob_nAttrMon.yaml: 2af3947eb1b5486bb29ba4c4d451c3aa640be315
   README.md: b0fd23513e7f58f34f33aa9f393c188fd8b009a0
   tests/inputDBTest.yml: c38616606dc5956e449189d11f8e661170f94dfb

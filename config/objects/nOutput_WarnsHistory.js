@@ -72,7 +72,7 @@ nOutput_WarnsHistory.prototype.output = function(scope, args) {
             if (isUnDef(prev) || Object.keys(prev).length == 0 || !isArray(prev.history)) {
                 $ch(this.chName).set({ title: value.title, createdate: value.createdate }, { title: value.title, createdate: value.createdate, history: [ newV ] });
             } else {
-                if (prev.history.filter(r => compare(r, newV)).length < 0) prev.history.push(newV);
+                if (prev.history.filter(r => compare(r, newV)).length == 0) prev.history.push(newV);
                 // Per entry housekeeping
                 if (this.historyMax >= 0) {
                     while (prev.history.length > this.historyMax) {

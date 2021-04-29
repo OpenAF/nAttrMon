@@ -36,6 +36,8 @@ var nOutput_Channels = function(aMap) {
   if (isDef(aMap.custom)) cauth_func = aMap.custom;
   if (isDef(aMap.authCustom)) cauth_func = aMap.authCustom;
 
+  this.channels = _$(aMap.channels, "channels").isArray().default([]);
+
   if (isDef(httpd)) {
     // Channel authentication
     var chAuth = function(u, p, s, r) {
@@ -359,6 +361,19 @@ var nOutput_Channels = function(aMap) {
     }
     $ch("nattrmon::ops").expose(httpd, "/chs/ops", chAuth);
     $ch("nattrmon::ps").expose(httpd, "/chs/ps", chAuth);
+
+    var listChs = $ch().list();
+    this.channels.forEach(aCh => {
+      if (listChs.indexOf(aCh) >= 0) {
+        if (isDef(aMap.peers) && isArray(aMap.peers)) {
+          $ch(aCh).peer(httpd, "/chs/" + aCh, addSuffix(aMap.peers, "/chs/" + aCh), chAuth);
+        } else {
+          $ch(aCh).expose(httpd, "/chs/" + aCh, chAuth);
+        }
+      } else {
+        logWarn("Channel '" + aCh + "' not found.");
+      }
+    });
 
   } else {
     throw "Need a http output defined.";
