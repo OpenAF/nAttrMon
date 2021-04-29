@@ -1,0 +1,16 @@
+output:
+  name       : Output warnings history
+  chSubscribe: nattrmon::warnings
+  execFrom   : nOutput_WarnsHistory
+  execArgs   :
+    # chName    : nattrmon::warningsHistory
+    chType  : file
+    chParams:
+      file: "/some/folder/warningHistory.json"
+    # historyMax: 100
+    # maxEntries: 100
+    # include   :
+    # - Problem with A
+    # - Problem with B
+    # exclude   :
+    # - Problem with C
