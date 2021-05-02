@@ -10,31 +10,7 @@ init:
     __NAM_NEED_CH_PERSISTENCE: false
     __NAM_LOGCONSOLE         : true
 
-todo:
-- nAttrMon Prepare shutdown
-- name: nAttrMon Init
-  args: *INIT
-
-- Add plugs
-- nAttrMon Run Single
-#- nAttrMon Start
-
-include:
-- oJob_nAttrMon.yaml
-
-ojob:
-  #daemon      : true
-  opacks      :
-  - openaf: 20210412
-  catch       : "ow.oJob.output({ Help: args.init.help }, args); logErr(exception); return false;"
-  logToConsole: false   # change to true for debugging
-
-jobs:
-# ---------------
-- name: Add plugs
-  deps: nAttrMon Init
-  to  : nAttrMon Add Plugs
-  args:
+nattrmon: &NATTRMON
   # ------
   # INPUTS
   - input:
@@ -74,3 +50,34 @@ jobs:
       exec       : |
         _$(args.v, "args.v").$_();
         print("WARN | " + ow.format.toSLON(args.v));
+
+# -------------------------
+# -------------------------
+
+todo:
+- nAttrMon Prepare shutdown
+- name: nAttrMon Init
+  args: *INIT
+
+- Add plugs
+- nAttrMon Run Single
+# Comment "Run Single" and uncomment "Start" for daemon mode
+#- nAttrMon Start
+
+include:
+- oJob_nAttrMon.yaml
+
+ojob:
+  # Uncomment "daemon" for daemon mode
+  #daemon      : true
+  opacks      :
+  - openaf: 20210412
+  catch       : "ow.oJob.output({ Help: args.init.help }, args); logErr(exception); return false;"
+  logToConsole: false   # change to true for debugging
+
+jobs:
+# ---------------
+- name: Add plugs
+  deps: nAttrMon Init
+  to  : nAttrMon Add Plugs
+  args: *NATTRMON

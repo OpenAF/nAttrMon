@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20210428'
+version: '20210431'
 dependencies:
   openaf: '>=20210412'
 files:
@@ -301,7 +301,7 @@ filesHash:
   config/objects/nOutput_HTTP.js: cb990e387ce74ab2845c12487be6a3ccb2dba3b2
   config/objects/nOutput_HTTP_HealthZ.js: 570c5ae615a2ecbc3f304bda850549f0649bb704
   config/objects/nOutput_HTTP_JSON.js: d8a7c5ff8683e9fef18471673b54c24228df2d4d
-  config/objects/nOutput_HTTP_Metrics.js: bc386c8eeb26ffed665b375f2d316a118cace893
+  config/objects/nOutput_HTTP_Metrics.js: 2adbb11a51f59d6f7cf940490db0bc8e18afa704
   config/objects/nOutput_HTTP_Status.js: edef19006705f59eee10b7154f3bb2e5efa341ed
   config/objects/nOutput_Log.js: 69ef02bb37d306deb390f303a8bbf6e2234be792
   config/objects/nOutput_Notifications.js: 1e5cabdd01f3c6b4e7f68bf7259a0256c9963985
@@ -393,18 +393,18 @@ filesHash:
   lib/nattributes.js: f28cee64a735e0e6ae3b520bbc59f74e6203e1db
   lib/nattributevalue.js: d6a378dba74922540bcc3e054222733f69d5cead
   lib/ninput.js: cb1a2bc442a0a3ac9e6237fd02b445e31bd518cf
-  lib/nmain.js: a0d9dbc1493b553d1e41031fc279d18125b6aafd
+  lib/nmain.js: 4850405cb670d0a4ef424bdb6bc34830ab8bc220
   lib/nmonitoredobject.js: da0b8a8590ce1534826750e2e70b3d6e4bee9f98
   lib/noutput.js: 097a89ae2ab12cb28d88034444a72d368464d14c
   lib/nplug.js: d9a6ffcd4c9999cff6364ff40dd9a38dbac680e8
   lib/ntmplhelpers.js: ace956e44614b286cb445e803e5168dc02461c0e
   lib/nvalidation.js: 252998540faca7913211029f1bdd4397beba3ce9
   lib/nwarning.js: a8022e42582a148df205f333e1c523a01f48eb06
-  lib/nwarnings.js: 3eb81e81a80227e8c48d2ea000749a4a762c6699
+  lib/nwarnings.js: c99f38868ad1fde57ff86fc62693d6baa33a4878
   LICENSE: 7df059597099bb7dcf25d2a9aedfaf4465f72d8d
   nattrmon.js: 0577704f46097906a7f715fd8bc8c913278e8b08
   nattrmon.yaml.sample: d3358e316e84b31dcab07d11d1957742815bee33
-  nAttrmon_single.yaml.sample: ad2adb104d43947cda661e8bf1ee915fa6fdc3ea
+  nAttrmon_single.yaml.sample: 6b13385033a2fe93ccef709f3d51d202a95c7d03
   oJob_nAttrMon.yaml: 2af3947eb1b5486bb29ba4c4d451c3aa640be315
   README.md: b0fd23513e7f58f34f33aa9f393c188fd8b009a0
   tests/inputDBTest.yml: c38616606dc5956e449189d11f8e661170f94dfb

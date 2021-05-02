@@ -19,6 +19,13 @@ var nOutput_HTTP_Metrics = function (aMap) {
         this.nameCVals = _$(aMap.nameCVals, "nameCVals").isString().default("nattrmon_cval");
         this.nameLVals = _$(aMap.nameLVals, "nameLVals").isString().default("nattrmon_lval");
         this.nameWarns = _$(aMap.nameWarns, "nameWarns").isString().default("nattrmon_warn");
+
+		this.chName   = _$(aMap.chName, "chName").isString().default(__);
+		this.chType   = _$(aMap.chType, "chType").isString().default(__);
+		this.chParams = _$(aMap.chParams, "chParams").isMap().default(__);
+		this.chPeriod = _$(aMap.chPeriod, "chPeriod").isNumber().default(5000);
+
+		if (isDef(this.chName) && this.chPeriod > 0) $ch(this.chName).create(1, this.chType, this.chParams);
 	} else {
 		aMap = {};
 	}
@@ -128,6 +135,42 @@ var nOutput_HTTP_Metrics = function (aMap) {
             return ow.metrics.fromObj2OpenMetrics(m, n, d);
         }).join("");
     }
+
+	ow.metrics.add("nattrmon", () => {
+		var _a = nattrmon.getAttributes(true); 
+		var _c = nattrmon.getCurrentValues(true);
+		var _l = nattrmon.getLastValues(true);
+		var _w = nattrmon.getWarnings();
+
+		var res = {
+			numAttrs      : _a.length,
+			numCVals      : _c.size(),
+			numLVals      : _l.size(),
+			numWarnsHigh  : isDef(_w[nWarning.LEVEL_HIGH])   ? Object.keys(_w[nWarning.LEVEL_HIGH]).length : 0,
+			numWarnsMedium: isDef(_w[nWarning.LEVEL_MEDIUM]) ? Object.keys(_w[nWarning.LEVEL_MEDIUM]).length : 0,
+			numWarnsLow   : isDef(_w[nWarning.LEVEL_LOW])    ? Object.keys(_w[nWarning.LEVEL_LOW]).length : 0,
+			numWarnsInfo  : isDef(_w[nWarning.LEVEL_INFO])   ? Object.keys(_w[nWarning.LEVEL_INFO]).length : 0,
+			numWarnsClosed: isDef(_w[nWarning.LEVEL_CLOSED]) ? Object.keys(_w[nWarning.LEVEL_CLOSED]).length : 0,
+			lastCheck     : (_a.length <= 0 ? -1 : (new Date( $from( _a ).sort("-lastcheck").at(0).lastcheck )).getTime()),
+			lastWarnHigh  : _w[nWarning.LEVEL_HIGH].length > 0   ? (new Date( $from(_w[nWarning.LEVEL_HIGH]).sort("-lastupdate").at(0).lastupdate )).getTime() : -1,
+			lastWarnMedium: _w[nWarning.LEVEL_MEDIUM].length > 0 ? (new Date( $from(_w[nWarning.LEVEL_MEDIUM]).sort("-lastupdate").at(0).lastupdate )).getTime() : -1,
+			lastWarnLow   : _w[nWarning.LEVEL_LOW].length > 0    ? (new Date( $from(_w[nWarning.LEVEL_LOW]).sort("-lastupdate").at(0).lastupdate )).getTime() : -1,
+			lastWarnInfo  : _w[nWarning.LEVEL_INFO].length > 0   ? (new Date( $from(_w[nWarning.LEVEL_INFO]).sort("-lastupdate").at(0).lastupdate )).getTime() : -1,
+			lastWarnClosed: _w[nWarning.LEVEL_CLOSED].length > 0 ? (new Date( $from(_w[nWarning.LEVEL_CLOSED]).sort("-lastupdate").at(0).lastupdate )).getTime() : -1,
+			plugsExecuting: $ch(nattrmon.chPS).size()
+		};
+
+		res.numWarns = res.numWarnsHigh + res.numWarnsMedium + res.numWarnsLow + res.numWarnsInfo + res.numWarnsClosed;
+		res.lastWarn = -1;
+		if (res.lastWarnHigh > res.lastWarn)   res.lastWarn = res.lastWarnHigh;
+		if (res.lastWarnMedium > res.lastWarn) res.lastWarn = res.lastWarnMedium;
+		if (res.lastWarnLow > res.lastWarn)    res.lastWarn = res.lastWarnLow;
+		if (res.lastWarnInfo > res.lastWarn)   res.lastWarn = res.lastWarnInfo;
+		if (res.lastWarnClosed > res.lastWarn) res.lastWarn = res.lastWarnClosed;
+		return res;
+	});
+
+	if (isDef(this.chName) && this.chPeriod > 0) ow.metrics.startCollecting(this.chName, this.chPeriod);
 
 	// Add function to server
 	//httpd.addEcho("/echo");
