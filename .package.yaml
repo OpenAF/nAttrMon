@@ -84,6 +84,7 @@ files:
   - config/objects/nInput_IMAbnormalLoadings.js
   - config/objects/nInput_IMLoadingsProgress.js
   - config/objects/nInput_IMMemory.js
+  - config/objects/nInput_Kube_Events.js
   - config/objects/nInput_LogErrorAgg.js
   - config/objects/nInput_OSInfo.js
   - config/objects/nInput_RAIDMemory.js
@@ -283,6 +284,7 @@ filesHash:
   config/objects/nInput_IMAbnormalLoadings.js: b7d86f2f5b70e218de6967a52114cac15fe5b570
   config/objects/nInput_IMLoadingsProgress.js: 1987633b3cf1ee4f8a1f74a7441f386637aa93a6
   config/objects/nInput_IMMemory.js: 69f6e3d39aa5a75c83d2e4f8e2ece0b28df7e3f1
+  config/objects/nInput_Kube_Events.js: aea00ecce32d285bca1531b8015cee0ad314078c
   config/objects/nInput_LogErrorAgg.js: 43e3809d524752c55f7c58403661beb8e623f52b
   config/objects/nInput_OSInfo.js: b8548f6d69dea80553fbef3e6e8d6552c15362e9
   config/objects/nInput_RAIDMemory.js: 12772f9c7775672dfd4a420db336d04621e2dc78
