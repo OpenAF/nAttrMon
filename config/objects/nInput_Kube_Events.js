@@ -25,6 +25,8 @@
     this.params.full = _$(this.params.full, "full").isBoolean().default(false);
 
     if (isUnDef(getOPackPath("Kube"))) throw "Please install the latest Kube opack (opack install Kube).";
+
+    loadLib("kube.js");
     if (isUnDef(this.params.attrTemplate)) this.params.attrTemplate = "Kube/Events";
 
     nInput.call(this, this.input);
