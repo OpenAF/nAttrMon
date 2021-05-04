@@ -19,12 +19,10 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20210431'
+version: '20210504'
 dependencies:
   openaf: '>=20210412'
 files:
-- .github/ISSUE_TEMPLATE/bug_report.md
-- .github/ISSUE_TEMPLATE/feature_request.md
 - .gitignore
 - .package.yaml
 - config/inputs/move_files_from_inputs_disabled.dummy
@@ -78,7 +76,6 @@ files:
 - config/objects/nInput_CompareTimes.js
 - config/objects/nInput_DB.js
 - config/objects/nInput_DMPerformance.js
-- config/objects/nInput_DPStats.js
 - config/objects/nInput_EndPoints.js
 - config/objects/nInput_Filesystem.js
 - config/objects/nInput_FilesystemCount.js
@@ -227,8 +224,6 @@ files:
 - util/templates/Object_nOutput_template.js
 - util/watchdog.yaml.hbs
 filesHash:
-  .github/ISSUE_TEMPLATE/bug_report.md: 83d211c67c12e8c1f6e9f796cfd0cecbf5160e15
-  .github/ISSUE_TEMPLATE/feature_request.md: f6867a2f0417fe89a0f2008730ee19dd38422021
   .gitignore: 39785e9c0e444387c904a807d9e506a0215ca099
   config/inputs/move_files_from_inputs_disabled.dummy: b858cb282617fb0956d960215c8e84d1ccf909c6
   config/inputs.disabled/js/00.kube.init.js: 113c26637447ccb75022e07943ae00f8b80b4c46
@@ -281,7 +276,6 @@ filesHash:
   config/objects/nInput_CompareTimes.js: 5c95c1387549e405031414b430c98951ed591d1c
   config/objects/nInput_DB.js: 7c93aec10cf242292a481a5a2065ebb4a458c074
   config/objects/nInput_DMPerformance.js: 3d0f27b87f5b1a004e32559b0076c3cbfdf5d064
-  config/objects/nInput_DPStats.js: 4d082bc2d5c297a38529f6f67de14449e7dc2e50
   config/objects/nInput_EndPoints.js: 12f22ce1b4e43fa796b0a4350bfb92a9197ec9c9
   config/objects/nInput_Filesystem.js: c7e2db7d4e26deb2a96de8da1620a3da64b1f4bb
   config/objects/nInput_FilesystemCount.js: e36218f7c2ffa39438f1c1d22ad982c04e0fd4a0
