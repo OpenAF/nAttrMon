@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20210504'
+version: '20210512'
 dependencies:
   openaf: '>=20210412'
 files:
@@ -310,7 +310,7 @@ filesHash:
   config/objects/nOutput_Oracle.js: ab0f2fe7958952437ae93030715633858462269f
   config/objects/nOutput_RemoteChannel.js: 8dcadaf89c78f31707c45d615a3941ce0547cd33
   config/objects/nOutput_Slack.js: 313a4f210ec3bd8471de32dc6e19aa32cb7e8210
-  config/objects/nOutput_Stdout.js: 2abf4e491d71fd53670c650768e5d6ab3dc7db51
+  config/objects/nOutput_Stdout.js: eddd09834507308573f289b6a4c92e7cdd6b1b70
   config/objects/nOutput_WarnsHistory.js: 7634a5ad57297289e5c13eca8993b5fb8bc13d51
   config/objects/nValidation_AFPing.js: f48325d605e693dee3ab2912224cda0fde11e490
   config/objects/nValidation_Generic.js: 29c893f6c48b521c5a8980fd616564827ee98e30
@@ -395,7 +395,7 @@ filesHash:
   lib/nattributes.js: f28cee64a735e0e6ae3b520bbc59f74e6203e1db
   lib/nattributevalue.js: d6a378dba74922540bcc3e054222733f69d5cead
   lib/ninput.js: cb1a2bc442a0a3ac9e6237fd02b445e31bd518cf
-  lib/nmain.js: 4850405cb670d0a4ef424bdb6bc34830ab8bc220
+  lib/nmain.js: e14f3fbc6cc8170f5dd4209acd59e059e839b0ec
   lib/nmonitoredobject.js: da0b8a8590ce1534826750e2e70b3d6e4bee9f98
   lib/noutput.js: 097a89ae2ab12cb28d88034444a72d368464d14c
   lib/nplug.js: d9a6ffcd4c9999cff6364ff40dd9a38dbac680e8
