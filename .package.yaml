@@ -1,228 +1,228 @@
-author: 'Nuno Aguiar, Andreia Brizida, Jose Alves, Leandro Fernandes'
+author: Nuno Aguiar, Andreia Brizida, Jose Alves, Leandro Fernandes
 scripts:
   posterase: ''
   postinstall: ''
   preerase: ''
   preinstall: ''
 keywords:
-  - nattrmon
-  - attribute
-  - monitor
-  - attrmon
+- nattrmon
+- attribute
+- monitor
+- attrmon
 bugs:
-  url: 'https://github.com/OpenAF/nAttrMon/issues'
+  url: https://github.com/OpenAF/nAttrMon/issues
 repository:
   type: http
-  url: 'https://openaf.io/opacks/nAttrMon.opack'
+  url: https://openaf.io/opacks/nAttrMon.opack
 description: Tool for solution's (including RAID) functional monitoring.
 name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20210431'
+version: '20210504'
 dependencies:
   openaf: '>=20210412'
 files:
-  - .gitignore
-  - .package.yaml
-  - config/inputs/move_files_from_inputs_disabled.dummy
-  - config/inputs.disabled/js/00.kube.init.js
-  - config/inputs.disabled/js/00.raid.init.js
-  - config/inputs.disabled/js/05.filesystemCount.js
-  - config/inputs.disabled/js/07.logErrorAgg.js
-  - config/inputs.disabled/js/09.filesystemcount.js
-  - config/inputs.disabled/js/10.filesystem.js
-  - config/inputs.disabled/js/10.filesystemcount.js
-  - config/inputs.disabled/js/11.OSInfo.js
-  - config/inputs.disabled/js/12.ShellCmd.js
-  - config/inputs.disabled/js/13.ListDirFiles.js
-  - config/inputs.disabled/js/22.fraud.snapshots.js
-  - config/inputs.disabled/js/41.fms.rulestatus.js
-  - config/inputs.disabled/yaml/01.ping.yaml
-  - config/inputs.disabled/yaml/01.test.yaml
-  - config/inputs.disabled/yaml/02.showIgnoredPlugs.yaml
-  - config/inputs.disabled/yaml/02.test.yaml
-  - config/inputs.disabled/yaml/03.AbnormalLoads.yaml
-  - config/inputs.disabled/yaml/03.flows.yaml
-  - config/inputs.disabled/yaml/03.LoadingProgress.yaml
-  - config/inputs.disabled/yaml/03.semaphores.yaml
-  - config/inputs.disabled/yaml/04.db.appadm.yaml
-  - config/inputs.disabled/yaml/09.memory.yaml
-  - config/inputs.disabled/yaml/10.filesystem.yaml
-  - config/inputs.disabled/yaml/10.filesystemcount.fixed.yaml
-  - config/inputs.disabled/yaml/10.filesystemcount.mobsubscribers.yaml
-  - config/inputs.disabled/yaml/10.httpjson.yaml
-  - config/inputs.disabled/yaml/10.osinfo.yaml
-  - config/inputs.disabled/yaml/10.sessions.yaml
-  - config/inputs.disabled/yaml/11.times.yaml
-  - config/inputs.disabled/yaml/12.connections.yaml
-  - config/inputs.disabled/yaml/12.shellCmd.yaml
-  - config/inputs.disabled/yaml/13.RAIDSchedulers.yaml
-  - config/inputs.disabled/yaml/15.endpoint_nAttrMon.yaml
-  - config/inputs.disabled/yaml/15.remote_nAttrMon.yaml
-  - config/inputs.disabled/yaml/20.dmPerformance.yaml
-  - config/inputs.disabled/yaml/25.bpmDebugFlags.yaml
-  - config/inputs.disabled/yaml/25.cbpmDebugFlags.yaml
-  - config/inputs.disabled/yaml/26.endpoints.yaml
-  - config/move_files_from_the_disabled_folders.dummy
-  - config/nattrmonignore.js.sample
-  - config/objects/nInput_AFPing.js
-  - config/objects/nInput_BPMDebugChecks.js
-  - config/objects/nInput_BPMNRunningFlows.js
-  - config/objects/nInput_CBPMDebugChecks.js
-  - config/objects/nInput_CBPMRunningFlows.js
-  - config/objects/nInput_CBPMSemaphores.js
-  - config/objects/nInput_Channel.js
-  - config/objects/nInput_CompareTimes.js
-  - config/objects/nInput_DB.js
-  - config/objects/nInput_DMPerformance.js
-  - config/objects/nInput_EndPoints.js
-  - config/objects/nInput_Filesystem.js
-  - config/objects/nInput_FilesystemCount.js
-  - config/objects/nInput_FMSRuleStatus.js
-  - config/objects/nInput_HTTPJson.js
-  - config/objects/nInput_IMAbnormalLoadings.js
-  - config/objects/nInput_IMLoadingsProgress.js
-  - config/objects/nInput_IMMemory.js
-  - config/objects/nInput_Kube_Events.js
-  - config/objects/nInput_LogErrorAgg.js
-  - config/objects/nInput_OSInfo.js
-  - config/objects/nInput_RAIDMemory.js
-  - config/objects/nInput_RemoteChannel.js
-  - config/objects/nInput_RunningFlows.js
-  - config/objects/nInput_Schedulers.js
-  - config/objects/nInput_Semaphores.js
-  - config/objects/nInput_Sessions.js
-  - config/objects/nInput_Shell.js
-  - config/objects/nOutput_Channels.js
-  - config/objects/nOutput_DSV.js
-  - config/objects/nOutput_EmailWarnings.js
-  - config/objects/nOutput_ES.js
-  - config/objects/nOutput_H2.js
-  - config/objects/nOutput_HTMLStatus.js
-  - config/objects/nOutput_HTTP.js
-  - config/objects/nOutput_HTTP_HealthZ.js
-  - config/objects/nOutput_HTTP_JSON.js
-  - config/objects/nOutput_HTTP_Metrics.js
-  - config/objects/nOutput_HTTP_Status.js
-  - config/objects/nOutput_Log.js
-  - config/objects/nOutput_Notifications.js
-  - config/objects/nOutput_Oracle.js
-  - config/objects/nOutput_RemoteChannel.js
-  - config/objects/nOutput_Slack.js
-  - config/objects/nOutput_Stdout.js
-  - config/objects/nOutput_WarnsHistory.js
-  - config/objects/nValidation_AFPing.js
-  - config/objects/nValidation_Generic.js
-  - config/objects/nValidation_Semaphores.js
-  - config/objects/nValidation_Yellows.js
-  - config/objects.assets/noutputemailwarnings/logo.png
-  - config/objects.assets/noutputemailwarnings/warningEmailTemplate.hbs
-  - config/objects.assets/noutputhttp/css/bootstrap-theme.min.css
-  - config/objects.assets/noutputhttp/css/bootstrap.min.css
-  - config/objects.assets/noutputhttp/css/font-awesome.min.css
-  - config/objects.assets/noutputhttp/css/nattrmon.css
-  - config/objects.assets/noutputhttp/dashboard.css
-  - config/objects.assets/noutputhttp/favicon.png
-  - config/objects.assets/noutputhttp/fonts/fontawesome-webfont.eot
-  - config/objects.assets/noutputhttp/fonts/fontawesome-webfont.svg
-  - config/objects.assets/noutputhttp/fonts/fontawesome-webfont.ttf
-  - config/objects.assets/noutputhttp/fonts/fontawesome-webfont.woff
-  - config/objects.assets/noutputhttp/fonts/fontawesome-webfont.woff2
-  - config/objects.assets/noutputhttp/fonts/FontAwesome.otf
-  - config/objects.assets/noutputhttp/fonts/glyphicons-halflings-regular.eot
-  - config/objects.assets/noutputhttp/fonts/glyphicons-halflings-regular.svg
-  - config/objects.assets/noutputhttp/fonts/glyphicons-halflings-regular.ttf
-  - config/objects.assets/noutputhttp/fonts/glyphicons-halflings-regular.woff
-  - config/objects.assets/noutputhttp/fonts/icon.eot
-  - config/objects.assets/noutputhttp/fonts/icon.svg
-  - config/objects.assets/noutputhttp/fonts/icon.ttf
-  - config/objects.assets/noutputhttp/fonts/icon.woff
-  - config/objects.assets/noutputhttp/history.html
-  - config/objects.assets/noutputhttp/index.html
-  - config/objects.assets/noutputhttp/js/angular-animate.min.js
-  - config/objects.assets/noutputhttp/js/angular.min.js
-  - config/objects.assets/noutputhttp/js/bootstrap.min.js
-  - config/objects.assets/noutputhttp/js/holder.min.js
-  - config/objects.assets/noutputhttp/js/ie10-viewport-bug-workaround.js
-  - config/objects.assets/noutputhttp/js/jquery.min.js
-  - config/objects.assets/noutputhttp/js/nattrmon_js.js
-  - config/objects.assets/noutputhttp/js/retina.min.js
-  - config/objects.assets/noutputhttp/logout.html
-  - config/objects.assets/noutputhttp/now.html
-  - config/objects.assets/noutputhttp/plugs.html
-  - config/objects.assets/noutputstatus/green.md
-  - config/objects.assets/noutputstatus/logo.png
-  - config/objects.assets/noutputstatus/red.md
-  - config/objects.assets/noutputstatus/status.md
-  - config/objects.assets/noutputstatus/yellow.md
-  - config/objects.disabled/move_files_from_objects.dummy
-  - config/outputs/move_files_from_outputs_disabled.dummy
-  - config/outputs.disabled/js/00.init.js
-  - config/outputs.disabled/js/05.es.log.js
-  - config/outputs.disabled/js/09.channels.js
-  - config/outputs.disabled/js/1.oracleoutput.js
-  - config/outputs.disabled/js/4.logFile.js
-  - config/outputs.disabled/yaml/00.httpAll.yaml
-  - config/outputs.disabled/yaml/00.httphealthz.yaml
-  - config/outputs.disabled/yaml/01.h2output.yaml
-  - config/outputs.disabled/yaml/02.httpjson.yaml
-  - config/outputs.disabled/yaml/03.http.yaml
-  - config/outputs.disabled/yaml/03.pushChannels.yaml
-  - config/outputs.disabled/yaml/04.csvFile.yaml
-  - config/outputs.disabled/yaml/04.emailWarnings.yaml
-  - config/outputs.disabled/yaml/04.httpmetrics.yaml
-  - config/outputs.disabled/yaml/05.es.values.yaml
-  - config/outputs.disabled/yaml/05.es.warnings.yaml
-  - config/outputs.disabled/yaml/08.warnsHistory.yaml
-  - config/outputs.disabled/yaml/09.channels.yaml
-  - config/validations/move_files_from_validations_disabled.dummy
-  - config/validations.disabled/js/01.validatePing.js
-  - config/validations.disabled/js/03.validateSemaphores.js
-  - config/validations.disabled/js/04.validateErrorFlows.js
-  - config/validations.disabled/js/30.validateYellows.js
-  - config/validations.disabled/yaml/01.somebodyTouched.yaml
-  - config/validations.disabled/yaml/01.validatePing.yaml
-  - config/validations.disabled/yaml/01.validatePingPorts.yaml
-  - config/validations.disabled/yaml/03.validateSemaphores.yaml
-  - config/validations.disabled/yaml/05.validateErrorFlows.yaml
-  - config/validations.disabled/yaml/14.validateCompareTimes.yaml
-  - CONTRIBUTING.md
-  - docs/images/logo.png
-  - docs/images/nAttrMon.png
-  - docs/images/nAttrMon.xcf
-  - lib/nattribute.js
-  - lib/nattributes.js
-  - lib/nattributevalue.js
-  - lib/ninput.js
-  - lib/nmain.js
-  - lib/nmonitoredobject.js
-  - lib/noutput.js
-  - lib/nplug.js
-  - lib/ntmplhelpers.js
-  - lib/nvalidation.js
-  - lib/nwarning.js
-  - lib/nwarnings.js
-  - LICENSE
-  - nattrmon.js
-  - nattrmon.yaml.sample
-  - nAttrmon_single.yaml.sample
-  - oJob_nAttrMon.yaml
-  - README.md
-  - tests/inputDBTest.yml
-  - tests/inputShellTest.yml
-  - tests/nattrmonTester.js
-  - tests/outputTest.yml
-  - tests/unitTest.js
-  - tests/unitTestYAML.js
-  - util/backupConfig.yaml
-  - util/clean.yaml
-  - util/genScripts.yaml
-  - util/loadDB2Elastic.js
-  - util/loadFile2Elastic.yaml
-  - util/templates/Object_nInput_template.js
-  - util/templates/Object_nOutput_template.js
-  - util/watchdog.yaml.hbs
+- .gitignore
+- .package.yaml
+- config/inputs/move_files_from_inputs_disabled.dummy
+- config/inputs.disabled/js/00.kube.init.js
+- config/inputs.disabled/js/00.raid.init.js
+- config/inputs.disabled/js/05.filesystemCount.js
+- config/inputs.disabled/js/07.logErrorAgg.js
+- config/inputs.disabled/js/09.filesystemcount.js
+- config/inputs.disabled/js/10.filesystem.js
+- config/inputs.disabled/js/10.filesystemcount.js
+- config/inputs.disabled/js/11.OSInfo.js
+- config/inputs.disabled/js/12.ShellCmd.js
+- config/inputs.disabled/js/13.ListDirFiles.js
+- config/inputs.disabled/js/22.fraud.snapshots.js
+- config/inputs.disabled/js/41.fms.rulestatus.js
+- config/inputs.disabled/yaml/01.ping.yaml
+- config/inputs.disabled/yaml/01.test.yaml
+- config/inputs.disabled/yaml/02.showIgnoredPlugs.yaml
+- config/inputs.disabled/yaml/02.test.yaml
+- config/inputs.disabled/yaml/03.AbnormalLoads.yaml
+- config/inputs.disabled/yaml/03.flows.yaml
+- config/inputs.disabled/yaml/03.LoadingProgress.yaml
+- config/inputs.disabled/yaml/03.semaphores.yaml
+- config/inputs.disabled/yaml/04.db.appadm.yaml
+- config/inputs.disabled/yaml/09.memory.yaml
+- config/inputs.disabled/yaml/10.filesystem.yaml
+- config/inputs.disabled/yaml/10.filesystemcount.fixed.yaml
+- config/inputs.disabled/yaml/10.filesystemcount.mobsubscribers.yaml
+- config/inputs.disabled/yaml/10.httpjson.yaml
+- config/inputs.disabled/yaml/10.osinfo.yaml
+- config/inputs.disabled/yaml/10.sessions.yaml
+- config/inputs.disabled/yaml/11.times.yaml
+- config/inputs.disabled/yaml/12.connections.yaml
+- config/inputs.disabled/yaml/12.shellCmd.yaml
+- config/inputs.disabled/yaml/13.RAIDSchedulers.yaml
+- config/inputs.disabled/yaml/15.endpoint_nAttrMon.yaml
+- config/inputs.disabled/yaml/15.remote_nAttrMon.yaml
+- config/inputs.disabled/yaml/20.dmPerformance.yaml
+- config/inputs.disabled/yaml/25.bpmDebugFlags.yaml
+- config/inputs.disabled/yaml/25.cbpmDebugFlags.yaml
+- config/inputs.disabled/yaml/26.endpoints.yaml
+- config/move_files_from_the_disabled_folders.dummy
+- config/nattrmonignore.js.sample
+- config/objects/nInput_AFPing.js
+- config/objects/nInput_BPMDebugChecks.js
+- config/objects/nInput_BPMNRunningFlows.js
+- config/objects/nInput_CBPMDebugChecks.js
+- config/objects/nInput_CBPMRunningFlows.js
+- config/objects/nInput_CBPMSemaphores.js
+- config/objects/nInput_Channel.js
+- config/objects/nInput_CompareTimes.js
+- config/objects/nInput_DB.js
+- config/objects/nInput_DMPerformance.js
+- config/objects/nInput_EndPoints.js
+- config/objects/nInput_Filesystem.js
+- config/objects/nInput_FilesystemCount.js
+- config/objects/nInput_FMSRuleStatus.js
+- config/objects/nInput_HTTPJson.js
+- config/objects/nInput_IMAbnormalLoadings.js
+- config/objects/nInput_IMLoadingsProgress.js
+- config/objects/nInput_IMMemory.js
+- config/objects/nInput_Kube_Events.js
+- config/objects/nInput_LogErrorAgg.js
+- config/objects/nInput_OSInfo.js
+- config/objects/nInput_RAIDMemory.js
+- config/objects/nInput_RemoteChannel.js
+- config/objects/nInput_RunningFlows.js
+- config/objects/nInput_Schedulers.js
+- config/objects/nInput_Semaphores.js
+- config/objects/nInput_Sessions.js
+- config/objects/nInput_Shell.js
+- config/objects/nOutput_Channels.js
+- config/objects/nOutput_DSV.js
+- config/objects/nOutput_EmailWarnings.js
+- config/objects/nOutput_ES.js
+- config/objects/nOutput_H2.js
+- config/objects/nOutput_HTMLStatus.js
+- config/objects/nOutput_HTTP.js
+- config/objects/nOutput_HTTP_HealthZ.js
+- config/objects/nOutput_HTTP_JSON.js
+- config/objects/nOutput_HTTP_Metrics.js
+- config/objects/nOutput_HTTP_Status.js
+- config/objects/nOutput_Log.js
+- config/objects/nOutput_Notifications.js
+- config/objects/nOutput_Oracle.js
+- config/objects/nOutput_RemoteChannel.js
+- config/objects/nOutput_Slack.js
+- config/objects/nOutput_Stdout.js
+- config/objects/nOutput_WarnsHistory.js
+- config/objects/nValidation_AFPing.js
+- config/objects/nValidation_Generic.js
+- config/objects/nValidation_Semaphores.js
+- config/objects/nValidation_Yellows.js
+- config/objects.assets/noutputemailwarnings/logo.png
+- config/objects.assets/noutputemailwarnings/warningEmailTemplate.hbs
+- config/objects.assets/noutputhttp/css/bootstrap-theme.min.css
+- config/objects.assets/noutputhttp/css/bootstrap.min.css
+- config/objects.assets/noutputhttp/css/font-awesome.min.css
+- config/objects.assets/noutputhttp/css/nattrmon.css
+- config/objects.assets/noutputhttp/dashboard.css
+- config/objects.assets/noutputhttp/favicon.png
+- config/objects.assets/noutputhttp/fonts/fontawesome-webfont.eot
+- config/objects.assets/noutputhttp/fonts/fontawesome-webfont.svg
+- config/objects.assets/noutputhttp/fonts/fontawesome-webfont.ttf
+- config/objects.assets/noutputhttp/fonts/fontawesome-webfont.woff
+- config/objects.assets/noutputhttp/fonts/fontawesome-webfont.woff2
+- config/objects.assets/noutputhttp/fonts/FontAwesome.otf
+- config/objects.assets/noutputhttp/fonts/glyphicons-halflings-regular.eot
+- config/objects.assets/noutputhttp/fonts/glyphicons-halflings-regular.svg
+- config/objects.assets/noutputhttp/fonts/glyphicons-halflings-regular.ttf
+- config/objects.assets/noutputhttp/fonts/glyphicons-halflings-regular.woff
+- config/objects.assets/noutputhttp/fonts/icon.eot
+- config/objects.assets/noutputhttp/fonts/icon.svg
+- config/objects.assets/noutputhttp/fonts/icon.ttf
+- config/objects.assets/noutputhttp/fonts/icon.woff
+- config/objects.assets/noutputhttp/history.html
+- config/objects.assets/noutputhttp/index.html
+- config/objects.assets/noutputhttp/js/angular-animate.min.js
+- config/objects.assets/noutputhttp/js/angular.min.js
+- config/objects.assets/noutputhttp/js/bootstrap.min.js
+- config/objects.assets/noutputhttp/js/holder.min.js
+- config/objects.assets/noutputhttp/js/ie10-viewport-bug-workaround.js
+- config/objects.assets/noutputhttp/js/jquery.min.js
+- config/objects.assets/noutputhttp/js/nattrmon_js.js
+- config/objects.assets/noutputhttp/js/retina.min.js
+- config/objects.assets/noutputhttp/logout.html
+- config/objects.assets/noutputhttp/now.html
+- config/objects.assets/noutputhttp/plugs.html
+- config/objects.assets/noutputstatus/green.md
+- config/objects.assets/noutputstatus/logo.png
+- config/objects.assets/noutputstatus/red.md
+- config/objects.assets/noutputstatus/status.md
+- config/objects.assets/noutputstatus/yellow.md
+- config/objects.disabled/move_files_from_objects.dummy
+- config/outputs/move_files_from_outputs_disabled.dummy
+- config/outputs.disabled/js/00.init.js
+- config/outputs.disabled/js/05.es.log.js
+- config/outputs.disabled/js/09.channels.js
+- config/outputs.disabled/js/1.oracleoutput.js
+- config/outputs.disabled/js/4.logFile.js
+- config/outputs.disabled/yaml/00.httpAll.yaml
+- config/outputs.disabled/yaml/00.httphealthz.yaml
+- config/outputs.disabled/yaml/01.h2output.yaml
+- config/outputs.disabled/yaml/02.httpjson.yaml
+- config/outputs.disabled/yaml/03.http.yaml
+- config/outputs.disabled/yaml/03.pushChannels.yaml
+- config/outputs.disabled/yaml/04.csvFile.yaml
+- config/outputs.disabled/yaml/04.emailWarnings.yaml
+- config/outputs.disabled/yaml/04.httpmetrics.yaml
+- config/outputs.disabled/yaml/05.es.values.yaml
+- config/outputs.disabled/yaml/05.es.warnings.yaml
+- config/outputs.disabled/yaml/08.warnsHistory.yaml
+- config/outputs.disabled/yaml/09.channels.yaml
+- config/validations/move_files_from_validations_disabled.dummy
+- config/validations.disabled/js/01.validatePing.js
+- config/validations.disabled/js/03.validateSemaphores.js
+- config/validations.disabled/js/04.validateErrorFlows.js
+- config/validations.disabled/js/30.validateYellows.js
+- config/validations.disabled/yaml/01.somebodyTouched.yaml
+- config/validations.disabled/yaml/01.validatePing.yaml
+- config/validations.disabled/yaml/01.validatePingPorts.yaml
+- config/validations.disabled/yaml/03.validateSemaphores.yaml
+- config/validations.disabled/yaml/05.validateErrorFlows.yaml
+- config/validations.disabled/yaml/14.validateCompareTimes.yaml
+- CONTRIBUTING.md
+- docs/images/logo.png
+- docs/images/nAttrMon.png
+- docs/images/nAttrMon.xcf
+- lib/nattribute.js
+- lib/nattributes.js
+- lib/nattributevalue.js
+- lib/ninput.js
+- lib/nmain.js
+- lib/nmonitoredobject.js
+- lib/noutput.js
+- lib/nplug.js
+- lib/ntmplhelpers.js
+- lib/nvalidation.js
+- lib/nwarning.js
+- lib/nwarnings.js
+- LICENSE
+- nattrmon.js
+- nattrmon.yaml.sample
+- nAttrmon_single.yaml.sample
+- oJob_nAttrMon.yaml
+- README.md
+- tests/inputDBTest.yml
+- tests/inputShellTest.yml
+- tests/nattrmonTester.js
+- tests/outputTest.yml
+- tests/unitTest.js
+- tests/unitTestYAML.js
+- util/backupConfig.yaml
+- util/clean.yaml
+- util/genScripts.yaml
+- util/loadDB2Elastic.js
+- util/loadFile2Elastic.yaml
+- util/templates/Object_nInput_template.js
+- util/templates/Object_nOutput_template.js
+- util/watchdog.yaml.hbs
 filesHash:
   .gitignore: 39785e9c0e444387c904a807d9e506a0215ca099
   config/inputs/move_files_from_inputs_disabled.dummy: b858cb282617fb0956d960215c8e84d1ccf909c6
@@ -284,7 +284,7 @@ filesHash:
   config/objects/nInput_IMAbnormalLoadings.js: b7d86f2f5b70e218de6967a52114cac15fe5b570
   config/objects/nInput_IMLoadingsProgress.js: 1987633b3cf1ee4f8a1f74a7441f386637aa93a6
   config/objects/nInput_IMMemory.js: 69f6e3d39aa5a75c83d2e4f8e2ece0b28df7e3f1
-  config/objects/nInput_Kube_Events.js: aea00ecce32d285bca1531b8015cee0ad314078c
+  config/objects/nInput_Kube_Events.js: 97ddcc52a2f23c882afef8babde1e85e305cfa4d
   config/objects/nInput_LogErrorAgg.js: 43e3809d524752c55f7c58403661beb8e623f52b
   config/objects/nInput_OSInfo.js: b8548f6d69dea80553fbef3e6e8d6552c15362e9
   config/objects/nInput_RAIDMemory.js: 12772f9c7775672dfd4a420db336d04621e2dc78
