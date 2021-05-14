@@ -1,9 +1,10 @@
 
 /**
  */
-var nOutput_Stdout = function() {
-	if (isUnDef(aMap) || !isObject(aMap)) aMap = {};
+var nOutput_Stdout = function(aMap) {
+	aMap = _$(aMap).isMap().default({});
 	this.lastTime = {};
+	this.outputTemplate = "{{name}}: {{{value}}} ({{date}})";
 
 	nOutput.call(this, this.output);
 };
@@ -20,7 +21,7 @@ nOutput_Stdout.prototype.output = function(scope, args) {
 	};
 
 	var writeLine = (line) => {
-		print(this.afilename, line + "\n");
+		print(line + "\n");
 	};
 
 	var cvals = scope.getCurrentValues();
