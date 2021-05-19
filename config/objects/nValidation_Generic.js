@@ -100,7 +100,7 @@ nValidation_Generic.prototype.checkEntry = function(ret, k, v, args) {
                     var generateWarning = true;
                     var data = args;
 
-                    var evalCond = (aV) => { generateWarning = aV; };
+                    var evalCond = (aV) => { generateWarning = (isDef(check.not) && check.not) ? !aV : aV; };
 
                     data.value = val;
                     data.originalValue = v.val;
