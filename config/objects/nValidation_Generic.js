@@ -177,7 +177,7 @@ nValidation_Generic.prototype.checkEntry = function(ret, k, v, args) {
                         var warn = new nWarning(warnLevel, warnTitle, warnDesc);
 
                         if (isDef(check.healing) && isObject(check.healing)) {
-                            var hc = sha1(stringify(check.healing, void 0, ""));
+                            var hc = sha1(warnLevel + md5(check.expr) + stringify(check.healing, void 0, ""));
 
                             var cHealing = clone(check.healing);
                             traverse(cHealing, (aK, aV, aP, aO) => {
@@ -198,7 +198,8 @@ nValidation_Generic.prototype.checkEntry = function(ret, k, v, args) {
                                 }
                             });
 
-                            if (!(nattrmon.isNotified(warnTitle, hc))) {
+                            var runHealing = !(nattrmon.isNotified(warnTitle, hc));
+                            if (runHealing) {
                                 try {
                                     if (!(nattrmon.setNotified(warnTitle, hc))) {
                                         if (isUnDef(warn.notified)) warn.notified = {};
