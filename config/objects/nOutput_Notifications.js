@@ -57,17 +57,20 @@ nOutput_Notifications.prototype.output = function(scope, args, meta) {
             var parent = this;
 
             selec.select((w) => {
-                if (!nattrmon.isNotified(w.title, parent.params.__notifyID) && isDef(notif.userID)) {
+                var nID = parent.params.__notifyID + notif.userID + w.level;
+
+                if (isDef(notif.userID) && !nattrmon.isNotified(w.title, nID)) {
                     // Prepare message for notification
                     var message = templify(notif.message, { warn: w });
                     try {
                         // Send notification
                         var ph = new Pushover(parent.params.APIToken);
                         ph.send(notif.userID, message);
+                        log("nOutput_Notifications: Notification " + nID + " sent.");
 
                         // Notify that was been sent successfully
                         //w.notified[parent.__notifyID] = true;
-                        nattrmon.setNotified(w.title, parent.params.__notifyID);
+                        nattrmon.setNotified(w.title, nID);
                         //nattrmon.getWarnings(true).setWarningByName(w.title, w);
                     } catch(e) {
                         logErr("nOutput_Notifications: [" + stringify(notif, void 0, "") + "] " + String(e));
@@ -77,4 +80,5 @@ nOutput_Notifications.prototype.output = function(scope, args, meta) {
         }
     }
 
+    return 1;
 };
