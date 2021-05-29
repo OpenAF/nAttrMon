@@ -44,7 +44,7 @@ nOutput_Slack.prototype.output = function(scope, args, meta) {
             var parent = this;
 
             selec.select((w) => {
-                if (!nattrmon.isNotified(w.title, parent.params.__notifyID) && isDef(notif.webhook) && w.level.toUpperCase() != "CLOSED") {
+                if (isDef(notif.webhook) && !nattrmon.isNotified(w.title, w.level + parent.params.__notifyID + md5(notif.webhook))) {
                     // Prepare message for notification
                     var aPreMessage = templify("*_{{level}}_ | {{{title}}}*\n{{{description}}}", w);
                     var aContext    = templify("_created on {{createdate}}_", w);
@@ -67,6 +67,9 @@ nOutput_Slack.prototype.output = function(scope, args, meta) {
                     case "INFO":
                         aPreMessage = ":information_source: " + aPreMessage;
                         break;
+                    case "CLOSED":
+                        aPreMessage = ":thumbsup: " + aPreMessage;
+                        break;
                     }
 
                     try {
@@ -84,7 +87,7 @@ nOutput_Slack.prototype.output = function(scope, args, meta) {
                         var restReply = $rest().post(notif.webhook, restMsg);
                         if (restReply != "ok") logWarn("Reply from Slack was not expected: " + stringify(restReply, ""));
                         // Notify that was been sent successfully
-                        nattrmon.setNotified(w.title, parent.params.__notifyID);
+                        nattrmon.setNotified(w.title, w.level + parent.params.__notifyID + md5(notif.webhook));
                     } catch(e) {
                         logErr("nOutput_Slack: [" + stringify(notif, void 0, "") + "] " + String(e));
                     }
