@@ -23,12 +23,12 @@ jobs:
   from:
   - nAttrMon Start
   exec: |
-    ["nattrmon::trigger", "nattrmon::lvals", "nattrmon::cvals", "nattrmon::attributes", "nattrmon::warnings", "nattrmon::plugs", "nattrmon::ps"]
+    ["nattrmon::trigger", "nattrmon::lvals", "nattrmon::lvals::buffer", "nattrmon::cvals", "nattrmon::cvals::buffer", "nattrmon::attributes", "nattrmon::warnings", "nattrmon::warnings::buffer", "nattrmon::plugs", "nattrmon::ps"]
     .filter(r => r.startsWith("nattrmon::"))
     .forEach(r => {
       global.nattrmon.debug("Waiting for " + r + "...");
       $ch(r).waitForJobs();
-      sleep(50, true);
+      sleep(100, true);
     });
     global.nattrmon.debug("Stopping...");
     //global.nattrmon.stop();
