@@ -214,7 +214,7 @@ nValidation_Generic.prototype.checkEntry = function(ret, k, v, args) {
                                     }
     
                                 } catch(e) {
-                                    logError("Healing job failed for '" + warnTitle + "' with exception: " + String(e));
+                                    logErr("Healing job failed for '" + warnTitle + "' with exception: " + String(e));
                                     if (cHealing.warnTitleTemplate) {
                                         sprint(merge(data, { exceptionMessage: String(e) }));
                                         var healWarnTitle = templify(cHealing.warnTitleTemplate, merge(data, { exceptionMessage: String(e) }));
