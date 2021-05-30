@@ -177,7 +177,7 @@ nValidation_Generic.prototype.checkEntry = function(ret, k, v, args) {
                         var warn = new nWarning(warnLevel, warnTitle, warnDesc);
 
                         if (isDef(check.healing) && isObject(check.healing)) {
-                            var hc = sha1(warnLevel + md5(check.expr) + stringify(check.healing, void 0, ""));
+                            var hc = sha1(warnLevel + md5(warnTitle) + stringify(check.healing, void 0, ""));
 
                             var cHealing = clone(check.healing);
                             traverse(cHealing, (aK, aV, aP, aO) => {
@@ -198,10 +198,17 @@ nValidation_Generic.prototype.checkEntry = function(ret, k, v, args) {
                                 }
                             });
 
-                            var runHealing = !(nattrmon.isNotified(warnTitle, hc));
+                            var runHealing = isUnDef(nattrmon.isNotified(warnTitle, hc));
+                            if (!runHealing && isNumber(cHealing.retryInMS)) {
+                                var w = nattrmon.isNotified(warnTitle, hc);
+                                if (isDef(w) && now() - (new Date(w)).getTime() > cHealing.retryInMS) {
+                                    runHealing = true;
+                                    logWarn("Retrying healing for '" + warnTitle + "'...");
+                                }
+                            }
                             if (runHealing) {
                                 try {
-                                    if (!(nattrmon.setNotified(warnTitle, hc))) {
+                                    if (!(nattrmon.setNotified(warnTitle, hc, new Date()))) {
                                         if (isUnDef(warn.notified)) warn.notified = {};
                                         warn.notified[hc] = true;
                                     }
@@ -213,7 +220,6 @@ nValidation_Generic.prototype.checkEntry = function(ret, k, v, args) {
                                         logWarn("Running healing ojob for '" + warnTitle + "'");
                                         oJobRunFile(cHealing.execOJob, cHealing.execArgs);
                                     }
-    
                                 } catch(e) {
                                     logErr("Healing job failed for '" + warnTitle + "' with exception: " + String(e));
                                     if (cHealing.warnTitleTemplate) {
