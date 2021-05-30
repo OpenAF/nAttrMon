@@ -29,10 +29,16 @@ nOutput_Slack.prototype.output = function(scope, args, meta) {
             var selec = $from(warns);
 
             if (isDef(notif.warnLevel)) {
-                var level = notif.warnLevel.toLowerCase();
-                level = level.charAt(0).toUpperCase() + level.slice(1);
-
-                selec = selec.equals("level", level);
+                if (isString(notif.warnLevel)) {
+                    notif.warnLevel = notif.warnLevel.split(",").map(r => r.trim());
+                }
+                if (isArray(notif.warnLevel)) {
+                    notif.warnLevel.forEach(l => {
+                        var level = l.toLowerCase();
+                        level = level.charAt(0).toUpperCase() + level.slice(1);
+                        selec = selec.orEquals("level", level);
+                    });
+                }
             } else {
                 selec = selec.equals("level", "High");
             }
