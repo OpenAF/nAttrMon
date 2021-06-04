@@ -99,7 +99,7 @@ nOutput_EmailWarnings.prototype.output = function (scope, args, meta) {
 				if (ws[wsi].title.match(this.excludeRE[erei])) { shouldEval = false; }
 			}			
 		}		
-		if (shouldEval && !nattrmon.isNotified(ws[wsi].title, this.instanceId) && this.warnTypes.indexOf(ws[wsi].level) >= 0) {
+		if (shouldEval && !nattrmon.isNotified(ws[wsi].title, ws[wsi].level + this.instanceId) && this.warnTypes.indexOf(ws[wsi].level) >= 0) {
 			shouldEmail = true;
 		}
 	}
@@ -171,13 +171,13 @@ nOutput_EmailWarnings.prototype.output = function (scope, args, meta) {
 										return { 
 											t: r.title, 
 											d: ow.format.string.distance(String(owarns[i][j].description), String(r.description)),
-											n: nattrmon.isNotified(r.title, parent.instanceId)
+											n: nattrmon.isNotified(r.title, r.level + parent.instanceId)
 										};
 									else
 										return {
 											t: r.title,
 											d: ow.format.string.distance(owarns[i][j].title, r.title),
-											n: nattrmon.isNotified(r.title, parent.instanceId)
+											n: nattrmon.isNotified(r.title, r.level + parent.instanceId)
 										};
 								}))
 								.less("d", (String(owarns[i][j].description).length * (this.groupBySimilarity/100)))
@@ -192,15 +192,15 @@ nOutput_EmailWarnings.prototype.output = function (scope, args, meta) {
 
 								if (isDef(this.alertUntilBySimilarity) && this.alertUntilBySimilarity > 0) {
 								 	if ($from(resDupls).equals("n", true).count() >= this.alertUntilBySimilarity) {
-										nattrmon.setNotified(owarns[i][j].title, this.instanceId);
+										nattrmon.setNotified(owarns[i][j].title, owarns[i][j].level + this.instanceId);
 									}
 								}
 							}
 
-							if (!nattrmon.isNotified(owarns[i][j].title, this.instanceId) && 
+							if (!nattrmon.isNotified(owarns[i][j].title, owarns[i][j].level + this.instanceId) && 
 								this.warnTypesShow.indexOf(owarns[i][j].level) >= 0) {
 									list.push(owarns[i][j]);
-									nattrmon.setNotified(owarns[i][j].title, this.instanceId);
+									nattrmon.setNotified(owarns[i][j].title, owarns[i][j].level + this.instanceId);
 									count++;
 							} 
 						}

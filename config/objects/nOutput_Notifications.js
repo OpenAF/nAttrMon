@@ -57,7 +57,7 @@ nOutput_Notifications.prototype.output = function(scope, args, meta) {
             var parent = this;
 
             selec.select((w) => {
-                var nID = parent.params.__notifyID + notif.userID + w.level;
+                var nID = w.level + parent.params.__notifyID + md5(notif.userID);
 
                 if (isDef(notif.userID) && !nattrmon.isNotified(w.title, nID)) {
                     // Prepare message for notification

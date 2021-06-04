@@ -26,9 +26,11 @@ jobs:
     ["nattrmon::trigger", "nattrmon::lvals", "nattrmon::lvals::buffer", "nattrmon::cvals", "nattrmon::cvals::buffer", "nattrmon::attributes", "nattrmon::warnings", "nattrmon::warnings::buffer", "nattrmon::plugs", "nattrmon::ps"]
     .filter(r => r.startsWith("nattrmon::"))
     .forEach(r => {
-      global.nattrmon.debug("Waiting for " + r + "...");
-      $ch(r).waitForJobs();
-      sleep(100, true);
+      if ($ch().list().indexOf(r) >= 0) {
+        global.nattrmon.debug("Waiting for " + r + "...");
+        $ch(r).waitForJobs();
+        sleep(100, true);
+      }
     });
     global.nattrmon.debug("Stopping...");
     //global.nattrmon.stop();
