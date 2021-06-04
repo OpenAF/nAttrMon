@@ -33,7 +33,8 @@ jobs:
       }
     });
     global.nattrmon.debug("Stopping...");
-    //global.nattrmon.stop();
+    global.nattrmon.stop();
+    exit(0);
     //log("nAttrMon stopped.");
     //print(new Date() + " | Stopping.");
 
@@ -56,8 +57,8 @@ jobs:
     single: true
   exec    : |
     var fnJob = j => {
-      if (isMap(j) && isDef(j.execJob) && isUnDef(j.exec)) {
-        j.exec  = "var r = $job('teste', args);\n";
+      if (isMap(j) && isDef(j.execJob) && isUnDef(j.exec) && isUnDef(j.execFrom)) {
+        j.exec  = "var r = $job('" + j.execJob + "', args);\n";
         j.exec += "if (isMap(r)) {\n";
         j.exec += "   if (isDef(r.set)) {\n";
         j.exec += "      r = r.set;\n";
@@ -131,6 +132,18 @@ jobs:
     if (isDef(args.__NAM_LOGCONSOLE)) global.__NAM_LOGCONSOLE = Boolean(args.__NAM_LOGCONSOLE); else global.__NAM_LOGCONSOLE = false;
     if (isDef(args.__NAM_LOG_ASYNC)) __logFormat.async = Boolean(args.__NAM_LOG_ASYNC); else global.__NAM_LOG_ASYNC = true;
     if (isDef(args.__NAM_MAXPLUGEXECUTE_TIME)) global.__NAM_MAXPLUGEXECUTE_TIME = Number(args.__NAM_MAXPLUGEXECUTE_TIME);
+
+    (function() {
+      print("Applying parameters:");
+      $from(af.fromJavaArray( af.getScopeIds() ))
+      .starts("__NAM_")
+      .sort()
+      .select(r => { 
+        print(r + ": " + global[r]);
+      });
+
+      print(repeat(80, "-"));
+    })();
 
     if (isUnDef(args.withDirectory)) {
       global.nattrmon = new nAttrMon(global.NATTRMON_SUBHOME + "/config", global.__NAM_DEBUG);
