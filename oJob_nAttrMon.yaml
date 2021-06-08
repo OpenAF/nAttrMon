@@ -23,6 +23,11 @@ jobs:
   from:
   - nAttrMon Start
   exec: |
+    if (isString(args.onStart)) args.onStart = [ args.onStart ];
+    if (isArray(args.onStart)) args.onStart.forEach(j => {
+      args = $job(j, args);
+    });
+
     ["nattrmon::trigger", "nattrmon::lvals", "nattrmon::lvals::buffer", "nattrmon::cvals", "nattrmon::cvals::buffer", "nattrmon::attributes", "nattrmon::warnings", "nattrmon::warnings::buffer", "nattrmon::plugs", "nattrmon::ps"]
     .filter(r => r.startsWith("nattrmon::"))
     .forEach(r => {
@@ -34,6 +39,12 @@ jobs:
     });
     global.nattrmon.debug("Stopping...");
     global.nattrmon.stop();
+
+    if (isString(args.onStop)) args.onStop = [ args.onStop ];
+    if (isArray(args.onStop)) args.onStop.forEach(j => {
+      args = $job(j, args);
+    });
+
     exit(0);
     //log("nAttrMon stopped.");
     //print(new Date() + " | Stopping.");
@@ -134,8 +145,8 @@ jobs:
     if (isDef(args.__NAM_MAXPLUGEXECUTE_TIME)) global.__NAM_MAXPLUGEXECUTE_TIME = Number(args.__NAM_MAXPLUGEXECUTE_TIME);
 
     (function() {
-      print("Applying parameters:");
-      $from(af.fromJavaArray( af.getScopeIds() ))
+      print("Reapplying parameters:");
+      $from(Object.keys(args))
       .starts("__NAM_")
       .sort()
       .select(r => { 

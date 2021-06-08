@@ -55,12 +55,20 @@ nattrmon: &NATTRMON
 # -------------------------
 
 todo:
-- nAttrMon Prepare shutdown
+- name: nAttrMon Prepare shutdown
 - name: nAttrMon Init
   args: *INIT
 
-- Add plugs
-- nAttrMon Run Single
+- name: Add plugs
+- name: nAttrMon Run Single
+  #args:
+  #  onStart:
+  #  - job 1
+  #  - job 2
+  #  onStop:
+  #  - job 3
+  #  - job 4
+  
 # Comment "Run Single" and uncomment "Start" for daemon mode
 #- nAttrMon Start
 
