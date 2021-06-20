@@ -28,13 +28,16 @@ jobs:
       args = $job(j, args);
     });
 
-    ["nattrmon::trigger", "nattrmon::lvals", "nattrmon::lvals::buffer", "nattrmon::cvals", "nattrmon::cvals::buffer", "nattrmon::attributes", "nattrmon::warnings", "nattrmon::warnings::buffer", "nattrmon::plugs", "nattrmon::ps"]
-    .filter(r => r.startsWith("nattrmon::"))
+    $ch("nattrmon::trigger").waitForJobs();
+    ow.ch.utils.flushBuffer("nattrmon::cvals::__bufferTransit");
+    ow.ch.utils.flushBuffer("nattrmon::warnings::__bufferTransit");
+
+    ["nattrmon::trigger", "nattrmon::plugs", "nattrmon::lvals", "nattrmon::cvals", "nattrmon::warnings", "nattrmon::lvals::buffer", "nattrmon::cvals::buffer", "nattrmon::warnings::buffer", "nattrmon::attributes", "nattrmon::warnings", "nattrmon::ps"]
     .forEach(r => {
       if ($ch().list().indexOf(r) >= 0) {
         global.nattrmon.debug("Waiting for " + r + "...");
-        $ch(r).waitForJobs();
-        sleep(100, true);
+        $ch(r).waitForJobs(2500);
+        sleep(250, true);
       }
     });
     global.nattrmon.debug("Stopping...");
