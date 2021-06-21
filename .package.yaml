@@ -237,7 +237,7 @@ filesHash:
   util/genScripts.yaml: 377f153b934e21dcf7968047300e0a2f5d96e635
   util/clean.yaml: 8b75ebd3fb27c08b040600f120b642303ccfe470
   util/loadDB2Elastic.js: 190b68c03e71fa859df71429da4c31035f20ce94
-  oJob_nAttrMon.yaml: 078f3233cb13c0f2dfe601b2953445316dbcdc9c
+  oJob_nAttrMon.yaml: 493cfc94419a0d57a6ee1a4f55409e76b9efb2b7
   config/move_files_from_the_disabled_folders.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
   config/outputs/move_files_from_outputs_disabled.dummy: b858cb282617fb0956d960215c8e84d1ccf909c6
   config/nattrmonignore.js.sample: dad08a2c3a4fdba2f45c5d357aa2ebb7971d73e5

@@ -37,8 +37,8 @@ jobs:
     .forEach(r => {
       if ($ch().list().indexOf(r) >= 0) {
         global.nattrmon.debug("Waiting for " + r + "...");
-        $ch(r).waitForJobs(2500);
-        sleep(250, true);
+        $ch(r).waitForJobs();
+        sleep(100, true);
       }
     });
     global.nattrmon.debug("Stopping...");
