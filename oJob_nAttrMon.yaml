@@ -28,8 +28,12 @@ jobs:
       args = $job(j, args);
     });
 
-    ["nattrmon::trigger", "nattrmon::lvals", "nattrmon::lvals::buffer", "nattrmon::cvals", "nattrmon::cvals::buffer", "nattrmon::attributes", "nattrmon::warnings", "nattrmon::warnings::buffer", "nattrmon::plugs", "nattrmon::ps"]
-    .filter(r => r.startsWith("nattrmon::"))
+    $ch("nattrmon::trigger").waitForJobs();
+    if ($ch().list().indexOf("nattrmon::cvals::__bufferTransit") >= 0) ow.ch.utils.flushBuffer("nattrmon::cvals::__bufferTransit");
+    if ($ch().list().indexOf("nattrmon::lvals::__bufferTransit") >= 0) ow.ch.utils.flushBuffer("nattrmon::lvals::__bufferTransit");
+    if ($ch().list().indexOf("nattrmon::warnings::__bufferTransit") >= 0) ow.ch.utils.flushBuffer("nattrmon::warnings::__bufferTransit");
+
+    ["nattrmon::trigger", "nattrmon::plugs", "nattrmon::lvals", "nattrmon::cvals", "nattrmon::warnings", "nattrmon::lvals::buffer", "nattrmon::cvals::buffer", "nattrmon::warnings::buffer", "nattrmon::attributes", "nattrmon::warnings", "nattrmon::ps"]
     .forEach(r => {
       if ($ch().list().indexOf(r) >= 0) {
         global.nattrmon.debug("Waiting for " + r + "...");
