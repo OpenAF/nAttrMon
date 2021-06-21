@@ -29,8 +29,9 @@ jobs:
     });
 
     $ch("nattrmon::trigger").waitForJobs();
-    ow.ch.utils.flushBuffer("nattrmon::cvals::__bufferTransit");
-    ow.ch.utils.flushBuffer("nattrmon::warnings::__bufferTransit");
+    if ($ch().list().indexOf("nattrmon::cvals::__bufferTransit") >= 0) ow.ch.utils.flushBuffer("nattrmon::cvals::__bufferTransit");
+    if ($ch().list().indexOf("nattrmon::lvals::__bufferTransit") >= 0) ow.ch.utils.flushBuffer("nattrmon::lvals::__bufferTransit");
+    if ($ch().list().indexOf("nattrmon::warnings::__bufferTransit") >= 0) ow.ch.utils.flushBuffer("nattrmon::warnings::__bufferTransit");
 
     ["nattrmon::trigger", "nattrmon::plugs", "nattrmon::lvals", "nattrmon::cvals", "nattrmon::warnings", "nattrmon::lvals::buffer", "nattrmon::cvals::buffer", "nattrmon::warnings::buffer", "nattrmon::attributes", "nattrmon::warnings", "nattrmon::ps"]
     .forEach(r => {
