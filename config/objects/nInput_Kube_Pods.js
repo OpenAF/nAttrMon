@@ -42,6 +42,7 @@ nInput_Kube_Pods.prototype.input = function(scope, args) {
     var res = o.map(r=>({
        namespace   : r.Metadata.Namespace,
        name        : r.Metadata.Name,
+       generateName: r.Metadata.GenerateName,
        creationDate: r.Metadata.CreationTimestamp,
        status      : r.Status.Phase,
        podIP       : r.Status.PodIP,
