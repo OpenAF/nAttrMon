@@ -7,6 +7,7 @@
  *    - notifications.warnLevel (String)   The warn level for which this entry will send a notification (if not defined defaults to HIGH).\
  *    - notifications.warnTitle (RegExp)   A regular expression for the warn titles to trigger this notification (if not defined defaults to all).\
  *    - notifications.webhook   (String)   A pushover user id.\
+ *    - notifications.simple    (Boolean)  If true the slack notification will be sent with the simplest protocol (false).\
  *    (deprecated) - notifications.message   (Template) A template where the variable "warn" is provided as each warning entry (e.g. title, description, ...).\
  * \
  * </odoc>
@@ -79,17 +80,22 @@ nOutput_Slack.prototype.output = function(scope, args, meta) {
                     }
 
                     try {
-                        var restMsg = { blocks: [
-                               {
-                                  type: "section",
-                                  text: { type: "mrkdwn", text: aPreMessage }
-                               },
-                               {
-                                  type: "context",
-                                  elements: [ { type: "mrkdwn", text: aContext } ]
-                               }
-                        ] };
-
+                        var restMsg;
+                        if (notif.simple) {
+                            restMsg = { text: aPreMessage + "\n" + aContext };
+                        } else {
+                            restMsg = { blocks: [
+                                {
+                                    type: "section",
+                                    text: { type: "mrkdwn", text: aPreMessage }
+                                },
+                                {
+                                    type: "context",
+                                    elements: [ { type: "mrkdwn", text: aContext } ]
+                                }
+                            ] };
+                        }
+                        
                         var restReply = $rest().post(notif.webhook, restMsg);
                         if (restReply != "ok") logWarn("Reply from Slack was not expected: " + stringify(restReply, ""));
                         // Notify that was been sent successfully

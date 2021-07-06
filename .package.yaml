@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20210621'
+version: '20210705'
 dependencies:
   openaf: '>=20210515'
 files:
@@ -311,7 +311,7 @@ filesHash:
   config/objects/nOutput_Notifications.js: 4a20e3ee7334f78b9b7ab36730000530fb63d598
   config/objects/nOutput_Oracle.js: ab0f2fe7958952437ae93030715633858462269f
   config/objects/nOutput_RemoteChannel.js: 8dcadaf89c78f31707c45d615a3941ce0547cd33
-  config/objects/nOutput_Slack.js: a77bc2bd5c7cc3163c5fc5ca24e18cd1f752ba58
+  config/objects/nOutput_Slack.js: d6bd7a0409ddb801fb2f552bdc93f84d6789442e
   config/objects/nOutput_Stdout.js: eddd09834507308573f289b6a4c92e7cdd6b1b70
   config/objects/nOutput_WarnsHistory.js: 7634a5ad57297289e5c13eca8993b5fb8bc13d51
   config/objects/nValidation_AFPing.js: f48325d605e693dee3ab2912224cda0fde11e490
