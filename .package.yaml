@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20210705'
+version: '20210711'
 dependencies:
   openaf: '>=20210515'
 files:
@@ -87,6 +87,7 @@ files:
 - config/objects/nInput_Kube_Pods.js
 - config/objects/nInput_LogErrorAgg.js
 - config/objects/nInput_OSInfo.js
+- config/objects/nInput_RAIDGCMemory.js
 - config/objects/nInput_RAIDMemory.js
 - config/objects/nInput_RemoteChannel.js
 - config/objects/nInput_RunningFlows.js
@@ -288,6 +289,7 @@ filesHash:
   config/objects/nInput_Kube_Pods.js: db140281231000473e0fed563f6fce6be7c623cc
   config/objects/nInput_LogErrorAgg.js: 43e3809d524752c55f7c58403661beb8e623f52b
   config/objects/nInput_OSInfo.js: b8548f6d69dea80553fbef3e6e8d6552c15362e9
+  config/objects/nInput_RAIDGCMemory.js: 257e44d45d3fe70bcafde29efac92a57d3702e6f
   config/objects/nInput_RAIDMemory.js: 12772f9c7775672dfd4a420db336d04621e2dc78
   config/objects/nInput_RemoteChannel.js: 42b87110cc2a584907920c79c2ddfb49c1e92383
   config/objects/nInput_RunningFlows.js: 7d8d77a702b4f9f2f719679052cba240798fa5f8
@@ -409,7 +411,7 @@ filesHash:
   nattrmon.js: 0577704f46097906a7f715fd8bc8c913278e8b08
   nattrmon.yaml.sample: d3358e316e84b31dcab07d11d1957742815bee33
   nAttrmon_single.yaml.sample: 56e31c6102c90bdad55b434247848027a7adb69d
-  oJob_nAttrMon.yaml: 493cfc94419a0d57a6ee1a4f55409e76b9efb2b7
+  oJob_nAttrMon.yaml: 3f8cf3b418a0fa0ac9e76c2a0122aaf1bef8621c
   README.md: b0fd23513e7f58f34f33aa9f393c188fd8b009a0
   tests/inputDBTest.yml: c38616606dc5956e449189d11f8e661170f94dfb
   tests/inputShellTest.yml: ce643955982cb16b53a8843acd3549466e5cddf5

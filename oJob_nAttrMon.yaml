@@ -23,11 +23,6 @@ jobs:
   from:
   - nAttrMon Start
   exec: |
-    if (isString(args.onStart)) args.onStart = [ args.onStart ];
-    if (isArray(args.onStart)) args.onStart.forEach(j => {
-      args = $job(j, args);
-    });
-
     $ch("nattrmon::trigger").waitForJobs();
     if ($ch().list().indexOf("nattrmon::cvals::__bufferTransit") >= 0) ow.ch.utils.flushBuffer("nattrmon::cvals::__bufferTransit");
     if ($ch().list().indexOf("nattrmon::lvals::__bufferTransit") >= 0) ow.ch.utils.flushBuffer("nattrmon::lvals::__bufferTransit");
@@ -41,13 +36,14 @@ jobs:
         sleep(100, true);
       }
     });
-    global.nattrmon.debug("Stopping...");
-    global.nattrmon.stop();
 
     if (isString(args.onStop)) args.onStop = [ args.onStop ];
     if (isArray(args.onStop)) args.onStop.forEach(j => {
       args = $job(j, args);
     });
+
+    global.nattrmon.debug("Stopping...");
+    global.nattrmon.stop();
 
     exit(0);
     //log("nAttrMon stopped.");
@@ -118,6 +114,11 @@ jobs:
 
     global.nattrmon.debug("nAttrMon restoring snapshot");
     log("nAttrMon started (main=" + global.NATTRMON_HOME + "; home=" + global.NATTRMON_SUBHOME + ").");
+
+    if (isString(args.onStart)) args.onStart = [ args.onStart ];
+    if (isArray(args.onStart)) args.onStart.forEach(j => {
+      args = $job(j, args);
+    });
 
     $ch("nattrmon::trigger").set(1, 1);
 
