@@ -53,7 +53,7 @@ nInput_Shell.prototype.input = function(scope, args) {
 					throw "Kube opack not installed.";
 				} 
 
-				var s = $sec(v.secRepo, v.secBucket, v.secBucketPass);
+				var s = $sec(v.secRepo, v.secBucket, v.secBucketPass, v.secMainPass, v.secFile);
 				var k = s.getObj(v.secObjKey);
 				if (isUnDef(k) || isUnDef(k.getNamespaces)) {
 					throw "The secObjKey = '" + v.secObjKey + "' is not a valid Kube object.";

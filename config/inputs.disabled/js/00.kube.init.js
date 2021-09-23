@@ -11,8 +11,9 @@ $ch("kubeEntries").create();
 $ch("kubeEntries").set({ key: "Kube Example" }, { 
     key : "Kube Example", 
     type: "kube",
+    secFile      : "/some/path/secrets.yaml",
     secBucket    : "myBucket",
-    secBucketPass: "mySecret",
+    //secBucketPass: "mySecret",
     secObjKey    : "myKube",
     namespace    : "default",
     podTemplate  : "test-"
