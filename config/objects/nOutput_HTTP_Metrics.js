@@ -142,6 +142,24 @@ var nOutput_HTTP_Metrics = function (aMap) {
 		var _l = nattrmon.getLastValues(true);
 		var _w = nattrmon.getWarnings();
 
+		var stats = { poolsStats: [] };
+
+        for(var i in nattrmon.objPools) {
+          var pool = nattrmon.objPools[i];
+
+          stats.poolsStats.push({
+            poolName: i,
+            min: pool.__min,
+            max: pool.__max,
+            increment: pool.__inc,
+            timeout: pool.__timeout,
+            keepAliveTime: pool.__keepaliveTime,
+            poolSize: pool.__pool.length,
+            freeObjects: pool.__currentFree,
+            currentSize: pool.__currentSize
+          });
+        }
+
 		var res = {
 			numAttrs      : _a.length,
 			numCVals      : _c.size(),
@@ -157,7 +175,8 @@ var nOutput_HTTP_Metrics = function (aMap) {
 			lastWarnLow   : _w[nWarning.LEVEL_LOW].length > 0    ? (new Date( $from(_w[nWarning.LEVEL_LOW]).sort("-lastupdate").at(0).lastupdate )).getTime() : -1,
 			lastWarnInfo  : _w[nWarning.LEVEL_INFO].length > 0   ? (new Date( $from(_w[nWarning.LEVEL_INFO]).sort("-lastupdate").at(0).lastupdate )).getTime() : -1,
 			lastWarnClosed: _w[nWarning.LEVEL_CLOSED].length > 0 ? (new Date( $from(_w[nWarning.LEVEL_CLOSED]).sort("-lastupdate").at(0).lastupdate )).getTime() : -1,
-			plugsExecuting: $ch(nattrmon.chPS).size()
+			plugsExecuting: $ch(nattrmon.chPS).size(),
+			poolsStats    : stats
 		};
 
 		res.numWarns = res.numWarnsHigh + res.numWarnsMedium + res.numWarnsLow + res.numWarnsInfo + res.numWarnsClosed;
