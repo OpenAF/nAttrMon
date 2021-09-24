@@ -148,6 +148,9 @@ jobs:
     if (isDef(args.__NAM_LOGCONSOLE)) global.__NAM_LOGCONSOLE = Boolean(args.__NAM_LOGCONSOLE); else global.__NAM_LOGCONSOLE = false;
     if (isDef(args.__NAM_LOG_ASYNC)) __logFormat.async = Boolean(args.__NAM_LOG_ASYNC); else global.__NAM_LOG_ASYNC = true;
     if (isDef(args.__NAM_MAXPLUGEXECUTE_TIME)) global.__NAM_MAXPLUGEXECUTE_TIME = Number(args.__NAM_MAXPLUGEXECUTE_TIME);
+    if (isString(args.__NAM_CHANNEL_CVALS))  global.__NAM_CHANNEL_CVALS = String(args.__NAM_CHANNEL_CVALS);
+    if (isString(args.__NAM_CHANNEL_LVALS))  global.__NAM_CHANNEL_LVALS = String(args.__NAM_CHANNEL_LVALS);
+    if (isString(args.__NAM_CHANNEL_WARNS))  global.__NAM_CHANNEL_WARNS = String(args.__NAM_CHANNEL_WARNS);
 
     (function() {
       print("Reapplying parameters:");

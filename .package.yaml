@@ -268,7 +268,7 @@ filesHash:
   tests/nattrmonTester.js: 1676171ab793cdb67da4de3e033aee110aa8ef20
   .github/ISSUE_TEMPLATE/bug_report.md: 83d211c67c12e8c1f6e9f796cfd0cecbf5160e15
   .github/ISSUE_TEMPLATE/feature_request.md: f6867a2f0417fe89a0f2008730ee19dd38422021
-  oJob_nAttrMon.yaml: 3f8cf3b418a0fa0ac9e76c2a0122aaf1bef8621c
+  oJob_nAttrMon.yaml: 1232ab61f98038df3704a0bb91e4e65adba3d6f3
   .gitignore: 39785e9c0e444387c904a807d9e506a0215ca099
   nattrmon.yaml.sample: 2105e5b2952ea187abcc3857dae9f2c6bb3ee1e5
   config/move_files_from_the_disabled_folders.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
