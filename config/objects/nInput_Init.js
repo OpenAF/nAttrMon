@@ -19,7 +19,7 @@
     this.params.AF  = _$(this.params.AF, "AF").isMap().default({});
     this.params.DB  = _$(this.params.DB, "DB").isMap().default({});
     this.params.SSH = _$(this.params.SSH, "SSH").isMap().default({});
-    this.params.CH  = _$(this.params.CH, "CH").isArray().default({});
+    this.params.CH  = _$(this.params.CH, "CH").isArray().default([]);
 
     //if (isUnDef(this.params.attrTemplate)) this.params.attrTemplate = "Some default category/Some object";
 
