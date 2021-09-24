@@ -69,4 +69,13 @@ output:
   - name         : Output Metrics
     description  : Outputs attributes, warnings, current and previous values in a JSON representation through HTTP.
     execFrom     : nOutput_HTTP_Metrics
-    execArgs     : *COMMON
+    execArgs     :
+      <<          : *COMMON
+      includeSelf : true
+      includeCVals: true
+      includeLVals: true
+      includeWarns: true
+      nameSelf    : someTitle
+      nameCVals   : someTitle_cvals
+      nameLVals   : someTitle_lvals
+      nameWarns   : someTitle_warns

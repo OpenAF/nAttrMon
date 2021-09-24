@@ -1,0 +1,79 @@
+sec: &SEC
+  secFile  : /some/path/secrets.yaml
+  secBucket: nattrmon
+
+afpool: &AFPOOL
+  max: 3
+  min: 1
+  #keepalive    : 60000   # 1 min
+  #incrementsOf : 1
+  #retry        : 3
+  #retryInterval: 30000   # 30 sec
+
+dbpool: &DBPOOL
+  max: 3
+  min: 1
+  #keepalive    : 60000   # 1 min
+  #incrementsOf : 1
+  #retry        : 3
+  #retryInterval: 30000   # 30 sec
+
+input: 	
+   name         : Init
+   execFrom     : nInput_Init
+   execArgs     :
+     AF:
+       # ------------------
+       raidServers:
+       - key    : RAS Main
+         <<     : *SEC
+         secKey : ras_main
+         timeout: 5000
+         pool   : *AFPOOL
+
+       - key    : RAS Sat 1
+         <<     : *SEC
+         secKey : fms_sat1
+         timeout: 5000
+         pool   : *AFPOOL
+
+       # --------------------
+       fmsServers:
+       - key    : FMS Main
+         <<     : *SEC
+         secKey : fms_main
+         timeout: 5000
+         pool   : *AFPOOL
+
+     DB:
+       # ---------------
+       raidDBs:
+       - key         : RAS ADM
+         <<          : *SEC
+         secKey      : ras_adm
+         timeout     : 30000
+         associations:
+         - parentKey : RAS Main
+           type      : db.adm
+         - parentKey : RAS Sat 1
+           type      : db.adm
+
+       - key      : FMS ADM
+         <<       : *SEC
+         secKey   : fms_adm
+         timeout  : 30000
+         associations:
+         - parentKey : FMS Main
+           type      : db.adm
+
+       - key      : DAT
+         <<       : *SEC
+         secKey   : dat
+         timeout  : 30000
+         associations:
+         - parentKey : RAS Main
+           type      : db.dat
+         - parentKey : RAS Sat 1
+           type      : db.dat
+         - parentKey : FMS Main
+           type      : db.dat

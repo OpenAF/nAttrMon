@@ -91,10 +91,17 @@ nInput_Filesystem.prototype.input = function (scope, args) {
 					if (isUnDef(getOPackPath("Kube"))) {
 						throw "Kube opack not installed.";
 					} 
-					var s = $sec(v.secRepo, v.secBucket, v.secBucketPass);
-					var k = s.getObj(v.secObjKey);
+					var s = $sec(v.secRepo, v.secBucket, v.secBucketPass, v.secMainPass, v.secFile);
+					var k;
+					if (isDef(v.secObjKey)) {
+						var k = s.getObj(v.secObjKey);
+					}
+					if (isDef(v.secKey)) {
+						var ka = s.get(v.secKey);
+						k = new Kube(ka.url, ka.user, ka.pass, ka.wsTimeout, ka.token);
+					}
 					if (isUnDef(k) || isUnDef(k.getNamespaces)) {
-						throw "The secObjKey = '" + v.secObjKey + "' is not a valid Kube object.";
+						throw "Couldn't create a valid Kube object.";
 					}
 
 					var epods = [];

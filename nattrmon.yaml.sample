@@ -47,3 +47,8 @@
 
 # Control how core objects are loaded (defaults to false)
 #COREOBJECTS_LAZYLOADING: true
+
+# Custom channels type and options
+#CHANNEL_CVALS: "{ type: 'file', options: { file: 'cvals.json' } }"
+#CHANNEL_LVALS: "{ type: 'file', options: { file: 'lvals.json' } }"
+#CHANNEL_WARNS: "{ type: 'elasticsearch', options: { index: 'warns', secKey: 'elastic', secBucket: 'nattrmon', secFile: 'elastic.yaml' } }"
