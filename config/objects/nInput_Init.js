@@ -19,6 +19,7 @@
     this.params.AF  = _$(this.params.AF, "AF").isMap().default({});
     this.params.DB  = _$(this.params.DB, "DB").isMap().default({});
     this.params.SSH = _$(this.params.SSH, "SSH").isMap().default({});
+    this.params.CH  = _$(this.params.CH, "CH").isArray().default({});
 
     //if (isUnDef(this.params.attrTemplate)) this.params.attrTemplate = "Some default category/Some object";
 
@@ -77,6 +78,34 @@
                     logErr(e1);
                 }
             });
+        } catch(e) {
+            logErr(e);
+        }
+    });
+    
+    this.params.CH.forEach(ch => {
+        try {
+            _$(ch, "ch").isMap().$_();
+            _$(ch.name, "ch.name").isString().$_();
+            ch.type = _$(ch.type, ch.name + " ch.type").isString().default("simple");
+    
+            // Creating channel
+            $ch(ch.name).create(1, ch.type, ch.options);
+            if (isArray(ch.entries)) {
+                ch.entries.forEach(entry => {
+                    try {
+                        _$(entry.key, "entry.key").$_();
+                        _$(entry.value, "entry.value").$_();
+                        
+                        entry.key = setSec(entry.key);
+                        entry.value = setSec(entry.value);
+
+                        $ch(ch.name).set(entry.key, entry.value);
+                    } catch(e1) {
+                        logErr(e1);
+                    }
+                });
+            }
         } catch(e) {
             logErr(e);
         }

@@ -246,7 +246,7 @@ filesHash:
   lib/nplug.js: d9a6ffcd4c9999cff6364ff40dd9a38dbac680e8
   lib/ntmplhelpers.js: ace956e44614b286cb445e803e5168dc02461c0e
   lib/ninput.js: cb1a2bc442a0a3ac9e6237fd02b445e31bd518cf
-  lib/nmain.js: 5624e4d5a957463fc2750b724ea1a979b11fd062
+  lib/nmain.js: 2faba7abff577185eb40f9ebe77c4baacab1a93d
   lib/noutput.js: 097a89ae2ab12cb28d88034444a72d368464d14c
   lib/nwarning.js: 9a430f79f35de1a298285eccda8b5885a5f85fad
   lib/nvalidation.js: 252998540faca7913211029f1bdd4397beba3ce9
@@ -290,7 +290,7 @@ filesHash:
   config/inputs.disabled/yaml/10.filesystem.yaml: e8b8a6149c8f32128cd3c601081f6f67b3822e70
   config/inputs.disabled/yaml/01.test.yaml: 1f769bf740a9820d8ed8f4684f74c7e53611a765
   config/inputs.disabled/yaml/10.osinfo.yaml: bd4b88bbd3ddf03fb40d90264ab85766bfbf452a
-  config/inputs.disabled/yaml/00.init.yaml: 33631106ad40ea12707c92b3401e0652b37a3e9b
+  config/inputs.disabled/yaml/00.init.yaml: be9c7045da9cf5bf34f78b6e219003b28b9b8af7
   config/inputs.disabled/yaml/20.dmPerformance.yaml: f84cf5ca17549658e0801b36202b1fa95e50a546
   config/inputs.disabled/yaml/10.sessions.yaml: 460da54e61f71ae9b1f0ef325f70d87b55e6861c
   config/inputs.disabled/yaml/03.flows.yaml: 8748a1200859bcfb349baccf8c513541777a0032
@@ -334,7 +334,7 @@ filesHash:
   config/objects/nInput_Schedulers.js: bd12d875fbca06f105dc77c32630e27813a674d2
   config/objects/nOutput_ES.js: 14aa4b466e5e6a326cbedf151b4a4a83b4a2b557
   config/objects/nOutput_Stdout.js: eddd09834507308573f289b6a4c92e7cdd6b1b70
-  config/objects/nInput_Init.js: 6fcf9968082076a5bb7a22694a39d9a3af52971f
+  config/objects/nInput_Init.js: a9f774ddf9563fcf1ed5fcad3795179d932a2802
   config/objects/nOutput_Oracle.js: ab0f2fe7958952437ae93030715633858462269f
   config/objects/nInput_IMMemory.js: 69f6e3d39aa5a75c83d2e4f8e2ece0b28df7e3f1
   config/objects/nInput_CBPMRunningFlows.js: d67a9d873ce6efe45b5fa642a51b64a40fdf8ba1

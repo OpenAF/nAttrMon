@@ -77,3 +77,26 @@ input:
            type      : db.dat
          - parentKey : FMS Main
            type      : db.dat
+
+     CH:
+     # -------------
+     - name   : urls
+       type   : simple
+       entries:
+       - key           : FirstURL
+         value         :
+            url           : http://first.url:1234
+            responseCode  : 200
+            includeLatency: true
+       - key           : SecretURL
+         value         :
+            <<            : *SEC
+            secKey        : SecretURL
+            responseCode  : 200
+            includeLatency: true
+    
+     # --------------
+     - name   : ports
+       type   : file
+       options:
+         file: "portsFile.json"
