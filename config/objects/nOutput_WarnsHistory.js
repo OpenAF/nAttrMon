@@ -38,7 +38,11 @@
     this.historyMax = _$(aMap.historyMax, "historyMax").isNumber().default(50);
     this.maxEntries = _$(aMap.maxEntries, "maxEntries").isNumber().default(100);
 
-    $ch(this.chName).create(1, this.chType, this.chParams);
+    var o = {
+        type   : this.chType,
+        options: this.chParams
+    };
+    $ch(this.chName).create(1, o.type, __nam_getChExtraOptions(o).options);
 
     nOutput.call(this, this.output);
 };
