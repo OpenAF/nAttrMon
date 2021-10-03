@@ -246,7 +246,7 @@ filesHash:
   lib/nplug.js: d9a6ffcd4c9999cff6364ff40dd9a38dbac680e8
   lib/ntmplhelpers.js: ace956e44614b286cb445e803e5168dc02461c0e
   lib/ninput.js: cb1a2bc442a0a3ac9e6237fd02b445e31bd518cf
-  lib/nmain.js: 2a28eedcf29e973cb4076bd4c050bf7aadfc4693
+  lib/nmain.js: 0c9353011cb860563e75a41c5ed50ba47cc829e6
   lib/noutput.js: 097a89ae2ab12cb28d88034444a72d368464d14c
   lib/nwarning.js: 9a430f79f35de1a298285eccda8b5885a5f85fad
   lib/nvalidation.js: 252998540faca7913211029f1bdd4397beba3ce9
