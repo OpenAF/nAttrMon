@@ -65,7 +65,7 @@ nOutput_ES.prototype.addToES = function (aCh, aVal, useTitle) {
 		if (isArray(aVal.val)) {
 			for (var i in aVal.val) {
 				obj.id = sha1(obj.name + (this.unique ? "" : obj.date) + i);
-				obj[obj.name] = aVal.val[i];
+				obj[obj.name] = clone(aVal.val[i]);
 				
 				traverse(obj, function (k, v, p, o) {
 					if (v == null || v == "n/a") {
@@ -77,15 +77,15 @@ nOutput_ES.prototype.addToES = function (aCh, aVal, useTitle) {
 						}
 					}
 				});
-				data.push(clone(obj));
+				data.push(obj);
 			}
 		} else {
 			if (useTitle) {
 				obj.id = sha1(obj.title + (this.unique ? obj.createdate : obj.date) + obj.level);
-				obj = merge(obj, aVal);
+				obj = merge(obj, clone(aVal));
 			} else {
 				obj.id = sha1(obj.name + (this.unique ? "" : obj.date));
-				obj[obj.name] = aVal.val;
+				obj[obj.name] = clone(aVal.val);
 			}
 			traverse(obj, function (k, v, p, o) {
 				if (v == null) {
@@ -97,7 +97,7 @@ nOutput_ES.prototype.addToES = function (aCh, aVal, useTitle) {
 					}
 				}
 			});
-			data.push(clone(obj));
+			data.push(obj);
 		}
 	} catch (e) {
 		logErr(e + " - " + stringify(obj) + " - (" + stringify(aVal) + ")");
