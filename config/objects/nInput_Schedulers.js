@@ -3,12 +3,13 @@
  * <key>nattrmon.nInput_Schedulers(aMap) : nInput</key>
  * You can create an input to check for the schedulers on the application
  * using a map composed of:\
- *    - keys (a key string or an array of keys for an AF object)\
- *    - chKeys (a channel name for the keys of AF objects)\
- *    - attrTemplate (a string template)\
- *    - statusInclude (an array of status to include default: includes everything)
- *    - statusExclude (an array of status to exclude default: excludes nothing)
- *    - namesExclude (an array of scheduler names to exclude default: excludes nothing)
+ *    - keys           (a key string or an array of keys for an AF object)\
+ *    - chKeys         (a channel name for the keys of AF objects)\
+ *    - attrTemplate   (a string template)\
+ *    - statusInclude  (an array of status to include default: includes everything)\
+ *    - statusExclude  (an array of status to exclude default: excludes nothing)\
+ *    - namesExclude   (an array of scheduler names to exclude default: excludes nothing)\
+ *    - excludeLongAgo (defaults to false but if true will not output the HowLongAgo field)\
  * \
  * </odoc>
  */
@@ -36,6 +37,8 @@ var nInput_Schedulers = function(aMap) {
 	this.params.namesExclude = [];
     }
 
+    this.params.excludeLongAgo = _$(this.params.excludeLongAgo, "excludeLongAgo").isBoolean().default(false);
+
     nInput.call(this, this.input);
 }
 inherit(nInput_Schedulers, nInput);
@@ -44,6 +47,7 @@ nInput_Schedulers.prototype.__getSchedulers = function(aKey, scope) {
     var retSchedulers = [];
     var schedulers = [];
     ow.loadFormat();
+    var parent = this;
 
 	try {
          nattrmon.useObject(aKey, function(s) {
@@ -73,8 +77,17 @@ nInput_Schedulers.prototype.__getSchedulers = function(aKey, scope) {
             }
         }
 
-        retSchedulers = $from($from(schedulers).select(function(x){ return { Name:x.name, Status:x.status, NextExecutionDate:(x.nextExecDate === null) ? "" : ow.format.fromWedoDate(x.nextExecDate), LastExecutionDate:(x.lastExecDate === null) ? "" : ow.format.fromWedoDate(x.lastExecDate), HowLongAgo:(x.lastExecDate === null) ? "" : ow.format.timeago(x.lastExecDate.content[0])};})).sort("-LastExecutionDate").select();
-        
+        retSchedulers = $from($from(schedulers).select(function(x){ var r = {
+            Name             : x.name,
+            Status           : x.status,
+            NextExecutionDate: (x.nextExecDate === null) ? "" : ow.format.fromWedoDate(x.nextExecDate),
+            LastExecutionDate: (x.lastExecDate === null) ? "" : ow.format.fromWedoDate(x.lastExecDate),
+            HowLongAgo       : (x.lastExecDate === null) ? "" : ow.format.timeago(x.lastExecDate.content[0])
+         };
+         if (parent.params.excludeLongAgo) delete r.HowLongAgo;
+         return r;
+        })).sort("-LastExecutionDate").select();
+
 	} catch(e) {
 		logErr("Error while retrieving schedulers using '" + aKey + "': " + e.message);
 	}
