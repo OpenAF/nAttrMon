@@ -77,7 +77,7 @@ nOutput_ES.prototype.addToES = function (aCh, aVal, useTitle) {
 						}
 					}
 				});
-				data.push(obj);
+				data.push(clone(obj));
 			}
 		} else {
 			if (useTitle) {
