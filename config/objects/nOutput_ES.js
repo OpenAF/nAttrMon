@@ -19,6 +19,8 @@ var nOutput_ES = function (aMap) {
 		this.funcIndex = (isDef(aMap.funcIndex)) ? af.eval(aMap.funcIndex) : new Function("return '" + aMap.index + "'");
 	}
 
+	this.format = aMap.format;
+
 	this.include = aMap.include;
 	this.exclude = aMap.exclude;
 
@@ -32,12 +34,13 @@ var nOutput_ES = function (aMap) {
 
 	this.myUUID = genUUID();
 	this.ch = "__es_ " + this.myUUID;
-	$ch(this.ch).create(void 0, "elasticsearch", {
-		url: this.url,
-		idKey: "id",
-		index: this.funcIndex,
-		user: this.user,
-		pass: this.pass
+	$ch(this.ch).create(__, "elasticsearch", {
+		url   : this.url,
+		idKey : "id",
+		index : this.funcIndex,
+		format: this.format,
+		user  : this.user,
+		pass  : this.pass
 	});
 
 	nOutput.call(this, this.output);
