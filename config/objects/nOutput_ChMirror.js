@@ -23,7 +23,7 @@
             _$(this.channels[ch].mirrorFrom, "mirrorFrom").isString().oneOf(chList).$_();
             if (chList.indexOf(ch) < 0) {
                 log("Creating channel '" + ch + "' for mirror...");
-                var op = __nam_getSec(this.channels[ch]);
+                var op = __nam_getSec(this.channels[ch], this.channels[ch].secOut);
                 $ch(ch).create(__, op.type, op.options);
             }
 
