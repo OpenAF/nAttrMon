@@ -143,6 +143,7 @@ files:
 - config/objects/nInput_CBPMSemaphores.js
 - config/objects/nInput_FilesystemCount.js
 - config/objects/nInput_AFPing.js
+- config/objects/nInput_RAIDLookups.js
 - config/objects/nValidation_Semaphores.js
 - config/objects/nInput_CompareTimes.js
 - config/objects/nValidation_AFPing.js
@@ -352,6 +353,7 @@ filesHash:
   config/objects/nInput_CBPMSemaphores.js: 75a0892cdad21aee8762d6d1346548bf6d42b59b
   config/objects/nInput_FilesystemCount.js: e36218f7c2ffa39438f1c1d22ad982c04e0fd4a0
   config/objects/nInput_AFPing.js: c88598e75deb073715ed011272ae7ffb46962e8e
+  config/objects/nInput_RAIDLookups.js: 1544374c0bec3e6c53eb60c1efe578f4b8f101ae
   config/objects/nValidation_Semaphores.js: 97b6c1850b80d95cc92c1c50b05fdfa26467fd94
   config/objects/nInput_CompareTimes.js: 5c95c1387549e405031414b430c98951ed591d1c
   config/objects/nValidation_AFPing.js: f48325d605e693dee3ab2912224cda0fde11e490
