@@ -160,6 +160,7 @@ files:
 - config/objects/nInput_DMPerformance.js
 - config/objects/nInput_Semaphores.js
 - config/objects/nInput_Kube_Events.js
+- config/objects/nInput_nAttrMon.js
 - config/objects/nInput_EndPoints.js
 - config/objects/nOutput_HTTP_JSON.js
 - config/objects/nOutput_HTTP.js
@@ -370,6 +371,7 @@ filesHash:
   config/objects/nInput_DMPerformance.js: 3d0f27b87f5b1a004e32559b0076c3cbfdf5d064
   config/objects/nInput_Semaphores.js: 9b0c0d8ca1b1c33d8faeaae89738360c8569534e
   config/objects/nInput_Kube_Events.js: 97ddcc52a2f23c882afef8babde1e85e305cfa4d
+  config/objects/nInput_nAttrMon.js: cd903fb5f3e1695d3a14ffde288f8be9d4349644
   config/objects/nInput_EndPoints.js: 12f22ce1b4e43fa796b0a4350bfb92a9197ec9c9
   config/objects/nOutput_HTTP_JSON.js: d8a7c5ff8683e9fef18471673b54c24228df2d4d
   config/objects/nOutput_HTTP.js: cb990e387ce74ab2845c12487be6a3ccb2dba3b2
