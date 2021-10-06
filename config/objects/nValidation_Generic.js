@@ -249,7 +249,7 @@ nValidation_Generic.prototype.validate = function(warns, scope, args) {
     if (isDef(args) && isDef(args.k) && isDef(args.v)) {
         if (args.op == "setall") {
             for(var ii in args.v) {
-                ret = ret.concat(this.checkEntry(ret, args.k, args.v[ii], args));
+                ret = this.checkEntry(ret, args.k, args.v[ii], args);
             }
         }
         if (args.op == "set") {
