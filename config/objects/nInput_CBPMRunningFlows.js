@@ -75,10 +75,10 @@ nInput_CBPMRunningFlows.prototype.input = function (scope, args) {
 
             nattrmon.useObject(aKey, (aAF) => {
                 try {
-                    if (isString(this.status)) {
-                        instances = ow.waf.cbpm.getFlowInstances(aAF, r.flowUUID, [this.status.toUpperCase()], this.limit, false, false);
+                    if (isString(parent.status)) {
+                        instances = ow.waf.cbpm.getFlowInstances(aAF, r.flowUUID, [parent.status.toUpperCase()], parent.limit, false, false);
                     } else {
-                        instances = ow.waf.cbpm.getFlowInstances(aAF, r.flowUUID, isArray(this.status) ? this.status.map(r => r.toUpperCase()) : __, this.limit, false, false);
+                        instances = ow.waf.cbpm.getFlowInstances(aAF, r.flowUUID, isArray(parent.status) ? parent.status.map(r => r.toUpperCase()) : __, parent.limit, false, false);
                     }
                 } catch (e) {
                     // Check if it never executed
@@ -88,7 +88,7 @@ nInput_CBPMRunningFlows.prototype.input = function (scope, args) {
 
             if (isDef(instances) && isArray(instances)) {
                 $from(instances).select((t) => {
-                    if (ow.format.dateDiff.inHours(ow.format.fromWeDoDateToDate(t.instanceStartTime)) <= this.hoursToCheck) {
+                    if (ow.format.dateDiff.inHours(ow.format.fromWeDoDateToDate(t.instanceStartTime)) <= parent.hoursToCheck) {
                         var line = {
                             Name: aKey,
                             Category: r.flowCategory,
@@ -105,7 +105,7 @@ nInput_CBPMRunningFlows.prototype.input = function (scope, args) {
                                 line = merge(line, { "End Date": (isUnDef(t.instanceEndTime)) ? "n/a" : ow.format.fromWeDoDateToDate(t.instanceEndTime), "Exception": (isUnDef(t.instanceErrorMessage)) ? "n/a" : t.instanceErrorMessage });
                                 break;
                             case 'STARTED':
-                                if (!this.excludeLongAgo) line = merge(line, { "Started how long ago(min)": ow.format.dateDiff.inMinutes(ow.format.fromWeDoDateToDate(t.instanceStartTime), new Date()) });
+                                if (!parent.excludeLongAgo) line = merge(line, { "Started how long ago(min)": ow.format.dateDiff.inMinutes(ow.format.fromWeDoDateToDate(t.instanceStartTime), new Date()) });
                                 break;
                             default:
                                 if (isDef((t.instanceEndTime))) {
