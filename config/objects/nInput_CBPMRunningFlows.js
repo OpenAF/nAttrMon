@@ -39,7 +39,7 @@ var nInput_CBPMRunningFlows = function (aMap) {
     }
 
     this.attrTemplate = aMap.attrTemplate;
-    //this.status = (isUnDef(aMap.status)) ? 'STARTED' : aMap.status;
+    this.status = (isUnDef(aMap.status)) ? __ : aMap.status;
     this.hoursToCheck = (isUnDef(aMap.hoursToCheck)) ? 24 : aMap.hoursToCheck;
     //this.useDatabase = aMap.useDatabase;
     this.excludeLongAgo = _$(aMap.excludeLongAgo, "excludeLongAgo").isBoolean().default(false);
