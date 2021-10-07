@@ -145,6 +145,7 @@ files:
 - config/objects/nInput_AFPing.js
 - config/objects/nInput_RAIDLookups.js
 - config/objects/nValidation_Semaphores.js
+- config/objects/nInput_RAIDStatus_DB.js
 - config/objects/nInput_CompareTimes.js
 - config/objects/nValidation_AFPing.js
 - config/objects/nInput_BPMDebugChecks.js
@@ -336,7 +337,7 @@ filesHash:
   config/objects/nInput_BPMNRunningFlows.js: 86da2d78b524d42ac4ab9598820605bbbfb24c57
   config/objects/nOutput_H2.js: 01082a7d69167f4e3df6fd11b619855d5dc11ba6
   config/objects/nInput_Schedulers.js: 96771d166e2574b6d5a526cc6025ad3abf1363d4
-  config/objects/nOutput_ES.js: 3233bca029b4d21a80e494738e9b2f4eef5d02b5
+  config/objects/nOutput_ES.js: baf690a0deb5a899c1c6d6c5c82e535a11756d37
   config/objects/nOutput_Stdout.js: eddd09834507308573f289b6a4c92e7cdd6b1b70
   config/objects/nInput_Init.js: bc95c351c8793ff7871c690ebdeebc208c3c6652
   config/objects/nOutput_Oracle.js: ab0f2fe7958952437ae93030715633858462269f
@@ -356,6 +357,7 @@ filesHash:
   config/objects/nInput_AFPing.js: c88598e75deb073715ed011272ae7ffb46962e8e
   config/objects/nInput_RAIDLookups.js: 1544374c0bec3e6c53eb60c1efe578f4b8f101ae
   config/objects/nValidation_Semaphores.js: 97b6c1850b80d95cc92c1c50b05fdfa26467fd94
+  config/objects/nInput_RAIDStatus_DB.js: 2b35bfcc2a02d2e2367971c1c895257f8b2b551d
   config/objects/nInput_CompareTimes.js: 5c95c1387549e405031414b430c98951ed591d1c
   config/objects/nValidation_AFPing.js: f48325d605e693dee3ab2912224cda0fde11e490
   config/objects/nInput_BPMDebugChecks.js: 6e1042ba95cc3374d3516be2202538529344769f
@@ -371,7 +373,7 @@ filesHash:
   config/objects/nInput_DMPerformance.js: 3d0f27b87f5b1a004e32559b0076c3cbfdf5d064
   config/objects/nInput_Semaphores.js: 9b0c0d8ca1b1c33d8faeaae89738360c8569534e
   config/objects/nInput_Kube_Events.js: 97ddcc52a2f23c882afef8babde1e85e305cfa4d
-  config/objects/nInput_nAttrMon.js: cd903fb5f3e1695d3a14ffde288f8be9d4349644
+  config/objects/nInput_nAttrMon.js: b493802b6c15d897ebbed4efd6ced80772b06ad4
   config/objects/nInput_EndPoints.js: 12f22ce1b4e43fa796b0a4350bfb92a9197ec9c9
   config/objects/nOutput_HTTP_JSON.js: d8a7c5ff8683e9fef18471673b54c24228df2d4d
   config/objects/nOutput_HTTP.js: cb990e387ce74ab2845c12487be6a3ccb2dba3b2

@@ -16,7 +16,10 @@ var nOutput_ES = function (aMap) {
 	if (isUnDef(aMap.index) && isUnDef(aMap.funcIndex)) {
 		throw "Please define either an index or a funcIndex";
 	} else {
-		this.funcIndex = (isDef(aMap.funcIndex)) ? af.eval(aMap.funcIndex) : new Function("return '" + aMap.index + "'");
+		if (isUnDef(aMap.format))
+			this.funcIndex = (isDef(aMap.funcIndex)) ? af.eval(aMap.funcIndex) : new Function("return '" + aMap.index + "'");
+		else
+			this.funcIndex = aMap.index;
 	}
 
 	this.format = aMap.format;

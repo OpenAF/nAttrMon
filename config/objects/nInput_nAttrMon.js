@@ -51,5 +51,7 @@ nInput_nAttrMon.prototype.input = function(scope, args) {
         ret[templify(this.params.attrTemplate, { name: "Threads" })] = thr;
     }
 
+    ret[templify(this.params.attrTemplate, { name: "PS" })] = $ch("nattrmon::ps").getAll();
+
     return ret;
 };
