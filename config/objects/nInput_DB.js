@@ -4,10 +4,11 @@ loadUnderscore();
  * <odoc>
  * <key>nattrmon.nInput_DB(aMap) : nInput</key>
  * aMap is composed of:\
- *    - key (the key for the database access)\
+ *    - key        (the key for the database access)\
  *    - key.parent (in alternative provide the parent key (e.g. RAS))\
  *    - key.child  (in alternative provide the child key synonym (e.g. db.app))\
- *    - sqls (a map of query templates (if a '{{lastdate}}' is included it will be replaced by the last checked date), each will become an attribute)
+ *    - sqls       (a map of query templates (if a '{{lastdate}}' is included it will be replaced by the last checked date), each will become an attribute)
+ *    - sqlsByType (in alternative to sqls lets you divide further into SQL statement per database product (e.g. postgresql, oracle, h2, etc...))
  * </odoc>
  */
 var nInput_DB = function (anMonitoredAFObjectKey, aMapOfAttributeNameANDSQL) {
@@ -23,21 +24,21 @@ var nInput_DB = function (anMonitoredAFObjectKey, aMapOfAttributeNameANDSQL) {
 		}
 		
 		if (isDef(this.params.sqlsByType) && isUnDef(this.params.sqls)) {
-			
-			nattrmon.useObject(this.objectPoolKey, function (aDb) {
-				
-				res = String(aDb.getConnect().getClass()).indexOf("postgresql") > 0;
+			var res;
+
+			nattrmon.useObject(this.objectPoolKey, function(aDb) {	
+				//res = String(aDb.getConnect().getClass()).indexOf("postgresql") > 0;
+				res = String(aDb.getConnect().getMetaData().getDatabaseProductName()).toLowerCase();
 				return true;
 			});
 			
-			if (res) {
+		    this.map = this.params.sqlsByType[res];
+			/*if (res) {
 				this.map = this.params.sqlsByType.postgresql;
 			} else {
 				this.map = this.params.sqlsByType.oracle;
-			}
-			
+			}*/
 		} else {
-
 			this.map = this.params.sqls;
 		}
 			
