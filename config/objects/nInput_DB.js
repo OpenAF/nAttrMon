@@ -21,7 +21,26 @@ var nInput_DB = function (anMonitoredAFObjectKey, aMapOfAttributeNameANDSQL) {
 				this.objectPoolKey = this.params.key;
 			}
 		}
-		this.map = this.params.sqls;
+		
+		if (isDef(this.params.sqlsByType) && isUnDef(this.params.sqls)) {
+			
+			nattrmon.useObject(this.objectPoolKey, function (aDb) {
+				
+				res = String(aDb.getConnect().getClass()).indexOf("postgresql") > 0;
+				return true;
+			});
+			
+			if (res) {
+				this.map = this.params.sqlsByType.postgresql;
+			} else {
+				this.map = this.params.sqlsByType.oracle;
+			}
+			
+		} else {
+
+			this.map = this.params.sqls;
+		}
+			
 	} else {
 		// Is a monitored object or a pool?
 		if (nattrmon.isObjectPool(anMonitoredAFObjectKey)) {
@@ -34,10 +53,10 @@ var nInput_DB = function (anMonitoredAFObjectKey, aMapOfAttributeNameANDSQL) {
 			else
 				throw "Key " + anMonitoredAFObjectKey + " not found.";
 		}
-
+		
 		this.map = aMapOfAttributeNameANDSQL;
 	}
-
+	
 	nInput.call(this, this.input);
 }
 inherit(nInput_DB, nInput);
@@ -58,7 +77,6 @@ nInput_DB.prototype.input = function (scope, args) {
 			var atr = scope.getAttributes().getAttributeByName(i);
 			var lval = scope.getLastValues()[i];
 			//var warns = ow.obj.fromArray2Obj(scope.getWarnings(true).getCh().getAll(), "title");
-			//var atrs = 
 
 			var data = {
 				attribute: atr,
