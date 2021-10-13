@@ -1,0 +1,52 @@
+input:
+   name         : In Error flows for the last 5 days
+   cron         : "*/30 * * * * *"
+   waitForFinish: true
+   onlyOnEvent  : true
+   execFrom     : nInput_DB
+   execArgs     : 
+      key : APPADM
+      sqlsByType:
+         oracle:
+            Database/In Error Flows       : >
+               SELECT INSTANCE_ID "Instance", C.SHORT_NAME "Flow", A.FLOW_VERSION "Version", A.FLOW_RUN_ID "RunID", A.CREATED_BY "User",
+                  CASE WHEN A.FLOW_STATUS = 3 
+                  THEN 'ERROR' 
+                  ELSE 'COMPLETED' 
+                  END "STATUS",
+                  TO_CHAR(A.CREATED_DATE, 'YYYY-MM-DD HH24:MI:SS') "Start Date", 
+                  TO_CHAR(A.MODIFIED_DATE, 'YYYY-MM-DD HH24:MI:SS') "End Date", 
+                  TRUNC(SYSDATE - A.MODIFIED_DATE) "Days Ago", 
+                  B.NAME "Task Name",
+                  B.EXCEPTION "Exception"
+                  FROM CBPM_C_RUNNING_FLOWS A, CBPM_C_RUNNING_TASKS B, AF_T_OBJ_SPEC C 
+                  WHERE A.FLOW_RUN_ID = B.FLOW_RUN_ID 
+                  AND B.EXCEPTION IS NOT NULL 
+                  AND A.EXCEPTION IS NOT NULL 
+                  AND B.TASK_STATUS IN (3,4)
+                  AND A.FLOW_STATUS IN (3,4)
+                  AND C.OBJ_SPEC_UUID = A.FLOW_ID 
+                  AND A.MODIFIED_DATE >= CURRENT_DATE - 5 
+                  ORDER BY "Start Date" DESC, "End Date" DESC, "Flow", "RunID"
+         
+         postgresql:
+            Database/In Error Flows        : >
+               SELECT INSTANCE_ID "Instance", C."SHORT_NAME" "Flow", A."FLOW_VERSION" "Version", A."FLOW_RUN_ID" "RunID", A."CREATED_BY" "User", 
+                  CASE WHEN A."FLOW_STATUS" = 3 
+                  then 'Error' 
+                  ELSE 'Completed' 
+                  END "Status",
+                  TO_CHAR(A."CREATED_DATE", 'YYYY-MM-DD HH24:MI:SS') "Start Date", 
+                  TO_CHAR(A."MODIFIED_DATE", 'YYYY-MM-DD HH24:MI:SS') "End Date", 
+                  DATE_PART('day', CURRENT_DATE - a."MODIFIED_DATE") "Days Ago",
+                  B."NAME" "Task Name", 
+                  B."EXCEPTION" "Exception"
+                  from "CBPM_C_RUNNING_FLOWS" A, "CBPM_C_RUNNING_TASKS" B, "AF_T_OBJ_SPEC" C
+                  WHERE A."FLOW_RUN_ID" = B."FLOW_RUN_ID"
+                  AND B."EXCEPTION" IS NOT NULL
+                  AND A."EXCEPTION" IS NOT NULL
+                  AND B."TASK_STATUS" IN (3,4)
+                  AND A."FLOW_STATUS" IN (3,4)
+                  AND C."OBJ_SPEC_UUID" = A."FLOW_ID"
+                  AND A."MODIFIED_DATE" >= CURRENT_DATE - INTERVAL '5 DAY'
+                  ORDER BY "Start Date" DESC, "End Date" DESC, "Flow", "RunID"
