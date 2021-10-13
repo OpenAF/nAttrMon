@@ -1,0 +1,46 @@
+input:
+   name         : Running flows retrieved from the database 
+   cron         : "*/30 * * * * *"
+   waitForFinish: true
+   onlyOnEvent  : true
+   execFrom     : nInput_DB
+   execArgs     : 
+      key : APPADM
+      sqlsByType:
+         oracle:
+            Database/Running Flows       : >
+               SELECT INSTANCE_ID "Instance", 
+                  C.SHORT_NAME "Flow", 
+                  A.FLOW_VERSION "Version", 
+                  A.FLOW_RUN_ID "RunID", 
+                  A.CREATED_BY "User",
+                  TO_CHAR(A.CREATED_DATE, 'YYYY-MM-DD HH24:MI:SS') "Flow Start Date", 
+                  TRUNC((SYSDATE - A.CREATED_DATE)*24*60) "Flow Running Minutes", 
+                  B.NAME "Task Name",
+                  TO_CHAR(B.CREATED_DATE, 'YYYY-MM-DD HH24:MI:SS') "Task Start Date",
+                  TRUNC((SYSDATE - B.CREATED_DATE)*24*60) "Task Running Minutes"
+                  FROM CBPM_C_RUNNING_FLOWS A, CBPM_C_RUNNING_TASKS B, AF_T_OBJ_SPEC C 
+                  WHERE A.FLOW_RUN_ID = B.FLOW_RUN_ID 
+                  AND B.TASK_STATUS = 2
+                  AND A.FLOW_STATUS = 2
+                  AND C.OBJ_SPEC_UUID = A.FLOW_ID 
+                  ORDER BY "Instance", "Flow Start Date" asc, "Task Start Date"
+         
+         postgresql:
+            Database/Running Flows        : >
+               SELECT "INSTANCE_ID" "Instance",
+                  C."SHORT_NAME" "Flow",
+                  A."FLOW_VERSION" "Version",
+                  A."FLOW_RUN_ID" "RunID",
+                  A."CREATED_BY" "User",
+                  TO_CHAR(A."CREATED_DATE", 'YYYY-MM-DD HH24:MI:SS') "Flow Start Date",
+                  DATE_PART('minute', CURRENT_DATE - A."CREATED_DATE") "Flow Running Minutes",
+                  B."NAME" "Task Name",
+                  TO_CHAR(B."CREATED_DATE", 'YYYY-MM-DD HH24:MI:SS') "Task Start Date",
+                  DATE_PART('minute', CURRENT_DATE - B."CREATED_DATE") "Flow Running Minutes"
+                  FROM "CBPM_C_RUNNING_FLOWS" A, "CBPM_C_RUNNING_TASKS" B, "AF_T_OBJ_SPEC" C
+                  WHERE A."FLOW_RUN_ID" = B."FLOW_RUN_ID"
+                  AND B."TASK_STATUS" = 2
+                  AND A."FLOW_STATUS" = 2
+                  AND C."OBJ_SPEC_UUID" = A."FLOW_ID"
+                  ORDER BY "Instance", "Flow Start Date" asc, "Task Start Date"
