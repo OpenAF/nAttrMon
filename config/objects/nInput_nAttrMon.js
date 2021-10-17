@@ -53,5 +53,7 @@ nInput_nAttrMon.prototype.input = function(scope, args) {
 
     ret[templify(this.params.attrTemplate, { name: "PS" })] = $ch("nattrmon::ps").getAll();
 
+    ret[templify(this.params.attrTemplate, { name: "Plugs" })] = $ch("nattrmon::plugs").getAll();
+
     return ret;
 };
