@@ -86,11 +86,13 @@ nInput_Filesystem.prototype.input = function (scope, args) {
 
 			for (var i in this.params.keys) {
 				var v = $ch(this.params.chKeys).get({ key: this.params.keys[i] });
+				v = __nam_getSec(v);
+				
 				switch(v.type) {
 				case "kube":
 					if (isUnDef(getOPackPath("Kube"))) {
 						throw "Kube opack not installed.";
-					} 
+					}  
 					var s = $sec(v.secRepo, v.secBucket, v.secBucketPass, v.secMainPass, v.secFile);
 					var k;
 					if (isDef(v.secObjKey)) {

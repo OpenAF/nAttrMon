@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20211014'
+version: '20211017'
 dependencies:
   openaf: '>=20210721'
 files:
@@ -245,7 +245,7 @@ filesHash:
   tests/outputTest.yml: 0c4ba4176163e4aa9ff7fd4ae4128339d8384581
   tests/nattrmonTester.js: 1676171ab793cdb67da4de3e033aee110aa8ef20
   tests/unitTestYAML.js: 01fd646107421f0441b19cd966977ab7ac2eff37
-  oJob_nAttrMon.yaml: 1232ab61f98038df3704a0bb91e4e65adba3d6f3
+  oJob_nAttrMon.yaml: 97277f719fa7faf2336b5ba3e7f2582eb8308f9a
   nAttrmon_single.yaml.sample: 56e31c6102c90bdad55b434247848027a7adb69d
   docs/images/logo.png: ee5366a3aa207c69d5139e04e7a4523078b974ba
   docs/images/nAttrMon.png: 298fb1bb1e7c004b6204069d2a3319fbdebedea0
@@ -267,7 +267,7 @@ filesHash:
   lib/noutput.js: 097a89ae2ab12cb28d88034444a72d368464d14c
   lib/nattributes.js: f28cee64a735e0e6ae3b520bbc59f74e6203e1db
   lib/nwarnings.js: 565260de1c13160589dd2dcd920ab6b7d5eaae01
-  lib/nmain.js: c97e4019f066d088e1d7b965739835beb57be749
+  lib/nmain.js: d8eedb615899e5741f2f419db62375225a580dbc
   lib/nattribute.js: 957b3e1e4d55c554e029229dae26e838df1da7b4
   lib/nplug.js: d9a6ffcd4c9999cff6364ff40dd9a38dbac680e8
   lib/ntmplhelpers.js: ace956e44614b286cb445e803e5168dc02461c0e
@@ -421,14 +421,14 @@ filesHash:
   config/objects/nInput_FilesystemCount.js: e36218f7c2ffa39438f1c1d22ad982c04e0fd4a0
   config/objects/nInput_CBPMDebugChecks.js: 737f33ddd852309d0322f57e7adeeb307627652f
   config/objects/nInput_RemoteChannel.js: 42b87110cc2a584907920c79c2ddfb49c1e92383
-  config/objects/nInput_Shell.js: a020d885d28ae36aa278ed257eb4bf4c5429335a
-  config/objects/nInput_Init.js: bc95c351c8793ff7871c690ebdeebc208c3c6652
+  config/objects/nInput_Shell.js: e3f52cbf7fb1c7cabb724ec6111aebb3527f16d0
+  config/objects/nInput_Init.js: dc25f3108e195c5e0572e614217a391cc26fe9ea
   config/objects/nOutput_Notifications.js: 4a20e3ee7334f78b9b7ab36730000530fb63d598
   config/objects/nOutput_Stdout.js: eddd09834507308573f289b6a4c92e7cdd6b1b70
   config/objects/nInput_IMAbnormalLoadings.js: b7d86f2f5b70e218de6967a52114cac15fe5b570
   config/objects/nInput_LogErrorAgg.js: 43e3809d524752c55f7c58403661beb8e623f52b
   config/objects/nInput_Semaphores.js: 9b0c0d8ca1b1c33d8faeaae89738360c8569534e
-  config/objects/nInput_Filesystem.js: 109d0bcf027b2aac0877ce3b414b892eb0dba7d6
+  config/objects/nInput_Filesystem.js: 29e1cb977c7fba7ae3a28d259c329154f9c555b3
   config/objects/nInput_Sessions.js: eb6f26629da062d0be7cd6cf7284372d1363123d
   config/objects/nInput_RunningFlows.js: 7d8d77a702b4f9f2f719679052cba240798fa5f8
   config/objects/nOutput_HTTP_Status.js: edef19006705f59eee10b7154f3bb2e5efa341ed

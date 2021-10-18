@@ -156,6 +156,7 @@ jobs:
       print("Reapplying parameters:");
       $from(Object.keys(args))
       .starts("__NAM_")
+      .notStarts("__NAM_SEC")
       .sort()
       .select(r => { 
         print(r + ": " + global[r]);

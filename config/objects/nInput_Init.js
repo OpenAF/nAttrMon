@@ -46,7 +46,8 @@
 
     var setSec = aEntry => {
         if (isDef(aEntry.secKey)) {
-            return merge(aEntry, $sec(aEntry.secRepo, aEntry.secBucket, aEntry.secPass, aEntry.secMainPass, aEntry.secFile).get(aEntry.secKey));
+            //return merge(aEntry, $sec(aEntry.secRepo, aEntry.secBucket, aEntry.secPass, aEntry.secMainPass, aEntry.secFile).get(aEntry.secKey));
+            return __nam_getSec(aEntry);
         } else {
             return aEntry;
         }
