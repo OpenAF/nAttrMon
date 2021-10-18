@@ -62,14 +62,20 @@ nInput_RAIDGCMemory.prototype.__getMemory = function(aKey, aExtra) {
 	try {
 		var mems;
 		var parent = this;
-		nattrmon.useObject(aKey, function(s) {
-			try {
-				mems = s.exec("StatusReport", { RunGC: true }).GarbageCollector;
-			} catch(e) {
-				logErr("Error while retrieving memory using '" + aKey + "': " + e.message);
-				throw e;
-			}		
-		});
+		if (isBoolean(parent.params.useCache) && parent.params.useCache) {
+			var res = $cache("nattrmon::" + aKey).get({ op: "StatusReport", args: { RunGC: true } });
+			if (isMap(res) && isDef(res.__error)) throw res.__error;
+			mems = res.GarbageCollector;
+		} else {
+			nattrmon.useObject(aKey, function(s) {
+				try {
+					mems = s.exec("StatusReport", { RunGC: true }).GarbageCollector;
+				} catch(e) {
+					logErr("Error while retrieving memory using '" + aKey + "': " + e.message);
+					throw e;
+				}		
+			});
+		}
 
 		freemem = Math.round(Number(mems.MemoryAfterGarbageCollectorExecution.FreeHeapMemory.replace(/MB/,"")));
 		usedmem = Math.round(Number(mems.MemoryAfterGarbageCollectorExecution.UsedHeapMemory.replace(/MB/,"")));

@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20211017'
+version: '20211018'
 dependencies:
   openaf: '>=20210721'
 files:
@@ -401,10 +401,10 @@ filesHash:
   config/objects/nOutput_WarnsHistory.js: 53820893e6a8f4a63b2ad93ffc7e7094c6bcdf1f
   config/objects/nOutput_HTTP_JSON.js: d8a7c5ff8683e9fef18471673b54c24228df2d4d
   config/objects/nValidation_Yellows.js: 942478fcd710e392add0b6ef6349ef51a895b764
-  config/objects/nInput_RAIDGCMemory.js: 257e44d45d3fe70bcafde29efac92a57d3702e6f
+  config/objects/nInput_RAIDGCMemory.js: 61db6bc880acfd8ce0845b2a604f403bc3f26730
   config/objects/nInput_CBPMRunningFlows.js: 54156f08ebcd272a24ae0b7d8c135f5d582dd195
   config/objects/nOutput_HTTP_Metrics.js: 3d3d590167336abf72a51f45618ee4854969b51b
-  config/objects/nInput_RAIDMemory.js: 12772f9c7775672dfd4a420db336d04621e2dc78
+  config/objects/nInput_RAIDMemory.js: 5b941a58ef1b523d3f5825435ecfb72dabb7143c
   config/objects/nInput_BPMNRunningFlows.js: 86da2d78b524d42ac4ab9598820605bbbfb24c57
   config/objects/nOutput_Log.js: 69ef02bb37d306deb390f303a8bbf6e2234be792
   config/objects/nOutput_RemoteChannel.js: 8dcadaf89c78f31707c45d615a3941ce0547cd33
@@ -413,23 +413,23 @@ filesHash:
   config/objects/nInput_Schedulers.js: 96771d166e2574b6d5a526cc6025ad3abf1363d4
   config/objects/nInput_RAIDLookups.js: 1544374c0bec3e6c53eb60c1efe578f4b8f101ae
   config/objects/nInput_nAttrMon.js: c8ec9f45f724e7372b02751b893178490587641b
-  config/objects/nOutput_ES.js: baf690a0deb5a899c1c6d6c5c82e535a11756d37
+  config/objects/nOutput_ES.js: aa5209b81fc8dbf8dffa857fd4d105db91be4aa9
   config/objects/nInput_AFPing.js: c88598e75deb073715ed011272ae7ffb46962e8e
   config/objects/nOutput_HTTP_HealthZ.js: 570c5ae615a2ecbc3f304bda850549f0649bb704
-  config/objects/nInput_RAIDStatus_DB.js: 2b35bfcc2a02d2e2367971c1c895257f8b2b551d
+  config/objects/nInput_RAIDStatus_DB.js: a59c7b62281341e3b0a3e279ff12eaaa85b43eac
   config/objects/nInput_Kube_Pods.js: db140281231000473e0fed563f6fce6be7c623cc
   config/objects/nInput_FilesystemCount.js: e36218f7c2ffa39438f1c1d22ad982c04e0fd4a0
   config/objects/nInput_CBPMDebugChecks.js: 737f33ddd852309d0322f57e7adeeb307627652f
   config/objects/nInput_RemoteChannel.js: 42b87110cc2a584907920c79c2ddfb49c1e92383
   config/objects/nInput_Shell.js: e3f52cbf7fb1c7cabb724ec6111aebb3527f16d0
-  config/objects/nInput_Init.js: dc25f3108e195c5e0572e614217a391cc26fe9ea
+  config/objects/nInput_Init.js: e26d034d43b670c361232f5b605d94474fb29ae8
   config/objects/nOutput_Notifications.js: 4a20e3ee7334f78b9b7ab36730000530fb63d598
   config/objects/nOutput_Stdout.js: eddd09834507308573f289b6a4c92e7cdd6b1b70
   config/objects/nInput_IMAbnormalLoadings.js: b7d86f2f5b70e218de6967a52114cac15fe5b570
   config/objects/nInput_LogErrorAgg.js: 43e3809d524752c55f7c58403661beb8e623f52b
   config/objects/nInput_Semaphores.js: 9b0c0d8ca1b1c33d8faeaae89738360c8569534e
   config/objects/nInput_Filesystem.js: 29e1cb977c7fba7ae3a28d259c329154f9c555b3
-  config/objects/nInput_Sessions.js: eb6f26629da062d0be7cd6cf7284372d1363123d
+  config/objects/nInput_Sessions.js: 077852363cc60a0c1b5073cac22f75b285d86f12
   config/objects/nInput_RunningFlows.js: 7d8d77a702b4f9f2f719679052cba240798fa5f8
   config/objects/nOutput_HTTP_Status.js: edef19006705f59eee10b7154f3bb2e5efa341ed
   config/objects/nOutput_Channels.js: 52345d9d8aa49a381d2b45e119768866515b4139

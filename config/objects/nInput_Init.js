@@ -15,11 +15,12 @@
     } else {
         this.params = {};
     }
-    
-    this.params.AF  = _$(this.params.AF, "AF").isMap().default({});
-    this.params.DB  = _$(this.params.DB, "DB").isMap().default({});
-    this.params.SSH = _$(this.params.SSH, "SSH").isMap().default({});
-    this.params.CH  = _$(this.params.CH, "CH").isArray().default([]);
+
+    this.params.AF       = _$(this.params.AF, "AF").isMap().default({});
+    this.params.AFCache  = _$(this.params.AFCache, "AFCache").isMap().default({});
+    this.params.DB       = _$(this.params.DB, "DB").isMap().default({});
+    this.params.SSH      = _$(this.params.SSH, "SSH").isMap().default({});
+    this.params.CH       = _$(this.params.CH, "CH").isArray().default([]);
 
     //if (isUnDef(this.params.attrTemplate)) this.params.attrTemplate = "Some default category/Some object";
 
@@ -57,7 +58,7 @@
         var chkey = _$(this.params.AF[ichkey], ichkey).isArray().$_();
         try {
             chkey = _$(chkey, ichkey).isArray().default({});
-    
+
             $ch(ichkey).create();
             chkey.forEach(entry => {
                 try {
@@ -67,7 +68,7 @@
                     entry.key  = _$(entry.key, "AF " + ichkey + " entry key").isString().$_();
 
                     $ch(ichkey).set({ key: entry.key }, entry);
-                    
+
                     log("Creating AF object pool to access " + entry.key + "...");
                     var p = ow.obj.pool.AF(entry.url, entry.timeout, entry.conTimeout, entry.dontUseTransaction);
                     setPool(p, entry);
@@ -83,13 +84,13 @@
             logErr(e);
         }
     });
-    
+
     this.params.CH.forEach(ch => {
         try {
             _$(ch, "ch").isMap().$_();
             _$(ch.name, "ch.name").isString().$_();
             ch.type = _$(ch.type, ch.name + " ch.type").isString().default("simple");
-    
+
             // Creating channel
             $ch(ch.name).create(1, ch.type, ch.options);
             if (isArray(ch.entries)) {
@@ -97,7 +98,7 @@
                     try {
                         _$(entry.key, "entry.key").$_();
                         _$(entry.value, "entry.value").$_();
-                        
+
                         entry.key = setSec(entry.key);
                         entry.value = setSec(entry.value);
 
@@ -116,7 +117,7 @@
         var chkey = _$(this.params.DB[ichkey], ichkey).isArray().$_();
         try {
             chkey = _$(chkey, ichkey).isArray().default({});
-    
+
             $ch(ichkey).create();
             chkey.forEach(entry => {
                 try {
@@ -126,7 +127,7 @@
                     entry.key  = _$(entry.key, "DB " + ichkey + " entry key").isString().$_();
 
                     $ch(ichkey).set({ key: entry.key }, entry);
-                    
+
                     log("Creating DB object pool to access " + entry.key + "...");
                     var p;
                     if (isDef(entry.driver)) {
@@ -152,7 +153,7 @@
         var chkey = _$(this.params.SSH[ichkey], ichkey).isArray().$_();
         try {
             chkey = _$(chkey, ichkey).isArray().default({});
-    
+
             $ch(ichkey).create();
             chkey.forEach(entry => {
                 try {
@@ -162,15 +163,58 @@
                     entry.key  = _$(entry.key, "SSH " + ichkey + " entry key").isString().$_();
 
                     $ch(ichkey).set({ key: entry.key }, entry);
-                    
+
                     log("Creating SSH object pool to access " + entry.key + "...");
                     var p = ow.obj.pool.SSH(entry.host, entry.port, entry.login, entry.pass, entry.idkey, entry.withCompression);
-                
+
                     setPool(p, entry);
                     nattrmon.addObjectPool(entry.key, p);
 
                     log("Created object pool to access " + entry.key);
                     setAssociations("SSH", entry);
+                } catch(e1) {
+                    logErr(e1);
+                }
+            });
+        } catch(e) {
+            logErr(e);
+        }
+    });
+
+    Object.keys(this.params.AFCache).forEach(ichkey => {
+        var chkey = _$(this.params.AFCache[ichkey], ichkey).isArray().$_();
+        try {
+            chkey = _$(chkey, ichkey).isArray().default({});
+
+            $ch(ichkey).create();
+            chkey.forEach(entry => {
+                try {
+                    entry      = _$(entry, "AFCache " + ichkey + " entry").isMap().$_();
+                    entry      = setSec(entry);
+                    entry.key  = _$(entry.key, "AFCache " + ichkey + " entry key").isString().$_();
+                    entry.ttl  = _$(entry.ttl, "AFCache " + ichkey + " ttl key").isNumber().default(__);
+
+                    log("Creating AF operation cache to access " + entry.key + "...");
+                    $cache("nattrmon::" + entry.key)
+                    .ttl(entry.ttl)
+                    .fn(aK => {
+                        if (isString(aK.op) && isMap(aK.args)) {
+                            var res = __;
+                            nattrmon.useObject(entry.key, function(s) {
+                                try {
+                                    res = s.exec(aK.op, aK.args);
+                                } catch(e) {
+                                    res = { __error: "Error while retrieving result from '" + aK.op + "' using '" + entry.key + "' AF object pool: " + e.message }
+                                }
+                            });
+                            return res;
+                        } else {
+                            return __;
+                        }
+                    })
+                    .create();
+
+                    log("Created AF operation cache to access " + entry.key);
                 } catch(e1) {
                     logErr(e1);
                 }

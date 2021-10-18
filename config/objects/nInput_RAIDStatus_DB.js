@@ -36,22 +36,36 @@ nInput_RAIDStatus_DB.prototype.__getData = function (aKey, scope) {
     var ses, parseResult = false;
 
     try {
+        var parent = this;
+
         if (isDef(aKey)) {
-            nattrmon.useObject(aKey, s => {
-                try {
-                    ses = s.exec("StatusReport", {});
-                    if (isMap(ses) && isDef(ses.Services) && isDef(ses.Services["wedo.jaf.services.database.ConnectionManagerBase"])) {
-                        ses = ses.Services["wedo.jaf.services.database.ConnectionManagerBase"];
-                        parseResult = true;
-                        return true;
-                    } else {
+            if (isBoolean(parent.params.useCache) && parent.params.useCache) {
+                var res = $cache("nattrmon::" + aKey).get({ op: "StatusReport", args: {} });
+                if (isMap(res) && isDef(res.__error)) throw res.__error;
+                if (isMap(res) && isDef(res.Services) && isDef(res.Services["wedo.jaf.services.database.ConnectionManagerBase"])) {
+                    res = res.Services["wedo.jaf.services.database.ConnectionManagerBase"];
+                    parseResult = true;
+                    ses = res;
+                } else {
+                    logErr("Error while retrieving connection manager base data using '" + aKey + "': " + e.message);
+                }
+            } else {
+                nattrmon.useObject(aKey, s => {
+                    try {
+                        ses = s.exec("StatusReport", {});
+                        if (isMap(ses) && isDef(ses.Services) && isDef(ses.Services["wedo.jaf.services.database.ConnectionManagerBase"])) {
+                            ses = ses.Services["wedo.jaf.services.database.ConnectionManagerBase"];
+                            parseResult = true;
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    } catch (e) {
+                        logErr("Error while retrieving connection manager base data using '" + aKey + "': " + e.message);
                         return false;
                     }
-                } catch (e) {
-                    logErr("Error while retrieving connection manager base data using '" + aKey + "': " + e.message);
-                    return false;
-                }
-            });
+                });
+            }
         } else {
             try {
                 ses = s.exec("StatusReport", {}).Services["wedo.jaf.services.database.ConnectionManagerBase"];

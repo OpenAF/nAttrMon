@@ -121,7 +121,7 @@ nOutput_ES.prototype.addToES = function (aCh, aVal, useTitle) {
 		   }
 		}		
 		if (cont && isMap(res) && isDef(res.error)) {
-			logErr("Error on sending '" + res.error + "'");
+			logErr("Error on sending '" + af.toSLON(res.error) + "'");
 		}
 	} catch (e) {
 		sprintErr(e + " -- " + stringify(data));
