@@ -62,8 +62,8 @@ nInput_RAIDGCMemory.prototype.__getMemory = function(aKey, aExtra) {
 	try {
 		var mems;
 		var parent = this;
-		if (isBoolean(parent.params.useCache) && parent.params.useCache) {
-			var res = $cache("nattrmon::" + aKey).get({ op: "StatusReport", args: { RunGC: true } });
+		if (isString(parent.params.useCache)) {
+			var res = $cache("nattrmon::" + parent.params.useCache + "::" + aKey).get({ op: "StatusReport", args: { RunGC: true } });
 			if (isMap(res) && isDef(res.__error)) throw res.__error;
 			mems = res.GarbageCollector;
 		} else {

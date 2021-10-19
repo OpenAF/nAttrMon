@@ -38,8 +38,8 @@ nInput_Sessions.prototype.__getSessions = function(aKey, scope) {
 
 	try {
 		if (isDef(aKey)) {
-			if (isBoolean(parent.params.useCache) && parent.params.useCache) {
-				var res = $cache("nattrmon::" + aKey).get({ op: "StatusReport", args: { } });
+			if (isString(parent.params.useCache)) {
+				var res = $cache("nattrmon::" + parent.params.useCache + "::" + aKey).get({ op: "StatusReport", args: { } });
 				if (isMap(res) && isDef(res.__error)) throw res.__error;
 				ses = res.Services["wedo.jaf.services.sessions.SessionManagerBase"];
 				ses = (isDef(ses) ? ses = ses.SessionManager.Sessions : []);

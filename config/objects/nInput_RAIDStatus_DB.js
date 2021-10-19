@@ -39,8 +39,8 @@ nInput_RAIDStatus_DB.prototype.__getData = function (aKey, scope) {
         var parent = this;
 
         if (isDef(aKey)) {
-            if (isBoolean(parent.params.useCache) && parent.params.useCache) {
-                var res = $cache("nattrmon::" + aKey).get({ op: "StatusReport", args: {} });
+            if (isString(parent.params.useCache)) {
+                var res = $cache("nattrmon::" + parent.params.useCache + "::" + aKey).get({ op: "StatusReport", args: {} });
                 if (isMap(res) && isDef(res.__error)) throw res.__error;
                 if (isMap(res) && isDef(res.Services) && isDef(res.Services["wedo.jaf.services.database.ConnectionManagerBase"])) {
                     res = res.Services["wedo.jaf.services.database.ConnectionManagerBase"];

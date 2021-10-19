@@ -61,8 +61,8 @@ nInput_RAIDMemory.prototype.__getMemory = function(aKey, aExtra) {
 	try {
 		var mems;
 		var parent = this;
-		if (isBoolean(parent.params.useCache) && parent.params.useCache) {
-			var res = $cache("nattrmon::" + aKey).get({ op: "StatusReport", args: {} });
+		if (isString(parent.params.useCache)) {
+			var res = $cache("nattrmon::" + parent.params.useCache + "::" + aKey).get({ op: "StatusReport", args: {} });
 			if (isMap(res) && isDef(res.__error)) throw res.__error;
 			mems = res.MemoryInfo;
 		} else {
