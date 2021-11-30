@@ -20,6 +20,7 @@ var nInput_EndPoints = function(aMap) {
 inherit(nInput_EndPoints, nInput);
 
 nInput_EndPoints.prototype.testURL = function(anEntry) {
+    anEntry = __nam_getSec(anEntry)
     if (isDef(anEntry.url)) {
         var canDoIt = false, lat;
         var h = new ow.obj.http();
@@ -56,6 +57,7 @@ nInput_EndPoints.prototype.testURL = function(anEntry) {
 };
 
 nInput_EndPoints.prototype.testPort = function(anEntry) {
+    anEntry = __nam_getSec(anEntry)
     if (isUnDef(anEntry.timeout)) anEntry.timeout = 1500;
 
     if (isDef(anEntry.address) && isDef(anEntry.port)) {
