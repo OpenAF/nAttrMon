@@ -123,7 +123,7 @@ nOutput_ES.prototype.addToES = function (aCh, aVal, useTitle) {
 		if (cont && isMap(res) && isDef(res.error)) {
 			logErr("Error on sending '" + af.toSLON(res.error) + "'");
 		}
-		if (cont && isMap(res) && isDef(res.errors)) {
+		if (cont && isMap(res) && isDef(res.errors) && res.errors) {
 			logErr("Error on sending '" + $from(data).select((r)=>{return r.name}).join(", ") + "': " + stringify(res));
 		}
 	} catch (e) {
