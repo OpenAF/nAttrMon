@@ -1,7 +1,7 @@
 /**
  * Author: Nuno Aguiar
  */
-var nOutput_ES = function (aMap) {
+ var nOutput_ES = function (aMap) {
 	if (isUnDef(aMap) || !isObject(aMap)) aMap = {};
 
 	if (isUnDef(aMap.url)) {
@@ -91,7 +91,7 @@ nOutput_ES.prototype.addToES = function (aCh, aVal, useTitle) {
 				obj = merge(obj, clone(aVal));
 			} else {
 				obj.id = sha1(obj.name + (this.unique ? "" : obj.date));
-				obj[obj.name] = clone(aVal.val);
+				obj[obj.name] = (isMap(aVal.val) ? clone(aVal.val) : aVal.val)
 			}
 			traverse(obj, function (k, v, p, o) {
 				if (v == null) {
@@ -122,6 +122,9 @@ nOutput_ES.prototype.addToES = function (aCh, aVal, useTitle) {
 		}		
 		if (cont && isMap(res) && isDef(res.error)) {
 			logErr("Error on sending '" + af.toSLON(res.error) + "'");
+		}
+		if (cont && isMap(res) && isDef(res.errors)) {
+			logErr("Error on sending '" + $from(data).select((r)=>{return r.name}).join(", ") + "': " + stringify(res));
 		}
 	} catch (e) {
 		sprintErr(e + " -- " + stringify(data));
