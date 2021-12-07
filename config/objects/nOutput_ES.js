@@ -53,6 +53,9 @@ inherit(nOutput_ES, nOutput);
 nOutput_ES.prototype.addToES = function (aCh, aVal, useTitle) {
 	var obj = {};
 	var data = [];
+	var extra = ""
+
+	if (isDef(this.stampMap)) extra = stringify(sortMapKeys(this.stampMap), __, "")
 
 	if (useTitle) {
 		obj = {
@@ -70,7 +73,7 @@ nOutput_ES.prototype.addToES = function (aCh, aVal, useTitle) {
 	try {
 		if (isArray(aVal.val)) {
 			for (var i in aVal.val) {
-				obj.id = sha1(obj.name + (this.unique ? "" : obj.date) + i);
+				obj.id = sha1(obj.name + (this.unique ? "" : obj.date) + i + extra);
 				obj[obj.name] = clone(aVal.val[i]);
 				
 				traverse(obj, function (k, v, p, o) {
@@ -87,10 +90,10 @@ nOutput_ES.prototype.addToES = function (aCh, aVal, useTitle) {
 			}
 		} else {
 			if (useTitle) {
-				obj.id = sha1(obj.title + (this.unique ? obj.createdate : obj.date) + obj.level);
+				obj.id = sha1(obj.title + (this.unique ? obj.createdate : obj.date) + obj.level + extra);
 				obj = merge(obj, clone(aVal));
 			} else {
-				obj.id = sha1(obj.name + (this.unique ? "" : obj.date));
+				obj.id = sha1(obj.name + (this.unique ? "" : obj.date) + extra);
 				obj[obj.name] = (isMap(aVal.val) ? clone(aVal.val) : aVal.val)
 			}
 			traverse(obj, function (k, v, p, o) {
