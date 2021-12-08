@@ -266,8 +266,8 @@ filesHash:
   lib/nattributevalue.js: d6a378dba74922540bcc3e054222733f69d5cead
   lib/noutput.js: 097a89ae2ab12cb28d88034444a72d368464d14c
   lib/nattributes.js: f28cee64a735e0e6ae3b520bbc59f74e6203e1db
-  lib/nwarnings.js: 565260de1c13160589dd2dcd920ab6b7d5eaae01
-  lib/nmain.js: d8eedb615899e5741f2f419db62375225a580dbc
+  lib/nwarnings.js: ecc23cfe9744873da04bc42790d6d061f9cfcbb6
+  lib/nmain.js: 3517b661e0747f69c58aae2cfa5f587c8ba4dc59
   lib/nattribute.js: 957b3e1e4d55c554e029229dae26e838df1da7b4
   lib/nplug.js: d9a6ffcd4c9999cff6364ff40dd9a38dbac680e8
   lib/ntmplhelpers.js: ace956e44614b286cb445e803e5168dc02461c0e
