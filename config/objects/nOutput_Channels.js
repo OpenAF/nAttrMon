@@ -201,6 +201,38 @@ var nOutput_Channels = function(aMap) {
         return {};
       },
 
+      "kill": function(value) {
+        if (isDef(value) && isDef(value.force)) {
+          if (value.force) {
+            logWarn("force kill command received!")
+            exit(-1)
+          } else {
+            logWarn("kill command received, stopping...")
+            $do(() => {
+              nattrmon.stop()
+              sleep(5000, true)
+              exit(-1)
+            })
+          }
+        }
+      },
+
+      "restart": function(value) {
+        if (isDef(value) && isDef(value.force)) {
+          if (value.force) {
+            logWarn("force restart command received!")
+            restartOpenAF()
+          } else {
+            logWarn("restart command received, restarting...")
+            $do(() => {
+              nattrmon.stop()
+              sleep(5000, true)
+              restartOpenAF()
+            })
+          }
+        }
+      },
+
       "reloadPlug": function (value) {
         if (isUnDef(value.file)) {
           return {
