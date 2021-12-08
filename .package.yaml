@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20211207'
+version: '20211208'
 dependencies:
   openaf: '>=20210721'
 files:
@@ -363,8 +363,9 @@ filesHash:
   config/objects/nInput_Schedulers.js: 96771d166e2574b6d5a526cc6025ad3abf1363d4
   config/objects/nInput_Semaphores.js: 9b0c0d8ca1b1c33d8faeaae89738360c8569534e
   config/objects/nInput_Sessions.js: e4adb3f97db438aa0524ba3a1efebd615d7c3057
-  config/objects/nInput_Shell.js: e3f52cbf7fb1c7cabb724ec6111aebb3527f16d0
-  config/objects/nInput_nAttrMon.js: c8ec9f45f724e7372b02751b893178490587641b
+  config/objects/nInput_RunningFlows.js: 7d8d77a702b4f9f2f719679052cba240798fa5f8
+  config/objects/nOutput_HTTP_Status.js: edef19006705f59eee10b7154f3bb2e5efa341ed
+  config/objects/nOutput_Channels.js: 81fa59618aa1fe306dbf17a9167a681530bab73f
   config/objects/nOutput_ChMirror.js: c1b5d965320aac73d90f0a6e12ae0a4123f8afd5
   config/objects/nOutput_Channels.js: 52345d9d8aa49a381d2b45e119768866515b4139
   config/objects/nOutput_DSV.js: b723aefe236bd464d215c52406cec796cd47d97f
