@@ -28,6 +28,7 @@
 	this.exclude = aMap.exclude;
 
 	this.unique = aMap.unique;
+	this.noDateDocId = _$(aMap.noDateDocId, "noDateDocId").isBoolean().default(false)
 
 	if (isDef(this.include) && !isArray(this.include)) throw "Include needs to be an array";
 	if (isDef(this.exclude) && !isArray(this.exclude)) throw "Exclude needs to be an array";
@@ -73,7 +74,7 @@ nOutput_ES.prototype.addToES = function (aCh, aVal, useTitle) {
 	try {
 		if (isArray(aVal.val)) {
 			for (var i in aVal.val) {
-				obj.id = sha1(obj.name + (this.unique ? "" : obj.date) + i + extra);
+				obj.id = sha1(obj.name + (this.unique ? "" : (this.noDateDocId ? "" : obj.date)) + i + extra);
 				obj[obj.name] = clone(aVal.val[i]);
 				
 				traverse(obj, function (k, v, p, o) {
@@ -90,10 +91,10 @@ nOutput_ES.prototype.addToES = function (aCh, aVal, useTitle) {
 			}
 		} else {
 			if (useTitle) {
-				obj.id = sha1(obj.title + (this.unique ? obj.createdate : obj.date) + obj.level + extra);
+				obj.id = sha1(obj.title + (this.noDateDocId ? "" : (this.unique ? obj.createdate : obj.date)) + obj.level + extra);
 				obj = merge(obj, clone(aVal));
 			} else {
-				obj.id = sha1(obj.name + (this.unique ? "" : obj.date) + extra);
+				obj.id = sha1(obj.name + (this.unique ? "" : (this.noDateDocId ? "" : obj.date)) + extra);
 				obj[obj.name] = (isMap(aVal.val) ? clone(aVal.val) : aVal.val)
 			}
 			traverse(obj, function (k, v, p, o) {

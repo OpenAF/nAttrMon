@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20211208'
+version: '20211215'
 dependencies:
   openaf: '>=20210721'
 files:
@@ -267,8 +267,8 @@ filesHash:
   lib/nattributevalue.js: d6a378dba74922540bcc3e054222733f69d5cead
   lib/noutput.js: 097a89ae2ab12cb28d88034444a72d368464d14c
   lib/nattributes.js: f28cee64a735e0e6ae3b520bbc59f74e6203e1db
-  lib/nwarnings.js: 9a6fb69e27fea66e1fba7a0bacb334224ce1aba5
-  lib/nmain.js: f74f8f7f511ef8f98865632a9518a680cf674389
+  lib/nwarnings.js: 542513dfbc8e6066cd92ae03641a03d334361609
+  lib/nmain.js: f220e2a45f52fe0e5fd5f3364ff8d82a846cf7d8
   lib/nattribute.js: 957b3e1e4d55c554e029229dae26e838df1da7b4
   lib/nplug.js: d9a6ffcd4c9999cff6364ff40dd9a38dbac680e8
   lib/ntmplhelpers.js: ace956e44614b286cb445e803e5168dc02461c0e
@@ -414,7 +414,7 @@ filesHash:
   config/objects/nInput_Schedulers.js: 96771d166e2574b6d5a526cc6025ad3abf1363d4
   config/objects/nInput_RAIDLookups.js: 1544374c0bec3e6c53eb60c1efe578f4b8f101ae
   config/objects/nInput_nAttrMon.js: c8ec9f45f724e7372b02751b893178490587641b
-  config/objects/nOutput_ES.js: a0b2d2c9768f04eb3ba221b03d39088330f866a7
+  config/objects/nOutput_ES.js: 87272e07fa2c0d7283f2e1bbe434b9ac27ecbfbb
   config/objects/nOutput_Log2ES.js: 7e5d538324a2fa59d5a83ad0ad6ada9760529ed9
   config/objects/nInput_AFPing.js: c88598e75deb073715ed011272ae7ffb46962e8e
   config/objects/nOutput_HTTP_HealthZ.js: 570c5ae615a2ecbc3f304bda850549f0649bb704
