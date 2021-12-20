@@ -36,6 +36,7 @@ files:
 - docs/images/nAttrMon.png
 - docs/images/nAttrMon.xcf
 - README.md
+- .precompile
 - .package.yaml
 - CONTRIBUTING.md
 - util/backupConfig.yaml
@@ -252,6 +253,7 @@ filesHash:
   docs/images/nAttrMon.png: 298fb1bb1e7c004b6204069d2a3319fbdebedea0
   docs/images/nAttrMon.xcf: ae00e462f4b6c18adc55b6ddc4900ab3e0ffac35
   README.md: b0fd23513e7f58f34f33aa9f393c188fd8b009a0
+  .precompile: 52743b858c620cbf8590846495d282efc2ce0060
   CONTRIBUTING.md: c39f66b369fdd4722819997ac9c0f2a1cf6219ec
   util/backupConfig.yaml: cecdefad82f0c4e23d5341cb97bb6deccf6fd0ff
   util/loadFile2Elastic.yaml: 8ba828ece6a9796db21a691f2b32ad21a2caf214
