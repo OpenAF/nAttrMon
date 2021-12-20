@@ -36,6 +36,8 @@ var nValidation_Generic = function (aMap) {
 inherit(nValidation_Generic, nValidation);
 
 nValidation_Generic.prototype.pathMapper = function(path) {
+    if (path == ".") return obj => obj
+
     if (path.indexOf('.') < 0) {
         return (obj) => {
             return obj[path];
@@ -66,19 +68,37 @@ nValidation_Generic.prototype.levelMapper = function(aLevel) {
 nValidation_Generic.prototype.checkEntry = function(ret, k, v, args) {
     for (var i in this.params.checks) {
         var check = this.params.checks[i]; 
+        var go = false
 
         if (isDef(v) && 
             ((isDef(check.attribute) && v.name == check.attribute) || 
-             (isDef(check.attrPattern) && v.name.match(new RegExp(check.attrPattern))) 
+             (isDef(check.attrPattern) && v.name.match(new RegExp(check.attrPattern)))
             )
            ) {
+            go = true
+        }
+
+        if (isDef(v) && 
+            ((isDef(check.title) && v.title == check.title) || 
+             (isDef(check.titlePattern) && v.title.match(new RegExp(check.titlePattern)))
+            )
+           ) {
+            go = true
+            if (isUnDef(check.map)) check.map = "."
+        }
+
+        if (go) {
             var uuid;
             if (check.debug) uuid = genUUID();
 
             var warnLevel = this.levelMapper(check.warnLevel);
 
             var vals = [];
-            if (!(isArray(v.val))) vals = [v.val]; else vals = v.val;
+            if (isDef(v.val)) {
+                if (!(isArray(v.val))) vals = [v.val]; else vals = v.val
+            } else {
+                if (!(isArray(v))) vals = [v]; else vals = v
+            }
 
             for (var vv in vals) {
                 var val;
@@ -249,16 +269,31 @@ nValidation_Generic.prototype.validate = function(warns, scope, args) {
     if (isDef(args) && isDef(args.k) && isDef(args.v)) {
         if (args.op == "setall") {
             for(var ii in args.v) {
-                ret = this.checkEntry(ret, args.k, args.v[ii], args);
+                var go = true
+                if (isDef(this.params.attrPattern) && !args.v[ii].name.match(new RegExp(this.params.attrPattern))) go = false
+                if (isDef(this.params.attribute) && !args.v[ii].name.match(new RegExp(this.params.attribute))) go = false
+                if (isDef(this.params.titlePattern) && !args.v[ii].title.match(new RegExp(this.params.titlePattern))) go = false
+                if (isDef(this.params.title) && !args.v[ii].title.match(new RegExp(this.params.title))) go = false
+                if (go) ret = this.checkEntry(ret, args.k, args.v[ii], args)
             }
         }
         if (args.op == "set") {
-            ret = this.checkEntry(ret, args.k, args.v, args);
+            var go = true
+            if (isDef(this.params.attrPattern) && !args.v.name.match(new RegExp(this.params.attrPattern))) go = false
+            if (isDef(this.params.attribute) && !args.v.name.match(new RegExp(this.params.attribute))) go = false
+            if (isDef(this.params.titlePattern) && !args.v.title.match(new RegExp(this.params.titlePattern))) go = false
+            if (isDef(this.params.title) && !args.v.title.match(new RegExp(this.params.title))) go = false
+            if (go) ret = this.checkEntry(ret, args.k, args.v, args)
         }
     } else {
         var cvals = scope.getCurrentValues();
         for(var i in cvals) {
-            ret = this.checkEntry(ret, { name: cvals[i].name }, cvals[i], args);
+            var go = true
+            if (isDef(this.params.attrPattern) && !cvals[i].name.match(new RegExp(this.params.attrPattern))) go = false
+            if (isDef(this.params.attribute) && !cvals[i].name.match(new RegExp(this.params.attribute))) go = false
+            if (isDef(this.params.titlePattern) && !cvals[i].title.match(new RegExp(this.params.titlePattern))) go = false
+            if (isDef(this.params.title) && !cvals[i].title.match(new RegExp(this.params.title))) go = false
+            if (go) ret = this.checkEntry(ret, { name: cvals[i].name }, cvals[i], args)
         }
     }
 
