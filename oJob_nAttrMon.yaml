@@ -15,6 +15,7 @@ jobs:
   type: shutdown
   exec: |
     global.nattrmon.stop();
+    $ch("nattrmon::trigger").destroy()
     log("nAttrMon stopped.");
     //print(new Date() + " | Stopping.");
 
@@ -22,6 +23,7 @@ jobs:
 - name: nAttrMon Shutdown
   exec: |
     global.nattrmon.stop()
+    $ch("nattrmon::trigger").destroy()
     log("nAttrMon stopped.")
 
 # -------------------------
@@ -51,7 +53,7 @@ jobs:
     global.nattrmon.debug("Stopping...");
     global.nattrmon.stop();
 
-    exit(0);
+    //exit(0);
     //log("nAttrMon stopped.");
     //print(new Date() + " | Stopping.");
 
@@ -158,6 +160,17 @@ jobs:
     if (isString(args.__NAM_CHANNEL_LVALS))  global.__NAM_CHANNEL_LVALS = String(args.__NAM_CHANNEL_LVALS);
     if (isString(args.__NAM_CHANNEL_WARNS))  global.__NAM_CHANNEL_WARNS = String(args.__NAM_CHANNEL_WARNS);
 
+    if (isUnDef(args.withDirectory)) {
+      global.nattrmon = new nAttrMon(global.NATTRMON_SUBHOME + "/config", global.__NAM_DEBUG);
+    } else {
+      global.nattrmon = new nAttrMon(args.withDirectory, global.__NAM_DEBUG);
+    }
+
+    global.nattrmon.debug("nAttrMon start load plugs");
+    global.nattrmon.loadPlugs();
+
+    $ch("nattrmon::trigger").create();
+
     (function() {
       print("Reapplying parameters:");
       $from(Object.keys(args))
@@ -170,14 +183,3 @@ jobs:
 
       print(repeat(80, "-"));
     })();
-
-    if (isUnDef(args.withDirectory)) {
-      global.nattrmon = new nAttrMon(global.NATTRMON_SUBHOME + "/config", global.__NAM_DEBUG);
-    } else {
-      global.nattrmon = new nAttrMon(args.withDirectory, global.__NAM_DEBUG);
-    }
-
-    global.nattrmon.debug("nAttrMon start load plugs");
-    global.nattrmon.loadPlugs();
-
-    $ch("nattrmon::trigger").create();
