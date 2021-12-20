@@ -18,6 +18,12 @@ jobs:
     log("nAttrMon stopped.");
     //print(new Date() + " | Stopping.");
 
+# -----------------------
+- name: nAttrMon Shutdown
+  exec: |
+    global.nattrmon.stop()
+    log("nAttrMon stopped.")
+
 # -------------------------
 - name: nAttrMon Run Single
   from:
