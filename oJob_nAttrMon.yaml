@@ -14,6 +14,14 @@ jobs:
 - name: nAttrMon Prepare shutdown
   type: shutdown
   exec: |
+    $ch()
+    .list()
+    .filter(r => r.startsWith("nattrmon::"))
+    .forEach(r => {
+      global.nattrmon.debug("Waiting for " + r + "...");
+      $ch(r).waitForJobs();
+    })
+
     global.nattrmon.stop();
     $ch("nattrmon::trigger").destroy()
     log("nAttrMon stopped.");
@@ -22,6 +30,14 @@ jobs:
 # -----------------------
 - name: nAttrMon Shutdown
   exec: |
+    $ch()
+    .list()
+    .filter(r => r.startsWith("nattrmon::"))
+    .forEach(r => {
+      global.nattrmon.debug("Waiting for " + r + "...");
+      $ch(r).waitForJobs();
+    })
+    
     global.nattrmon.stop()
     $ch("nattrmon::trigger").destroy()
     log("nAttrMon stopped.")
