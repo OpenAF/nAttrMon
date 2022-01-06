@@ -60,6 +60,12 @@ nInput_EndPoints.prototype.testPort = function(anEntry) {
     anEntry = __nam_getSec(anEntry)
     if (isUnDef(anEntry.timeout)) anEntry.timeout = 1500;
 
+    if (isDef(anEntry.url) && isUnDef(anEntry.address) && isUnDef(anEntry.port)) {
+        var _url = new java.net.URL(anEntry.url)
+        anEntry.address = _url.getHost()
+        anEntry.port    = (_url.getPort() == -1 ? _url.getDefaultPort() : _url.getPort())
+    }
+
     if (isDef(anEntry.address) && isDef(anEntry.port)) {
         var canDoIt = false;
         var errorMessage = "n/a";
@@ -90,18 +96,26 @@ nInput_EndPoints.prototype.input = function(scope, args) {
     if (isDef(this.params.urls)) {
         for(var attribute in this.params.urls) {
             var entry = this.params.urls[attribute];
-            ret[attribute] = this.testURL(entry);
+            ret[templify(attribute, entry)] = this.testURL(entry);
         }
     }
 
     if (isDef(this.params.chUrls)) {
         $ch(this.params.chUrls).forEach((k, v) => {
             var attr;
-            if (isDef(k.key))       attr = k.key;
-            if (isString(k))        attr = k;
-            if (isDef(k.attribute)) attr = k.attribute;
+            if (isUnDef(this.params.attribute)) {
+                if (isDef(k.key))       attr = k.key;
+                if (isString(k))        attr = k;
+                if (isDef(k.attribute)) attr = k.attribute; 
+            } else {
+                if (isDef(k.attribute))
+                    attr = k.attribute
+                else
+                    attr = this.params.attribute
+            }
+
             if (isDef(attr)) {
-                ret[attr] = this.testURL(v);
+                ret[templify(attr, k)] = this.testURL(v);
             }
         });
     }
@@ -109,18 +123,26 @@ nInput_EndPoints.prototype.input = function(scope, args) {
     if (isDef(this.params.ports)) {
         for(var attribute in this.params.ports) {
             var entry = this.params.ports[attribute];
-            ret[attribute] = this.testPort(entry);
+            ret[templify(attribute, entry)] = this.testPort(entry);
         }
     }
 
     if (isDef(this.params.chPorts)) {
         $ch(this.params.chPorts).forEach((k, v) => {
             var attr;
-            if (isDef(k.key))       attr = k.key;
-            if (isString(k))        attr = k;
-            if (isDef(k.attribute)) attr = k.attribute;
+            if (isUnDef(this.params.attribute)) {
+                if (isDef(k.key))       attr = k.key;
+                if (isString(k))        attr = k;
+                if (isDef(k.attribute)) attr = k.attribute;
+            } else {
+                if (isDef(k.attribute))
+                    attr = k.attribute
+                else
+                    attr = this.params.attribute
+            }
+
             if (isDef(attr)) {
-                ret[attr] = this.testPort(v);
+                ret[templify(attr, k)] = this.testPort(v);
             }
         });
     }
