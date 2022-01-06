@@ -47,7 +47,7 @@ var nOutput_EmailWarnings = function(aMap) {
 
 	this.lock = false;
 
-	this.first = (isUnDef(aMap.dontAvoidStartEmails)) ? true : aMap.dontAvoidStartEmails;
+	this.first = (isUnDef(aMap.dontAvoidStartEmails)) ? true : !aMap.dontAvoidStartEmails;
 	this.startTime = new Date();
 	this.firstGrace = (isUnDef(aMap.firstGrace)) ? void 0 : aMap.firstGrace;	
 
