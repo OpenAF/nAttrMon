@@ -1,0 +1,16 @@
+input:
+  name         : Retrieve percentiles
+  cron         : "*/15 * * * *"
+  waitForFinish: true
+  onlyOnEvent  : true
+  execFrom     : nInput_ESSearch
+  execArgs     :
+    url   : http://localhost:9200
+    index : test
+    search:
+      size: 0
+      aggs:
+        percs:
+          percentiles:
+            field: "size"
+    path  : aggregations.percs.values
