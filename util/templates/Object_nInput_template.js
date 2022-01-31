@@ -12,7 +12,7 @@
  * </odoc>
  */
 var nInput_SomeObject = function(aMap) {
-    if (isObject(aMap)) {
+    if (!isNull(aMap) && isMap(aMap)) {
         this.params = aMap;
     } else {
         this.params = {};
@@ -24,12 +24,31 @@ var nInput_SomeObject = function(aMap) {
 };
 inherit(nInput_SomeObject, nInput);
 
-nInput_SomeObject.prototype.input = function(scope, args) {
-    var ret = {};
+nInput_SomeObject.prototype.get = function(keyData, extra) {
+    // Get metrics based on keyData
+    var res = { key: keyData }
 
-    ret[templify(this.params.attrTemplate)] = {
+    // TODO
+
+    return merge(extra, res)
+}
+
+nInput_SomeObject.prototype.input = function(scope, args) {
+    var ret = {}
+
+    /*ret[templify(this.params.attrTemplate)] = {
         something: true
-    };
+    };*/
+
+	if (isDef(this.params.chKeys)) {
+        var arr = []
+        $ch(this.params.chKeys).forEach((k, v) => {
+            arr.push(this.get(merge(k, v)))
+        })
+        ret[templify(this.params.attrTemplate, this.params)] = arr
+    } else {
+        ret[templify(this.params.attrTemplate, this.params)] = this.get(this.params)
+    }
 
     return ret;
 };

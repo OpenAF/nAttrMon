@@ -131,12 +131,24 @@ var nOutput_HTTP_Status = function (aMap) {
     var parent = this;
     var routes = {};
     routes["/status"] = function(req) {
-        var hres = ow.server.httpd.reply(parent.status(), 200, "text/html", {});
-        return preProcess(req, hres);
+		try {
+			var hres = ow.server.httpd.reply(parent.status(), 200, "text/html", {});
+			return preProcess(req, hres);
+		} catch(e) {
+			logErr("Error in HTTP request: " + stringify(req, __, "") + "; exception: " + String(e))
+			if (isJavaException(e)) e.javaException.printStackTrace()
+			return ow.server.httpd.reply("Error (check logs)", 500)
+		}
     }
 	ow.server.httpd.route(httpd, ow.server.httpd.mapWithExistingRoutes(httpd, routes), function (r) {
-		var hres = ow.server.httpd.reply("", 200, "text/plain", {});
-		return preProcess(r, hres);
+		try {
+			var hres = ow.server.httpd.reply("", 200, "text/plain", {});
+			return preProcess(r, hres);
+		} catch(e) {
+			logErr("Error in HTTP request: " + stringify(r, __, "") + "; exception: " + String(e))
+			if (isJavaException(e)) e.javaException.printStackTrace()
+			return ow.server.httpd.reply("Error (check logs)", 500)
+		}
 	});
 
 	nOutput.call(this, this.output);

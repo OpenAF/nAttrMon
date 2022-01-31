@@ -196,22 +196,34 @@ var nOutput_HTTP_Metrics = function (aMap) {
     var parent = this;
 	ow.server.httpd.route(httpd, ow.server.httpd.mapWithExistingRoutes(httpd, {
 		"/metrics": function (req) {
-            var res = "";
-			switch (req.params.op) {
-            default:
-                if (parent.includeSelf)  res += ow.metrics.fromObj2OpenMetrics(ow.metrics.getAll(), parent.nameSelf);
-                if (parent.includeCVals) res += _parse(nattrmon.getCurrentValues(), parent.nameCVals);
-                if (parent.includeLVals) res += _parse(nattrmon.getLastValues(), parent.nameLVals);
-                if (parent.includeWarns) res += _parse(nattrmon.getWarnings(), parent.nameWarns);
-                break;
+			try {
+				var res = "";
+				switch (req.params.op) {
+				default:
+					if (parent.includeSelf)  res += ow.metrics.fromObj2OpenMetrics(ow.metrics.getAll(), parent.nameSelf);
+					if (parent.includeCVals) res += _parse(nattrmon.getCurrentValues(), parent.nameCVals);
+					if (parent.includeLVals) res += _parse(nattrmon.getLastValues(), parent.nameLVals);
+					if (parent.includeWarns) res += _parse(nattrmon.getWarnings(), parent.nameWarns);
+					break;
+				}
+				var hres = ow.server.httpd.reply(res, 200, "text/plain", {});
+				hres.data = String(hres.data).replace(/\n+/g, "\n");
+				return preProcess(req, hres);
+			} catch(e) {
+				logErr("Error in HTTP request: " + stringify(req, __, "") + "; exception: " + String(e))
+				if (isJavaException(e)) e.javaException.printStackTrace()
+				return ow.server.httpd.reply("Error (check logs)", 500)
 			}
-			var hres = ow.server.httpd.reply(res, 200, "text/plain", {});
-            hres.data = String(hres.data).replace(/\n+/g, "\n");
-			return preProcess(req, hres);
 		}
 	}), function (r) {
-		var hres = ow.server.httpd.reply("", 200, "text/plain", {});
-		return preProcess(r, hres);
+		try {
+			var hres = ow.server.httpd.reply("", 200, "text/plain", {});
+			return preProcess(r, hres);
+		} catch(e) {
+			logErr("Error in HTTP request: " + stringify(r, __, "") + "; exception: " + String(e))
+			if (isJavaException(e)) e.javaException.printStackTrace()
+			return ow.server.httpd.reply("Error (check logs)", 500)
+		}
 	});
 
 	nOutput.call(this, this.output);

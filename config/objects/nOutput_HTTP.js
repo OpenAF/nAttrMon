@@ -117,27 +117,50 @@ var nOutput_HTTP = function (aMap) {
 	// Add function to server
 	ow.server.httpd.route(httpd, ow.server.httpd.mapWithExistingRoutes(httpd, {
 		"/f": function (r) {
-			if (r.uri == "/f") r.uri = "/index.html";
-			var hres = ow.server.httpd.replyFile(httpd, path + "/objects.assets/noutputhttp", "/f", r.uri);			
-			return preProcess(r, hres);
+			try {
+				if (r.uri == "/f") r.uri = "/index.html"
+				var hres = ow.server.httpd.replyFile(httpd, path + "/objects.assets/noutputhttp", "/f", r.uri)		
+				return preProcess(r, hres)
+			} catch(e) {
+				logErr("Error in HTTP request: " + stringify(r, __, "") + "; exception: " + String(e))
+				if (isJavaException(e)) e.javaException.printStackTrace()
+				return ow.server.httpd.reply("Error (check logs)", 500)
+			}
 		},
 		"/meta": function (req) {
-			var ret = {};
+			try {
+				var ret = {}
+				ret = nattrmon.getSessionData("httpd.summary.custom")
 
-			ret = nattrmon.getSessionData("httpd.summary.custom");
-
-			var hres = httpd.replyOKJSON(beautifier(ret));
-			return preProcess(req, hres);
+				var hres = httpd.replyOKJSON(beautifier(ret))
+				return preProcess(req, hres)
+			} catch(e) {
+				logErr("Error in HTTP request: " + stringify(req, __, "") + "; exception: " + String(e))
+				if (isJavaException(e)) e.javaException.printStackTrace()
+				return ow.server.httpd.reply("Error (check logs)", 500)
+			}
 		},
 		"/": function (r) {
-			if (r.uri == "/") r.uri = "/index.html";
-			var hres = ow.server.httpd.replyFile(httpd, path + "/objects.assets/noutputhttp", "/", r.uri);			
-			return preProcess(r, hres);
+			try {
+				if (r.uri == "/") r.uri = "/index.html"
+				var hres = ow.server.httpd.replyFile(httpd, path + "/objects.assets/noutputhttp", "/", r.uri)			
+				return preProcess(r, hres)
+			} catch(e) {
+				logErr("Error in HTTP request: " + stringify(r, __, "") + "; exception: " + String(e))
+				if (isJavaException(e)) e.javaException.printStackTrace()
+				return ow.server.httpd.reply("Error (check logs)", 500)
+			}
 		}
 	}), function (r) {
-		if (r.uri == "/") r.uri = "/index.html";
-		var hres = ow.server.httpd.replyFile(httpd, path + "/objects.assets/noutputhttp", "/", r.uri);
-		return preProcess(r, hres);
+		try {
+			if (r.uri == "/") r.uri = "/index.html";
+			var hres = ow.server.httpd.replyFile(httpd, path + "/objects.assets/noutputhttp", "/", r.uri);
+			return preProcess(r, hres);
+		} catch(e) {
+			logErr("Error in HTTP request: " + stringify(r, __, "") + "; exception: " + String(e))
+			if (isJavaException(e)) e.javaException.printStackTrace()
+			return ow.server.httpd.reply("Error (check logs)", 500)
+		}
 	});
 
 	nattrmon.setSessionData("httpd.summary.custom", {
