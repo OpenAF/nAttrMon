@@ -129,36 +129,60 @@ var nOutput_HTTP_HealthZ = function (aMap) {
     var routes = {};
     if (parent.includeHealthZ) {
         routes["/healthz"] = function(req) {
-            var hres = ow.server.httpd.reply("OK", 200, "text/plain", {});
-            return preProcess(req, hres);
+			try {
+				var hres = ow.server.httpd.reply("OK", 200, "text/plain", {});
+				return preProcess(req, hres);
+			} catch(e) {
+				logErr("Error in HTTP request: " + stringify(req, __, "") + "; exception: " + String(e))
+				if (isJavaException(e)) e.javaException.printStackTrace()
+				return ow.server.httpd.reply("Error (check logs)", 500)
+			}
         }
     }
     if (parent.includeLiveZ) {
         routes["/livez"] = function(req) {
             var hres;
-            try {
-                $ch(nattrmon.chPS).size();
-                hres = ow.server.httpd.reply("OK", 200, "text/plain", {});
-            } catch(e) {
-                hres = ow.server.httpd.reply("Internal Server Error", 500, "text/plain", {});
-            } 
-            return preProcess(req, hres);
+			try {
+				try {
+					$ch(nattrmon.chPS).size();
+					hres = ow.server.httpd.reply("OK", 200, "text/plain", {});
+				} catch(e) {
+					hres = ow.server.httpd.reply("Internal Server Error", 500, "text/plain", {});
+				} 
+				return preProcess(req, hres);
+			} catch(e) {
+				logErr("Error in HTTP request: " + stringify(req, __, "") + "; exception: " + String(e))
+				if (isJavaException(e)) e.javaException.printStackTrace()
+				return ow.server.httpd.reply("Error (check logs)", 500)
+			}
         }
     }
     if (parent.includeReadyZ) {
         routes["/readyz"] = function(req) {
-            if (nattrmon.alive) {
-                var hres = ow.server.httpd.reply("OK", 200, "text/plain", {});
-                return preProcess(req, hres);
-            } else {
-                var hres = ow.server.httpd.reply("Not ready", 503, "text/plain", {});
-                return preProcess(req, hres);
-            }
+			try {
+				if (nattrmon.alive) {
+					var hres = ow.server.httpd.reply("OK", 200, "text/plain", {});
+					return preProcess(req, hres);
+				} else {
+					var hres = ow.server.httpd.reply("Not ready", 503, "text/plain", {});
+					return preProcess(req, hres);
+				}
+			} catch(e) {
+				logErr("Error in HTTP request: " + stringify(req, __, "") + "; exception: " + String(e))
+				if (isJavaException(e)) e.javaException.printStackTrace()
+				return ow.server.httpd.reply("Error (check logs)", 500)
+			}
         }
     }
 	ow.server.httpd.route(httpd, ow.server.httpd.mapWithExistingRoutes(httpd, routes), function (r) {
-		var hres = ow.server.httpd.reply("", 200, "text/plain", {});
-		return preProcess(r, hres);
+		try {
+			var hres = ow.server.httpd.reply("", 200, "text/plain", {});
+			return preProcess(r, hres);
+		} catch(e) {
+			logErr("Error in HTTP request: " + stringify(r, __, "") + "; exception: " + String(e))
+			if (isJavaException(e)) e.javaException.printStackTrace()
+			return ow.server.httpd.reply("Error (check logs)", 500)
+		}
 	});
 
 	nOutput.call(this, this.output);
