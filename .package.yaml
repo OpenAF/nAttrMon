@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20220130'
+version: '20220213'
 dependencies:
   openaf: '>=20210721'
 files:
@@ -419,7 +419,7 @@ filesHash:
   config/objects/nOutput_Slack.js: d6bd7a0409ddb801fb2f552bdc93f84d6789442e
   config/objects/nOutput_H2.js: 01082a7d69167f4e3df6fd11b619855d5dc11ba6
   config/objects/nInput_Schedulers.js: 96771d166e2574b6d5a526cc6025ad3abf1363d4
-  config/objects/nInput_RAIDLookups.js: 1544374c0bec3e6c53eb60c1efe578f4b8f101ae
+  config/objects/nInput_RAIDLookups.js: 9a56cb2550a5c254097337f4da7191f58a685caa
   config/objects/nInput_nAttrMon.js: c8ec9f45f724e7372b02751b893178490587641b
   config/objects/nOutput_ES.js: 87272e07fa2c0d7283f2e1bbe434b9ac27ecbfbb
   config/objects/nOutput_Log2ES.js: 7e5d538324a2fa59d5a83ad0ad6ada9760529ed9
