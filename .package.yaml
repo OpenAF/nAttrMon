@@ -19,9 +19,9 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20220213'
+version: '20220225'
 dependencies:
-  openaf: '>=20210721'
+  openaf: '>=20211229'
 files:
 - nattrmon.js
 - tests/inputDBTest.yml
