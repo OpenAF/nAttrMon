@@ -157,7 +157,7 @@ nOutput_H2.prototype.output = function(scope, args) {
 				if (isUnDef(attr)) return;
 				//if (resNames.indexOf(attr.name) < 0) {
 					var dchk = (isUnDef(attr.lastcheck)) ? null : stringify(attr.lastcheck).replace(/"/g, "");
-					db.us("merge into attributes (name, description, last_seen) key(name) values(?, ?, parsedatetime(?, 'yyyy-MM-dd\'\'T\'\'HH:mm:ss.SSS\'\'Z\'\'','en','GMT'))", [ attr.name, attr.description, dchk ]);
+					db.us("merge into attributes (name, description, last_seen) key(name) values(?, ?, parsedatetime(?, 'yyyy-MM-dd\'\'T\'\'HH:mm:ss.SSS\'\'Z\'\'','en','GMT'))", [ String(attr.name), String(attr.description), dchk ]);
 				//}
 			//}
 
@@ -173,7 +173,7 @@ nOutput_H2.prototype.output = function(scope, args) {
 							//var dchk = (isDef(dchk.lastcheck) ? stringify(dchk.lastcheck).replace(/"/g, "") : null);
 							var val = stringify(attrval.val);
 							if (isDef(val))
-								db.us("insert into attribute_values (name, val, date_modified, date_checked) values (?, ?, parsedatetime(?, 'yyyy-MM-dd\'\'T\'\'HH:mm:ss.SSS\'\'Z\'\'','en','GMT'), parsedatetime(?, 'yyyy-MM-dd\'\'T\'\'HH:mm:ss.SSS\'\'Z\'\'','en','GMT'))", [ args.k.name, val, dmod, dchk ]);
+								db.us("insert into attribute_values (name, val, date_modified, date_checked) values (?, ?, parsedatetime(?, 'yyyy-MM-dd\'\'T\'\'HH:mm:ss.SSS\'\'Z\'\'','en','GMT'), parsedatetime(?, 'yyyy-MM-dd\'\'T\'\'HH:mm:ss.SSS\'\'Z\'\'','en','GMT'))", [ String(args.k.name), String(val), dmod, dchk ]);
 							parent.firstTime[args.k.name] = 1;
 						}
 					}
