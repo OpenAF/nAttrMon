@@ -89,7 +89,6 @@ files:
 - config/objects.assets/noutputhttp/js/nattrmon_js.js
 - config/objects.assets/noutputhttp/js/ie10-viewport-bug-workaround.js
 - config/objects.assets/noutputhttp/js/angular.min.js
-- config/objects.assets/noutputhttp/js/jquery.min.js
 - config/objects.assets/noutputhttp/js/angular-animate.min.js
 - config/objects.assets/noutputhttp/js/bootstrap.min.js
 - config/objects.assets/noutputhttp/js/holder.min.js
@@ -265,7 +264,7 @@ filesHash:
   util/watchdog.yaml.hbs: 73f633d9b03461ddd308f58d85d6f783e697ad90
   util/templates/Object_nOutput_template.js: 285d160535f820c3ae97a71c0643ae215decd84e
   util/templates/Object_nInput_template.js: 79949a15621701c80f54d75204f66bbc458b7d7a
-  util/clean.yaml: 8b75ebd3fb27c08b040600f120b642303ccfe470
+  util/clean.yaml: bff9881af13c3775ed9c09916be8f8ced13aecc4
   nattrmon.yaml.sample: 2105e5b2952ea187abcc3857dae9f2c6bb3ee1e5
   lib/ninput.js: cb1a2bc442a0a3ac9e6237fd02b445e31bd518cf
   lib/nwarning.js: 9a430f79f35de1a298285eccda8b5885a5f85fad
@@ -288,7 +287,7 @@ filesHash:
   config/objects.assets/noutputstatus/red.md: 0c37cd3c61f568da64141ef3fab12c3760a43113
   config/objects.assets/noutputstatus/green.md: 4ab282bf1a49d9ea2c3e6fec28816441660fba70
   config/objects.assets/noutputstatus/yellow.md: 9ada895d500c3f35d5c1d1f474e9efe7d2990ec3
-  config/objects.assets/noutputhttp/logout.html: dfecdc4ed8e70d912c3dd8c24215c7d0fffcf7b9
+  config/objects.assets/noutputhttp/logout.html: 2398f9f7051a5328196407295c776f9679db6afe
   config/objects.assets/noutputhttp/fonts/icon.eot: 1821dc5d05f13dc52ec7363f38258265f88202e8
   config/objects.assets/noutputhttp/fonts/fontawesome-webfont.ttf: 27cf1f2ec59aece6938c7bb2feb0e287ea778ff9
   config/objects.assets/noutputhttp/fonts/glyphicons-halflings-regular.eot: 86b6f62b7853e67d3e635f6512a5a5efc58ea3c3
@@ -304,19 +303,18 @@ filesHash:
   config/objects.assets/noutputhttp/fonts/fontawesome-webfont.woff: 507970402e328b2baeb05bde73bf9ded4e2c3a2d
   config/objects.assets/noutputhttp/fonts/glyphicons-halflings-regular.woff: 278e49a86e634da6f2a02f3b47dd9d2a8f26210f
   config/objects.assets/noutputhttp/favicon.png: 1ad74b6b72424d71c71da6f832ca8f4e7ac5d632
-  config/objects.assets/noutputhttp/now.html: 29e069e0ca11447171233122b35d9ff90c543634
+  config/objects.assets/noutputhttp/now.html: 6827db09a179aa14026bc565966c2af47df263c0
   config/objects.assets/noutputhttp/js/nattrmon_js.js: 183bc1c0e18aa62259d2e4a9a10697c810ae60ca
   config/objects.assets/noutputhttp/js/ie10-viewport-bug-workaround.js: b133cb4aaff8f32026190281d8a27456eace82b1
-  config/objects.assets/noutputhttp/js/angular.min.js: d0e3fccc46957eeaaf5611075a2015b410b64725
-  config/objects.assets/noutputhttp/js/jquery.min.js: 7ed710bf2b3a08cee23950790208683b0346fb1c
-  config/objects.assets/noutputhttp/js/angular-animate.min.js: 648e2ca79c0c074b2b61042e91d31b353ad290d3
-  config/objects.assets/noutputhttp/js/bootstrap.min.js: 253711c6d825de55a8360552573be950da180614
+  config/objects.assets/noutputhttp/js/angular.min.js: 32e24fc5f40120fe30ca097235d6c5988f84c927
+  config/objects.assets/noutputhttp/js/angular-animate.min.js: ae949c3c2879e99e71a2258d1ab34d02afb02119
+  config/objects.assets/noutputhttp/js/bootstrap.min.js: 24a900bdfcefd52cbcff3bc36440af9b87cd5067
   config/objects.assets/noutputhttp/js/holder.min.js: c1ad1dcfebf4c1770d40fc5d7bc46ca692d12822
   config/objects.assets/noutputhttp/js/retina.min.js: da44a409a0907960a6526cf35807ecaf61059223
-  config/objects.assets/noutputhttp/index.html: c636d5c12223d2b4d4b5503544930c8bc3c0bb53
-  config/objects.assets/noutputhttp/history.html: 9b452f7aa9571068a0575ba15bf959f6e33de803
+  config/objects.assets/noutputhttp/index.html: 3707a0198746dda5b106a18195700462cf2dd69f
+  config/objects.assets/noutputhttp/history.html: 8fe373da53f179ec60ea3c0eaca207d6f71fcfb1
   config/objects.assets/noutputhttp/dashboard.css: 96d9d77e456868b0797afe0ce344be026315d535
-  config/objects.assets/noutputhttp/plugs.html: d21d71a50b103bddc0025df40370e2a68c577f64
+  config/objects.assets/noutputhttp/plugs.html: 96e0e91d9313231993cc8a6b329b468d81aef254
   config/objects.assets/noutputhttp/css/font-awesome.min.css: 05ea25bc9b3ac48993e1fee322d3bc94b49a6e22
   config/objects.assets/noutputhttp/css/nattrmon.css: 1e1b1eaea971a8a736c0fa5943a33c630fbadd68
   config/objects.assets/noutputhttp/css/bootstrap.min.css: ed29315e0ffb3f14382431f2724235bf67f44eb3
@@ -405,7 +403,7 @@ filesHash:
   config/objects/nInput_ESSearch.js: 0f825f81de288367fde87f13be5e1ccfe072bd1c
   config/objects/nInput_IMLoadingsProgress.js: 1987633b3cf1ee4f8a1f74a7441f386637aa93a6
   config/objects/nInput_DMPerformance.js: 3d0f27b87f5b1a004e32559b0076c3cbfdf5d064
-  config/objects/nOutput_HTTP.js: aeb52c81d2aa902fb0351a3c63646d08c04fac03
+  config/objects/nOutput_HTTP.js: b8a15ba7dd563f984fa6d71b14bf4135bb18c2b7
   config/objects/nOutput_WarnsHistory.js: 53820893e6a8f4a63b2ad93ffc7e7094c6bcdf1f
   config/objects/nOutput_HTTP_JSON.js: 73c4619994bf56f923fc3d2860e0aa6b422e3748
   config/objects/nValidation_Yellows.js: 942478fcd710e392add0b6ef6349ef51a895b764
@@ -417,7 +415,7 @@ filesHash:
   config/objects/nOutput_Log.js: 69ef02bb37d306deb390f303a8bbf6e2234be792
   config/objects/nOutput_RemoteChannel.js: 8dcadaf89c78f31707c45d615a3941ce0547cd33
   config/objects/nOutput_Slack.js: d6bd7a0409ddb801fb2f552bdc93f84d6789442e
-  config/objects/nOutput_H2.js: 01082a7d69167f4e3df6fd11b619855d5dc11ba6
+  config/objects/nOutput_H2.js: f812e07f5bb7c396e55a8c70e7c4d8112b9435a6
   config/objects/nInput_Schedulers.js: 96771d166e2574b6d5a526cc6025ad3abf1363d4
   config/objects/nInput_RAIDLookups.js: 9a56cb2550a5c254097337f4da7191f58a685caa
   config/objects/nInput_nAttrMon.js: c8ec9f45f724e7372b02751b893178490587641b

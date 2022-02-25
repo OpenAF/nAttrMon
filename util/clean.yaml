@@ -54,6 +54,14 @@ jobs:
      exec: >
         cleanDir(global.config + "/log");
 
+   # Cleaning openaf precompiled libs
+   - name: Clean precompiled
+     from: Clean functions
+     deps:
+     - Init
+     exec: |
+        cleanDir(global.packPath + "/lib/.openaf_precompiled")
+
    # Everything done
    # 
    - name: Done
@@ -71,4 +79,5 @@ todo:
    - Clean H2 database
    - Clean pid file
    - Clean logs
+   - Clean precompiled
    - Done

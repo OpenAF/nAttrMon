@@ -115,7 +115,7 @@ var nOutput_HTTP = function (aMap) {
 	}
 
 	// Add function to server
-	ow.server.httpd.route(httpd, ow.server.httpd.mapWithExistingRoutes(httpd, {
+	ow.server.httpd.route(httpd, ow.server.httpd.mapWithExistingRoutes(httpd, ow.server.httpd.mapRoutesWithLibs(httpd, {
 		"/f": function (r) {
 			try {
 				if (r.uri == "/f") r.uri = "/index.html"
@@ -161,7 +161,7 @@ var nOutput_HTTP = function (aMap) {
 			if (isJavaException(e)) e.javaException.printStackTrace()
 			return ow.server.httpd.reply("Error (check logs)", 500)
 		}
-	});
+	}));
 
 	nattrmon.setSessionData("httpd.summary.custom", {
 		"title": this.title,
