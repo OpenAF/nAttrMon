@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20220225'
+version: '20220309'
 dependencies:
   openaf: '>=20211229'
 files:
@@ -174,6 +174,7 @@ files:
 - config/objects/nValidation_AFPing.js
 - config/objects/nOutput_Oracle.js
 - config/objects/nInput_CBPMSemaphores.js
+- config/objects/nOutput_AWSCloudWatch.js
 - config/objects/nInput_Kube_Events.js
 - config/objects/nInput_FMSRuleStatus.js
 - config/objects/nOutput_DSV.js
@@ -392,6 +393,7 @@ filesHash:
   config/objects/nValidation_AFPing.js: f48325d605e693dee3ab2912224cda0fde11e490
   config/objects/nOutput_Oracle.js: ab0f2fe7958952437ae93030715633858462269f
   config/objects/nInput_CBPMSemaphores.js: 75a0892cdad21aee8762d6d1346548bf6d42b59b
+  config/objects/nOutput_AWSCloudWatch.js: fe25ce31694f084d9effa980bb7f5be1378d02c1
   config/objects/nInput_Kube_Events.js: 97ddcc52a2f23c882afef8babde1e85e305cfa4d
   config/objects/nInput_FMSRuleStatus.js: a751fa64817c47bcac24d7b4bcdbfe699abb30c8
   config/objects/nOutput_DSV.js: b723aefe236bd464d215c52406cec796cd47d97f
