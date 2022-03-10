@@ -1,15 +1,20 @@
-// Author: who
+// Author: Nuno Aguiar
 
 /**
  * <odoc>
  * <key>nattrmon.nOutput_AWSCloudWatch(aMap)</key>
- * Provide some explanation of the objective of your output object.
+ * Will output attribute metrics to AWS CloudWatch
  * \
  * On aMap expects:\
  * \
- *    - include        (Array)   Array of regex attributes/warnings to include on output.\
- *    - exclude        (Array)   Array of regex attributes/warnings to exclude from output.\
- *    - considerSetAll (Boolean) Should process attributes/warnings in bulk.\
+ *    - include        (Array)   Array of regex attributes to include on output.\
+ *    - exclude        (Array)   Array of regex attributes to exclude from output.\
+ *    - considerSetAll (Boolean) Should process attributes in bulk.\
+ *    - region         (String)  The AWS region to use (defaults to us-east-1)\
+ *    - logGroup       (String)  The AWS CloudWatch log group to use (defaults to nattrmon)\
+ *    - accessKey      (String)  The AWS API access key to put metrics in AWS CloudWatch\
+ *    - secretKey      (String)  The AWS API secret key to put metrics in AWS CloudWatch\
+ *    - sessionToken   (String)  The AWS API session token to put metrics in AWS CloudWatch\
  * \
  * </odoc>
  */
@@ -63,15 +68,16 @@ nOutput_AWSCloudWatch.prototype.output = function(scope, args) {
         if (isok) {
 			var _m = ow.metrics.fromObj2OpenMetrics(value.val, value.name, value.date)
 			ow.metrics.fromOpenMetrics2Array(_m).forEach(m => {
-			var dims = Object.keys(m.labels).map(k => {
-				return { Name: k, Value: m.labels[k] }
-			})
-			metrics.push({
-				MetricName: m.metric,
-				Timestamp : (new Date(m.timestamp)).toISOString(),
-				Unit      : "None",
-				Value     : m.value,
-				Dimensions: dims
+				var dims = Object.keys(m.labels).map(k => {
+					return { Name: k, Value: m.labels[k] }
+				})
+				metrics.push({
+					MetricName: m.metric,
+					Timestamp : (new Date(m.timestamp)).toISOString(),
+					Unit      : "None",  // To be enhanced in the future
+					Value     : m.value,
+					Dimensions: dims
+				})
 			})
 		}
     })
