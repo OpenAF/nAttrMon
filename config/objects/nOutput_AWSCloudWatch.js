@@ -19,6 +19,8 @@
  * </odoc>
  */
 var nOutput_AWSCloudWatch = function(aMap) {
+	if (getVersion() < "20220209") throw "nOutput_AWSCloudWatch requires OpenAF version >= 20220209"
+
     if (!isNull(aMap) && isMap(aMap)) {
         this.params = aMap;
     } else {
