@@ -1,6 +1,6 @@
 /**
  */
-var nInput_DMPerformance = function(aMap) {
+ var nInput_DMPerformance = function(aMap) {
     this.params = aMap;
     ow.loadWAF();
 
@@ -20,6 +20,7 @@ var nInput_DMPerformance = function(aMap) {
 	}
 
     if (isUnDef(this.params.bestOf)) this.params.bestOf = 1;
+    this.params.withAssociatedDB = _$(this.params.withAssociatedDB, "withAssociatedDB").isBoolean().default(true)
 
 	nInput.call(this, this.input);
 };
@@ -67,16 +68,19 @@ nInput_DMPerformance.prototype.input = function(scope, args) {
                             return true;
                         });
 
-                        nattrmon.useObject(nattrmon.getAssociatedObjectPool(aKey, "db." + qdb.replace(/\n/g, "").replace(/Connect to (\w+).+/g, "$1").toLowerCase()), function(aDB) {
-                            aDB.q("select user from dual"); // Ensure it's connected before testing
-
-                            init = now();
-                            var rows = aDB.q(query).results;
-                            tDB = now() - init;
-                            nDB = rows.length;
-
-                            return true;
-                        });
+                        if (this.params.withAssociatedDB) {
+                            nattrmon.useObject(nattrmon.getAssociatedObjectPool(aKey, "db." + qdb.replace(/\n/g, "").replace(/Connect to (\w+).+/g, "$1").toLowerCase()), function(aDB) {
+                                aDB.q("select user from dual"); // Ensure it's connected before testing
+    
+                                init = now();
+                                var rows = aDB.q(query).results;
+                                tDB = now() - init;
+                                nDB = rows.length;
+    
+                                return true;
+                            })
+                        }
+                        
 
                         if ($from(resAr).equals("Query", j).any()) {
                             var current = $from(resAr).equals("Query", j).at(0);
@@ -85,9 +89,11 @@ nInput_DMPerformance.prototype.input = function(scope, args) {
                                 current["DataModel rows"] = nDM;
                             }
 
-                            if (current["Direct DB time"] > tDB) {
-                                current["Direct DB time"] = tDB;
-                                current["Direct DB rows"] = nDB;
+                            if (this.params.withAssociatedDB) {
+                                if (current["Direct DB time"] > tDB) {
+                                    current["Direct DB time"] = tDB;
+                                    current["Direct DB rows"] = nDB;
+                                }
                             }
                         } else {
                             resAr.push({
@@ -95,8 +101,8 @@ nInput_DMPerformance.prototype.input = function(scope, args) {
                                 "DataModel prepare time": pDM,
                                 "DataModel time": tDM,
                                 "DataModel rows": nDM,
-                                "Direct DB time": tDB,
-                                "Direct DB rows": nDB
+                                "Direct DB time": (this.params.withAssociatedDB) ? tDB : __,
+                                "Direct DB rows": (this.params.withAssociatedDB) ? nDB : __
                             });
                         }
                     }

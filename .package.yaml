@@ -133,6 +133,7 @@ files:
 - config/inputs.disabled/js/05.filesystemCount.js
 - config/inputs.disabled/js/09.filesystemcount.js
 - config/inputs.disabled/js/11.OSInfo.js
+- config/inputs.disabled/yaml/00.kinit.yaml
 - config/inputs.disabled/yaml/10.osinfo.yaml
 - config/inputs.disabled/yaml/12.shellCmd.yaml
 - config/inputs.disabled/yaml/10.httpjson.yaml
@@ -352,6 +353,7 @@ filesHash:
   config/inputs.disabled/js/05.filesystemCount.js: e8d4d119ec2d022033309bc18de8a2dc3a9d66aa
   config/inputs.disabled/js/09.filesystemcount.js: 076acd8dcea5205d3777498e9393c05d2296fb8b
   config/inputs.disabled/js/11.OSInfo.js: f388c959fb4e9b05708c17c07251192dcd4d3d0d
+  config/inputs.disabled/yaml/00.kinit.yaml: 4c00c8da18ef3d6fe707b03627b4f15b038ce599
   config/inputs.disabled/yaml/10.osinfo.yaml: bd4b88bbd3ddf03fb40d90264ab85766bfbf452a
   config/inputs.disabled/yaml/12.shellCmd.yaml: 0788119c6d68336209422bf46f6dfa0c93880d14
   config/inputs.disabled/yaml/10.httpjson.yaml: ffa430a070894a0254a3ce6485eb32107a59e2ea
@@ -393,7 +395,7 @@ filesHash:
   config/objects/nValidation_AFPing.js: f48325d605e693dee3ab2912224cda0fde11e490
   config/objects/nOutput_Oracle.js: ab0f2fe7958952437ae93030715633858462269f
   config/objects/nInput_CBPMSemaphores.js: 75a0892cdad21aee8762d6d1346548bf6d42b59b
-  config/objects/nOutput_AWSCloudWatch.js: fe25ce31694f084d9effa980bb7f5be1378d02c1
+  config/objects/nOutput_AWSCloudWatch.js: 35301c31e2a2e89b99212fc01fa67aa93fb6fdc8
   config/objects/nInput_Kube_Events.js: 97ddcc52a2f23c882afef8babde1e85e305cfa4d
   config/objects/nInput_FMSRuleStatus.js: a751fa64817c47bcac24d7b4bcdbfe699abb30c8
   config/objects/nOutput_DSV.js: b723aefe236bd464d215c52406cec796cd47d97f
@@ -404,7 +406,7 @@ filesHash:
   config/objects/nValidation_Semaphores.js: 97b6c1850b80d95cc92c1c50b05fdfa26467fd94
   config/objects/nInput_ESSearch.js: 0f825f81de288367fde87f13be5e1ccfe072bd1c
   config/objects/nInput_IMLoadingsProgress.js: 1987633b3cf1ee4f8a1f74a7441f386637aa93a6
-  config/objects/nInput_DMPerformance.js: 3d0f27b87f5b1a004e32559b0076c3cbfdf5d064
+  config/objects/nInput_DMPerformance.js: c7b8d30f023cc550ea262333927cc1acf9cab3b6
   config/objects/nOutput_HTTP.js: b8a15ba7dd563f984fa6d71b14bf4135bb18c2b7
   config/objects/nOutput_WarnsHistory.js: 53820893e6a8f4a63b2ad93ffc7e7094c6bcdf1f
   config/objects/nOutput_HTTP_JSON.js: 73c4619994bf56f923fc3d2860e0aa6b422e3748
