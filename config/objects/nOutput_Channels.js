@@ -99,6 +99,7 @@ var nOutput_Channels = function(aMap) {
             nattrmon.listOfWarnings.getCh().unset({
               title: value.title
             });
+            if (isDef(__NAM_CHANNEL_WNOTS)) $ch(nattrmon.chNotifications).unset({ title: value.title })
             logWarn("OPS | Warning '" + value.title + "' forced deleted!");
             return {
               successfull: true
@@ -144,6 +145,7 @@ var nOutput_Channels = function(aMap) {
             nattrmon.listOfWarnings.getCh().unset({
               title: warns[warn].title
             });
+            if (isDef(__NAM_CHANNEL_WNOTS)) $ch(nattrmon.chNotifications).unset({ title: warns[warn].title })
             logWarn("OPS | Warning '" + warns[warn].title + "' forced deleted!");
             c++;
           }
@@ -385,6 +387,13 @@ var nOutput_Channels = function(aMap) {
       $ch("nattrmon::warnings").peer(httpd, "/chs/warns", addSuffix(aMap.peers, "/chs/warns"), chAuth);
     } else {
       $ch("nattrmon::warnings").expose(httpd, "/chs/warns", chAuth);
+    }
+    if (isDef(__NAM_CHANNEL_WNOTS)) {
+      if (isDef(aMap.peers) && isArray(aMap.peers)) {
+        $ch("nattrmon::wnotf").peer(httpd, "/chs/wnots", addSuffix(aMap.peers, "/chs/wnots"), chAuth);
+      } else {
+        $ch("nattrmon::wnotf").expose(httpd, "/chs/wnots", chAuth);
+      }
     }
     if (isDef(aMap.peers) && isArray(aMap.peers)) {
       $ch("nattrmon::plugs").peer(httpd, "/chs/plugs", addSuffix(aMap.peers, "/chs/plugs"), chAuth);

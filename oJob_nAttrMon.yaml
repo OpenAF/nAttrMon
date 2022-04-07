@@ -52,7 +52,7 @@ jobs:
     if ($ch().list().indexOf("nattrmon::lvals::__bufferTransit") >= 0) ow.ch.utils.flushBuffer("nattrmon::lvals::__bufferTransit");
     if ($ch().list().indexOf("nattrmon::warnings::__bufferTransit") >= 0) ow.ch.utils.flushBuffer("nattrmon::warnings::__bufferTransit");
 
-    ["nattrmon::trigger", "nattrmon::plugs", "nattrmon::lvals", "nattrmon::cvals", "nattrmon::warnings", "nattrmon::lvals::buffer", "nattrmon::cvals::buffer", "nattrmon::warnings::buffer", "nattrmon::attributes", "nattrmon::warnings", "nattrmon::ps"]
+    ["nattrmon::trigger", "nattrmon::plugs", "nattrmon::lvals", "nattrmon::cvals", "nattrmon::warnings", "nattrmon::wnotf", "nattrmon::lvals::buffer", "nattrmon::cvals::buffer", "nattrmon::warnings::buffer", "nattrmon::attributes", "nattrmon::warnings", "nattrmon::ps"]
     .forEach(r => {
       if ($ch().list().indexOf(r) >= 0) {
         global.nattrmon.debug("Waiting for " + r + "...");
@@ -175,6 +175,16 @@ jobs:
     if (isString(args.__NAM_CHANNEL_CVALS))  global.__NAM_CHANNEL_CVALS = String(args.__NAM_CHANNEL_CVALS);
     if (isString(args.__NAM_CHANNEL_LVALS))  global.__NAM_CHANNEL_LVALS = String(args.__NAM_CHANNEL_LVALS);
     if (isString(args.__NAM_CHANNEL_WARNS))  global.__NAM_CHANNEL_WARNS = String(args.__NAM_CHANNEL_WARNS);
+    if (isString(args.__NAM_CHANNEL_WNOTS))  global.__NAM_CHANNEL_WNOTS = String(args.__NAM_CHANNEL_WNOTS)
+
+    if (isDef(args.__NAM_CLOSEDHK_HOWLONGAGOINMS)) global.__NAM_CLOSEDHK_HOWLONGAGOINMS = Number(args.__NAM_CLOSEDHK_HOWLONGAGOINMS)
+    if (isDef(args.__NAM_CLOSEDHK_ONSTARTUP))      global.__NAM_CLOSEDHK_ONSTARTUP = toBoolean(args.__NAM_CLOSEDHK_ONSTARTUP)
+ 
+    if (isDef(args.__NAM_SEC_REPO))        global.__NAM_SEC_REPO = String(global.__NAM_SEC_REPO)
+    if (isDef(args.__NAM_SEC_BUCKET))      global.__NAM_SEC_BUCKET = String(global.__NAM_SEC_BUCKET)
+    if (isDef(args.__NAM_SEC_BUCKET_PASS)) global.__NAM_SEC_BUCKET_PASS = String(global.__NAM_SEC_BUCKET_PASS)
+    if (isDef(args.__NAM_SEC_MAIN_PASS))   global.__NAM_SEC_MAIN_PASS = String(global.__NAM_SEC_MAIN_PASS)
+    if (isDef(args.__NAM_SEC_FILE))        global.__NAM_SEC_FILE = String(global.__NAM_SEC_FILE)
 
     if (isUnDef(args.withDirectory)) {
       global.nattrmon = new nAttrMon(global.NATTRMON_SUBHOME + "/config", global.__NAM_DEBUG);
