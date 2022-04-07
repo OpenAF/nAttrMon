@@ -133,6 +133,7 @@ files:
 - config/inputs.disabled/js/05.filesystemCount.js
 - config/inputs.disabled/js/09.filesystemcount.js
 - config/inputs.disabled/js/11.OSInfo.js
+- config/inputs.disabled/yaml/00.kinit.yaml
 - config/inputs.disabled/yaml/10.osinfo.yaml
 - config/inputs.disabled/yaml/12.shellCmd.yaml
 - config/inputs.disabled/yaml/10.httpjson.yaml
@@ -272,8 +273,8 @@ filesHash:
   lib/nattributevalue.js: d6a378dba74922540bcc3e054222733f69d5cead
   lib/noutput.js: 097a89ae2ab12cb28d88034444a72d368464d14c
   lib/nattributes.js: f28cee64a735e0e6ae3b520bbc59f74e6203e1db
-  lib/nwarnings.js: c64ae8db99147e7c00abc0158876e0403c8044ec
-  lib/nmain.js: f89e2b21bc25a1d6dc8b5fef26b458b011a0f468
+  lib/nwarnings.js: 321869ec1eede857181697cee829f41831449933
+  lib/nmain.js: 23de5573f08e2c396650f2ebd0620f87ee69962a
   lib/nattribute.js: 957b3e1e4d55c554e029229dae26e838df1da7b4
   lib/nplug.js: cfae6fc112042e574320895f406fddb942f4ff6d
   lib/ntmplhelpers.js: eaa9d6188a1636cc26dfc2ccfce6a27bd34f8fba
@@ -321,7 +322,7 @@ filesHash:
   config/objects.assets/noutputhttp/css/bootstrap.min.css: ed29315e0ffb3f14382431f2724235bf67f44eb3
   config/objects.assets/noutputhttp/css/bootstrap-theme.min.css: fc6b4268fbd57ad95d2b41a1d4d6866f222fbdb2
   config/objects.assets/noutputemailwarnings/logo.png: ee5366a3aa207c69d5139e04e7a4523078b974ba
-  config/objects.assets/noutputemailwarnings/warningEmailTemplate.hbs: b5e62b3f7503f1e822c973c53aedc9d095ccdb81
+  config/objects.assets/noutputemailwarnings/warningEmailTemplate.hbs: 288f4632e00efe1625a78db1ee78d1ad0595a8a8
   config/outputs.disabled/js/05.es.log.js: 4d8281c73e5094a41177570ba3544297f11520fc
   config/outputs.disabled/js/00.init.js: 2fc376d4557dc91ec036f115661c7634f7f8f0eb
   config/outputs.disabled/js/09.channels.js: 90b095b9c68e01b3aa724a8c370391f6d75cadf5
@@ -352,6 +353,7 @@ filesHash:
   config/inputs.disabled/js/05.filesystemCount.js: e8d4d119ec2d022033309bc18de8a2dc3a9d66aa
   config/inputs.disabled/js/09.filesystemcount.js: 076acd8dcea5205d3777498e9393c05d2296fb8b
   config/inputs.disabled/js/11.OSInfo.js: f388c959fb4e9b05708c17c07251192dcd4d3d0d
+  config/inputs.disabled/yaml/00.kinit.yaml: 4c00c8da18ef3d6fe707b03627b4f15b038ce599
   config/inputs.disabled/yaml/10.osinfo.yaml: bd4b88bbd3ddf03fb40d90264ab85766bfbf452a
   config/inputs.disabled/yaml/12.shellCmd.yaml: 0788119c6d68336209422bf46f6dfa0c93880d14
   config/inputs.disabled/yaml/10.httpjson.yaml: ffa430a070894a0254a3ce6485eb32107a59e2ea
