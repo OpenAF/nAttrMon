@@ -123,6 +123,7 @@ nOutput_HK.prototype.output = function(scope, args) {
                     nattrmon.listOfWarnings.getCh().unset({
                         title: warns[warn].title
                     });
+                    if (isDef(__NAM_CHANNEL_WNOTS)) $ch(nattrmon.chNotifications).unset({ title: warns[warn].title })
                 }
             }
         }
