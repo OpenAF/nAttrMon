@@ -1,0 +1,105 @@
+sec: &SEC
+  secFile  : /some/path/secrets.yaml
+  secBucket: nattrmon
+
+afpool: &AFPOOL
+  max: 3
+  min: 1
+  #keepalive    : 60000   # 1 min
+  #incrementsOf : 1
+  #retry        : 3
+  #retryInterval: 30000   # 30 sec
+
+dbpool: &DBPOOL
+  max: 3
+  min: 1
+  #keepalive    : 60000   # 1 min
+  #incrementsOf : 1
+  #retry        : 3
+  #retryInterval: 30000   # 30 sec
+
+kube: &KUBE
+  url      : 
+  user     :
+  pass     :
+  wsTimeout:
+  token    :
+  namespace:
+
+input: 	
+   name         : Init
+   execFrom     : nInput_Init
+   execArgs     :
+     AF:
+       # ------------------
+       raidServers:
+         key     : RAS {{Metadata.Name}}
+         url     : http://user:password@{{Status.PodIP}}:7100/xdt
+         timeout : 5000
+         pool    : *AFPOOL
+         kube    : *KUBE
+         selector: starts("Metadata.Name", "rafm-")
+
+       # --------------------
+       fmsServers:
+         key    : FMS {{Metadata.Name}}
+         url    : http://user:password@{{Status.PodIP}}:7100/xdt
+         timeout: 5000
+         pool   : *AFPOOL
+         kube   : *KUBE
+
+     DB:
+       # ---------------
+       raidDBs:
+       - key         : RAS ADM
+         <<          : *SEC
+         secKey      : ras_adm
+         timeout     : 30000
+         associations:
+         - parentKey : RAS Main
+           type      : db.adm
+         - parentKey : RAS Sat 1
+           type      : db.adm
+
+       - key      : FMS ADM
+         <<       : *SEC
+         secKey   : fms_adm
+         timeout  : 30000
+         associations:
+         - parentKey : FMS Main
+           type      : db.adm
+
+       - key      : DAT
+         <<       : *SEC
+         secKey   : dat
+         timeout  : 30000
+         associations:
+         - parentKey : RAS Main
+           type      : db.dat
+         - parentKey : RAS Sat 1
+           type      : db.dat
+         - parentKey : FMS Main
+           type      : db.dat
+
+     CH:
+     # -------------
+     - name   : urls
+       type   : simple
+       entries:
+       - key           : FirstURL
+         value         :
+            url           : http://first.url:1234
+            responseCode  : 200
+            includeLatency: true
+       - key           : SecretURL
+         value         :
+            <<            : *SEC
+            secKey        : SecretURL
+            responseCode  : 200
+            includeLatency: true
+    
+     # --------------
+     - name   : ports
+       type   : file
+       options:
+         file: "portsFile.json"
