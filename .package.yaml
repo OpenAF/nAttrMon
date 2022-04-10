@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20220406'
+version: '20220409'
 dependencies:
   openaf: '>=20211229'
 files:
@@ -251,7 +251,7 @@ filesHash:
   tests/outputTest.yml: 0c4ba4176163e4aa9ff7fd4ae4128339d8384581
   tests/nattrmonTester.js: 1676171ab793cdb67da4de3e033aee110aa8ef20
   tests/unitTestYAML.js: 01fd646107421f0441b19cd966977ab7ac2eff37
-  oJob_nAttrMon.yaml: e7756e0a7028872ba7183b1beca50db2dca55c05
+  oJob_nAttrMon.yaml: 81dbe4b5c065da15f2719c66ca6d56643255a4c0
   nAttrmon_single.yaml.sample: 56e31c6102c90bdad55b434247848027a7adb69d
   docs/images/logo.png: ee5366a3aa207c69d5139e04e7a4523078b974ba
   docs/images/nAttrMon.png: 298fb1bb1e7c004b6204069d2a3319fbdebedea0
@@ -274,7 +274,7 @@ filesHash:
   lib/noutput.js: 097a89ae2ab12cb28d88034444a72d368464d14c
   lib/nattributes.js: f28cee64a735e0e6ae3b520bbc59f74e6203e1db
   lib/nwarnings.js: 1988fb946cd19c29a3321e99ae21661643ec1fe3
-  lib/nmain.js: e4c79ffa18468524e6958ca6fb1a6d4e791f2929
+  lib/nmain.js: 3feaaa192f975af5993e47bad1c305f4f487f4c0
   lib/nattribute.js: 957b3e1e4d55c554e029229dae26e838df1da7b4
   lib/nplug.js: cfae6fc112042e574320895f406fddb942f4ff6d
   lib/ntmplhelpers.js: eaa9d6188a1636cc26dfc2ccfce6a27bd34f8fba
@@ -418,7 +418,7 @@ filesHash:
   config/objects/nInput_BPMNRunningFlows.js: 86da2d78b524d42ac4ab9598820605bbbfb24c57
   config/objects/nOutput_Log.js: 69ef02bb37d306deb390f303a8bbf6e2234be792
   config/objects/nOutput_RemoteChannel.js: 8dcadaf89c78f31707c45d615a3941ce0547cd33
-  config/objects/nOutput_Slack.js: 6efdd918a1cdd94a5bcb7135723b3439b2f0a9c2
+  config/objects/nOutput_Slack.js: bf5205bfd1b76b48345ec99bb407438eb3f1b0c9
   config/objects/nOutput_H2.js: f812e07f5bb7c396e55a8c70e7c4d8112b9435a6
   config/objects/nInput_Schedulers.js: 96771d166e2574b6d5a526cc6025ad3abf1363d4
   config/objects/nInput_RAIDLookups.js: 9a56cb2550a5c254097337f4da7191f58a685caa
