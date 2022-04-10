@@ -4,6 +4,7 @@
  * <odoc>
  * <key>nattrmon.nOutput_Log2ES(aMap)</key>
  * Configures the nAttrMon log to be output to ES
+ * (on new nAttrMon you can use __NAM_CHANNEL_LOGS)
  * </odoc>
  */
 var nOutput_Log2ES = function(aMap) {
