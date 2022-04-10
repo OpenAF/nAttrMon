@@ -176,6 +176,7 @@ jobs:
     if (isString(args.__NAM_CHANNEL_LVALS))  global.__NAM_CHANNEL_LVALS = String(args.__NAM_CHANNEL_LVALS);
     if (isString(args.__NAM_CHANNEL_WARNS))  global.__NAM_CHANNEL_WARNS = String(args.__NAM_CHANNEL_WARNS);
     if (isString(args.__NAM_CHANNEL_WNOTS))  global.__NAM_CHANNEL_WNOTS = String(args.__NAM_CHANNEL_WNOTS)
+    if (isString(args.__NAM_CHANNEL_LOGS))   global.__NAM_CHANNEL_LOGS  = String(args.__NAM_CHANNEL_LOGS)
 
     if (isDef(args.__NAM_CLOSEDHK_HOWLONGAGOINMS)) global.__NAM_CLOSEDHK_HOWLONGAGOINMS = Number(args.__NAM_CLOSEDHK_HOWLONGAGOINMS)
     if (isDef(args.__NAM_CLOSEDHK_ONSTARTUP))      global.__NAM_CLOSEDHK_ONSTARTUP = toBoolean(args.__NAM_CLOSEDHK_ONSTARTUP)
