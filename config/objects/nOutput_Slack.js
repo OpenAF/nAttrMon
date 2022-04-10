@@ -13,7 +13,8 @@
  * </odoc>
  */
 var nOutput_Slack = function(aMap) {
-    this.params = aMap;
+    this.params = _$(aMap, "aMap").isMap().default({})
+
     nOutput.call(this, this.output);
 };
 inherit(nOutput_Slack, nOutput);
@@ -25,6 +26,10 @@ nOutput_Slack.prototype.output = function(scope, args, meta) {
         this.params.__notifyID = sha1(meta.aName);
 
         var warns = nattrmon.getWarnings(true).getCh().getAll();
+        if (isDef(this.params.filter)) {
+            warns = nattrmon.filter(warns, this.params.filter)
+            sprint(warns)
+        }
         for(var inotif in this.params.notifications) {
             var notif = this.params.notifications[inotif];
             var selec = $from(warns);
