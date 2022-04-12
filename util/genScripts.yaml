@@ -19,7 +19,7 @@ jobs:
       if (!io.fileExists(args.path + "/nattrmon.yaml")) throw "Please create the file " + args.path + "/nattrmon.yaml";
       global.path = args.path;
 
-      var config = io.readFileYAML(args.path + "/nattrmon.yaml");
+      var config = io.readFileYAML(args.path + "/nattrmon.yaml", true);
       config = _$(config).default({});
       
       global.configPath = _$(config.CONFIG).default(args.path + "/config");
