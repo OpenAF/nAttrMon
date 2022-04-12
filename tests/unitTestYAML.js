@@ -26,7 +26,7 @@ try {
 
 ow.loadTest().setMemoryProfile(true);
 print("Results:\n" + stringify(ow.test.test(params.withYAML, function() {
-   var nattrmonYAMLFile = io.readFileYAML(params.withYAML);
+   var nattrmonYAMLFile = io.readFileYAML(params.withYAML, true);
 
    if (isDef(nattrmonYAMLFile.input)) return nattrmon.loadObject(nattrmonYAMLFile.input, "input").exec.exec(nattrmon, nattrmonYAMLFile.input.execArgs);
    if (isDef(nattrmonYAMLFile.output)) return nattrmon.loadObject(nattrmonYAMLFile.output, "output").exec.exec(nattrmon, nattrmonYAMLFile.output.execArgs);

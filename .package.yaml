@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20220409'
+version: '20220411'
 dependencies:
   openaf: '>=20211229'
 files:
@@ -134,6 +134,7 @@ files:
 - config/inputs.disabled/js/09.filesystemcount.js
 - config/inputs.disabled/js/11.OSInfo.js
 - config/inputs.disabled/yaml/00.kinit.yaml
+- config/inputs.disabled/yaml/20.chvals.yaml
 - config/inputs.disabled/yaml/10.osinfo.yaml
 - config/inputs.disabled/yaml/12.shellCmd.yaml
 - config/inputs.disabled/yaml/10.httpjson.yaml
@@ -176,6 +177,7 @@ files:
 - config/objects/nOutput_Oracle.js
 - config/objects/nInput_CBPMSemaphores.js
 - config/objects/nOutput_AWSCloudWatch.js
+- config/objects/nInput_ChVals.js
 - config/objects/nInput_Kube_Events.js
 - config/objects/nInput_FMSRuleStatus.js
 - config/objects/nOutput_DSV.js
@@ -250,7 +252,7 @@ filesHash:
   tests/unitTest.js: 067565f7c1517b331684246f5c9a7949124417ea
   tests/outputTest.yml: 0c4ba4176163e4aa9ff7fd4ae4128339d8384581
   tests/nattrmonTester.js: 1676171ab793cdb67da4de3e033aee110aa8ef20
-  tests/unitTestYAML.js: 01fd646107421f0441b19cd966977ab7ac2eff37
+  tests/unitTestYAML.js: 1d943c734c6bcacd46fe6de29275997b925cc19e
   oJob_nAttrMon.yaml: 81dbe4b5c065da15f2719c66ca6d56643255a4c0
   nAttrmon_single.yaml.sample: 56e31c6102c90bdad55b434247848027a7adb69d
   docs/images/logo.png: ee5366a3aa207c69d5139e04e7a4523078b974ba
@@ -262,10 +264,10 @@ filesHash:
   util/backupConfig.yaml: cecdefad82f0c4e23d5341cb97bb6deccf6fd0ff
   util/loadFile2Elastic.yaml: 8ba828ece6a9796db21a691f2b32ad21a2caf214
   util/loadDB2Elastic.js: 190b68c03e71fa859df71429da4c31035f20ce94
-  util/genScripts.yaml: 377f153b934e21dcf7968047300e0a2f5d96e635
+  util/genScripts.yaml: 5dbc6e2e44c9c70cbf84905a857794d4cb1ac8f6
   util/watchdog.yaml.hbs: 73f633d9b03461ddd308f58d85d6f783e697ad90
   util/templates/Object_nOutput_template.js: 285d160535f820c3ae97a71c0643ae215decd84e
-  util/templates/Object_nInput_template.js: 79949a15621701c80f54d75204f66bbc458b7d7a
+  util/templates/Object_nInput_template.js: 179fb16e105eb56394aaf591d7a3a55983fd687a
   util/clean.yaml: bff9881af13c3775ed9c09916be8f8ced13aecc4
   nattrmon.yaml.sample: 2105e5b2952ea187abcc3857dae9f2c6bb3ee1e5
   lib/ninput.js: cb1a2bc442a0a3ac9e6237fd02b445e31bd518cf
@@ -274,7 +276,7 @@ filesHash:
   lib/noutput.js: 097a89ae2ab12cb28d88034444a72d368464d14c
   lib/nattributes.js: f28cee64a735e0e6ae3b520bbc59f74e6203e1db
   lib/nwarnings.js: 1988fb946cd19c29a3321e99ae21661643ec1fe3
-  lib/nmain.js: bef7e3ba0ddf6edd839eecdb131d946aa8c96189
+  lib/nmain.js: 7e3dc1e1e376b6908bffe73ed9af4bba11683a5c
   lib/nattribute.js: 957b3e1e4d55c554e029229dae26e838df1da7b4
   lib/nplug.js: cfae6fc112042e574320895f406fddb942f4ff6d
   lib/ntmplhelpers.js: eaa9d6188a1636cc26dfc2ccfce6a27bd34f8fba
@@ -354,6 +356,7 @@ filesHash:
   config/inputs.disabled/js/09.filesystemcount.js: 076acd8dcea5205d3777498e9393c05d2296fb8b
   config/inputs.disabled/js/11.OSInfo.js: f388c959fb4e9b05708c17c07251192dcd4d3d0d
   config/inputs.disabled/yaml/00.kinit.yaml: 4c00c8da18ef3d6fe707b03627b4f15b038ce599
+  config/inputs.disabled/yaml/20.chvals.yaml: d03ba1bb4f7953bdb7f30226a42004f21a460e79
   config/inputs.disabled/yaml/10.osinfo.yaml: bd4b88bbd3ddf03fb40d90264ab85766bfbf452a
   config/inputs.disabled/yaml/12.shellCmd.yaml: 0788119c6d68336209422bf46f6dfa0c93880d14
   config/inputs.disabled/yaml/10.httpjson.yaml: ffa430a070894a0254a3ce6485eb32107a59e2ea
@@ -396,6 +399,7 @@ filesHash:
   config/objects/nOutput_Oracle.js: ab0f2fe7958952437ae93030715633858462269f
   config/objects/nInput_CBPMSemaphores.js: 75a0892cdad21aee8762d6d1346548bf6d42b59b
   config/objects/nOutput_AWSCloudWatch.js: 35301c31e2a2e89b99212fc01fa67aa93fb6fdc8
+  config/objects/nInput_ChVals.js: d6689e116dd3c5f92905b9bd2e87a2828f8ea70c
   config/objects/nInput_Kube_Events.js: 97ddcc52a2f23c882afef8babde1e85e305cfa4d
   config/objects/nInput_FMSRuleStatus.js: a751fa64817c47bcac24d7b4bcdbfe699abb30c8
   config/objects/nOutput_DSV.js: b723aefe236bd464d215c52406cec796cd47d97f

@@ -1,0 +1,21 @@
+input:
+  name       : Input ChVals
+  chSubscribe: myFiles
+  execFrom   : nInput_ChVals 
+  execArgs   :
+    chName: myFiles
+    #full: 
+    filter:
+      where:
+      - cond: equals
+        args:
+        - isFile
+        - true
+      transform:
+      - func: attach
+        args:
+        - lastAccessDate
+        - !!js/eval elem => new Date(elem.lastAccess)
+      select:
+        filename      : n/a
+        lastAccessDate: n/a

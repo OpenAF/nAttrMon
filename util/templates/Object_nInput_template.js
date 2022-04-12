@@ -25,12 +25,13 @@ var nInput_SomeObject = function(aMap) {
 inherit(nInput_SomeObject, nInput);
 
 nInput_SomeObject.prototype.get = function(keyData, extra) {
-    // Get metrics based on keyData
-    var res = { key: keyData }
+    extra = _$(extra, "extra").isMap().default(__)
+    // Get metrics based on keyData or, if no chKeys is provided, check this.params
+    var res = isString(keyData) ? { key: keyData } : {}
 
     // TODO
 
-    return merge(extra, res)
+    return merge(res, extra)
 }
 
 nInput_SomeObject.prototype.input = function(scope, args) {
@@ -47,7 +48,7 @@ nInput_SomeObject.prototype.input = function(scope, args) {
         })
         ret[templify(this.params.attrTemplate, this.params)] = arr
     } else {
-        ret[templify(this.params.attrTemplate, this.params)] = this.get(this.params)
+        ret[templify(this.params.attrTemplate, this.params)] = this.get()
     }
 
     return ret;
