@@ -25,6 +25,8 @@ var nOutput_HTTP_Metrics = function (aMap) {
 		this.chParams = _$(aMap.chParams, "chParams").isMap().default(__);
 		this.chPeriod = _$(aMap.chPeriod, "chPeriod").isNumber().default(5000);
 
+		this.format   = _$(aMap.format, "format").isString().default(__)
+
 		if (isDef(this.chName) && this.chPeriod > 0) $ch(this.chName).create(1, this.chType, this.chParams);
 	} else {
 		aMap = {};
@@ -198,12 +200,39 @@ var nOutput_HTTP_Metrics = function (aMap) {
 		"/metrics": function (req) {
 			try {
 				var res = "";
-				switch (req.params.op) {
+				var fmt = _$(req.params.format).default(parent.format)
+				switch (fmt) {
+				case "json":
+					var _res = {}
+					if (isDef(req.params.type)) {
+						switch(req.params.type) {
+						case "self" : _res = ow.metrics.getAll(); break
+						case "cvals": _res = nattrmon.getCurrentValues(); break
+						case "lvals": _res = nattrmon.getLastValues(); break
+						case "warns": _res = nattrmon.getWarnings(); break
+						}
+					} else {
+						if (parent.includeSelf)  _res[parent.nameSelf] = ow.metrics.getAll()
+						if (parent.includeCVals) _res[parent.nameCVals] = nattrmon.getCurrentValues()
+						if (parent.includeLVals) _res[parent.nameLVals] = nattrmon.getLastValues()
+						if (parent.includeWarns) _res[parent.nameWarns] = nattrmon.getWarnings()
+					}
+					res = stringify(_res, __, "")
+					break;
 				default:
-					if (parent.includeSelf)  res += ow.metrics.fromObj2OpenMetrics(ow.metrics.getAll(), parent.nameSelf);
-					if (parent.includeCVals) res += _parse(nattrmon.getCurrentValues(), parent.nameCVals);
-					if (parent.includeLVals) res += _parse(nattrmon.getLastValues(), parent.nameLVals);
-					if (parent.includeWarns) res += _parse(nattrmon.getWarnings(), parent.nameWarns);
+					if (isDef(req.params.type)) {
+						switch(req.params.type) {
+						case "self" : res += ow.metrics.fromObj2OpenMetrics(ow.metrics.getAll(), parent.nameSelf); break
+						case "cvals": res += _parse(nattrmon.getCurrentValues(), parent.nameCVals); break
+						case "lvals": res += _parse(nattrmon.getLastValues(), parent.nameLVals); break
+						case "warns": res += _parse(nattrmon.getWarnings(), parent.nameWarns); break
+						}
+					} else {
+						if (parent.includeSelf)  res += ow.metrics.fromObj2OpenMetrics(ow.metrics.getAll(), parent.nameSelf);
+						if (parent.includeCVals) res += _parse(nattrmon.getCurrentValues(), parent.nameCVals);
+						if (parent.includeLVals) res += _parse(nattrmon.getLastValues(), parent.nameLVals);
+						if (parent.includeWarns) res += _parse(nattrmon.getWarnings(), parent.nameWarns);
+					}
 					break;
 				}
 				var hres = ow.server.httpd.reply(res, 200, "text/plain", {});
