@@ -52,3 +52,10 @@
 #CHANNEL_CVALS: "{ type: 'file', options: { file: 'cvals.json' } }"
 #CHANNEL_LVALS: "{ type: 'file', options: { file: 'lvals.json' } }"
 #CHANNEL_WARNS: "{ type: 'elasticsearch', options: { index: 'warns', secKey: 'elastic', secBucket: 'nattrmon', secFile: 'elastic.yaml' } }"
+
+# If disabled nattrmon won't try to slowdown plugs with waitForFinish=false if executing more plugs than available workers
+#SLOWDOWN: false
+# If enabled whenever a plug is slowdown a warn will be logged
+#SLOWDOWN_WARNS: true
+# Let's specify the unitary ms slowdown that will be used
+#SLOWDOWN_TIME: 250
