@@ -120,7 +120,27 @@ nValidation_Generic.prototype.checkEntry = function(ret, k, v, args) {
                     var generateWarning = true;
                     var data = args;
 
-                    var evalCond = (aV) => { generateWarning = (isDef(check.not) && check.not) ? !aV : aV; };
+                    var evalCond = (aV) => { 
+                        var _decision = (isDef(check.not) && check.not) ? !aV : aV
+
+                        if (isDef(check.for)) {
+                            var _k = "nValidation_Generic|" + md5(stringify(check,__,""))
+                            var _p = $get(_k)
+                            if (_decision) {
+                                var _f = nattrmon.fromTimeAbbreviation(check.for)
+                                if (isDef(_p)) {
+                                    if (_f > (nowUTC() - _p)) _decision = false
+                                } else {
+                                    $set(_k, nowUTC())
+                                    _decision = false
+                                }
+                            } else {
+                                if (isDef(_p)) $unset(_k)
+                            }
+                        }
+
+                        generateWarning = _decision
+                    }
 
                     data.value = val;
                     data.originalValue = v.val;
@@ -150,7 +170,7 @@ nValidation_Generic.prototype.checkEntry = function(ret, k, v, args) {
                         });
                     }
                     data.dateModified = v.date;
-
+    
                     var expr = templify(check.expr, data).replace(/\n/g, "");
                     try {
                         if (check.debug) {
