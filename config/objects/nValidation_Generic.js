@@ -28,7 +28,7 @@
  *          c: 6
  * </odoc>
  */
-var nValidation_Generic = function (aMap) {
+ var nValidation_Generic = function (aMap) {
     this.params = aMap;
 
     nValidation.call(this, this.validate);
@@ -145,6 +145,15 @@ nValidation_Generic.prototype.checkEntry = function(ret, k, v, args) {
                     data.value = val;
                     data.originalValue = v.val;
                     data.name = v.name;
+
+                    if (isUnDef(val)) {
+                       if (check.debug) { sprint(merge(v, {
+                            execId: uuid,
+                            reason: "undefined value"
+                          }));
+                       }
+                       continue
+                    }
 
                     if (isString(val) && new Date(val) != null) val = new Date(val);
                     if (Object.prototype.toString.call(val) == "[object Date]") {

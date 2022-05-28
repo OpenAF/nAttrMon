@@ -4,11 +4,32 @@ var nInputInitList = _$(nInputInitList, "nInputInitList").isMap().default({});
 nInputInitList["AF"] = {
     name   : "AF",
     type   : "map",
+    list   : (parent, ikey, content) => {
+        return ($ch().list().indexOf(ikey) >= 0 ? $ch(ikey).getKeys() : [])
+    },
+    recycle: (parent, ikey, content) => {
+        content = _$(content, "content").isArray().default([])
+
+        content.forEach(entry => {
+            entry = $ch(ikey).get({ key: entry.key })
+            if (isDef(entry.key)) {
+                log("Destroying AF object pool to access " + entry.key + "...")
+                nattrmon.delObjectPool(entry.key)
+
+                log("Destroying object pool to access " + entry.key + " associations...")
+                parent.unsetAssociations("AF", entry, ikey)
+
+                $ch(ikey).unset({ key: entry.key })
+            }
+        })
+    },
     factory: (parent, ikey, content) => {
         content = _$(content, "content").isArray().default([]);
 
-        $ch(ikey).create();
-        content.forEach(entry => {
+        $ch(ikey).create()
+        content
+        .filter(r => isUnDef($ch(ikey).get({ key: r.key })))
+        .forEach(entry => {
             entry      = _$(entry, "AF " + ikey + " entry").isMap().$_();
             entry      = parent.setSec(entry);
             entry.pool = _$(entry.pool, "AF " + ikey + " - " + entry.key + " pool").isMap().default({});
@@ -23,7 +44,9 @@ nInputInitList["AF"] = {
 
             log("Created object pool to access " + entry.key);
             parent.setAssociations("AF", entry, ikey);
-        });
+        })
+
+        return content.map(r => ({ key: r.key }))
     }
 };
 nInputInitList["CH"] = {
@@ -56,6 +79,12 @@ nInputInitList["CH"] = {
 nInputInitList["DB"] = {
     name   : "DB",
     type   : "map",
+    list   : (parent, ikey, content) => {
+
+    },
+    recycle: (parent, content) => {
+
+    },
     factory: (parent, ikey, content) => {
         $ch(ikey).create();
         content.forEach(entry => {
@@ -88,6 +117,12 @@ nInputInitList["DB"] = {
 nInputInitList["SSH"] = {
     name   : "SSH",
     type   : "map",
+    list   : (paremt, ikey, content) => {
+
+    },
+    recycle: (parent, ikey, content) => {
+
+    },
     factory: (parent, ikey, content) => {
         $ch(ikey).create();
         content.forEach(entry => {
@@ -116,6 +151,12 @@ nInputInitList["SSH"] = {
 nInputInitList["AFCache"] = {
     name   : "AFCache",
     type   : "map",
+    list   : (paremt, ikey, content) => {
+
+    },
+    recycle: (parent, ikey, content) => {
+
+    },
     factory: (parent, ikey, content) => {
         content.forEach(entry => {
             try {
@@ -152,6 +193,66 @@ nInputInitList["AFCache"] = {
     }
 }
 
+nInputInitList["Kube"] = {
+    name   : "Kube",
+    type   : "map",
+    dynamic: true,
+    factory: (parent, ikey, content, inc) => {
+        var entry = {}
+        entry[ikey] = clone(content)
+
+        if (isUnDef(getOPackPath("Kube"))) throw "Kube opack not installed."
+        loadLib("kube.js")
+
+        var getKubeLst = m => {
+            m = parent.setSec(m)
+            m.kind      = _$(m.kind, "_kube.kind").isString().default("FPO")
+            m.namespace = _$(m.namespace, "_kube.namespace").isString().default("default")
+
+            var lst = $kube(m)["get" + m.kind](m.namespace)
+            if (isMap(lst)) return lst.items; else return []
+        }, procKubeLst = (m, lst) => {
+            return ow.obj.filter(lst, m._kube.selector).map(r => {
+                var newM = clone(m)
+                delete newM._kube
+                traverse(newM, (aK, aV, aP, aO) => {
+                    if (isString(aV)) aO[aK] = templify(aV, r)
+                })
+                return newM
+            })
+        }
+
+        if (isArray(entry[ikey])) {
+            entry[ikey].forEach(m => {
+                m._kube = _$(m._kube, "_kube").isMap().default({})
+                m._kube.selector = _$(m._kube.selector, "_kube.selector").isMap().default({})
+
+                var lst = getKubeLst(m._kube)
+                if (isArray(lst)) {
+                    entry[ikey] = procKubeLst(m, lst)
+                }
+            })
+        } else {
+            if (isMap(entry[ikey])) {
+                Object.keys(entry[ikey]).forEach(ch => {
+                    var m = entry[ikey][ch]
+                    if (isArray(m) && m.length >= 1) m = m[0]
+
+                    m._kube = _$(m._kube, "_kube").isMap().default({})
+                    m._kube.selector = _$(m._kube.selector, "_kube.selector").isMap().default({})
+
+                    var lst = getKubeLst(m._kube)
+                    if (isArray(lst)) {
+                        entry[ikey][ch] = procKubeLst(m, lst)
+                    }
+                })
+            }
+        }
+
+        parent.procList(nInputInitList[ikey], entry, inc)
+    }
+}
+
 /**
  * <odoc>
  * <key>nattrmon.nInput_Init(aMap)</key>
@@ -167,8 +268,10 @@ nInputInitList["AFCache"] = {
     } else {
         this.params = {};
     }
+    
+    var parent = this
 
-    var fns = {
+    parent.fns = {
         setPool: (aPool, aEntry) => {
             if (isDef(aEntry.pool.max))           aPool.setMax(aEntry.pool.max);
             if (isDef(aEntry.pool.min))           aPool.setMin(aEntry.pool.min);
@@ -188,6 +291,17 @@ nInputInitList["AFCache"] = {
                 })
             }
         },
+        unsetAssociations: (aType, aEntry, ichkey) => {
+            if (isArray(aEntry.associations)) {
+                aEntry.associations.forEach(aci => {
+                    _$(aci.parentKey , aType + " " + ichkey + " - " + aEntry.key + " parent key").isString().$_();
+                    _$(aci.type      , aType + " " + ichkey + " - " + aEntry.key + " type for " + aci.parentKey).isString().$_();
+    
+                    nattrmon.deassociateObjectPool(aci.parentKey, aci.type);
+                    log("Object pool " + aEntry.key + " deassociated from " + aci.parentKey + " as " + aci.type);
+                })
+            }
+        },
         setSec: aEntry => {
             if (isDef(aEntry.secKey)) {
                 //return merge(aEntry, $sec(aEntry.secRepo, aEntry.secBucket, aEntry.secPass, aEntry.secMainPass, aEntry.secFile).get(aEntry.secKey));
@@ -195,35 +309,55 @@ nInputInitList["AFCache"] = {
             } else {
                 return aEntry;
             }
+        },
+        getParent: () => { return parent },
+        procList: (init, params, inc) => {
+            inc = _$(inc).isBoolean().default(false)
+
+            if (init.type == "map") {
+                params[init.name] = _$(params[init.name], init.name).isMap().default({});
+                Object.keys(params[init.name]).forEach(ikey => {
+                    var content = params[init.name][ikey];
+                    try {
+                        var lstPrev
+                        if (inc && isFunction(init.list)) {
+                            lstPrev = init.list(parent.fns, ikey, content, inc)
+                        }
+                        var lstNew = init.factory(parent.fns, ikey, content, inc)
+                        if (inc && isFunction(init.recycle)) {
+                            lstNew = _$(lstNew).isArray().default([])
+                            init.recycle(parent.fns, ikey, $from(lstPrev).except(lstNew).select(), inc)
+                        }
+                    } catch(e) {
+                        logErr(e);
+                    }
+                })
+            }
+                
+            if (init.type == "array") {
+                params[init.name] = _$(params[init.name], init.name).isArray().default([]);
+                params[init.name].forEach(content => {
+                    try {
+                        var lstPrev
+                        if (inc && isFunction(init.list)) {
+                            lstPrev = init.list(parent.fns, content, inc)
+                        }
+                        var lstNew = init.factory(parent.fns, content, inc)
+                        if (inc && isFunction(init.recycle)) {
+                            lstNew = _$(lstNew).isArray().default([])
+                            init.recycle(parent.fns, $from(lstPrev).exclude(lstNew).select(), inc)
+                        }
+                    } catch(e) {
+                        logErr(e);
+                    }
+                })
+            }
         }
     }
 
     Object.keys(nInputInitList).forEach(iinit => {
-        var init = nInputInitList[iinit];
-
-        if (init.type == "map") {
-            this.params[init.name] = _$(this.params[init.name], init.name).isMap().default({});
-            Object.keys(this.params[init.name]).forEach(ikey => {
-                var content = this.params[init.name][ikey];
-                try {
-                    init.factory(fns, ikey, content);
-                } catch(e) {
-                    logErr(e);
-                }
-            })
-        }
-            
-        if (init.type == "array") {
-            this.params[init.name] = _$(this.params[init.name], init.name).isArray().default([]);
-            this.params[init.name].forEach(content => {
-                try {
-                    init.factory(fns, content);
-                } catch(e) {
-                    logErr(e);
-                }
-            })
-        }
-    });
+        parent.fns.procList(nInputInitList[iinit], this.params)
+    })
 
     nInput.call(this, this.input);
 };
@@ -231,6 +365,13 @@ inherit(nInput_Init, nInput);
 
 nInput_Init.prototype.input = function(scope, args) {
     var ret = {};
+    var parent = this
+
+    Object.keys(nInputInitList)
+    .filter(n => nInputInitList[n].dynamic)
+    .forEach(iinit => {
+        parent.fns.procList(nInputInitList[iinit], parent.params, true)
+    })
 
     return ret;
 };
