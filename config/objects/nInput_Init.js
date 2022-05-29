@@ -311,12 +311,18 @@ nInputInitList["Kube"] = {
             m.kind      = _$(m.kind, "_kube.kind").isString().default("FPO")
             m.namespace = _$(m.namespace, "_kube.namespace").isString().default("default")
 
-            var lst = $kube(m)["get" + m.kind](m.namespace)
-            if (isMap(lst)) return lst.items; else return []
+            var nss = m.namespace.split(/ *, */)
+            var lst = []
+            nss.forEach(ns => {
+                var its = $kube(m)["get" + m.kind](ns)
+                if (isMap(its) && isArray(its.items)) lst = lst.concat(its.items)
+            })
+            return lst
         }, procKubeLst = (m, lst) => {
             return ow.obj.filter(lst, m._kube.selector).map(r => {
                 var newM = clone(m)
                 delete newM._kube
+                newM = parent.setSec(newM)
                 traverse(newM, (aK, aV, aP, aO) => {
                     if (isString(aV)) aO[aK] = templify(aV, r)
                 })
