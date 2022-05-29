@@ -1,0 +1,22 @@
+output:
+  name: SNMP Output
+  chSubscribe: nattrmon::cvals
+  execFrom: nOutput_SNMPServer
+  execArgs:
+    baseOID: 1.3.6.1.4.1.2.3
+    oidMapping:
+      "test/test": 1.3.6.1.4.1.2021.4.5.0
+
+    timeOut: 5000
+    numOfRetries: 3
+    useInform: false
+    snmpVersion: 2
+    snmpAddress: udp:10.20.30.40/162
+    snmpCommunity: "public or private"
+    snmpEngineID: "8000000344132292929"
+    snmpAuthPassPhrase: "YSGSGSFGJFFHJYVCNBJ"
+    snmpPrivPassPhrase: "n2dfsbsfdsdnDFHS"
+    snmpAuthProtocol: "MD5"
+    snmpPrivProtocol: "AES128"
+    snmpSecurityName: "NMS"
+
