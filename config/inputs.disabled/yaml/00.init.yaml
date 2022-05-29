@@ -95,6 +95,58 @@ input:
             responseCode  : 200
             includeLatency: true
     
+    # Kube:
+
+      # DB:
+      #   dbServers:
+      #   - key  : "DB {{metadata.name}}"
+      #     url  : "jdbc:postgresql://{{status.podIP}}:5432/db"
+      #     login: user
+      #     pass : pass
+      #     _kube:
+      #       selector:
+      #         where:
+      #         - cond: starts
+      #           args:
+      #           - "metadata.name"
+      #           - "db-"
+      #         - cond: equals
+      #           args:
+      #           - "status.phase"
+      #           - "Running"
+
+      # AF:
+      #   raidServers:
+      #   - key: "RAS {{metadata.name}}"
+      #     url: "http://{{status.podIP}}:1234"
+      #     _kube:
+      #       selector:
+      #         where:
+      #         - cond: starts
+      #           args:
+      #           - "metadata.name"
+      #           - "af-"
+      #         - cond: equals
+      #           args:
+      #           - "status.phase"
+      #           - "Running"
+
+      # AFCache:
+      #   raidCaches:
+      #   - key: "RAS {{metadata.name}}"
+      #     ttl: 5000
+      #     _kube:
+      #       selector:
+      #         where:
+      #         - cond: starts
+      #           args:
+      #           - "metadata.name"
+      #           - "af-"
+      #         - cond: equals
+      #           args:
+      #           - "status.phase"
+      #           - "Running"
+
      # --------------
      - name   : ports
        type   : file
