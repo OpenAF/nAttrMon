@@ -1,4 +1,4 @@
-author: Nuno Aguiar, Andreia Brizida, Jose Alves, Leandro Fernandes
+author: Nuno Aguiar, Andreia Brizida, Jose Alves, Leandro Fernandes, Surya Kalyan Jaddu
 scripts:
   posterase: ''
   postinstall: ''
@@ -108,6 +108,7 @@ files:
 - config/outputs.disabled/js/09.channels.js
 - config/outputs.disabled/js/1.oracleoutput.js
 - config/outputs.disabled/js/4.logFile.js
+- config/outputs.disabled/yaml/10.SNMPServer_Output.yaml
 - config/outputs.disabled/yaml/00.httpAll.yaml
 - config/outputs.disabled/yaml/01.h2output.yaml
 - config/outputs.disabled/yaml/05.es.values.yaml
@@ -193,6 +194,7 @@ files:
 - config/objects/nOutput_HTTP_JSON.js
 - config/objects/nValidation_Yellows.js
 - config/objects/nInput_RAIDGCMemory.js
+- config/objects/nOutput_SNMPServer.js
 - config/objects/nInput_CBPMRunningFlows.js
 - config/objects/nOutput_HTTP_Metrics.js
 - config/objects/nInput_RAIDMemory.js
@@ -329,6 +331,7 @@ filesHash:
   config/outputs.disabled/js/09.channels.js: 90b095b9c68e01b3aa724a8c370391f6d75cadf5
   config/outputs.disabled/js/1.oracleoutput.js: 0f7ce56148ba6772216ce4402f5509077c30af6e
   config/outputs.disabled/js/4.logFile.js: 64e401aa6e0ee55a2abbc3fd8fe72b965e8b9ddb
+  config/outputs.disabled/yaml/10.SNMPServer_Output.yaml: cbfb17d6451b00639d231ece529496f9f9b081b4
   config/outputs.disabled/yaml/00.httpAll.yaml: fcf74237eb55874c6e031c2586c85343e1b69b4b
   config/outputs.disabled/yaml/01.h2output.yaml: 49d7992bfbcf70ea667d6aeb4f0c71e7c16a1067
   config/outputs.disabled/yaml/05.es.values.yaml: aa44686271bda1db413620227d6a179568d12bf5
@@ -414,6 +417,7 @@ filesHash:
   config/objects/nOutput_HTTP_JSON.js: 73c4619994bf56f923fc3d2860e0aa6b422e3748
   config/objects/nValidation_Yellows.js: 942478fcd710e392add0b6ef6349ef51a895b764
   config/objects/nInput_RAIDGCMemory.js: 28aefad8696236df00e681ea00d85679d9481a9f
+  config/objects/nOutput_SNMPServer.js: f705c46eae29a6c7572b28fd67276559427cd3b2
   config/objects/nInput_CBPMRunningFlows.js: 54156f08ebcd272a24ae0b7d8c135f5d582dd195
   config/objects/nOutput_HTTP_Metrics.js: 1c3a0120b445f0ef1433877a38028771128ec565
   config/objects/nInput_RAIDMemory.js: 23ed9e4d91613c7a479a512e1dbc1a13cf971c23

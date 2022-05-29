@@ -1,5 +1,7 @@
 /** 
  * Author: Surya Kalyan Jaddu
+ * 
+ * <odoc>
  * <key>nAttrmon.nOutput_SNMPServer(aMap)</key>
  * Provide some explanation of the objective of your output object.\
  * On aMap expects:\
