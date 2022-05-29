@@ -1,6 +1,9 @@
 // Author: Nuno Aguiar
 
 var nInputInitList = _$(nInputInitList, "nInputInitList").isMap().default({});
+
+// AF
+// --
 nInputInitList["AF"] = {
     name   : "AF",
     type   : "map",
@@ -49,9 +52,38 @@ nInputInitList["AF"] = {
         return content.map(r => ({ key: r.key }))
     }
 };
+
+// CH
+// --
 nInputInitList["CH"] = {
     name   : "CH",
     type   : "array",
+    /*list   : (parent, content) => {
+        _$(content, "content").isMap().$_()
+        _$(content.name, "content.name").isString().$_()
+
+        if (isArray(content.entries)) {
+            return $ch(content.name).getKeys().map(r => {
+                if (isDef(r.key)) return r.key; else return r
+            })
+        } else {
+            return []
+        }
+    },
+    recycle: (parent, content) => {
+        _$(content, "content").isMap().$_()
+        _$(content.name, "content.name").isString().$_()
+
+        if (isArray(content.entries)) {
+            content.entries.forEach(entry => {
+                _$(entry.key, "entry.key").$_()
+                entry.key = parent.setSec(entry.key)
+
+                print(" -- " + entry.key)
+                $ch(content.name).unset(entry.key)
+            })
+        }
+    },*/
     factory: (parent, content) => {
         _$(content, "content").isMap().$_();
         _$(content.name, "content.name").isString().$_();
@@ -72,22 +104,44 @@ nInputInitList["CH"] = {
                 } catch(e1) {
                     logErr(e1);
                 }
-            });
+            })
+
+            return content.entries.map(r => r.key)
         }
+
+        return []
     }
 };
+
+// DB
+// --
 nInputInitList["DB"] = {
     name   : "DB",
     type   : "map",
     list   : (parent, ikey, content) => {
-
+        return ($ch().list().indexOf(ikey) >= 0 ? $ch(ikey).getKeys() : [])
     },
-    recycle: (parent, content) => {
+    recycle: (parent, ikey, content) => {
+        content = _$(content, "content").isArray().default([])
 
+        content.forEach(entry => {
+            entry = $ch(ikey).get({ key: entry.key })
+            if (isDef(entry.key)) {
+                log("Destroying DB object pool to access " + entry.key + "...")
+                nattrmon.delObjectPool(entry.key)
+
+                log("Destroying object pool to access " + entry.key + " associations...")
+                parent.unsetAssociations("DB", entry, ikey)
+
+                $ch(ikey).unset({ key: entry.key })
+            }
+        })
     },
     factory: (parent, ikey, content) => {
         $ch(ikey).create();
-        content.forEach(entry => {
+        content
+        .filter(r => isUnDef($ch(ikey).get({ key: r.key })))
+        .forEach(entry => {
             try {
                 entry      = _$(entry, "DB " + ikey + " entry").isMap().$_();
                 entry      = parent.setSec(entry);
@@ -111,21 +165,42 @@ nInputInitList["DB"] = {
             } catch(e1) {
                 logErr(e1);
             }
-        });
+        })
+
+        return content.map(r => ({ key: r.key }))
     }
 }
+
+// SSH
+// ---
 nInputInitList["SSH"] = {
     name   : "SSH",
     type   : "map",
-    list   : (paremt, ikey, content) => {
-
+    list   : (parent, ikey, content) => {
+        return ($ch().list().indexOf(ikey) >= 0 ? $ch(ikey).getKeys() : [])
     },
     recycle: (parent, ikey, content) => {
+        content = _$(content, "content").isArray().default([])
 
+        content.forEach(entry => {
+            entry = $ch(ikey).get({ key: entry.key })
+            if (isDef(entry.key)) {
+                log("Destroying SSH object pool to access " + entry.key + "...")
+                nattrmon.delObjectPool(entry.key)
+
+                log("Destroying object pool to access " + entry.key + " associations...")
+                parent.unsetAssociations("SSH", entry, ikey)
+
+                $ch(ikey).unset({ key: entry.key })
+            }
+        })
     },
     factory: (parent, ikey, content) => {
-        $ch(ikey).create();
-        content.forEach(entry => {
+        $ch(ikey).create()
+
+        content
+        .filter(r => isUnDef($ch(ikey).get({ key: r.key })))
+        .forEach(entry => {
             try {
                 entry      = _$(entry, "SSH " + ikey + " entry").isMap().$_();
                 entry      = parent.setSec(entry);
@@ -145,20 +220,43 @@ nInputInitList["SSH"] = {
             } catch(e1) {
                 logErr(e1);
             }
-        });
+        })
+
+        return content.map(r => ({ key: r.key }))
     }
 }
+
+// AFCache
+// -------
 nInputInitList["AFCache"] = {
     name   : "AFCache",
     type   : "map",
-    list   : (paremt, ikey, content) => {
-
+    list   : (parent, ikey, content) => {
+        return $ch()
+               .list()
+               .filter(r => r.startsWith("nattrmon::" + ikey + "::") && !r.endsWith("::__cache"))
+               .map(r => ({ key: r.replace("nattrmon::" + ikey + "::", "") }))
     },
     recycle: (parent, ikey, content) => {
+        content = _$(content, "content").isArray().default([])
+        
+        content.forEach(entry => {
+            entry      = _$(entry, "AFCache entry").isMap().$_()
+            entry      = parent.setSec(entry)
+            entry.key  = _$(entry.key, "AFCache '" + ikey + "' entry key").isString().$_()
+            entry.ttl  = _$(entry.ttl, "AFCache '" + ikey + "' " + entry.key + " ttl key").isNumber().default(__)
 
+            log("Destroying AF operation cache '" + ikey + "' to access " + entry.key + "...")
+            $cache("nattrmon::" + ikey + "::" + entry.key)
+            .destroy()
+        })
     },
     factory: (parent, ikey, content) => {
-        content.forEach(entry => {
+        content
+        .filter(r => $ch()
+                    .list()
+                    .indexOf("nattrmon::" + ikey + "::" + r.key) < 0)
+        .forEach(entry => {
             try {
                 entry      = _$(entry, "AFCache entry").isMap().$_();
                 entry      = parent.setSec(entry);
@@ -189,10 +287,14 @@ nInputInitList["AFCache"] = {
             } catch(e1) {
                 logErr(e1);
             }
-        });
+        })
+
+        return content.map(r => ({ key: r.key }))
     }
 }
 
+// Kube
+// ----
 nInputInitList["Kube"] = {
     name   : "Kube",
     type   : "map",
@@ -260,7 +362,7 @@ nInputInitList["Kube"] = {
  * (Check config/inputs.disabled/00.init.yaml)
  * </odoc>
  */
- var nInput_Init = function(aMap) {
+var nInput_Init = function(aMap) {
     if (getVersion() < "20210923") throw "nInput_Init is only supported starting on OpenAF version 20210923";
 
     if (isObject(aMap)) {
@@ -319,14 +421,15 @@ nInputInitList["Kube"] = {
                 Object.keys(params[init.name]).forEach(ikey => {
                     var content = params[init.name][ikey];
                     try {
-                        var lstPrev
-                        if (inc && isFunction(init.list)) {
+                        if (inc && isFunction(init.list) && isFunction(init.recycle)) {
+                            var lstPrev, lstNew
                             lstPrev = init.list(parent.fns, ikey, content, inc)
-                        }
-                        var lstNew = init.factory(parent.fns, ikey, content, inc)
-                        if (inc && isFunction(init.recycle)) {
+                            lstNew = init.factory(parent.fns, ikey, content, inc)
+       
                             lstNew = _$(lstNew).isArray().default([])
                             init.recycle(parent.fns, ikey, $from(lstPrev).except(lstNew).select(), inc)
+                        } else {
+                            if (!inc || init.dynamic) init.factory(parent.fns, ikey, content, inc)
                         }
                     } catch(e) {
                         logErr(e);
@@ -338,14 +441,15 @@ nInputInitList["Kube"] = {
                 params[init.name] = _$(params[init.name], init.name).isArray().default([]);
                 params[init.name].forEach(content => {
                     try {
-                        var lstPrev
-                        if (inc && isFunction(init.list)) {
+                        if (inc && isFunction(init.list) && isFunction(init.recycle)) {
+                            var lstPrev, lstNew
                             lstPrev = init.list(parent.fns, content, inc)
-                        }
-                        var lstNew = init.factory(parent.fns, content, inc)
-                        if (inc && isFunction(init.recycle)) {
+                            lstNew = init.factory(parent.fns, content, inc)
+
                             lstNew = _$(lstNew).isArray().default([])
-                            init.recycle(parent.fns, $from(lstPrev).exclude(lstNew).select(), inc)
+                            init.recycle(parent.fns, $from(lstPrev).except(lstNew).select(), inc)
+                        } else {
+                            if (!inc || init.dynamic) init.factory(parent.fns, content, inc)
                         }
                     } catch(e) {
                         logErr(e);
@@ -356,7 +460,7 @@ nInputInitList["Kube"] = {
     }
 
     Object.keys(nInputInitList).forEach(iinit => {
-        parent.fns.procList(nInputInitList[iinit], this.params)
+        parent.fns.procList(nInputInitList[iinit], this.params, false)
     })
 
     nInput.call(this, this.input);
