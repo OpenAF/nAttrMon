@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20220528'
+version: '20220531'
 dependencies:
   openaf: '>=20211229'
 files:
@@ -224,6 +224,7 @@ files:
 - config/objects/nInput_Semaphores.js
 - config/objects/nInput_Filesystem.js
 - config/objects/nInput_SSLCerts.js
+- config/objects/nInput_JavaGC.js
 - config/objects/nInput_Sessions.js
 - config/objects/nInput_RunningFlows.js
 - config/objects/nOutput_HTTP_Status.js
@@ -429,7 +430,7 @@ filesHash:
   config/objects/nInput_Schedulers.js: 96771d166e2574b6d5a526cc6025ad3abf1363d4
   config/objects/nInput_RAIDLookups.js: 9a56cb2550a5c254097337f4da7191f58a685caa
   config/objects/nInput_nAttrMon.js: c8ec9f45f724e7372b02751b893178490587641b
-  config/objects/nOutput_ES.js: 87272e07fa2c0d7283f2e1bbe434b9ac27ecbfbb
+  config/objects/nOutput_ES.js: 369d1739fba479f8b0fe49b3d3c2c1b6e96c7cbb
   config/objects/nOutput_Log2ES.js: 4ff766b80b2e03f08f9f38e5a8dba4115d62bf81
   config/objects/nInput_AFPing.js: c88598e75deb073715ed011272ae7ffb46962e8e
   config/objects/nOutput_HTTP_HealthZ.js: 557b493bc6cba42bc913376b8bc607700521f730
@@ -447,6 +448,7 @@ filesHash:
   config/objects/nInput_Semaphores.js: 9b0c0d8ca1b1c33d8faeaae89738360c8569534e
   config/objects/nInput_Filesystem.js: 29e1cb977c7fba7ae3a28d259c329154f9c555b3
   config/objects/nInput_SSLCerts.js: c91dd82454f653ab8e499da56a3cc240fb1800a8
+  config/objects/nInput_JavaGC.js: b888789c808cd5982026d08d605c2b694a324868
   config/objects/nInput_Sessions.js: e4adb3f97db438aa0524ba3a1efebd615d7c3057
   config/objects/nInput_RunningFlows.js: 7d8d77a702b4f9f2f719679052cba240798fa5f8
   config/objects/nOutput_HTTP_Status.js: a5f39539006aa3d99fbe82e32b405c347e2aaa81

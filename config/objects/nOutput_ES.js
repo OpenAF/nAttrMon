@@ -36,6 +36,8 @@
 	this.considerSetAll = (isDef(aMap.considerSetAll)) ? aMap.considerSetAll : true;
 	this.stampMap = aMap.stampMap;
 
+	this.keyMap = _$(aMap.keyMap, "keyMap").isMap().default({})
+
 	this.myUUID = genUUID();
 	this.ch = "__es_ " + this.myUUID;
 	$ch(this.ch).create(__, "elasticsearch", {
@@ -50,6 +52,12 @@
 	nOutput.call(this, this.output);
 };
 inherit(nOutput_ES, nOutput);
+
+nOutput_ES.prototype.addKeys = function(aVal, aOrig, aKeyMap) {
+	Object.keys(aKeyMap).forEach(k => {
+		$$(aVal).set(k, $$(aOrig).get(aKeyMap[k]))
+	})
+}
 
 nOutput_ES.prototype.addToES = function (aCh, aVal, useTitle) {
 	var obj = {};
@@ -76,6 +84,7 @@ nOutput_ES.prototype.addToES = function (aCh, aVal, useTitle) {
 			for (var i in aVal.val) {
 				obj.id = sha1(obj.name + (this.unique ? "" : (this.noDateDocId ? "" : obj.date)) + i + extra);
 				obj[obj.name] = clone(aVal.val[i]);
+				this.addKeys(obj, obj[obj.name], this.keyMap)
 				
 				traverse(obj, function (k, v, p, o) {
 					if (v == null || v == "n/a") {
@@ -93,9 +102,11 @@ nOutput_ES.prototype.addToES = function (aCh, aVal, useTitle) {
 			if (useTitle) {
 				obj.id = sha1(obj.title + (this.noDateDocId ? "" : (this.unique ? obj.createdate : obj.date)) + obj.level + extra);
 				obj = merge(obj, clone(aVal));
+				this.addKeys(obj, obj, this.keyMap)
 			} else {
 				obj.id = sha1(obj.name + (this.unique ? "" : (this.noDateDocId ? "" : obj.date)) + extra);
 				obj[obj.name] = (isMap(aVal.val) ? clone(aVal.val) : aVal.val)
+				this.addKeys(obj, obj[obj.name], this.keyMap)
 			}
 			traverse(obj, function (k, v, p, o) {
 				if (v == null) {
