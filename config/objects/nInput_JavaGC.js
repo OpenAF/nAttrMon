@@ -26,16 +26,18 @@ var nInput_JavaGC = function(aMap) {
 inherit(nInput_JavaGC, nInput)
 
 nInput_JavaGC.prototype.get = function(keyData, extra) {
-    extra = _$(extra, "extra").isMap().default(__)
+    extra   = _$(extra, "extra").isMap().default(__)
+    keyData = _$(keyData, "keyData").isMap().default({ })
     // Get metrics based on keyData or, if no chKeys is provided, check this.params
-    var res = {}
 
-    // TODO
-    res.gcSummary    = {}
-    res.gcCollectors = []
-    res.gcThreads    = {}
-    
     var fnProc = (key, data) => {
+        var res = {}
+
+        // TODO
+        res.gcSummary    = {}
+        res.gcCollectors = []
+        res.gcThreads    = {}
+
         res.gcSummary = {
             key             : key,
             vendor          : data.java.property.java.vm.vendor,
@@ -56,12 +58,15 @@ nInput_JavaGC.prototype.get = function(keyData, extra) {
         })))
         
         res.gcThreads = merge({ key: key }, data.java.threads)
+
+        return res
     }
 
-    var data
-    ow.java.getLocalJavaPIDs().forEach(p => {
-        fnProc(p.pid, ow.java.parseHSPerf(p.path))
-    })
+    var _res = nattrmon.shExec(keyData.type, keyData).exec(keyData.cmd)
+
+    if (isDef(_res) && isDef(_res.stdout)) {
+        res = fnProc(keyData.key, ow.java.parseHSPerf( af.fromBase64(af.fromString2Bytes(_res.stdout)) ))
+    }
 
     return merge(res, extra)
 }
@@ -77,7 +82,7 @@ nInput_JavaGC.prototype.input = function(scope, args) {
     var gcThreads    = templify(this.params.attrTemplate, { _name: "Threads" })
 
 	if (isDef(this.params.chKeys)) {
-        var arrGCSummary = [], arrGCCollector = [], arrGCThreads = []
+        var arrGCSummary = [], arrGCCollectors = [], arrGCThreads = []
         $ch(this.params.chKeys).forEach((k, v) => {
             var data = this.get(merge(k, v))
             arrGCSummary.push(data.gcSummary)
