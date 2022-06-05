@@ -31,34 +31,37 @@ nInput_JavaGC.prototype.get = function(keyData, extra) {
     var res = {}
 
     // TODO
-    res.gcSummary    = isString(keyData) ? { key: keyData } : {}
-    res.gcCollectors = isString(keyData) ? { key: keyData } : {}
-    res.gcThreads    = isString(keyData) ? { key: keyData } : {}
+    res.gcSummary    = {}
+    res.gcCollectors = []
+    res.gcThreads    = {}
     
-    ow.java.getLocalJavaPIDs().forEach(p => {
-        var data = ow.java.parseHSPerf(p.path)
-        res.gcSummary.push({
-          key             : p.pid,
-          vendor          : data.java.property.java.vm.vendor,
-          jre             : data.java.property.java.vm.name,
-          version         : data.java.property.java.vm.version,
-          totalRunningTime: data.sun.rt.__totalRunningTime,
-          percAppTime     : data.sun.rt.__percAppTime,
-          gcCause         : data.sun.gc.cause,
-          gcLastCause     : data.sun.gc.lastCause
-        })
+    var fnProc = (key, data) => {
+        res.gcSummary = {
+            key             : key,
+            vendor          : data.java.property.java.vm.vendor,
+            jre             : data.java.property.java.vm.name,
+            version         : data.java.property.java.vm.version,
+            totalRunningTime: data.sun.rt.__totalRunningTime,
+            percAppTime     : data.sun.rt.__percAppTime,
+            gcCause         : data.sun.gc.cause,
+            gcLastCause     : data.sun.gc.lastCause
+        }
         
         res.gcCollectors = res.gcCollectors.concat(data.sun.gc.collector.map(c => ({
-          key         : p.pid,
-          name        : c.name,
-          invocations : c.invocations,
-          lastExecTime: c.__lastExecTime,
-          avgExecTime : c.__avgExecTime
+            key         : key,
+            name        : c.name,
+            invocations : c.invocations,
+            lastExecTime: c.__lastExecTime,
+            avgExecTime : c.__avgExecTime
         })))
         
-        data.java.threads.key = p.pid
-        res.gcThreads.push(data.java.threads)
-      })
+        res.gcThreads = merge({ key: key }, data.java.threads)
+    }
+
+    var data
+    ow.java.getLocalJavaPIDs().forEach(p => {
+        fnProc(p.pid, ow.java.parseHSPerf(p.path))
+    })
 
     return merge(res, extra)
 }
