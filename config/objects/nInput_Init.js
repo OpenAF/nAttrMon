@@ -58,35 +58,42 @@ nInputInitList["AF"] = {
 nInputInitList["CH"] = {
     name   : "CH",
     type   : "array",
-    /*list   : (parent, content) => {
+    array  : "entries",
+    list   : (parent, content) => {
         _$(content, "content").isMap().$_()
-        _$(content.name, "content.name").isString().$_()
+        _$(content.name, "content.name1").isString().$_()
 
+        var ar
         if (isArray(content.entries)) {
-            return $ch(content.name).getKeys().map(r => {
-                if (isDef(r.key)) return r.key; else return r
+            ar = $ch(content.name).getKeys().map(r => {
+                if (isDef(r.key)) 
+                    return r.key; 
+                else
+                    return r;
             })
         } else {
-            return []
+            ar = []
         }
+
+        return ar
     },
-    recycle: (parent, content) => {
+    recycle: (parent, content, lst) => {
         _$(content, "content").isMap().$_()
-        _$(content.name, "content.name").isString().$_()
+        _$(content.name, "content.name2").isString().$_()
+        _$(lst, "lst").isArray().$_()
 
-        if (isArray(content.entries)) {
-            content.entries.forEach(entry => {
-                _$(entry.key, "entry.key").$_()
-                entry.key = parent.setSec(entry.key)
+        if (isArray(lst)) {
+            lst.forEach(entry => {
+                _$(entry, "entry").$_()
+                //entry.key = parent.setSec(entry.key)
 
-                print(" -- " + entry.key)
-                $ch(content.name).unset(entry.key)
+                $ch(content.name).unset({ key: entry })
             })
         }
-    },*/
-    factory: (parent, content) => {
+    },
+    factory: (parent, content, inc) => {
         _$(content, "content").isMap().$_();
-        _$(content.name, "content.name").isString().$_();
+        _$(content.name, "content.name3").isString().$_();
         content.type = _$(content.type, content.name + " content.type").isString().default("simple");
 
         // Creating channel
@@ -100,7 +107,7 @@ nInputInitList["CH"] = {
                     entry.key = parent.setSec(entry.key);
                     entry.value = parent.setSec(entry.value);
 
-                    $ch(content.name).set(entry.key, entry.value);
+                    $ch(content.name).set(entry.key, entry.value)
                 } catch(e1) {
                     logErr(e1);
                 }
@@ -331,14 +338,22 @@ nInputInitList["Kube"] = {
         }
 
         if (isArray(entry[ikey])) {
-            entry[ikey].forEach(m => {
-                m._kube = _$(m._kube, "_kube").isMap().default({})
-                m._kube.selector = _$(m._kube.selector, "_kube.selector").isMap().default({})
+            entry[ikey] = entry[ikey].map(m => {
+                if (isDef(nInputInitList[ikey].array) &&
+                    isDef($$(m).get(nInputInitList[ikey].array))) {
 
-                var lst = getKubeLst(m._kube)
-                if (isArray(lst)) {
-                    entry[ikey] = procKubeLst(m, lst)
-                }
+                    var mm = $$(m).get(nInputInitList[ikey].array)
+                    if (isArray(mm) && mm.length >= 1) mm = mm[0]
+
+                    mm._kube = _$(mm._kube, "_kube").isMap().default({})
+                    mm._kube.selector = _$(mm._kube.selector, "_kube.selector").isMap().default({})
+    
+                    var lst = getKubeLst(mm._kube)
+                    if (isArray(lst)) {
+                        $$(m).set(nInputInitList[ikey].array, procKubeLst(mm, lst))
+                    }
+                }  
+                return m         
             })
         } else {
             if (isMap(entry[ikey])) {
@@ -453,7 +468,7 @@ var nInput_Init = function(aMap) {
                             lstNew = init.factory(parent.fns, content, inc)
 
                             lstNew = _$(lstNew).isArray().default([])
-                            init.recycle(parent.fns, $from(lstPrev).except(lstNew).select(), inc)
+                            init.recycle(parent.fns, content, $from(lstPrev).except(lstNew).select(), inc)
                         } else {
                             if (!inc || init.dynamic) init.factory(parent.fns, content, inc)
                         }
@@ -466,7 +481,7 @@ var nInput_Init = function(aMap) {
     }
 
     Object.keys(nInputInitList).forEach(iinit => {
-        parent.fns.procList(nInputInitList[iinit], this.params, false)
+        parent.fns.procList(nInputInitList[iinit], clone(this.params), false)
     })
 
     nInput.call(this, this.input);
@@ -480,7 +495,7 @@ nInput_Init.prototype.input = function(scope, args) {
     Object.keys(nInputInitList)
     .filter(n => nInputInitList[n].dynamic)
     .forEach(iinit => {
-        parent.fns.procList(nInputInitList[iinit], parent.params, true)
+        parent.fns.procList(nInputInitList[iinit], clone(parent.params), true)
     })
 
     return ret;
