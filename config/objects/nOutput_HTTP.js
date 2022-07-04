@@ -5,7 +5,7 @@ var nOutput_HTTP = function (aMap) {
 	var aTitle = isDef(aMap.title) ? aMap.title : "Untitled";
 	var aPort = isDef(aMap.port) ? aMap.port : 8090;
 	var aRefreshTime = isDef(aMap.refreshTime) ? aMap.refreshTime : 2500;
-	var path = isDef(aMap.path) ? aMap.path : io.fileInfo(nattrmon.getConfigPath()).canonicalPath;
+	var path = isDef(aMap.path) ? aMap.path : io.fileInfo(nattrmon.getConfigPath("objects.assets/noutputhttp")).canonicalPath;
 
 	this.audit = (isDef(aMap.audit) ? aMap.audit : true);
 	this.auditTemplate = (isDef(aMap.auditTemplate) ? aMap.auditTemplate : AUDIT_TEMPLATE);

@@ -32,10 +32,10 @@ var nOutput_EmailWarnings = function(aMap) {
 	this.includeRE = aMap.includeRE;
 	this.excludeRE = aMap.excludeRE;
 
-	this.template = nattrmon.configPath + "/objects.assets/noutputemailwarnings/" + ((isUnDef(aMap.template)) ? "warningEmailTemplate.hbs" : aMap.template);
+	this.template = nattrmon.getConfigPath("objects.assets/noutputemailwarnings/") + "/objects.assets/noutputemailwarnings/" + ((isUnDef(aMap.template)) ? "warningEmailTemplate.hbs" : aMap.template);
 	if (!(io.fileExists(this.template))) {
 		logErr("Template " + this.template + " doesn't exist.");
-		this.template = nattrmon.configPath + "/objects.assets/noutputemailwarnings/warningEmailTemplate.hbs";
+		this.template = nattrmon.getConfigPath("objects.assets/noutputemailwarnings/") + "/objects.assets/noutputemailwarnings/warningEmailTemplate.hbs";
 	}		
 
 	this.templateImages = _$(aMap.templateImages).isMap("templateImages should be a map.").default({});
@@ -224,7 +224,7 @@ nOutput_EmailWarnings.prototype.output = function (scope, args, meta) {
 	if (count == 0) return;
 	//email.embedFile(nattrmon.configPath + "/objects.assets/noutputemailwarnings/logo.png", "logo");
 	for(var ii in this.templateImages) {
-		email.embedFile(nattrmon.configPath + "/objects.assets/noutputemailwarnings/" + this.templateImages[ii], ii);
+		email.embedFile(nattrmon.getConfigPath("objects.assets/noutputemailwarnings/") + "/objects.assets/noutputemailwarnings/" + this.templateImages[ii], ii);
 	}
 	var message = this.htmlTemplate("nOutput_EmailWarnings", data);
 
