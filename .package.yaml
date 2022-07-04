@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20220531'
+version: '20220703'
 dependencies:
   openaf: '>=20211229'
 files:
@@ -278,7 +278,7 @@ filesHash:
   lib/noutput.js: 097a89ae2ab12cb28d88034444a72d368464d14c
   lib/nattributes.js: f28cee64a735e0e6ae3b520bbc59f74e6203e1db
   lib/nwarnings.js: 1988fb946cd19c29a3321e99ae21661643ec1fe3
-  lib/nmain.js: 0132f9df6fb1b186b5153c93dbd138c58b65b7df
+  lib/nmain.js: 917a88defc1585a2e9dd2d68e78fe3c94c39fdf0
   lib/nattribute.js: 957b3e1e4d55c554e029229dae26e838df1da7b4
   lib/nplug.js: cfae6fc112042e574320895f406fddb942f4ff6d
   lib/ntmplhelpers.js: eaa9d6188a1636cc26dfc2ccfce6a27bd34f8fba
@@ -394,7 +394,7 @@ filesHash:
   config/move_files_from_the_disabled_folders.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
   config/objects/nValidation_Generic.js: 6c3a506b7ba79a9add379e5243f964f8cae4f624
   config/objects/nInput_BPMDebugChecks.js: 6e1042ba95cc3374d3516be2202538529344769f
-  config/objects/nOutput_EmailWarnings.js: 9d7ba2260203f890f3bc5de073a208d5d2991252
+  config/objects/nOutput_EmailWarnings.js: 7010177f9ba78db43c638acf844506dc81e906cc
   config/objects/nInput_Channel.js: 50c33108574630f6da6850f4e7f93f34a8632a62
   config/objects/nInput_CompareTimes.js: 5c95c1387549e405031414b430c98951ed591d1c
   config/objects/nValidation_AFPing.js: f48325d605e693dee3ab2912224cda0fde11e490
@@ -406,14 +406,14 @@ filesHash:
   config/objects/nInput_FMSRuleStatus.js: a751fa64817c47bcac24d7b4bcdbfe699abb30c8
   config/objects/nOutput_DSV.js: b723aefe236bd464d215c52406cec796cd47d97f
   config/objects/nInput_HTTPJson.js: 3bf9fc0a1d15592f46331725370577bbadc382b9
-  config/objects/nOutput_HTMLStatus.js: 34b4a28f92872a00821938a1b8a70220fe586dd6
+  config/objects/nOutput_HTMLStatus.js: 5672ea6092958891bb4a3a8eb3e8317c6e250600
   config/objects/nInput_OSInfo.js: b8548f6d69dea80553fbef3e6e8d6552c15362e9
   config/objects/nInput_EndPoints.js: 5042270a025e040a844f79832c924aa20f0413b4
   config/objects/nValidation_Semaphores.js: 97b6c1850b80d95cc92c1c50b05fdfa26467fd94
   config/objects/nInput_ESSearch.js: 0f825f81de288367fde87f13be5e1ccfe072bd1c
   config/objects/nInput_IMLoadingsProgress.js: 1987633b3cf1ee4f8a1f74a7441f386637aa93a6
   config/objects/nInput_DMPerformance.js: c7b8d30f023cc550ea262333927cc1acf9cab3b6
-  config/objects/nOutput_HTTP.js: b8a15ba7dd563f984fa6d71b14bf4135bb18c2b7
+  config/objects/nOutput_HTTP.js: 503eb7a2f8125aae56757ded7ae0e64915193aa5
   config/objects/nOutput_WarnsHistory.js: 53820893e6a8f4a63b2ad93ffc7e7094c6bcdf1f
   config/objects/nOutput_HTTP_JSON.js: 73c4619994bf56f923fc3d2860e0aa6b422e3748
   config/objects/nValidation_Yellows.js: 942478fcd710e392add0b6ef6349ef51a895b764
@@ -451,7 +451,7 @@ filesHash:
   config/objects/nInput_JavaGC.js: b888789c808cd5982026d08d605c2b694a324868
   config/objects/nInput_Sessions.js: e4adb3f97db438aa0524ba3a1efebd615d7c3057
   config/objects/nInput_RunningFlows.js: 7d8d77a702b4f9f2f719679052cba240798fa5f8
-  config/objects/nOutput_HTTP_Status.js: a5f39539006aa3d99fbe82e32b405c347e2aaa81
+  config/objects/nOutput_HTTP_Status.js: c4e56e646bfe3dd1d063604b5ab40bc0f618ff66
   config/objects/nOutput_Channels.js: f6e277efa2c12c3d6dd8468facbfb1bb43828ed6
   config/objects/nOutput_ChMirror.js: c1b5d965320aac73d90f0a6e12ae0a4123f8afd5
   config/objects/nInput_DB.js: fbd66abf6c3211710c05124dd84256814b61a6a2

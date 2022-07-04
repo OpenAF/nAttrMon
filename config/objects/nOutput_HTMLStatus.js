@@ -5,7 +5,7 @@
 	if (isUnDef(aMap) || !isObject(aMap)) aMap = {}; 
 
     this.file           = _$(aMap.file, "file").isString().default(__);
-    this.path           = isDef(aMap.path) ? aMap.path : io.fileInfo(nattrmon.getConfigPath()).canonicalPath;
+    this.path           = isDef(aMap.path) ? aMap.path : io.fileInfo(nattrmon.getConfigPath("objects.assets/noutputstatus")).canonicalPath;
     this.levelsIncluded = _$(aMap.levelsIncluded, "levelsIncluded").isArray().default([ "HIGH", "MEDIUM", "LOW", "INFO"]);
     this.redLevels      = _$(aMap.redLevels, "redLevels").isArray().default(["HIGH"]);
     this.yellowLevels   = _$(aMap.yellowLevels, "yellowLevels").isArray().default(["MEDIUM"]);
