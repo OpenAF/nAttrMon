@@ -3,7 +3,7 @@
 /**
  * <odoc>
  * <key>nattrmon.nInput_JavaGC(aMap)</key>
- * Provide some explanation of the objective of your input object.
+ * Retrieves GC information from hotspot JVMs running locally, on a host reachable through SSH or in a Kubernetes pod.
  * On aMap expects:\
  * \
  *    - someVariable (Type) Description of variable.\
