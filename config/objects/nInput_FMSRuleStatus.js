@@ -32,7 +32,7 @@ nInput_FMSRuleStatus.prototype.input = function(scope, args) {
 		enginesList = enginesList.concat(s.exec("FRAUD.GetEngineList", {"EnginePhase": 2}).EngineList);
 
 		// Go through all rules in all engines and get their status
-		res = $from(enginesList).select(function(engine) {
+		var _res = $from(enginesList).select(function(engine) {
 			var rules = s.exec("FRAUD.GetEngineRulesInfo", { "EngineId": engine.EngineId }).EngineRulesInfoList;
 
 			return $from(rules).select(function(rule) {
@@ -45,11 +45,11 @@ nInput_FMSRuleStatus.prototype.input = function(scope, args) {
 				}
 			});
 		});
-		res = _.flatten(res);
-		return res;
+		_res = _.flatten(_res);
+		return _res;
 	}
 
-	var ret = {}, arrSimple = [], arrDetailed = []
+	var res = {}, arrSimple = [], arrDetailed = []
 
 
 	if (isDef(this.params.chKeys)) this.params.keys = $from($ch(this.params.chKeys).getKeys()).sort("key").select(r => r.key)
@@ -86,6 +86,7 @@ nInput_FMSRuleStatus.prototype.input = function(scope, args) {
 		                  .equals("Status", "Inactive by anti-flooding")
 						  .attach("Key", this.params.keys[i])
 						  .select({
+			"Key"       : "",
 			"EngineName": "",
 			"Rule"      : "",
 			"Status"    : ""
