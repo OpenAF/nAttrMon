@@ -1,0 +1,5 @@
+input: 	
+  name: Input FMS RuleStatus
+  execFrom: nInput_FMSRuleStatus
+  execArgs:
+    chKeys: raidServers
