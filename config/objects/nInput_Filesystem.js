@@ -5,18 +5,20 @@
  * the unix "df" command. On can provide on aMap:\
  * \
  *    - volumeNames (an array of strings with the device volumes on the unix operating system)\
+ *    - useMountPoint (if useMountPoint=true the mount point will be used instead of the filesystem)
  *    - keys (a map with a SSH key or array of maps with SSH keys)\
  *    - chKeys (a channel with similar maps as keys)\
  * \
  * </odoc>
  */
 nInput_Filesystem = function (aMap) {
-	if (isObject(aMap)) {
-		this.params = aMap;
-		if (isUnDef(this.params.attrTemplate)) this.params.attrTemplate = "Server status/Filesystem";
+	if (isMap(aMap)) {
+		this.params = aMap
+		this.params.attrTemplate = _$(this.params.attrTemplate, "attrTemplate").isString().default("Server status/Filesystem")
 	} else {
 		this.params = {};
 	}
+	this.params.useMountPoint = _$(this.params.useMountPoint, "useMountPoint").isBoolean().default(false)
 	if (!isArray(this.params.volumeNames) || this.params.volumeNames.length == 0) throw "No volumeNames defined.";
 
 	nInput.call(this, this.input);
@@ -34,7 +36,8 @@ nInput_Filesystem.prototype.__parseCmd = function (resSpace, resINode) {
 		var inode = {};
 
 		for (var i in linesSpace) {
-			if (linesSpace[i].match(new RegExp("^" + vname))) {
+			if ((!this.params.useMountPoint && linesSpace[i].match(new RegExp("^" + vname + "\\s+")))
+			   || (this.params.useMountPoint && linesSpace[i].match(new RegExp(" " + vname + "$")))) {
 				var line = linesSpace[i].split(/\s+/);
 				space = {
 					"total": line[1],
@@ -46,7 +49,8 @@ nInput_Filesystem.prototype.__parseCmd = function (resSpace, resINode) {
 		}
 
 		for (var i in linesINode) {
-			if (linesINode[i].match(new RegExp("^" + vname))) {
+			if ((!this.params.useMountPoint && linesINode[i].match(new RegExp("^" + vname + "\\s+")))
+			   || (this.params.useMountPoint && linesINode[i].match(new RegExp("\\s+" + vname + "$")))) {
 				var line = linesINode[i].split(/\s+/);
 				inode = {
 					"total": line[1],
