@@ -1,27 +1,23 @@
-var nInput_FMSRulesStatus = function(anMonitoredAFObjectKey, attributePrefix) {
+var nInput_FMSRuleStatus = function(aMap, attributePrefix) {
 	if (isUnDef(getOPackPath("OpenCli"))) {
-		throw "OpenCli opack not installed.";
-	}
-	 
-	// Set server if doesn't exist
-	if (nattrmon.isObjectPool(anMonitoredAFObjectKey)) {
-		this.objectPoolKey = anMonitoredAFObjectKey;
-		this.monitoredObjectKey = anMonitoredAFObjectKey; // just for reference
-	} else {
-		this.monitoredObjectKey = anMonitoredAFObjectKey;
-		if (nattrmon.hasMonitoredObject(anMonitoredAFObjectKey))
-	  		this.server = nattrmon.getMonitoredObject(anMonitoredAFObjectKey);
-		else
-	  		throw "Key " + anMonitoredAFObjectKey + " not found.";
+		throw "OpenCli opack not installed."
 	}
 
-	this.attributePrefix = (isUndefined(attributePrefix)) ? "Fraud/Fraud rules status" : attributePrefix;
+    if (isMap(aMap)) {
+        this.params = aMap
+        // If keys is not an array make it an array.
+        if (!(isArray(this.params.keys))) {
+            this.params.keys = [this.params.keys]
+        }
 
-	nInput.call(this, this.input);
+        if (isUnDef(this.params.attrTemplate)) this.params.attrTemplate = (isUnDef(attributePrefix)) ? "Fraud/Fraud rules status" : attributePrefix
+    }
+
+	nInput.call(this, this.input)
 }
-inherit(nInput_FMSRulesStatus, nInput);
+inherit(nInput_FMSRuleStatus, nInput)
 
-nInput_FMSRulesStatus.prototype.input = function(scope, args) {
+nInput_FMSRuleStatus.prototype.input = function(scope, args) {
 	// Decode function
 	function decode(aStatus) {
 		switch(aStatus) {
@@ -36,7 +32,7 @@ nInput_FMSRulesStatus.prototype.input = function(scope, args) {
 		enginesList = enginesList.concat(s.exec("FRAUD.GetEngineList", {"EnginePhase": 2}).EngineList);
 
 		// Go through all rules in all engines and get their status
-		res = $from(enginesList).select(function(engine) {
+		var _res = $from(enginesList).select(function(engine) {
 			var rules = s.exec("FRAUD.GetEngineRulesInfo", { "EngineId": engine.EngineId }).EngineRulesInfoList;
 
 			return $from(rules).select(function(rule) {
@@ -49,47 +45,59 @@ nInput_FMSRulesStatus.prototype.input = function(scope, args) {
 				}
 			});
 		});
-		res = _.flatten(res);
-		return res;
+		_res = _.flatten(_res);
+		return _res;
 	}
 
-	var ret = {};
+	var res = {}, arrSimple = [], arrDetailed = []
 
-	try {
-		var res;
-		var parent = this;
-		if (isDefined(this.objectPoolKey)) {
-			nattrmon.useObject(this.objectPoolKey, function(s) {
-				try {
-					res = getResults(s);
-				} catch(e) {
-					logErr("Error while retrieving engines list and rules info using '" + parent.monitoredObjectKey + "': " + e.message);
-					throw e;
-				}
-				return true;
-			})
-		} else {
-			res = getResults(this.server);
+
+	if (isDef(this.params.chKeys)) this.params.keys = $from($ch(this.params.chKeys).getKeys()).sort("key").select(r => r.key)
+
+    for (var i in this.params.keys) {
+        var extra = {}
+        if (isDef(this.params.chKeys)) {
+            var value = $ch(this.params.chKeys).get({ key: this.params.keys[i] })
+            if (isDef(value)) {
+                for (var j in this.params.extra) {
+                    if (isDef(value[this.params.extra[j]])) extra[this.params.extra[j]] = value[this.params.extra[j]]
+                }
+            }
+        }
+
+		var ret
+		nattrmon.useObject(this.params.keys[i], function(s) {
+			try {
+				ret = getResults(s)
+			} catch(e) {
+				logErr("Error while retrieving engines list and rules info using '" + this.params.keys[i] + "': " + e.message)
+				throw e
+			}
+		})
+
+		var retSimple = {
+			"Key"                      : this.params.keys[i],
+			"Active"                   : $from(ret).equals("Status", "Active").count(),
+			"Inactive"                 : $from(ret).equals("Status", "Inactive").count(),
+			"Inactive by anti-flooding": $from(ret).equals("Status", "Inactive by anti-flooding").count()
 		}
-	} catch(e) {
-		logErr("Error while retrieving memory using '" + this.monitoredObjectKey + "': " + e.message);
-		if (isUndefined(this.objectPoolKey)) {
-			nattrmon.declareMonitoredObjectDirty(this.monitoredObjectKey);
-			this.server = nattrmon.getMonitoredObject(this.monitoredObjectKey);
-		}
-	}
+	
+		var retDetailed = $from(ret)
+		                  .equals("Status", "Inactive by anti-flooding")
+						  .attach("Key", this.params.keys[i])
+						  .select({
+			"Key"       : "",
+			"EngineName": "",
+			"Rule"      : "",
+			"Status"    : ""
+		})
+		
+        arrSimple   = arrSimple.concat(retSimple)
+		arrDetailed = arrDetailed.concat(retDetailed)
+    }
 
-	ret[this.attributePrefix] = {
-		"Active"                   : $from(res).equals("Status", "Active").count(),
-		"Inactive"                 : $from(res).equals("Status", "Inactive").count(),
-		"Inactive by anti-flooding": $from(res).equals("Status", "Inactive by anti-flooding").count()
-	}
+    res[templify(this.params.attrTemplate)]               = arrSimple
+	res[templify(this.params.attrTemplate) + " detailed"] = arrDetailed
 
-	ret[this.attributePrefix + " detailed"] = $from(res).equals("Status", "Inactive by anti-flooding").select({
-		"EngineName": "",
-		"Rule": "",
-		"Status": ""
-	});
-
-	return ret;
+	return res
 }
