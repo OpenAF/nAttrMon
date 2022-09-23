@@ -19,6 +19,7 @@ var nInput_JavaGC = function(aMap) {
     }
 
     ow.loadJava()
+    ow.loadNet()
     if (isUnDef(this.params.attrTemplate)) this.params.attrTemplate = "Java/{{_name}}"
 
     nInput.call(this, this.input)
@@ -39,11 +40,13 @@ nInput_JavaGC.prototype.get = function(keyData, extra) {
     
     ow.java.getLocalJavaPIDs().forEach(p => {
         var data = ow.java.parseHSPerf(p.path)
-        var cmdH = sha512(data.sun.rt.javaCommand).substring(0, 7)
+        var host = ow.net.getHostName()
+        var cmdH = sha512(host + data.sun.rt.javaCommand).substring(0, 7)
 
         res.gcSummary.push({
           key               : cmdH,
           pid               : p.pid,
+          host              : host,
           cmd               : data.sun.rt.javaCommand,
           vendor            : data.java.property.java.vm.vendor,
           jre               : data.java.property.java.vm.name,
