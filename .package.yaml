@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20220919'
+version: '20220922'
 dependencies:
   openaf: '>=20220822'
 files:
@@ -450,7 +450,7 @@ filesHash:
   config/objects/nInput_Semaphores.js: 9b0c0d8ca1b1c33d8faeaae89738360c8569534e
   config/objects/nInput_Filesystem.js: 59f6c245ec5acf11111d92ea0f83797214bf6030
   config/objects/nInput_SSLCerts.js: c91dd82454f653ab8e499da56a3cc240fb1800a8
-  config/objects/nInput_JavaGC.js: b888789c808cd5982026d08d605c2b694a324868
+  config/objects/nInput_JavaGC.js: c8dbf8219a8a0dbe0b6d8ab998491b3bbb255b03
   config/objects/nInput_Sessions.js: e4adb3f97db438aa0524ba3a1efebd615d7c3057
   config/objects/nInput_RunningFlows.js: 7d8d77a702b4f9f2f719679052cba240798fa5f8
   config/objects/nOutput_HTTP_Status.js: c4e56e646bfe3dd1d063604b5ab40bc0f618ff66
