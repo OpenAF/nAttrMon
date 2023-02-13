@@ -51,6 +51,6 @@ nInput_Kube_Pods.prototype.input = function(scope, args) {
 
     if (isDef(this.params.podName)) res = $from(res).match("name", this.params.podName).select();
 
-    ret[templify(this.params.attrTemplate)] = res;
+    ret[templify(this.params.attrTemplate, this.params)] = res;
     return ret;
 };
