@@ -1,0 +1,9 @@
+input:
+  name: Kube pods metrics
+  cron: "*/5 * * * * *"
+  execFrom: nInput_Kube_PodsMetrics
+  execArgs:
+    #secFile  : /secrets/secrets.yaml
+    #secBucket: nattrmon
+    #secKey   : kube 
+    kubeNamespace: default

@@ -1,0 +1,8 @@
+input:
+  name: Kube nodes metrics
+  cron: "*/5 * * * * *"
+  execFrom: nInput_Kube_NodesMetrics
+  execArgs:
+    #secFile  : /secrets/secrets.yaml
+    #secBucket: nattrmon
+    #secKey   : kube 

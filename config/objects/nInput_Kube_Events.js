@@ -39,18 +39,18 @@ nInput_Kube_Events.prototype.input = function(scope, args) {
     var kube = new Kube(this.params.kubeURL, this.params.kubeUser, this.params.kubePass, __, this.params.kubeToken);    
     if (!this.params.full) {
         ret[templify(this.params.attrTemplate)] = kube.getEvents().map(r => ({
-            startTime         : r.FirstTimestamp,
-            endTime           : r.LastTimestamp, 
-            type              : r.Type,
-            count             : r.Count,
-            sourceComponent   : r.Source.Component,
-            sourceHost        : r.Source.Host,
-            reportingComponent: r.ReportingComponent,
-            message           : r.Message,
-            reason            : r.Reason
+            startTime         : (isDef(r.FirstTimestamp) ? r.FirstTimestamp : "n/a"),
+            endTime           : (isDef(r.LastTimestamp) ? r.LastTimestamp: "n/a"), 
+            type              : (isDef(r.Type) ? r.Type : "n/a"),
+            count             : (isDef(r.Count) ? r.Count : "n/a"),
+            sourceComponent   : (isDef(r.Source) ? (isDef(r.Source.Component) ? r.Source.Component : "n/a") : "n/a"),
+            sourceHost        : (isDef(r.Source) ? (isDef(r.Source.Host) ? r.Source.Host : "n/a") : "n/a"),
+            reportingComponent: (isDef(r.ReportingComponent) ? r.ReportingComponent : "n/a"),
+            message           : (isDef(r.Message) ? r.Message : "n/a"),
+            reason            : (isDef(r.Reason) ? r.Reason : "n/a")
         }));
     } else {
-        ret[templify(this.params.attrTemplate)] = kube.getEvents();
+        ret[templify(this.params.attrTemplate, this.params)] = kube.getEvents();
     }
     
     kube.close();
