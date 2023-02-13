@@ -375,7 +375,7 @@ filesHash:
   config/objects/nInput_CBPMSemaphores.js: 75a0892cdad21aee8762d6d1346548bf6d42b59b
   config/objects/nOutput_SNMPServer.js: f705c46eae29a6c7572b28fd67276559427cd3b2
   config/objects/nOutput_HTTP_HealthZ.js: 557b493bc6cba42bc913376b8bc607700521f730
-  config/objects/nInput_Kube_Pods.js: fe5947523046e5d8ac85eda6bdb178b4cd31b761
+  config/objects/nInput_Kube_Pods.js: 3afb158052eb3eb1b9ffb70d68f0fa23c20b7c81
   config/objects/nOutput_RemoteChannel.js: 8dcadaf89c78f31707c45d615a3941ce0547cd33
   config/objects/nInput_DMPerformance.js: c7b8d30f023cc550ea262333927cc1acf9cab3b6
   config/objects/nOutput_HTTP.js: 503eb7a2f8125aae56757ded7ae0e64915193aa5
