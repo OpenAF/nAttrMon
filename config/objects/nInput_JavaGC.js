@@ -20,6 +20,9 @@ var nInput_JavaGC = function(aMap) {
 
     ow.loadJava()
     ow.loadNet()
+
+    this.params.type = _$(this.params.type, "type").oneOf(["local", "ssh", "kube"]).default("local")
+
     if (isUnDef(this.params.attrTemplate)) this.params.attrTemplate = "Java/{{_name}}"
 
     nInput.call(this, this.input)
@@ -37,73 +40,153 @@ nInput_JavaGC.prototype.get = function(keyData, extra) {
     res.gcThreads    = []
     res.gcSpaces     = []
     res.gcMem        = []
-    
-    ow.java.getLocalJavaPIDs().forEach(p => {
-        var data = ow.java.parseHSPerf(p.path)
-        var host = ow.net.getHostName()
-        var cmdH = sha512(host + data.sun.rt.javaCommand).substring(0, 7)
 
-        res.gcSummary.push({
-          key               : cmdH,
-          pid               : p.pid,
-          host              : host,
-          cmd               : data.sun.rt.javaCommand,
-          vendor            : data.java.property.java.vm.vendor,
-          jre               : data.java.property.java.vm.name,
-          version           : data.java.property.java.vm.version,
-          totalRunningTimeMs: data.sun.rt.__totalRunningTime,
-          percAppTime       : data.sun.rt.__percAppTime,
-          gcCause           : data.sun.gc.cause,
-          gcLastCause       : data.sun.gc.lastCause
+    var _lst = []
+    var setSec = aEntry => {
+        if (isDef(aEntry.secKey)) {
+            return __nam_getSec(aEntry)
+        } else {
+            return aEntry
+        }
+    }
+
+    switch(this.params.type) {
+    case "local":
+        _lst = ow.java.getLocalJavaPIDs()
+        break
+    case "kube" :
+        if (isUnDef(getOPackPath("Kube"))) throw "Kube opack not installed."
+        loadLib("kube.js")
+
+        this.params.kube = _$(this.params.kube, "kube").isMap().default({})
+
+        var m       = setSec(this.params.kube)
+        m.kind      = _$(m.kind, "kube.kind").isString().default("FPO")
+        m.namespace = _$(m.namespace, "kube.namespace").isString().default("default")
+
+        var nss = m.namespace.split(/ *, */), lst = []
+
+        nss.forEach(ns => {
+            var its = $kube(m)["get" + m.kind](ns)
+            if (isMap(its) && isArray(its.items)) lst = lst.concat(its.items)
         })
+
+        if (isMap(m.selector)) {
+            ow.obj.filter(lst, m.selector).forEach(r => {
+                var newM = clone(m)
+                traverse(newM, (aK, aV, aP, aO) => {
+                    if (isString(aV)) aO[aK] = templify(aV, r)
+                })
+            })
+        }
+
+        ow.obj.filter(lst, m.selector).forEach(r => {
+            var newM    = clone(m)
+            newM.pod       = r.metadata.name
+            newM.namespace = r.metadata.namespace
+
+            var res = nattrmon.shExec("kube", newM).exec(["/bin/sh", "-c", "/bin/sh -c 'echo ${TMPDIR:-/tmp} && echo \"||\" && find ${TMPDIR:-/tmp} -type f'"])
+            if (isDef(res.stdout)) {
+                var _tmp = String(res.stdout).split("||")
+                var lst  = _tmp[1]
+                           .split("\n")
+                           .filter(l => l.indexOf(_tmp[0].replace(/\n/g, "") + "/hsperfdata_") == 0)
+
+                lst.forEach(_l => {
+                    _lst.push({
+                        path: _l,
+                        pid: Number(_l.substring(_l.lastIndexOf("/")+1)),
+                        k: newM
+                    })
+                }) 
+            } 
+        })
+
+        break
+    }
+    
+    _lst.forEach(p => {
+        var data, host
         
-        res.gcCollectors = res.gcCollectors.concat(data.sun.gc.collector.map(c => ({
-          key                : cmdH,
-          pid                : p.pid, 
-          name               : c.name,
-          invocations        : c.invocations,
-          lastInvocationMsAgo: isDate(c.__lastExitDate) ? now() - c.__lastExitDate.getTime() : __,
-          lastExecTimeMs     : c.__lastExecTime,
-          avgExecTimeMs      : c.__avgExecTime
-        })))
-        
-        var r = { max: 0, total: 0, used: 0, free: 0 }
-        data.sun.gc.generation.forEach(gen => {
-          gen.space.forEach(space => {
-            res.gcSpaces.push({
+        switch(this.params.type) {
+        case "local": 
+            data = ow.java.parseHSPerf(p.path)
+            host = ow.net.getHostName()
+            break
+        case "kube" : 
+            host = p.k.namespace + "::" + p.k.pod
+            var __res = nattrmon.shExec("kube", p.k).exec("base64 " + p.path)
+            if (isDef(__res) && isDef(__res.stdout)) {
+                data = ow.java.parseHSPerf( af.fromBase64(String(__res.stdout)) )
+            }
+            break
+        }
+
+        if (isMap(data) && isDef(data.sun) && isDef(data.java)) {
+            var cmdH = sha512(host + data.sun.rt.javaCommand).substring(0, 7)
+
+            res.gcSummary.push({
+              key               : cmdH,
+              pid               : p.pid,
+              host              : host,
+              cmd               : data.sun.rt.javaCommand,
+              vendor            : data.java.property.java.vm.vendor,
+              jre               : data.java.property.java.vm.name,
+              version           : data.java.property.java.vm.version,
+              totalRunningTimeMs: data.sun.rt.__totalRunningTime,
+              percAppTime       : data.sun.rt.__percAppTime,
+              gcCause           : data.sun.gc.cause,
+              gcLastCause       : data.sun.gc.lastCause
+            })
+            
+            res.gcCollectors = res.gcCollectors.concat(data.sun.gc.collector.map(c => ({
+              key                : cmdH,
+              pid                : p.pid, 
+              name               : c.name,
+              invocations        : c.invocations,
+              lastInvocationMsAgo: isDate(c.__lastExitDate) ? now() - c.__lastExitDate.getTime() : __,
+              lastExecTimeMs     : c.__lastExecTime,
+              avgExecTimeMs      : c.__avgExecTime
+            })))
+            
+            var r = { max: 0, total: 0, used: 0, free: 0 }
+            data.sun.gc.generation.forEach(gen => {
+              gen.space.forEach(space => {
+                res.gcSpaces.push({
+                    key: cmdH,
+                    pid: p.pid,
+                    gen: gen.name,
+                    space: space.name,
+                    used : space.used > 0 ? space.used : 0,
+                    total: space.capacity > 0 ? space.capacity : 0,
+                    max  : space.maxCapacity > 0 ? space.maxCapacity : 0
+                })
+    
+                r.max   = (r.max < Number(space.maxCapacity)) ? Number(space.maxCapacity) : r.max
+                r.used  = r.used + Number(space.used)
+                r.total = isNumber(space.capacity) ? r.total + Number(space.capacity) : r.total
+              })
+            })
+    
+            res.gcMem.push({
                 key: cmdH,
                 pid: p.pid,
-                gen: gen.name,
-                space: space.name,
-                used : space.used > 0 ? space.used : 0,
-                total: space.capacity > 0 ? space.capacity : 0,
-                max  : space.maxCapacity > 0 ? space.maxCapacity : 0
+                total: r.total,
+                used: r.used,
+                free: r.total - r.used,
+                metaMax   : data.sun.gc.metaspace.maxCapacity,
+                metaTotal : data.sun.gc.metaspace.capacity,
+                metaUsed  : data.sun.gc.metaspace.used,
+                metaFree  : data.sun.gc.metaspace.capacity - data.sun.gc.metaspace.used
             })
-
-            r.max   = (r.max < Number(space.maxCapacity)) ? Number(space.maxCapacity) : r.max
-            r.used  = r.used + Number(space.used)
-            r.total = isNumber(space.capacity) ? r.total + Number(space.capacity) : r.total
-          })
-        })
-
-        res.gcMem.push({
-            key: cmdH,
-            pid: p.pid,
-            total: r.total,
-            used: r.used,
-            free: r.total - r.used,
-            metaMax   : data.sun.gc.metaspace.maxCapacity,
-            metaTotal : data.sun.gc.metaspace.capacity,
-            metaUsed  : data.sun.gc.metaspace.used,
-            metaFree  : data.sun.gc.metaspace.capacity - data.sun.gc.metaspace.used
-        })
-
-        var _t = { 
-            key: cmdH,
-            pid: p.pid
+    
+            var _t = { 
+                key: cmdH,
+                pid: p.pid
+            }
+            Object.keys(data.java.threads).forEach(k => _t[k] = data.java.threads[k])
+            res.gcThreads.push(_t)
         }
-        Object.keys(data.java.threads).forEach(k => _t[k] = data.java.threads[k])
-        res.gcThreads.push(_t)
       })
 
     return merge(res, extra)
