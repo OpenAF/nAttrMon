@@ -83,7 +83,7 @@ nInput_Kube_PodsMetrics.prototype.input = function(scope, args) {
         $from(r.containers)
         .select(s => {
             var cA = $from(s.usage).equals("key", "cpu").select(t => _r(_fromSIAbbrev(String(t.value.amount) + t.value.format)))
-            var mA = $from(s.usage).equals("key", "memory").select(t => ow.format.fromBytesAbbreviation(String(t.value.amount) + t.value.format))
+            var mA = $from(s.usage).equals("key", "memory").select(t => (Number(t.value.amount) > 0 ? ow.format.fromBytesAbbreviation(String(t.value.amount) + t.value.format) : ""))
             res.push({
                 namespace: r.metadata.namespace, 
                 name     : s.name,
