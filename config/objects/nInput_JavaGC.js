@@ -108,84 +108,88 @@ nInput_JavaGC.prototype.get = function(keyData, extra) {
     _lst.forEach(p => {
         var data, host
         
-        switch(this.params.type) {
-        case "local": 
-            data = ow.java.parseHSPerf(p.path)
-            host = ow.net.getHostName()
-            break
-        case "kube" : 
-            host = p.k.namespace + "::" + p.k.pod
-            var __res = nattrmon.shExec("kube", p.k).exec("base64 " + p.path)
-            if (isDef(__res) && isDef(__res.stdout)) {
-                data = ow.java.parseHSPerf( af.fromBase64(String(__res.stdout)) )
+        try {
+            switch(this.params.type) {
+            case "local": 
+                data = ow.java.parseHSPerf(p.path)
+                host = ow.net.getHostName()
+                break
+            case "kube" : 
+                host = p.k.namespace + "::" + p.k.pod
+                var __res = nattrmon.shExec("kube", p.k).exec("base64 -w0 " + p.path)
+                if (isDef(__res) && isDef(__res.stdout)) {
+                    data = ow.java.parseHSPerf( af.fromBase64(String(__res.stdout)) )
+                }
+                break
             }
-            break
-        }
-
-        if (isMap(data) && isDef(data.sun) && isDef(data.java)) {
-            var cmdH = sha512(host + data.sun.rt.javaCommand).substring(0, 7)
-
-            res.gcSummary.push({
-              key               : cmdH,
-              pid               : p.pid,
-              host              : host,
-              cmd               : data.sun.rt.javaCommand,
-              vendor            : data.java.property.java.vm.vendor,
-              jre               : data.java.property.java.vm.name,
-              version           : data.java.property.java.vm.version,
-              totalRunningTimeMs: data.sun.rt.__totalRunningTime,
-              percAppTime       : data.sun.rt.__percAppTime,
-              gcCause           : data.sun.gc.cause,
-              gcLastCause       : data.sun.gc.lastCause
-            })
-            
-            res.gcCollectors = res.gcCollectors.concat(data.sun.gc.collector.map(c => ({
-              key                : cmdH,
-              pid                : p.pid, 
-              name               : c.name,
-              invocations        : c.invocations,
-              lastInvocationMsAgo: isDate(c.__lastExitDate) ? now() - c.__lastExitDate.getTime() : __,
-              lastExecTimeMs     : c.__lastExecTime,
-              avgExecTimeMs      : c.__avgExecTime
-            })))
-            
-            var r = { max: 0, total: 0, used: 0, free: 0 }
-            data.sun.gc.generation.forEach(gen => {
-              gen.space.forEach(space => {
-                res.gcSpaces.push({
+    
+            if (isMap(data) && isDef(data.sun) && isDef(data.java)) {
+                var cmdH = sha512(host + data.sun.rt.javaCommand).substring(0, 7)
+    
+                res.gcSummary.push({
+                    key               : cmdH,
+                    pid               : p.pid,
+                    host              : host,
+                    cmd               : data.sun.rt.javaCommand,
+                    vendor            : data.java.property.java.vm.vendor,
+                    jre               : data.java.property.java.vm.name,
+                    version           : data.java.property.java.vm.version,
+                    totalRunningTimeMs: data.sun.rt.__totalRunningTime,
+                    percAppTime       : data.sun.rt.__percAppTime,
+                    gcCause           : data.sun.gc.cause,
+                    gcLastCause       : data.sun.gc.lastCause
+                })
+                
+                res.gcCollectors = res.gcCollectors.concat(data.sun.gc.collector.map(c => ({
+                    key                : cmdH,
+                    pid                : p.pid, 
+                    name               : c.name,
+                    invocations        : c.invocations,
+                    lastInvocationMsAgo: isDate(c.__lastExitDate) ? now() - c.__lastExitDate.getTime() : __,
+                    lastExecTimeMs     : c.__lastExecTime,
+                    avgExecTimeMs      : c.__avgExecTime
+                })))
+                
+                var r = { max: 0, total: 0, used: 0, free: 0 }
+                data.sun.gc.generation.forEach(gen => {
+                    gen.space.forEach(space => {
+                    res.gcSpaces.push({
+                        key: cmdH,
+                        pid: p.pid,
+                        gen: gen.name,
+                        space: space.name,
+                        used : space.used > 0 ? space.used : 0,
+                        total: space.capacity > 0 ? space.capacity : 0,
+                        max  : space.maxCapacity > 0 ? space.maxCapacity : 0
+                    })
+        
+                    r.max   = (r.max < Number(space.maxCapacity)) ? Number(space.maxCapacity) : r.max
+                    r.used  = r.used + Number(space.used)
+                    r.total = isNumber(space.capacity) ? r.total + Number(space.capacity) : r.total
+                    })
+                })
+        
+                res.gcMem.push({
                     key: cmdH,
                     pid: p.pid,
-                    gen: gen.name,
-                    space: space.name,
-                    used : space.used > 0 ? space.used : 0,
-                    total: space.capacity > 0 ? space.capacity : 0,
-                    max  : space.maxCapacity > 0 ? space.maxCapacity : 0
+                    total: r.total,
+                    used: r.used,
+                    free: r.total - r.used,
+                    metaMax   : data.sun.gc.metaspace.maxCapacity,
+                    metaTotal : data.sun.gc.metaspace.capacity,
+                    metaUsed  : data.sun.gc.metaspace.used,
+                    metaFree  : data.sun.gc.metaspace.capacity - data.sun.gc.metaspace.used
                 })
-    
-                r.max   = (r.max < Number(space.maxCapacity)) ? Number(space.maxCapacity) : r.max
-                r.used  = r.used + Number(space.used)
-                r.total = isNumber(space.capacity) ? r.total + Number(space.capacity) : r.total
-              })
-            })
-    
-            res.gcMem.push({
-                key: cmdH,
-                pid: p.pid,
-                total: r.total,
-                used: r.used,
-                free: r.total - r.used,
-                metaMax   : data.sun.gc.metaspace.maxCapacity,
-                metaTotal : data.sun.gc.metaspace.capacity,
-                metaUsed  : data.sun.gc.metaspace.used,
-                metaFree  : data.sun.gc.metaspace.capacity - data.sun.gc.metaspace.used
-            })
-    
-            var _t = { 
-                key: cmdH,
-                pid: p.pid
+        
+                var _t = { 
+                    key: cmdH,
+                    pid: p.pid
+                }
+                Object.keys(data.java.threads).forEach(k => _t[k] = data.java.threads[k])
+                res.gcThreads.push(_t)
             }
-            Object.keys(data.java.threads).forEach(k => _t[k] = data.java.threads[k])
-            res.gcThreads.push(_t)
+        } catch(eee) {
+            logErr("nInput_JavaGC | Kube | Problem: " + eee)
         }
       })
 
