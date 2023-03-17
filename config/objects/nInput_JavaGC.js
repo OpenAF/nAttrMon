@@ -81,11 +81,10 @@ nInput_JavaGC.prototype.get = function(keyData, extra) {
         }
 
         ow.obj.filter(lst, m.selector).forEach(r => {
+          var newM    = clone(m)
+          newM.pod       = r.metadata.name
+          newM.namespace = r.metadata.namespace
           try {
-            var newM    = clone(m)
-            newM.pod       = r.metadata.name
-            newM.namespace = r.metadata.namespace
-
             var res = nattrmon.shExec("kube", newM).exec(["/bin/sh", "-c", "/bin/sh -c 'echo ${TMPDIR:-/tmp} && echo \"||\" && find ${TMPDIR:-/tmp} -type f'"])
             if (isDef(res.stdout)) {
                 var _tmp = String(res.stdout).split("||")
@@ -101,7 +100,7 @@ nInput_JavaGC.prototype.get = function(keyData, extra) {
                     })
                 }) 
             } 
-          } catch(fe) { logErr("nInput_JavaGC | Kube | " + fe) }
+          } catch(fe) { logErr("nInput_JavaGC | Kube " + newM.namespace + "::" + newM.pod + " | " + fe) }
         })
 
         break
@@ -118,10 +117,12 @@ nInput_JavaGC.prototype.get = function(keyData, extra) {
                 break
             case "kube" : 
                 host = p.k.namespace + "::" + p.k.pod
-                var __res = nattrmon.shExec("kube", p.k).exec("base64 -w0 " + p.path)
-                if (isDef(__res) && isDef(__res.stdout)) {
-                    data = ow.java.parseHSPerf( af.fromBase64(String(__res.stdout)) )
-                }
+                try {
+                    var __res = nattrmon.shExec("kube", p.k).exec("base64 -w0 " + p.path)
+                    if (isDef(__res) && isDef(__res.stdout)) {
+                        data = ow.java.parseHSPerf( af.fromBase64(String(__res.stdout)) )
+                    }
+                } catch(kfe) { logErr("nInput_JavaGC | Kube " + host + " | " + kfe) }
                 break
             }
     
