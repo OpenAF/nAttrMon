@@ -81,6 +81,7 @@ nInput_JavaGC.prototype.get = function(keyData, extra) {
         }
 
         ow.obj.filter(lst, m.selector).forEach(r => {
+          try {
             var newM    = clone(m)
             newM.pod       = r.metadata.name
             newM.namespace = r.metadata.namespace
@@ -100,6 +101,7 @@ nInput_JavaGC.prototype.get = function(keyData, extra) {
                     })
                 }) 
             } 
+          } catch(fe) { logErr("nInput_JavaGC | Kube | " + fe) }
         })
 
         break
@@ -140,35 +142,39 @@ nInput_JavaGC.prototype.get = function(keyData, extra) {
                     gcLastCause       : data.sun.gc.lastCause
                 })
                 
-                res.gcCollectors = res.gcCollectors.concat(data.sun.gc.collector.map(c => ({
-                    key                : cmdH,
-                    pid                : p.pid, 
-                    name               : c.name,
-                    invocations        : c.invocations,
-                    lastInvocationMsAgo: isDate(c.__lastExitDate) ? now() - c.__lastExitDate.getTime() : __,
-                    lastExecTimeMs     : c.__lastExecTime,
-                    avgExecTimeMs      : c.__avgExecTime
-                })))
+                if (isArray(data.sun.gc.collector)) {
+                    res.gcCollectors = res.gcCollectors.concat(data.sun.gc.collector.map(c => ({
+                        key                : cmdH,
+                        pid                : p.pid, 
+                        name               : c.name,
+                        invocations        : c.invocations,
+                        lastInvocationMsAgo: isDate(c.__lastExitDate) ? now() - c.__lastExitDate.getTime() : __,
+                        lastExecTimeMs     : c.__lastExecTime,
+                        avgExecTimeMs      : c.__avgExecTime
+                    })))
+                }
                 
                 var r = { max: 0, total: 0, used: 0, free: 0 }
-                data.sun.gc.generation.forEach(gen => {
-                    gen.space.forEach(space => {
-                    res.gcSpaces.push({
-                        key: cmdH,
-                        pid: p.pid,
-                        gen: gen.name,
-                        space: space.name,
-                        used : space.used > 0 ? space.used : 0,
-                        total: space.capacity > 0 ? space.capacity : 0,
-                        max  : space.maxCapacity > 0 ? space.maxCapacity : 0
+                if (isArray(data.sun.gc.generation)) {
+                    data.sun.gc.generation.forEach(gen => {
+                        gen.space.forEach(space => {
+                        res.gcSpaces.push({
+                            key: cmdH,
+                            pid: p.pid,
+                            gen: gen.name,
+                            space: space.name,
+                            used : space.used > 0 ? space.used : 0,
+                            total: space.capacity > 0 ? space.capacity : 0,
+                            max  : space.maxCapacity > 0 ? space.maxCapacity : 0
+                        })
+            
+                        r.max   = (r.max < Number(space.maxCapacity)) ? Number(space.maxCapacity) : r.max
+                        r.used  = r.used + Number(space.used)
+                        r.total = isNumber(space.capacity) ? r.total + Number(space.capacity) : r.total
+                        })
                     })
-        
-                    r.max   = (r.max < Number(space.maxCapacity)) ? Number(space.maxCapacity) : r.max
-                    r.used  = r.used + Number(space.used)
-                    r.total = isNumber(space.capacity) ? r.total + Number(space.capacity) : r.total
-                    })
-                })
-        
+                }
+
                 res.gcMem.push({
                     key: cmdH,
                     pid: p.pid,
@@ -185,7 +191,7 @@ nInput_JavaGC.prototype.get = function(keyData, extra) {
                     key: cmdH,
                     pid: p.pid
                 }
-                Object.keys(data.java.threads).forEach(k => _t[k] = data.java.threads[k])
+                if (isMap(data.java.threads)) Object.keys(data.java.threads).forEach(k => _t[k] = data.java.threads[k])
                 res.gcThreads.push(_t)
             }
         } catch(eee) {
