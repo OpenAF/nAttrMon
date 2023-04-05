@@ -50,9 +50,27 @@ nInput_JavaGC.prototype.get = function(keyData, extra) {
         }
     }
 
+    if (isUnDef(keyData)) return
+
     switch(this.params.type) {
     case "local":
         _lst = ow.java.getLocalJavaPIDs()
+        break
+    case "ssh"  :
+        var __res
+        if (isString(keyData.key)) {
+            nattrmon.useObject(keyData.key, _ssh => {
+                __res = _ssh.exec("/bin/sh -c 'echo ${TMPDIR:-/tmp} && echo \"||\" && find ${TMPDIR:-/tmp} -type f'", __, __, __, true)
+            })
+        } else {
+            __res = nattrmon.shExec("ssh", keyData).exec("/bin/sh -c 'echo ${TMPDIR:-/tmp} && echo \"||\" && find ${TMPDIR:-/tmp} -type f'")
+        }
+        if (isDef(__res) && isDef(__res.stdout)) {
+            var _tmp  = __res.stdout.split("||")
+                _lst  = _tmp[1]
+                        .split("\n")
+                        .filter(l => l.indexOf(_tmp[0].replace(/\n/g, "") + "/hsperfdata_") == 0)
+        }
         break
     case "kube" :
         if (isUnDef(getOPackPath("Kube"))) throw "Kube opack not installed."
@@ -114,6 +132,25 @@ nInput_JavaGC.prototype.get = function(keyData, extra) {
             case "local": 
                 data = ow.java.parseHSPerf(p.path)
                 host = ow.net.getHostName()
+                break
+            case "ssh"  :
+                try {
+                    var __res
+                    if (isString(keyData.key)) {
+                        nattrmon.useObject(keyData.key, _ssh => {
+                            __res = _ssh.exec("base64 -w0 " + p, __, __, __, true)
+                        })
+                    } else {
+                        __res = nattrmon.shExec("ssh", keyData).exec("base64 -w0 " + p)
+                    }
+                    if (isMap(__res) && isDef(__res.stdout) && __res.stdout.length > 0) {
+                        var ostream = af.newOutputStream()
+                        ioStreamCopy(ostream, af.fromBytes2InputStream(af.fromBase64(af.fromString2Bytes(__res.stdout))))
+                        data = ow.java.parseHSPerf( ostream.toByteArray() )
+                    } else {
+                        data = {}
+                    }
+                } catch(fe) { logErr("nInput_JavaGC | SSH " + p + " | " + fe); throw fe }
                 break
             case "kube" : 
                 host = p.k.namespace + "::" + p.k.pod
@@ -194,9 +231,11 @@ nInput_JavaGC.prototype.get = function(keyData, extra) {
                 }
                 if (isMap(data.java.threads)) Object.keys(data.java.threads).forEach(k => _t[k] = data.java.threads[k])
                 res.gcThreads.push(_t)
+            } else {
+                throw "nInput_JavaGC | Couldn't retrieve data from " + af.toSLON(p) + "."
             }
         } catch(eee) {
-            logErr("nInput_JavaGC | Kube | Problem: " + eee)
+            logErr("nInput_JavaGC | Problem: " + eee)
         }
       })
 
@@ -216,7 +255,7 @@ nInput_JavaGC.prototype.input = function(scope, args) {
     var gcMem        = templify(this.params.attrTemplate, { _name: "Memory" })
 
 	if (isDef(this.params.chKeys)) {
-        var arrGCSummary = [], arrGCCollectors = [], arrGCThreads = [], arrGCSpaces = []
+        var arrGCSummary = [], arrGCCollectors = [], arrGCThreads = [], arrGCSpaces = [], arrGCMem = []
         $ch(this.params.chKeys).forEach((k, v) => {
             var data = this.get(merge(k, v))
             arrGCSummary.push(data.gcSummary)
@@ -231,7 +270,7 @@ nInput_JavaGC.prototype.input = function(scope, args) {
         ret[gcSpaces]     = arrGCSpaces
         ret[gcMem]        = arrGCMem
     } else {
-        var data = this.get()
+        var data = this.get(this.params)
         ret[gcSummary]    = data.gcSummary
         ret[gcCollectors] = data.gcCollectors
         ret[gcThreads]    = data.gcThreads
