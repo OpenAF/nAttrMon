@@ -49,76 +49,80 @@ nInput_Shell.prototype.input = function(scope, args) {
 			var v = $ch(this.params.chKeys).get({ key: this.params.keys[i] });
 			v = __nam_getSec(v);
 			
-			switch(v.type) {
-			case "kube":
-				if (isUnDef(getOPackPath("Kube"))) {
-					throw "Kube opack not installed.";
-				} 
-
-				var s = $sec(v.secRepo, v.secBucket, v.secBucketPass, v.secMainPass, v.secFile);
-				var k;
-				if (isDef(v.secObjKey)) {
-					var k = s.getObj(v.secObjKey);
-				}
-				if (isDef(v.secKey)) {
-					var ka = s.get(v.secKey);
-					k = new Kube(ka.url, ka.user, ka.pass, ka.wsTimeout, ka.token);
-				}
-				if (isUnDef(k) || isUnDef(k.getNamespaces)) {
-					throw "The secObjKey = '" + v.secObjKey + "' is not a valid Kube object.";
-				}
-
-				var epods = [];
-				if (isUnDef(v.pod)) {
-					if (isDef(v.podTemplate)) {
-						var pods = k.getPods(v.namespace);
-						epods = $from(pods)
-								.equals("Kind", "Pod")
-								.match("Metadata.Name", v.podTemplate)
-								.select(r => r.Metadata.Name);
-					} else {
-						throw "No pod determined for '" + v.secObjKey + "'";
+			try {
+				switch(v.type) {
+				case "kube":
+					if (isUnDef(getOPackPath("Kube"))) {
+						throw "Kube opack not installed.";
+					} 
+	
+					var s = $sec(v.secRepo, v.secBucket, v.secBucketPass, v.secMainPass, v.secFile);
+					var k;
+					if (isDef(v.secObjKey)) {
+						var k = s.getObj(v.secObjKey);
 					}
-				} else {
-					epods = [ v.pod ];
-				}
-			
-				epods.forEach(pod => {
-					try {
-						var rr = String(k.exec(v.namespace, pod, [ templify(parent.cmd) ], void 0, true));
-						if (parent.parseJson) {
+					if (isDef(v.secKey)) {
+						var ka = s.get(v.secKey);
+						k = new Kube(ka.url, ka.user, ka.pass, ka.wsTimeout, ka.token);
+					}
+					if (isUnDef(k) || isUnDef(k.getNamespaces)) {
+						throw "The secObjKey = '" + v.secObjKey + "' is not a valid Kube object.";
+					}
+	
+					var epods = [];
+					if (isUnDef(v.pod)) {
+						if (isDef(v.podTemplate)) {
+							var pods = k.getPods(v.namespace);
+							epods = $from(pods)
+									.equals("Kind", "Pod")
+									.match("Metadata.Name", v.podTemplate)
+									.select(r => r.Metadata.Name);
+						} else {
+							throw "No pod determined for '" + v.secObjKey + "'";
+						}
+					} else {
+						epods = [ v.pod ];
+					}
+				
+					epods.forEach(pod => {
+						try {
+							var rr = String(k.exec(v.namespace, pod, [ templify(parent.cmd) ], void 0, true));
+							if (parent.parseJson) {
+								res.push({
+									key: parent.params.keys[i],
+									result: jsonParse(rr, true)
+								});
+							} else {
+								res.push({
+									key: parent.params.keys[i],
+									result: rr
+								});
+							}
+							;
+						} catch(e) {
+							logErr("nInput_Shell | Error on namespace '"+ v.namespace + "', pod '" + pod + "': " + String(e));
+						}
+					});
+					
+					break;
+				case "ssh":
+				default:
+					nattrmon.useObject(this.params.keys[i], (ssh) => {
+						if (this.parseJson) {
 							res.push({
-								key: parent.params.keys[i],
-								result: jsonParse(rr, true)
+								key: this.params.keys[i],
+								result: jsonParse(ssh.exec(templify(this.cmd)), true)
 							});
 						} else {
 							res.push({
-								key: parent.params.keys[i],
-								result: rr
+								key: this.params.keys[i],
+								result: ssh.exec(templify(this.cmd))
 							});
 						}
-						;
-					} catch(e) {
-						logErr("nInput_Shell | Error on namespace '"+ v.namespace + "', pod '" + pod + "': " + String(e));
-					}
-				});
-				
-				break;
-			case "ssh":
-			default:
-				nattrmon.useObject(this.params.keys[i], (ssh) => {
-					if (this.parseJson) {
-						res.push({
-							key: this.params.keys[i],
-							result: jsonParse(ssh.exec(templify(this.cmd)), true)
-						});
-					} else {
-						res.push({
-							key: this.params.keys[i],
-							result: ssh.exec(templify(this.cmd))
-						});
-					}
-				});
+					});
+				}
+			} catch(pke) {
+				logErr(" nInput_Shell | " + this.params.keys[i] + " | " + pke)
 			}
 		}
 
