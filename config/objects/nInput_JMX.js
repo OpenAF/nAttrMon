@@ -90,13 +90,13 @@ nInput_JMX.prototype.get = function(keyData) {
                     try {
                         _tt(_obj.get(attr.name), attr.name)
                     } catch(ee) {
-                        logWarn("nInput_JMX | " + aObj + " | " + attr.name + " | " + ee)
+                        if (String(ee).indexOf("java.lang.UnsupportedOperationException") < 0) logWarn("nInput_JMX | " + aObj + " | " + attr.name + " | " + ee)
                     }
                 })
                 return data
             }
         } catch(e) {
-            logWarn("nInput_JMX | " + aObj + " | " + e)
+            if (String(e).indexOf("java.lang.UnsupportedOperationException") < 0) logWarn("nInput_JMX | " + aObj + " | " + e)
         }
     }
 

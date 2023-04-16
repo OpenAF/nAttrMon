@@ -367,7 +367,7 @@ filesHash:
   config/objects/nInput_HTTPJson.js: 3bf9fc0a1d15592f46331725370577bbadc382b9
   config/objects/nOutput_Oracle.js: ab0f2fe7958952437ae93030715633858462269f
   config/objects/nInput_CompareTimes.js: 5c95c1387549e405031414b430c98951ed591d1c
-  config/objects/nInput_JMX.js: f69af1e4f4a55ae34120afb1850ae97e74c7b64d
+  config/objects/nInput_JMX.js: fce9011c729efafd1abe79588a274ee36aac3c16
   config/objects/nOutput_H2.js: f812e07f5bb7c396e55a8c70e7c4d8112b9435a6
   config/objects/nInput_Sessions.js: e4adb3f97db438aa0524ba3a1efebd615d7c3057
   config/objects/nInput_BPMNRunningFlows.js: 86da2d78b524d42ac4ab9598820605bbbfb24c57
