@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20230212'
+version: '20230415'
 dependencies:
   openaf: '>=20220822'
 files:
@@ -187,6 +187,7 @@ files:
 - config/inputs.disabled/yaml/10.kubeNodesMetrics.yaml
 - config/inputs.disabled/yaml/01.ping.yaml
 - config/inputs.disabled/yaml/25.bpmDebugFlags.yaml
+- config/inputs.disabled/yaml/15.javagc.yaml
 - config/inputs.disabled/yaml/10.kubePodsMetrics.yaml
 - config/inputs.disabled/yaml/10.sessions.yaml
 - config/inputs.disabled/yaml/10.filesystem.yaml
@@ -332,7 +333,7 @@ filesHash:
   config/objects/nInput_RAIDGCMemory.js: 28aefad8696236df00e681ea00d85679d9481a9f
   config/objects/nInput_Schedulers.js: 96771d166e2574b6d5a526cc6025ad3abf1363d4
   config/objects/nInput_IMMemory.js: 69f6e3d39aa5a75c83d2e4f8e2ece0b28df7e3f1
-  config/objects/nInput_JavaGC.js: e039c7a1ad618f432ca41fcc40fdb61b1f1b2eb1
+  config/objects/nInput_JavaGC.js: a28bbf24766cff14d43ae23364dc6f43382b879a
   config/objects/nInput_nAttrMon.js: c8ec9f45f724e7372b02751b893178490587641b
   config/objects/nInput_CBPMDebugChecks.js: 737f33ddd852309d0322f57e7adeeb307627652f
   config/objects/nOutput_DSV.js: b723aefe236bd464d215c52406cec796cd47d97f
@@ -350,7 +351,7 @@ filesHash:
   config/objects/nOutput_Channels.js: f6e277efa2c12c3d6dd8468facbfb1bb43828ed6
   config/objects/nInput_OSInfo.js: b8548f6d69dea80553fbef3e6e8d6552c15362e9
   config/objects/nInput_ESSearch.js: 0f825f81de288367fde87f13be5e1ccfe072bd1c
-  config/objects/nInput_Shell.js: e3f52cbf7fb1c7cabb724ec6111aebb3527f16d0
+  config/objects/nInput_Shell.js: 5888cc365bddaeef4d9f293dc02897e86f6747a9
   config/objects/nOutput_HTTP_JSON.js: 73c4619994bf56f923fc3d2860e0aa6b422e3748
   config/objects/nInput_RAIDLookups.js: 9a56cb2550a5c254097337f4da7191f58a685caa
   config/objects/nOutput_Log2ES.js: 4ff766b80b2e03f08f9f38e5a8dba4115d62bf81
@@ -384,7 +385,7 @@ filesHash:
   config/objects/nOutput_Log.js: 69ef02bb37d306deb390f303a8bbf6e2234be792
   config/objects/nInput_Kube_Events.js: 7a36aa2e72973d9369b856c6ef2ce4eddcab8459
   config/objects/nInput_EndPoints.js: 5042270a025e040a844f79832c924aa20f0413b4
-  config/objects/nInput_Kube_PodsMetrics.js: 0547c230ed520abf4fb41038cbfcb3c850bc5a4c
+  config/objects/nInput_Kube_PodsMetrics.js: c9255fc8c0e310dff7dd0181487a3e4b0dbb46a0
   config/objects/nValidation_Yellows.js: 942478fcd710e392add0b6ef6349ef51a895b764
   config/objects/nValidation_AFPing.js: f48325d605e693dee3ab2912224cda0fde11e490
   config/objects/nValidation_Semaphores.js: 97b6c1850b80d95cc92c1c50b05fdfa26467fd94
@@ -418,6 +419,7 @@ filesHash:
   config/inputs.disabled/yaml/10.kubeNodesMetrics.yaml: e09e05bbd3eddf6caf819e5d90cf6c2be45d45ca
   config/inputs.disabled/yaml/01.ping.yaml: fe3c634d7b0beff66a59484a315fcc205ffe1ca9
   config/inputs.disabled/yaml/25.bpmDebugFlags.yaml: 1b98caed366844383947a0caf05161f6b010ac7f
+  config/inputs.disabled/yaml/15.javagc.yaml: d2afec1ae2c0aa6583d5554c93959ff61211425c
   config/inputs.disabled/yaml/10.kubePodsMetrics.yaml: 99424c1726600399c7b83da537186048791a13b0
   config/inputs.disabled/yaml/10.sessions.yaml: 460da54e61f71ae9b1f0ef325f70d87b55e6861c
   config/inputs.disabled/yaml/10.filesystem.yaml: e8b8a6149c8f32128cd3c601081f6f67b3822e70
