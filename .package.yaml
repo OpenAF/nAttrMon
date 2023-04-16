@@ -133,6 +133,7 @@ files:
 - config/objects/nInput_HTTPJson.js
 - config/objects/nOutput_Oracle.js
 - config/objects/nInput_CompareTimes.js
+- config/objects/nInput_JMX.js
 - config/objects/nOutput_H2.js
 - config/objects/nInput_Sessions.js
 - config/objects/nInput_BPMNRunningFlows.js
@@ -179,6 +180,7 @@ files:
 - config/inputs.disabled/yaml/41.rulestatus.yaml
 - config/inputs.disabled/yaml/12.elastic.yaml
 - config/inputs.disabled/yaml/10.filesystemcount.mobsubscribers.yaml
+- config/inputs.disabled/yaml/15.jmx.yaml
 - config/inputs.disabled/yaml/04.db.appadm.yaml
 - config/inputs.disabled/yaml/03.AbnormalLoads.yaml
 - config/inputs.disabled/yaml/03.flows.yaml
@@ -365,6 +367,7 @@ filesHash:
   config/objects/nInput_HTTPJson.js: 3bf9fc0a1d15592f46331725370577bbadc382b9
   config/objects/nOutput_Oracle.js: ab0f2fe7958952437ae93030715633858462269f
   config/objects/nInput_CompareTimes.js: 5c95c1387549e405031414b430c98951ed591d1c
+  config/objects/nInput_JMX.js: f69af1e4f4a55ae34120afb1850ae97e74c7b64d
   config/objects/nOutput_H2.js: f812e07f5bb7c396e55a8c70e7c4d8112b9435a6
   config/objects/nInput_Sessions.js: e4adb3f97db438aa0524ba3a1efebd615d7c3057
   config/objects/nInput_BPMNRunningFlows.js: 86da2d78b524d42ac4ab9598820605bbbfb24c57
@@ -411,6 +414,7 @@ filesHash:
   config/inputs.disabled/yaml/41.rulestatus.yaml: 1d6e902d7b0ff9617df9a843f406fe5e95a4bb4c
   config/inputs.disabled/yaml/12.elastic.yaml: af153e168e3497c28704eaf192bd1c653b86eb97
   config/inputs.disabled/yaml/10.filesystemcount.mobsubscribers.yaml: 7a606e7180296c916b585bac13313452ca73840d
+  config/inputs.disabled/yaml/15.jmx.yaml: b3e3e29b10e3610815cf567b20cf52b0d08b5bf4
   config/inputs.disabled/yaml/04.db.appadm.yaml: eb64f93d7b7695edc9fd36caeb2bd53157a329db
   config/inputs.disabled/yaml/03.AbnormalLoads.yaml: b44f57143736d027dea0d38f54cd2ada6c44e07a
   config/inputs.disabled/yaml/03.flows.yaml: 8748a1200859bcfb349baccf8c513541777a0032
