@@ -136,12 +136,13 @@ nInput_JavaGC.prototype.get = function(keyData, extra) {
             case "ssh"  :
                 try {
                     var __res
+                    if (isString(p)) p = { cmd: p, pid: p.substring(p.lastIndexOf("/") + 1) }
                     if (isString(keyData.key)) {
                         nattrmon.useObject(keyData.key, _ssh => {
-                            __res = _ssh.exec("base64 -w0 " + p, __, __, __, true)
+                            __res = _ssh.exec("base64 -w0 " + p.cmd, __, __, __, true)
                         })
                     } else {
-                        __res = nattrmon.shExec("ssh", keyData).exec("base64 -w0 " + p)
+                        __res = nattrmon.shExec("ssh", keyData).exec("base64 -w0 " + p.cmd)
                     }
                     if (isMap(__res) && isDef(__res.stdout) && __res.stdout.length > 0) {
                         var ostream = af.newOutputStream()
@@ -150,7 +151,7 @@ nInput_JavaGC.prototype.get = function(keyData, extra) {
                     } else {
                         data = {}
                     }
-                } catch(fe) { logErr("nInput_JavaGC | SSH " + p + " | " + fe); throw fe }
+                } catch(fe) { logErr("nInput_JavaGC | SSH " + p.cmd + " | " + fe); throw fe }
                 break
             case "kube" : 
                 host = p.k.namespace + "::" + p.k.pod
@@ -164,7 +165,7 @@ nInput_JavaGC.prototype.get = function(keyData, extra) {
             }
     
             if (isMap(data) && isDef(data.sun) && isDef(data.java)) {
-                var cmdH = sha512(host + data.sun.rt.javaCommand).substring(0, 7)
+                var cmdH = ((isMap(keyData) && isString(keyData.key)) ? keyData.key + ":" : "") + (isDef(host) ? host + ":" : "") + p.pid
     
                 res.gcSummary.push({
                     key               : cmdH,
@@ -239,7 +240,7 @@ nInput_JavaGC.prototype.get = function(keyData, extra) {
         }
       })
 
-    return merge(res, extra)
+    return res
 }
 
 nInput_JavaGC.prototype.input = function(scope, args) {
@@ -258,11 +259,11 @@ nInput_JavaGC.prototype.input = function(scope, args) {
         var arrGCSummary = [], arrGCCollectors = [], arrGCThreads = [], arrGCSpaces = [], arrGCMem = []
         $ch(this.params.chKeys).forEach((k, v) => {
             var data = this.get(merge(k, v))
-            arrGCSummary.push(data.gcSummary)
-            arrGCCollectors.push(data.gcCollectors)
-            arrGCThreads.push(data.gcThreads)
-            arrGCSpaces.push(data.gcSpaces)
-            arrGCMem.push(data.gcMem)
+            arrGCSummary = arrGCSummary.concat(data.gcSummary)
+            arrGCCollectors = arrGCCollectors.concat(data.gcCollectors)
+            arrGCThreads = arrGCThreads.concat(data.gcThreads)
+            arrGCSpaces = arrGCSpaces.concat(data.gcSpaces)
+            arrGCMem = arrGCMem.concat(data.gcMem)
         })
         ret[gcSummary]    = arrGCSummary
         ret[gcCollectors] = arrGCCollectors
