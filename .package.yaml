@@ -358,7 +358,7 @@ filesHash:
   config/objects/nOutput_HTTP_JSON.js: 73c4619994bf56f923fc3d2860e0aa6b422e3748
   config/objects/nInput_RAIDLookups.js: 9a56cb2550a5c254097337f4da7191f58a685caa
   config/objects/nOutput_Log2ES.js: 4ff766b80b2e03f08f9f38e5a8dba4115d62bf81
-  config/objects/nOutput_NDJson.js: edc5447590b96da7aa4f20f9d7cc17b17f09b62a
+  config/objects/nOutput_NDJson.js: 2d123b53a83a956587eb288534d6d90fb4eac41d
   config/objects/nInput_IMAbnormalLoadings.js: b7d86f2f5b70e218de6967a52114cac15fe5b570
   config/objects/nInput_FilesystemCount.js: e36218f7c2ffa39438f1c1d22ad982c04e0fd4a0
   config/objects/nOutput_ES.js: 369d1739fba479f8b0fe49b3d3c2c1b6e96c7cbb
