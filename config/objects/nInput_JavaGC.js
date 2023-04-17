@@ -20,6 +20,9 @@ var nInput_JavaGC = function(aMap) {
 
     ow.loadJava()
     ow.loadNet()
+
+    this.params.type = _$(this.params.type, "type").oneOf(["local", "ssh", "kube"]).default("local")
+
     if (isUnDef(this.params.attrTemplate)) this.params.attrTemplate = "Java/{{_name}}"
 
     nInput.call(this, this.input)
@@ -37,76 +40,207 @@ nInput_JavaGC.prototype.get = function(keyData, extra) {
     res.gcThreads    = []
     res.gcSpaces     = []
     res.gcMem        = []
-    
-    ow.java.getLocalJavaPIDs().forEach(p => {
-        var data = ow.java.parseHSPerf(p.path)
-        var host = ow.net.getHostName()
-        var cmdH = sha512(host + data.sun.rt.javaCommand).substring(0, 7)
 
-        res.gcSummary.push({
-          key               : cmdH,
-          pid               : p.pid,
-          host              : host,
-          cmd               : data.sun.rt.javaCommand,
-          vendor            : data.java.property.java.vm.vendor,
-          jre               : data.java.property.java.vm.name,
-          version           : data.java.property.java.vm.version,
-          totalRunningTimeMs: data.sun.rt.__totalRunningTime,
-          percAppTime       : data.sun.rt.__percAppTime,
-          gcCause           : data.sun.gc.cause,
-          gcLastCause       : data.sun.gc.lastCause
-        })
-        
-        res.gcCollectors = res.gcCollectors.concat(data.sun.gc.collector.map(c => ({
-          key                : cmdH,
-          pid                : p.pid, 
-          name               : c.name,
-          invocations        : c.invocations,
-          lastInvocationMsAgo: isDate(c.__lastExitDate) ? now() - c.__lastExitDate.getTime() : __,
-          lastExecTimeMs     : c.__lastExecTime,
-          avgExecTimeMs      : c.__avgExecTime
-        })))
-        
-        var r = { max: 0, total: 0, used: 0, free: 0 }
-        data.sun.gc.generation.forEach(gen => {
-          gen.space.forEach(space => {
-            res.gcSpaces.push({
-                key: cmdH,
-                pid: p.pid,
-                gen: gen.name,
-                space: space.name,
-                used : space.used > 0 ? space.used : 0,
-                total: space.capacity > 0 ? space.capacity : 0,
-                max  : space.maxCapacity > 0 ? space.maxCapacity : 0
-            })
-
-            r.max   = (r.max < Number(space.maxCapacity)) ? Number(space.maxCapacity) : r.max
-            r.used  = r.used + Number(space.used)
-            r.total = isNumber(space.capacity) ? r.total + Number(space.capacity) : r.total
-          })
-        })
-
-        res.gcMem.push({
-            key: cmdH,
-            pid: p.pid,
-            total: r.total,
-            used: r.used,
-            free: r.total - r.used,
-            metaMax   : data.sun.gc.metaspace.maxCapacity,
-            metaTotal : data.sun.gc.metaspace.capacity,
-            metaUsed  : data.sun.gc.metaspace.used,
-            metaFree  : data.sun.gc.metaspace.capacity - data.sun.gc.metaspace.used
-        })
-
-        var _t = { 
-            key: cmdH,
-            pid: p.pid
+    var _lst = []
+    var setSec = aEntry => {
+        if (isDef(aEntry.secKey)) {
+            return __nam_getSec(aEntry)
+        } else {
+            return aEntry
         }
-        Object.keys(data.java.threads).forEach(k => _t[k] = data.java.threads[k])
-        res.gcThreads.push(_t)
+    }
+
+    if (isUnDef(keyData)) return
+
+    switch(this.params.type) {
+    case "local":
+        _lst = ow.java.getLocalJavaPIDs()
+        break
+    case "ssh"  :
+        var __res
+        if (isString(keyData.key)) {
+            nattrmon.useObject(keyData.key, _ssh => {
+                __res = _ssh.exec("/bin/sh -c 'echo ${TMPDIR:-/tmp} && echo \"||\" && find ${TMPDIR:-/tmp} -type f'", __, __, __, true)
+            })
+        } else {
+            __res = nattrmon.shExec("ssh", keyData).exec("/bin/sh -c 'echo ${TMPDIR:-/tmp} && echo \"||\" && find ${TMPDIR:-/tmp} -type f'")
+        }
+        if (isDef(__res) && isDef(__res.stdout)) {
+            var _tmp  = __res.stdout.split("||")
+                _lst  = _tmp[1]
+                        .split("\n")
+                        .filter(l => l.indexOf(_tmp[0].replace(/\n/g, "") + "/hsperfdata_") == 0)
+        }
+        break
+    case "kube" :
+        if (isUnDef(getOPackPath("Kube"))) throw "Kube opack not installed."
+        loadLib("kube.js")
+
+        this.params.kube = _$(this.params.kube, "kube").isMap().default({})
+
+        var m       = setSec(this.params.kube)
+        m.kind      = _$(m.kind, "kube.kind").isString().default("FPO")
+        m.namespace = _$(m.namespace, "kube.namespace").isString().default("default")
+
+        var nss = m.namespace.split(/ *, */), lst = []
+
+        nss.forEach(ns => {
+            var its = $kube(m)["get" + m.kind](ns)
+            if (isMap(its) && isArray(its.items)) lst = lst.concat(its.items)
+        })
+
+        if (isMap(m.selector)) {
+            ow.obj.filter(lst, m.selector).forEach(r => {
+                var newM = clone(m)
+                traverse(newM, (aK, aV, aP, aO) => {
+                    if (isString(aV)) aO[aK] = templify(aV, r)
+                })
+            })
+        }
+
+        ow.obj.filter(lst, m.selector).forEach(r => {
+          var newM    = clone(m)
+          newM.pod       = r.metadata.name
+          newM.namespace = r.metadata.namespace
+          try {
+            var res = nattrmon.shExec("kube", newM).exec(["/bin/sh", "-c", "/bin/sh -c 'echo ${TMPDIR:-/tmp} && echo \"||\" && find ${TMPDIR:-/tmp} -type f'"])
+            if (isDef(res.stdout)) {
+                var _tmp = String(res.stdout).split("||")
+                var lst  = _tmp[1]
+                           .split("\n")
+                           .filter(l => l.indexOf(_tmp[0].replace(/\n/g, "") + "/hsperfdata_") == 0)
+
+                lst.forEach(_l => {
+                    _lst.push({
+                        path: _l,
+                        pid: Number(_l.substring(_l.lastIndexOf("/")+1)),
+                        k: newM
+                    })
+                }) 
+            } 
+          } catch(fe) { logErr("nInput_JavaGC | Kube " + newM.namespace + "::" + newM.pod + " | " + fe) }
+        })
+
+        break
+    }
+    
+    _lst.forEach(p => {
+        var data, host
+        
+        try {
+            switch(this.params.type) {
+            case "local": 
+                data = ow.java.parseHSPerf(p.path)
+                host = ow.net.getHostName()
+                break
+            case "ssh"  :
+                try {
+                    var __res
+                    if (isString(p)) p = { cmd: p, pid: p.substring(p.lastIndexOf("/") + 1) }
+                    if (isString(keyData.key)) {
+                        nattrmon.useObject(keyData.key, _ssh => {
+                            __res = _ssh.exec("base64 -w0 " + p.cmd, __, __, __, true)
+                        })
+                    } else {
+                        __res = nattrmon.shExec("ssh", keyData).exec("base64 -w0 " + p.cmd)
+                    }
+                    if (isMap(__res) && isDef(__res.stdout) && __res.stdout.length > 0) {
+                        var ostream = af.newOutputStream()
+                        ioStreamCopy(ostream, af.fromBytes2InputStream(af.fromBase64(af.fromString2Bytes(__res.stdout))))
+                        data = ow.java.parseHSPerf( ostream.toByteArray() )
+                    } else {
+                        data = {}
+                    }
+                } catch(fe) { logErr("nInput_JavaGC | SSH " + p.cmd + " | " + fe); throw fe }
+                break
+            case "kube" : 
+                host = p.k.namespace + "::" + p.k.pod
+                try {
+                    var __res = nattrmon.shExec("kube", p.k).exec("base64 -w0 " + p.path)
+                    if (isDef(__res) && isDef(__res.stdout)) {
+                        data = ow.java.parseHSPerf( af.fromBase64(String(__res.stdout)) )
+                    }
+                } catch(kfe) { logErr("nInput_JavaGC | Kube " + host + " | " + kfe) }
+                break
+            }
+    
+            if (isMap(data) && isDef(data.sun) && isDef(data.java)) {
+                var cmdH = ((isMap(keyData) && isString(keyData.key)) ? keyData.key + ":" : "") + (isDef(host) ? host + ":" : "") + p.pid
+    
+                res.gcSummary.push({
+                    key               : cmdH,
+                    pid               : p.pid,
+                    host              : host,
+                    cmd               : data.sun.rt.javaCommand,
+                    vendor            : data.java.property.java.vm.vendor,
+                    jre               : data.java.property.java.vm.name,
+                    version           : data.java.property.java.vm.version,
+                    totalRunningTimeMs: data.sun.rt.__totalRunningTime,
+                    percAppTime       : data.sun.rt.__percAppTime,
+                    gcCause           : data.sun.gc.cause,
+                    gcLastCause       : data.sun.gc.lastCause
+                })
+                
+                if (isArray(data.sun.gc.collector)) {
+                    res.gcCollectors = res.gcCollectors.concat(data.sun.gc.collector.map(c => ({
+                        key                : cmdH,
+                        pid                : p.pid, 
+                        name               : c.name,
+                        invocations        : c.invocations,
+                        lastInvocationMsAgo: isDate(c.__lastExitDate) ? now() - c.__lastExitDate.getTime() : __,
+                        lastExecTimeMs     : c.__lastExecTime,
+                        avgExecTimeMs      : c.__avgExecTime
+                    })))
+                }
+                
+                var r = { max: 0, total: 0, used: 0, free: 0 }
+                if (isArray(data.sun.gc.generation)) {
+                    data.sun.gc.generation.forEach(gen => {
+                        gen.space.forEach(space => {
+                        res.gcSpaces.push({
+                            key: cmdH,
+                            pid: p.pid,
+                            gen: gen.name,
+                            space: space.name,
+                            used : space.used > 0 ? space.used : 0,
+                            total: space.capacity > 0 ? space.capacity : 0,
+                            max  : space.maxCapacity > 0 ? space.maxCapacity : 0
+                        })
+            
+                        r.max   = (r.max < Number(space.maxCapacity)) ? Number(space.maxCapacity) : r.max
+                        r.used  = r.used + Number(space.used)
+                        r.total = isNumber(space.capacity) ? r.total + Number(space.capacity) : r.total
+                        })
+                    })
+                }
+
+                res.gcMem.push({
+                    key: cmdH,
+                    pid: p.pid,
+                    total: r.total,
+                    used: r.used,
+                    free: r.total - r.used,
+                    metaMax   : data.sun.gc.metaspace.maxCapacity,
+                    metaTotal : data.sun.gc.metaspace.capacity,
+                    metaUsed  : data.sun.gc.metaspace.used,
+                    metaFree  : data.sun.gc.metaspace.capacity - data.sun.gc.metaspace.used
+                })
+        
+                var _t = { 
+                    key: cmdH,
+                    pid: p.pid
+                }
+                if (isMap(data.java.threads)) Object.keys(data.java.threads).forEach(k => _t[k] = data.java.threads[k])
+                res.gcThreads.push(_t)
+            } else {
+                throw "nInput_JavaGC | Couldn't retrieve data from " + af.toSLON(p) + "."
+            }
+        } catch(eee) {
+            logErr("nInput_JavaGC | Problem: " + eee)
+        }
       })
 
-    return merge(res, extra)
+    return res
 }
 
 nInput_JavaGC.prototype.input = function(scope, args) {
@@ -122,14 +256,14 @@ nInput_JavaGC.prototype.input = function(scope, args) {
     var gcMem        = templify(this.params.attrTemplate, { _name: "Memory" })
 
 	if (isDef(this.params.chKeys)) {
-        var arrGCSummary = [], arrGCCollectors = [], arrGCThreads = [], arrGCSpaces = []
+        var arrGCSummary = [], arrGCCollectors = [], arrGCThreads = [], arrGCSpaces = [], arrGCMem = []
         $ch(this.params.chKeys).forEach((k, v) => {
             var data = this.get(merge(k, v))
-            arrGCSummary.push(data.gcSummary)
-            arrGCCollectors.push(data.gcCollectors)
-            arrGCThreads.push(data.gcThreads)
-            arrGCSpaces.push(data.gcSpaces)
-            arrGCMem.push(data.gcMem)
+            arrGCSummary = arrGCSummary.concat(data.gcSummary)
+            arrGCCollectors = arrGCCollectors.concat(data.gcCollectors)
+            arrGCThreads = arrGCThreads.concat(data.gcThreads)
+            arrGCSpaces = arrGCSpaces.concat(data.gcSpaces)
+            arrGCMem = arrGCMem.concat(data.gcMem)
         })
         ret[gcSummary]    = arrGCSummary
         ret[gcCollectors] = arrGCCollectors
@@ -137,7 +271,7 @@ nInput_JavaGC.prototype.input = function(scope, args) {
         ret[gcSpaces]     = arrGCSpaces
         ret[gcMem]        = arrGCMem
     } else {
-        var data = this.get()
+        var data = this.get(this.params)
         ret[gcSummary]    = data.gcSummary
         ret[gcCollectors] = data.gcCollectors
         ret[gcThreads]    = data.gcThreads
