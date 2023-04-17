@@ -12,6 +12,9 @@ input:
 
 # -------------------
 - name    : Input jmx
+  #cron         : "*/15 * * * *"
+  #waitForFinish: true
+  #onlyOnEvent  : true
   execFrom: nInput_JMX
   execArgs:
     chKeys : jmxs

@@ -1,12 +1,18 @@
 input:
 # -------------------------------
 - name       : Test Java GC local
+  #cron         : "*/15 * * * *"
+  #waitForFinish: true
+  #onlyOnEvent  : true
   execFrom   : nInput_JavaGC
   execArgs   :
     type        : local
 
 # -----------------------------
 - name       : Test Java GC ssh
+  #cron         : "*/15 * * * *"
+  #waitForFinish: true
+  #onlyOnEvent  : true
   execFrom   : nInput_JavaGC
   execArgs   :
     type        : ssh
@@ -15,6 +21,9 @@ input:
 
 # ------------------------------
 - name       : Test Java GC kube
+  #cron         : "*/15 * * * *"
+  #waitForFinish: true
+  #onlyOnEvent  : true
   execFrom   : nInput_JavaGC
   execArgs   :
     type        : kube

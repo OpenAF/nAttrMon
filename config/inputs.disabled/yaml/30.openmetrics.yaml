@@ -1,0 +1,27 @@
+input:
+  name         : Openmetrics input
+  cron         : "*/15 * * * *"
+  waitForFinish: true
+  onlyOnEvent  : true
+  execFrom     : nInput_OpenMetrics
+  execArgs     :
+    attrTemplate : Test/Prometheus
+    url          : http://127.0.0.1:9090
+    #metricsURI   : /metrics
+    #login        : mylogin
+    #pass         : mypass
+    #headers      :
+    #  Authorization: Bearer xyz123
+    #connectionTimeout: 5000  # ms
+    #includePrefix:
+    #- go
+    #- promhttp
+    #excludePrefix:
+    #- prometheus
+    #includeRE:
+    #- "_bytes$"
+    #excludeRE:
+    #- "_total$"
+    replace      :
+    - pattern    : "^prometheus_"
+      replacement: ""
