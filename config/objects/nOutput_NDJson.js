@@ -3,14 +3,7 @@
 /**
  * <odoc>
  * <key>nattrmon.nOutput_NDJson(aMap)</key>
- * Provide some explanation of the objective of your output object.
- * \
- * On aMap expects:\
- * \
- *    - include        (Array)   Array of regex attributes/warnings to include on output.\
- *    - exclude        (Array)   Array of regex attributes/warnings to exclude from output.\
- *    - considerSetAll (Boolean) Should process attributes/warnings in bulk.\
- * \
+ * Outputs cvals, lvals or warnings as ndjson files.
  * </odoc>
  */
 var nOutput_NDJson = function(aMap) {
