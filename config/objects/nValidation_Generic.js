@@ -247,17 +247,20 @@ nValidation_Generic.prototype.checkEntry = function(ret, k, v, args) {
                                 }
                             });
 
-                            var runHealing = isUnDef(nattrmon.isNotified(warnTitle, hc));
-                            if (!runHealing && isNumber(cHealing.retryInMS)) {
+                            var runHealing = isUnDef(nattrmon.isNotified(warnTitle, hc)) || cHealing.always
+                            if (!runHealing && isNumber(cHealing.retryInMS) && !cHealing.always) {
                                 var w = nattrmon.isNotified(warnTitle, hc);
-                                if (isDef(w) && now() - (new Date(w)).getTime() > cHealing.retryInMS) {
-                                    runHealing = true;
-                                    logWarn("Retrying healing for '" + warnTitle + "'...");
+                                var _w = nattrmon.getWarnings(true).getWarningByName(warnTitle)
+                                if (isUnDef(cHealing.endRetriesInMS) || isDef(_w) && now() - (new Date(_w.createdate)).getTime() < cHealing.endRetriesInMS) {
+                                    if (isDef(w) && now() - (new Date(w)).getTime() > cHealing.retryInMS) {
+                                        runHealing = true;
+                                        logWarn("Retrying healing for '" + warnTitle + "'...");
+                                    }
                                 }
                             }
                             if (runHealing) {
                                 try {
-                                    if (!(nattrmon.setNotified(warnTitle, hc, new Date()))) {
+                                    if (!cHealing.always && !(nattrmon.setNotified(warnTitle, hc, new Date()))) {
                                         if (isUnDef(warn.notified)) warn.notified = {};
                                         warn.notified[hc] = true;
                                     }
@@ -269,14 +272,31 @@ nValidation_Generic.prototype.checkEntry = function(ret, k, v, args) {
                                         logWarn("Running healing ojob for '" + warnTitle + "'");
                                         oJobRunFile(cHealing.execOJob, cHealing.execArgs);
                                     }
+                                    if (isMap(cHealing.execSh)) {
+                                        logWarn("Running healing shell command for '" + warnTitle + "'")
+                                        cHealing.execSh.cmd = _$(cHealing.execSh.cmd, "execSh.cmd").$_()
+                                        cHealing.execSh.pwd = _$(cHealing.execSh.pwd, "execSh.pwd").isString().default(__)
+                                        cHealing.execSh.dontWait = _$(cHealing.execSh.dontWait, "execSh.dontWait").isBoolean().default(__)
+                                        cHealing.execSh.prefix = _$(cHealing.execSh.prefix, "execSh.prefix").isString().default(__)
+                                        cHealing.execSh.envs = _$(cHealing.execSh.envs, "execSh.envs").isMap().default(__)
+                                        cHealing.execSh.timeout = _$(cHealing.execSh.timeout, "execSh.timeout").isNumber().default(__)
+
+                                        var _s = $sh(cHealing.execSh.cmd)
+                                        if (isDef(cHealing.execSh.pwd))      _s = _s.pwd(cHealing.execSh.pwd)
+                                        if (isDef(cHealing.execSh.dontWait)) _s = _s.dontWait(cHealing.execSh.dontWait)
+                                        if (isDef(cHealing.execSh.prefix))   _s = _s.prefix(cHealing.execSh.prefix)
+                                        if (isDef(cHealing.execSh.envs))     _s = _s.envs(cHealing.execSh.envs)
+                                        if (isDef(cHealing.execSh.timeout))  _s = _s.timeout(cHealing.execSh.timeout)
+                                        
+                                        var _r 
+                                        if (isDef(cHealing.execSh.prefix) && isUnDef(cHealing.execSh.timeout)) _r = _s.get(0); else _r = _s.exec(0)
+                                        if (!cHealing.execSh.dontWait && _r.exitcode != 0) throw af.toSLON(_r)
+                                    }
                                 } catch(e) {
                                     logErr("Healing job failed for '" + warnTitle + "' with exception: " + String(e));
                                     if (cHealing.warnTitleTemplate) {
-                                        sprint(merge(data, { exceptionMessage: String(e) }));
                                         var healWarnTitle = templify(cHealing.warnTitleTemplate, merge(data, { exceptionMessage: String(e) }));
                                         var healWarnDesc = templify(cHealing.warnDescTemplate, merge(data, { exceptionMessage: String(e) }));
-                                        print(cHealing.warnDescTemplate);
-                                        print(healWarnDesc);
                                         var healWarnLevel = this.levelMapper(cHealing.warnLevel);
                                         ret.push(new nWarning(healWarnLevel, healWarnTitle, healWarnDesc));
                                     }
