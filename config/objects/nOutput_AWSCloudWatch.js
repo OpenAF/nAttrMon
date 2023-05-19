@@ -15,6 +15,7 @@
  *    - accessKey      (String)  The AWS API access key to put metrics in AWS CloudWatch\
  *    - secretKey      (String)  The AWS API secret key to put metrics in AWS CloudWatch\
  *    - sessionToken   (String)  The AWS API session token to put metrics in AWS CloudWatch\
+ *    - debug          (Boolean) Shows additional information logs in case of error\
  * \
  * </odoc>
  */
@@ -41,9 +42,40 @@ var nOutput_AWSCloudWatch = function(aMap) {
 	this.params.secretkey    = _$(this.params.secretkey, "aws secretkey").isString().default(__)
 	this.params.sessiontoken = _$(this.params.sessiontoken, "aws sessiontoken").isString().default(__)
 
+	this.params.debug = _$(this.params.debug, "aws debug").isBoolean().default(false)
+
     nOutput.call(this, this.output);
 };
 inherit(nOutput_AWSCloudWatch, nOutput);
+
+nOutput_AWSCloudWatch.prototype.imds = function() {
+	var _role, _cred, _token
+	ow.loadNet()
+
+	if (ow.net.testPort("169.254.169.254", 80)) {
+		// IMDSv1
+		var url = "http://169.254.169.254/latest/meta-data"
+		var uris = "/iam/security-credentials"
+		if ($rest().get(url).responseCode == 200) {
+			_role = $rest().get(url + uris).trim().split("\n")[0]
+			_cred = $rest().get(url + uris + "/" + _role)
+			if (_cred.Code != "Success") throw "Problem trying to use IMDSv1: " + af.toSLON(_cred)
+		} else {
+			// IMDSv2
+			_token = $rest({ requestHeaders: { "X-aws-ec2-metadata-token-ttl-seconds": 21600 } }).put("http://169.254.169.254/latest/api/token")
+			var rh = { requestHeaders: { "X-aws-ec2-metadata-token": _token } }
+			_role = $rest(rh).get(url + uris).trim().split("\n")[0]
+			_cred = $rest(rh).get(url + uris + "/" + _role)
+			if (_cred.Code != "Success") throw "Problem trying to use IMDSv2: " + af.toSLON(_cred)
+		}
+	}
+
+	return {
+		accessKey: _cred.AccessKeyId,
+		secretKey: _cred.SecretAccessKey,
+		token    : _cred.Token
+	}
+}
 
 nOutput_AWSCloudWatch.prototype.output = function(scope, args) {
 	if (args.op != "setall" && args.op != "set") return;
@@ -70,22 +102,40 @@ nOutput_AWSCloudWatch.prototype.output = function(scope, args) {
         if (isok) {
 			var _m = ow.metrics.fromObj2OpenMetrics(value.val, value.name, value.date)
 			ow.metrics.fromOpenMetrics2Array(_m).forEach(m => {
-				var dims = Object.keys(m.labels).map(k => {
+				var dims = Object.keys(m.labels).filter(k => isDef(m.labels[k]) && String(m.labels[k]).length > 0).map(k => {
 					return { Name: k, Value: m.labels[k] }
 				})
-				metrics.push({
-					MetricName: m.metric,
-					Timestamp : (new Date(m.timestamp)).toISOString(),
-					Unit      : "None",  // To be enhanced in the future
-					Value     : m.value,
-					Dimensions: dims
-				})
+				if (isNumber(m.value)) {
+					try {
+						var _d = (new Date(m.timestamp)).toISOString()
+
+						if (isDate(new Date(_d))) {
+							metrics.push({
+								MetricName: m.metric,
+								Timestamp : _d,
+								Unit      : "None",  // To be enhanced in the future
+								Value     : m.value,
+								Dimensions: dims
+							})
+						}
+					} catch(ee) {
+					}
+				}
 			})
 		}
     })
 	if (metrics.length > 0) {
 		loadLib("aws.js")
-		var aws = new AWS(this.params.accesskey, this.params.secretkey, this.params.sessiontoken)
-		aws.CLOUDWATCH_PutMetricData(this.params.region, this.params.logGroup, metrics)
+		var aws
+		if (isUnDef(this.params.accesskey) && isUnDef(this.params.secretkey) && isUnDef(this.params.sessiontoken)) {
+			var _c = this.imds()
+			aws = new AWS(_c.accessKey, _c.secretKey, _c.token)
+		} else {
+			aws = new AWS(this.params.accesskey, this.params.secretkey, this.params.sessiontoken)
+		} 
+		var res = aws.CLOUDWATCH_PutMetricData(this.params.region, this.params.logGroup, metrics)
+		if (isMap(res) && isDef(res.ErrorResponse)) { 
+			logWarn(af.toSLON(res) + (this.params.debug ? stringify(metrics,__,"") : ""))
+		}
 	}
-};
+}
