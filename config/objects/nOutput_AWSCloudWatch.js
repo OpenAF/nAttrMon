@@ -82,12 +82,14 @@ nOutput_AWSCloudWatch.prototype.imds = function() {
 		} catch(e) {
 			throw "Problem trying to determine or use AWS IMDS: " + String(e)
 		}
-	}
 
-	return {
-		accessKey: _cred.AccessKeyId,
-		secretKey: _cred.SecretAccessKey,
-		token    : _cred.Token
+		return {
+			accessKey: _cred.AccessKeyId,
+			secretKey: _cred.SecretAccessKey,
+			token    : _cred.Token
+		}
+	} else {
+		logWarn("No AWS IMDS found.")
 	}
 }
 

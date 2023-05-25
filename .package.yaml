@@ -402,7 +402,7 @@ filesHash:
   config/objects/nInput_Sessions.js: e4adb3f97db438aa0524ba3a1efebd615d7c3057
   config/objects/nInput_Shell.js: 5888cc365bddaeef4d9f293dc02897e86f6747a9
   config/objects/nInput_nAttrMon.js: c8ec9f45f724e7372b02751b893178490587641b
-  config/objects/nOutput_AWSCloudWatch.js: ac94236fb82c364b9ca44721740af7d2c60a12a7
+  config/objects/nOutput_AWSCloudWatch.js: 698053af7c21364de98f81baf4b2fbcaffbfaaac
   config/objects/nOutput_ChMirror.js: c1b5d965320aac73d90f0a6e12ae0a4123f8afd5
   config/objects/nOutput_Channels.js: f6e277efa2c12c3d6dd8468facbfb1bb43828ed6
   config/objects/nOutput_DSV.js: b723aefe236bd464d215c52406cec796cd47d97f
