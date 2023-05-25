@@ -5,18 +5,18 @@ var nattrmonWarns = [];
 var plugs = [];
 
 function refresh(data) {
-    var attrs      = data.attributes;
-    var values     = data.values;
+    var attrs = data.attributes;
+    var values = data.values;
     var lastvalues = data.lastvalues;
-    var warns      = data.warnings;
+    var warns = data.warnings;
 
     nattrmonAttrsOrig = attrs;
     var tempattrs = [];
 
     var tempctgs = {};
-    var tempattr = {};
+    //var tempattr = {};
 
-    for(i in attrs) {
+    for (i in attrs) {
         if (values[i] != undefined) {
             attrs[i].val = values[i].val;
             attrs[i].moddate = values[i].date;
@@ -24,7 +24,7 @@ function refresh(data) {
             attrs[i].lastmoddate = lastvalues[i].date;
         }
         if (tempctgs[attrs[i].category.join("/")] == undefined) {
-            tempctgs[attrs[i].category.join("/")] = [ attrs[i] ];
+            tempctgs[attrs[i].category.join("/")] = [attrs[i]];
         } else {
             tempctgs[attrs[i].category.join("/")].push(attrs[i]);
         }
@@ -32,10 +32,11 @@ function refresh(data) {
     }
 
     var ctgs = [];
-    for(i in tempctgs) {
-        ctgs.push({"name": i,
-                   "attrs": tempctgs[i]
-                  });
+    for (i in tempctgs) {
+        ctgs.push({
+            "name": i,
+            "attrs": tempctgs[i]
+        });
     }
 
     var tempwarns = {
@@ -44,7 +45,7 @@ function refresh(data) {
         Low: [],
         Info: []
     };
-    for(var i in warns) {
+    for (var i in warns) {
         tempwarns[i] = warns[i];
     }
 
@@ -60,29 +61,51 @@ function render(sce, aValue, aType) {
         aType = "undefined";
     }
 
+    var _determineKeys = ar => {
+        return ar.reduce((keys, map) => {
+            if ("[object Object]" == Object.prototype.toString.call(map)) {
+                for (const key in map) {
+                    keys.add(key)
+                }
+            }
+            return keys
+        }, new Set())
+    }
+
     // If object
     var _render = (aValue) => {
         if (typeof aValue != 'object') return aValue;
 
         var out = "";
         if (aValue instanceof Array && aValue.length > 0) {
+            var _keys = Array.from(_determineKeys(aValue))
             var out = "<table class=\"nattributetable\"><tr>";
-            for(var i in aValue[0]) {
-                out += "<th class=\"nattributetablehead\"><b>" + i + "</b></th>";
+            for (var i in _keys) {
+                out += "<th class=\"nattributetablehead\"><b>" + _keys[i] + "</b></th>";
             }
             out += "</tr>";
-            for(var x in aValue) {
+            for (var x in aValue) {
                 out += "<tr>";
-                for(var y in aValue[x]) {
-                	out += "<td class=\"nattributetablecell\">" + _render(aValue[x][y]) + "</td>";
+                for (var y in _keys) {
+                    var _v = ""
+                    if (aValue[x] != null && aValue[x][_keys[y]] != null) {
+                        if ("undefined" != aValue[x][_keys[y]]) _v = aValue[x][_keys[y]]
+                        if ("undefined" == typeof _v) _v = ""
+                    }
+                    out += "<td class=\"nattributetablecell\">" + _render(_v) + "</td>";
                 }
                 out += "</tr>";
             }
             out += "</table>";
         } else {
             var out = "<table class=\"nattributetable\">";
-            for(var i in aValue) {
-                out += "<tr><td class=\"nattributetablecell\"><b>" + i + "</b></td><td class=\"nattributetablecell\">" + _render(aValue[i]) + "</td></tr>";
+            for (var i in aValue) {
+                var _v = ""
+                if (aValue[i] != null) {
+                    if ("undefined" != aValue[i]) _v = aValue[i]
+                    if ("undefined" == typeof _v) _v = ""
+                }
+                out += "<tr><td class=\"nattributetablecell\"><b>" + i + "</b></td><td class=\"nattributetablecell\">" + _render(_v) + "</td></tr>";
             }
             out += "</table>";
         }
@@ -95,8 +118,8 @@ function render(sce, aValue, aType) {
         aValue = out;
     }
 
-    switch(aType) {
-        case "sem": return sce.trustAsHtml("<span style=\"background-color:"+ aValue +"\">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class=\"nattributevalue\"> - " + aValue + "</span>");
+    switch (aType) {
+        case "sem": return sce.trustAsHtml("<span style=\"background-color:" + aValue + "\">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class=\"nattributevalue\"> - " + aValue + "</span>");
         case "desc": return sce.trustAsHtml("<span class=\"nattributedesc\">" + aValue + "</span>");
         case "date": return sce.trustAsHtml((new Date(aValue)).toLocaleString() + "");
         case "undefined": return sce.trustAsHtml("<span class=\"nattributevalueNA\">" + aValue + "</span>")
