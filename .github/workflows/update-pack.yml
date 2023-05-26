@@ -27,6 +27,37 @@ jobs:
         script: oPack("genpack .")
         dist  : 't8'
         
+    - name: Update version badge
+      uses: OpenAF/ojob-action@v3
+      with:
+        def : |
+          todo:
+          - Update badge with version
+
+          ojob:
+            opacks:
+            - Badgen
+
+          include:
+          - badgen.yaml
+
+          jobs:
+          # -------------------------------
+          - name: Update badge with version
+            from: Get version
+            to  :
+            - name: Badgen generate file
+              args: 
+                labelColor: grey2
+                icon      : "nattrmon_grey.svg"
+                label     : "repo opack version"
+                file      : ".github/version.svg"
+
+          # -----------------
+          - name: Get version
+            exec: args.status = getOPackRemoteDB()["nAttrMon"].version
+        dist: 't8'
+        
     - name: Checkin
       uses: OpenAF/ojob-action@v3
       with:
