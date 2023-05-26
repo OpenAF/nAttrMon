@@ -1,0 +1,35 @@
+name: Update pack
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  workflow_dispatch:
+
+jobs:
+  UpdatePack:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Cache OpenAF runtime
+      uses: actions/cache@v3
+      with:
+        key : oaf-t8
+        path: /tmp/oaf
+
+    - name: Generate oPack
+      uses: OpenAF/ojob-action@v3
+      with:
+        script: oPack("genpack .")
+        dist  : 't8'
+        
+    - name: Checkin
+      uses: OpenAF/ojob-action@v3
+      with:
+        ojob: 'ojob.io/git/hub/checkIn.yaml'
+        args: 'message="Update\ package"'
+        dist: 't8'
