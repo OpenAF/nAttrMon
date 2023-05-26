@@ -1,5 +1,7 @@
 # nAttrMon
 
+![version](.github/version.svg)
+
 ## Documentation
 
 Please check the [nattrmon-docs](https://openaf.github.io/nattrmon-docs/) for more info.
