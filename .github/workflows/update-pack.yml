@@ -61,6 +61,6 @@ jobs:
     - name: Checkin
       uses: OpenAF/ojob-action@v3
       with:
-        ojob: 'ojob.io/git/hub/checkIn.yaml'
+        ojob: 'ojob.io/git/hub/checkIn'
         args: 'message="Update\ package"'
         dist: 't8'
