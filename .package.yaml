@@ -261,7 +261,7 @@ filesHash:
   .precompile: 52743b858c620cbf8590846495d282efc2ce0060
   CONTRIBUTING.md: c39f66b369fdd4722819997ac9c0f2a1cf6219ec
   LICENSE: 7df059597099bb7dcf25d2a9aedfaf4465f72d8d
-  README.md: b0fd23513e7f58f34f33aa9f393c188fd8b009a0
+  README.md: 706d0c7091c90d5405471ca1927f08fe2dc32020
   config/inputs.disabled/js/00.kube.init.js: 0be5054088e13053ffd86c7a7f3a710120330337
   config/inputs.disabled/js/00.raid.init.js: d6c7847577ab7a88cf84e2d6ce24b2d0258213ef
   config/inputs.disabled/js/05.filesystemCount.js: e8d4d119ec2d022033309bc18de8a2dc3a9d66aa
