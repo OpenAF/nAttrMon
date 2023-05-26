@@ -27,7 +27,7 @@ jobs:
     - name: Generate oPack
       uses: OpenAF/ojob-action@v3
       with:
-        script: oPack("genpack .")
+        script: oPack("genpack . --exclude .github")
         dist  : 't8'
         
     - name: Update version badge
@@ -52,6 +52,7 @@ jobs:
             - name: Badgen generate file
               args: 
                 labelColor: grey2
+                color     : blue
                 icon      : "nattrmon_grey.svg"
                 label     : "repo opack version"
                 file      : ".github/version.svg"
@@ -67,5 +68,5 @@ jobs:
       uses: OpenAF/ojob-action@v3
       with:
         ojob: 'ojob.io/git/hub/checkIn'
-        args: 'message="Update\ package"'
+        args: 'message="Update\ package" title="Update\ package"'
         dist: 't8'
