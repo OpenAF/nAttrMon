@@ -53,7 +53,7 @@ jobs:
               args: 
                 labelColor: grey2
                 color     : blue
-                icon      : "nattrmon_grey.svg"
+                icon      : "nattrmon.svg"
                 label     : "repo opack version"
                 file      : ".github/version.svg"
 
