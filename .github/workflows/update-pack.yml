@@ -62,6 +62,8 @@ jobs:
         dist: 't8'
         
     - name: Checkin
+      env:
+        GH_TOKEN: ${{ github.token }}
       uses: OpenAF/ojob-action@v3
       with:
         ojob: 'ojob.io/git/hub/checkIn'
