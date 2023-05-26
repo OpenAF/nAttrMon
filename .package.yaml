@@ -23,8 +23,6 @@ version: '20230524'
 dependencies:
   openaf: '>=20221216'
 files:
-- .github/ISSUE_TEMPLATE/bug_report.md
-- .github/ISSUE_TEMPLATE/feature_request.md
 - .gitignore
 - .package.yaml
 - .precompile
@@ -213,7 +211,6 @@ files:
 - config/outputs.disabled/yaml/08.warnsHistory.yaml
 - config/outputs.disabled/yaml/09.channels.yaml
 - config/outputs.disabled/yaml/10.SNMPServer_Output.yaml
-- config/outputs/00.httpAll.yaml
 - config/outputs/move_files_from_outputs_disabled.dummy
 - config/validations.disabled/js/01.validatePing.js
 - config/validations.disabled/js/03.validateSemaphores.js
@@ -260,8 +257,6 @@ files:
 - util/templates/Object_nOutput_template.js
 - util/watchdog.yaml.hbs
 filesHash:
-  .github/ISSUE_TEMPLATE/bug_report.md: 83d211c67c12e8c1f6e9f796cfd0cecbf5160e15
-  .github/ISSUE_TEMPLATE/feature_request.md: f6867a2f0417fe89a0f2008730ee19dd38422021
   .gitignore: 39785e9c0e444387c904a807d9e506a0215ca099
   .precompile: 52743b858c620cbf8590846495d282efc2ce0060
   CONTRIBUTING.md: c39f66b369fdd4722819997ac9c0f2a1cf6219ec
@@ -449,7 +444,6 @@ filesHash:
   config/outputs.disabled/yaml/08.warnsHistory.yaml: 3109d018544d5c1ab9424cecde0e27635c0447a2
   config/outputs.disabled/yaml/09.channels.yaml: f38c539f163ec3457267c55d4248237b76caee14
   config/outputs.disabled/yaml/10.SNMPServer_Output.yaml: cbfb17d6451b00639d231ece529496f9f9b081b4
-  config/outputs/00.httpAll.yaml: fcf74237eb55874c6e031c2586c85343e1b69b4b
   config/outputs/move_files_from_outputs_disabled.dummy: b858cb282617fb0956d960215c8e84d1ccf909c6
   config/validations.disabled/js/01.validatePing.js: cc572c157971ebdccd0a40a261f199cb9e509b5c
   config/validations.disabled/js/03.validateSemaphores.js: 6ded3ea530db8b5d4621fa8bad510e281ebd632d
