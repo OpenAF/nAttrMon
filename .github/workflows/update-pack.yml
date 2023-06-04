@@ -68,5 +68,5 @@ jobs:
       uses: OpenAF/ojob-action@v3
       with:
         ojob: 'ojob.io/git/hub/contentIn'
-        args: 'message="Update\ package" title="Update\ package"'
+        args: 'message="Update\ package" title="Update\ package" paths=.github/version.svg'
         dist: 't8'
