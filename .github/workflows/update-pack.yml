@@ -51,7 +51,7 @@ jobs:
             to  :
             - name: Badgen generate file
               args: 
-                labelColor: grey2
+                labelColor: grey3
                 color     : blue
                 icon      : "nattrmon.svg"
                 label     : "repo opack version"
