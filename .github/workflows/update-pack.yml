@@ -25,13 +25,13 @@ jobs:
         path: /tmp/oaf
 
     - name: Generate oPack
-      uses: OpenAF/ojob-action@v3
+      uses: openaf/ojob-action@v4
       with:
         script: oPack("genpack . --exclude .github")
         dist  : 't8'
         
     - name: Update version badge
-      uses: OpenAF/ojob-action@v3
+      uses: openaf/ojob-action@v4
       with:
         def : |
           todo:
@@ -65,7 +65,7 @@ jobs:
     - name: Checkin
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      uses: OpenAF/ojob-action@v3
+      uses: openaf/ojob-action@v4
       with:
         ojob: 'ojob.io/git/hub/contentIn'
         args: 'message="Update\ package" title="Update\ package" paths=.github/version.svg'

@@ -199,6 +199,7 @@ files:
 - config/outputs.disabled/js/4.logFile.js
 - config/outputs.disabled/yaml/00.httpAll.yaml
 - config/outputs.disabled/yaml/00.httphealthz.yaml
+- config/outputs.disabled/yaml/01.awscloudwatch.yaml
 - config/outputs.disabled/yaml/01.h2output.yaml
 - config/outputs.disabled/yaml/02.httpjson.yaml
 - config/outputs.disabled/yaml/03.http.yaml
@@ -397,7 +398,7 @@ filesHash:
   config/objects/nInput_Sessions.js: e4adb3f97db438aa0524ba3a1efebd615d7c3057
   config/objects/nInput_Shell.js: 5888cc365bddaeef4d9f293dc02897e86f6747a9
   config/objects/nInput_nAttrMon.js: c8ec9f45f724e7372b02751b893178490587641b
-  config/objects/nOutput_AWSCloudWatch.js: 698053af7c21364de98f81baf4b2fbcaffbfaaac
+  config/objects/nOutput_AWSCloudWatch.js: ee5689fbd92bc1b08343a42afac3d8f679af5e5c
   config/objects/nOutput_ChMirror.js: c1b5d965320aac73d90f0a6e12ae0a4123f8afd5
   config/objects/nOutput_Channels.js: f6e277efa2c12c3d6dd8468facbfb1bb43828ed6
   config/objects/nOutput_DSV.js: b723aefe236bd464d215c52406cec796cd47d97f
@@ -432,6 +433,7 @@ filesHash:
   config/outputs.disabled/js/4.logFile.js: 64e401aa6e0ee55a2abbc3fd8fe72b965e8b9ddb
   config/outputs.disabled/yaml/00.httpAll.yaml: fcf74237eb55874c6e031c2586c85343e1b69b4b
   config/outputs.disabled/yaml/00.httphealthz.yaml: 8756c424d211921e94f1657b2f9adacc4c436ec4
+  config/outputs.disabled/yaml/01.awscloudwatch.yaml: 50a6972ff1fa4f0eee4a3b1b85982b4eea58d410
   config/outputs.disabled/yaml/01.h2output.yaml: 49d7992bfbcf70ea667d6aeb4f0c71e7c16a1067
   config/outputs.disabled/yaml/02.httpjson.yaml: 6d14637f7fff15b4d75481597bb9ae4f77f12665
   config/outputs.disabled/yaml/03.http.yaml: 707437f882185eaeaf82a6bab58b8485b0c3c937
