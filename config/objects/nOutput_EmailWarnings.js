@@ -5,6 +5,13 @@ var nOutput_EmailWarnings_duplicatePrevent = [];
 var nOutput_EmailWarnings = function(aMap) {
 	plugin("Email");
 
+	ow.template.addHelper("emailParseJSON", o => {
+		var _r = ow.template.html.parseMap(o, true)
+
+		var _h = "<style>" + _r.css + "</style>" + _r.out 
+		return ow.template.addInLineCSS2HTML(_h)
+	})
+
 	this.addresses = [];
 	if (isArray(aMap.to)) {
 		aMap.to.forEach((v) => {
@@ -31,6 +38,7 @@ var nOutput_EmailWarnings = function(aMap) {
 	this.exclude = aMap.exclude;
 	this.includeRE = aMap.includeRE;
 	this.excludeRE = aMap.excludeRE;
+	this.custom = _$(aMap.custom, "custom").isString().default("")
 
 	this.template = nattrmon.getConfigPath("objects.assets/noutputemailwarnings/") + "/objects.assets/noutputemailwarnings/" + ((isUnDef(aMap.template)) ? "warningEmailTemplate.hbs" : aMap.template);
 	if (!(io.fileExists(this.template))) {
@@ -128,6 +136,7 @@ nOutput_EmailWarnings.prototype.output = function (scope, args, meta) {
 
 			data = {
 				subject: this.subject,
+				custom : templify(this.custom) + (this.custom.length > 0 ? "<br><hr>\n" : ""),
 				warns: []
 			};
 

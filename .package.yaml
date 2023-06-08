@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20230524'
+version: '20230607'
 dependencies:
   openaf: '>=20221216'
 files:
@@ -316,7 +316,7 @@ filesHash:
   config/move_files_from_the_disabled_folders.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
   config/nattrmonignore.js.sample: dad08a2c3a4fdba2f45c5d357aa2ebb7971d73e5
   config/objects.assets/noutputemailwarnings/logo.png: ee5366a3aa207c69d5139e04e7a4523078b974ba
-  config/objects.assets/noutputemailwarnings/warningEmailTemplate.hbs: 288f4632e00efe1625a78db1ee78d1ad0595a8a8
+  config/objects.assets/noutputemailwarnings/warningEmailTemplate.hbs: 632c53556ade3ec6842ca1fb188199498df7cfcd
   config/objects.assets/noutputhttp/css/bootstrap-theme.min.css: fc6b4268fbd57ad95d2b41a1d4d6866f222fbdb2
   config/objects.assets/noutputhttp/css/bootstrap.min.css: ed29315e0ffb3f14382431f2724235bf67f44eb3
   config/objects.assets/noutputhttp/css/font-awesome.min.css: 05ea25bc9b3ac48993e1fee322d3bc94b49a6e22
@@ -344,7 +344,7 @@ filesHash:
   config/objects.assets/noutputhttp/js/bootstrap.min.js: 24a900bdfcefd52cbcff3bc36440af9b87cd5067
   config/objects.assets/noutputhttp/js/holder.min.js: c1ad1dcfebf4c1770d40fc5d7bc46ca692d12822
   config/objects.assets/noutputhttp/js/ie10-viewport-bug-workaround.js: b133cb4aaff8f32026190281d8a27456eace82b1
-  config/objects.assets/noutputhttp/js/nattrmon_js.js: 183bc1c0e18aa62259d2e4a9a10697c810ae60ca
+  config/objects.assets/noutputhttp/js/nattrmon_js.js: ca73e3844e99d50966283dfadff5b20886432366
   config/objects.assets/noutputhttp/js/retina.min.js: da44a409a0907960a6526cf35807ecaf61059223
   config/objects.assets/noutputhttp/logout.html: 2398f9f7051a5328196407295c776f9679db6afe
   config/objects.assets/noutputhttp/now.html: 6827db09a179aa14026bc565966c2af47df263c0
@@ -402,7 +402,7 @@ filesHash:
   config/objects/nOutput_Channels.js: f6e277efa2c12c3d6dd8468facbfb1bb43828ed6
   config/objects/nOutput_DSV.js: b723aefe236bd464d215c52406cec796cd47d97f
   config/objects/nOutput_ES.js: 369d1739fba479f8b0fe49b3d3c2c1b6e96c7cbb
-  config/objects/nOutput_EmailWarnings.js: 7010177f9ba78db43c638acf844506dc81e906cc
+  config/objects/nOutput_EmailWarnings.js: 9b9c296db9af55a53e0fe7722e128d12841ca4b0
   config/objects/nOutput_H2.js: f812e07f5bb7c396e55a8c70e7c4d8112b9435a6
   config/objects/nOutput_HK.js: c9887fd101189ea35deaa8cdaddb280563856e01
   config/objects/nOutput_HTMLStatus.js: 5672ea6092958891bb4a3a8eb3e8317c6e250600
@@ -463,7 +463,7 @@ filesHash:
   lib/nattributes.js: f28cee64a735e0e6ae3b520bbc59f74e6203e1db
   lib/nattributevalue.js: d6a378dba74922540bcc3e054222733f69d5cead
   lib/ninput.js: cb1a2bc442a0a3ac9e6237fd02b445e31bd518cf
-  lib/nmain.js: 917a88defc1585a2e9dd2d68e78fe3c94c39fdf0
+  lib/nmain.js: e6617b487786be20c246968df4c9bdde30c3e1ab
   lib/nmonitoredobject.js: da0b8a8590ce1534826750e2e70b3d6e4bee9f98
   lib/noutput.js: 097a89ae2ab12cb28d88034444a72d368464d14c
   lib/nplug.js: cfae6fc112042e574320895f406fddb942f4ff6d
@@ -471,10 +471,10 @@ filesHash:
   lib/nvalidation.js: 252998540faca7913211029f1bdd4397beba3ce9
   lib/nwarning.js: 9a430f79f35de1a298285eccda8b5885a5f85fad
   lib/nwarnings.js: 1988fb946cd19c29a3321e99ae21661643ec1fe3
-  nAttrmon_single.yaml.sample: 56e31c6102c90bdad55b434247848027a7adb69d
+  nAttrmon_single.yaml.sample: 1813c44306a7206721c200bcf794a4cb7842e6f7
   nattrmon.js: 0577704f46097906a7f715fd8bc8c913278e8b08
   nattrmon.yaml.sample: de21b37a5628fa74adbbcb5883dca249c897ed3e
-  oJob_nAttrMon.yaml: 81106c2943f32c7dbe2ffed02a6a788f067e6705
+  oJob_nAttrMon.yaml: 1357cacccb72bccd5deb7d9e347c1100b3cb96eb
   tests/inputDBTest.yml: c38616606dc5956e449189d11f8e661170f94dfb
   tests/inputShellTest.yml: ce643955982cb16b53a8843acd3549466e5cddf5
   tests/nattrmonTester.js: 1676171ab793cdb67da4de3e033aee110aa8ef20
