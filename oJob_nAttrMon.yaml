@@ -180,6 +180,7 @@ jobs:
     if (isDef(args.__NAM_SLOWDOWN))       global.__NAM_SLOWDOWN       = Boolean(args.__NAM_SLOWDOWN)
     if (isDef(args.__NAM_SLOWDOWN_WARNS)) global.__NAM_SLOWDOWN_WARNS = Boolean(args.__NAM_SLOWDOWN_WARNS)
     if (isDef(args.__NAM_SLOWDOWN_TIME))  global.__NAM_SLOWDOWN_TIME  = Number(args.__NAM_SLOWDOWN_TIME)
+    if (isDef(args.__NAM_NOPLUGFILES))    global.__NAM_NOPLUGFILES    = Boolean(args.__NAM_NOPLUGFILES)
 
     if (isString(args.__NAM_CHANNEL_CVALS))  global.__NAM_CHANNEL_CVALS = String(args.__NAM_CHANNEL_CVALS);
     if (isString(args.__NAM_CHANNEL_LVALS))  global.__NAM_CHANNEL_LVALS = String(args.__NAM_CHANNEL_LVALS);
