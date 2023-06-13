@@ -9,6 +9,10 @@ init:
     __NAM_DEBUG              : false  # change to true for debugging
     __NAM_NEED_CH_PERSISTENCE: false
     __NAM_LOGCONSOLE         : true
+    __NAM_NOPLUGFILES        : true
+    #__NAM_BUFFERCHANNELS     : true
+    #__NAM_BUFFERBYNUMBER     : 100
+    #__NAM_BUFFERBYTIME       : 1000
 
 nattrmon: &NATTRMON
   # ------

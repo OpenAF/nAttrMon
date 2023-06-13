@@ -1,0 +1,19 @@
+output:
+  name       : Output AWS CloudWatch
+  chSubscribe: nattrmon::cvals
+  execFrom   : nOutput_AWSCloudWatch
+  execArgs   :
+    #include       :
+    #- Service/Memory Metrics
+    #exclude       :
+    #includeDim    :
+    #excludeDim    :
+    #- pod
+    #unitByMetric  :
+    #  Service_Memory_Metrics_Amount: "Bytes"
+    #considerSetAll: true
+    #region        : us-east-1
+    #logGroup      : nattrmon
+    #accessKey     : AKI1234567
+    #secretKey     : A1B2C3D4E5F6G7
+    #sessionToken  :
