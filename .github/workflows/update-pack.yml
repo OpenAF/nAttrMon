@@ -59,7 +59,7 @@ jobs:
 
           # -----------------
           - name: Get version
-            exec: args.status = getOPackRemoteDB()["nAttrMon"].version
+            exec: args.status = io.readFileYAML(".package.yaml").version
         dist: 't8'
         
     - name: Checkin
