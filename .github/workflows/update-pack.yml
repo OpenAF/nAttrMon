@@ -80,5 +80,6 @@ jobs:
     - name: Upload oPack artifact
       uses: actions/upload-artifact@v3.1.2
       with:
+        name: nAttrMon.opack
         path: nAttrMon-*.opack
       
