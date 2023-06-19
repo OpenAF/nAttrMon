@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20230607'
+version: '20230618'
 dependencies:
   openaf: '>=20221216'
 files:
@@ -398,7 +398,7 @@ filesHash:
   config/objects/nInput_Sessions.js: e4adb3f97db438aa0524ba3a1efebd615d7c3057
   config/objects/nInput_Shell.js: 5888cc365bddaeef4d9f293dc02897e86f6747a9
   config/objects/nInput_nAttrMon.js: c8ec9f45f724e7372b02751b893178490587641b
-  config/objects/nOutput_AWSCloudWatch.js: ee5689fbd92bc1b08343a42afac3d8f679af5e5c
+  config/objects/nOutput_AWSCloudWatch.js: 7e481df8405dd5f00f62350af1e0a10feb7fb457
   config/objects/nOutput_ChMirror.js: c1b5d965320aac73d90f0a6e12ae0a4123f8afd5
   config/objects/nOutput_Channels.js: f6e277efa2c12c3d6dd8468facbfb1bb43828ed6
   config/objects/nOutput_DSV.js: b723aefe236bd464d215c52406cec796cd47d97f
