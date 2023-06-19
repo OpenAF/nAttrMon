@@ -70,3 +70,15 @@ jobs:
         ojob: 'ojob.io/git/hub/contentIn'
         args: 'message="Update\ package" title="Update\ package" paths=.github/version.svg,.package.yaml'
         dist: 't8'
+
+    - name: Pack oPack
+      uses: openaf/ojob-action@v4
+      with:
+        script: oPack("pack . --exclude .github")
+        dist  : 't8'
+        
+    - name: Upload oPack artifact
+      uses: actions/upload-artifact@v3.1.2
+      with:
+        path: nAttrMon-*.opack
+      
