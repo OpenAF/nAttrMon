@@ -15,10 +15,10 @@ var nOutput_HTTP_Metrics = function (aMap) {
         this.includeLVals = _$(aMap.includeLVals, "includeLVals").isBoolean().default(false);
         this.includeWarns = _$(aMap.includeWarns, "includeWarns").isBoolean().default(true);
 
-        this.nameSelf  = _$(aMap.nameSelf, "nameSelf").isString().default("nattrmon");
-        this.nameCVals = _$(aMap.nameCVals, "nameCVals").isString().default("nattrmon_cval");
-        this.nameLVals = _$(aMap.nameLVals, "nameLVals").isString().default("nattrmon_lval");
-        this.nameWarns = _$(aMap.nameWarns, "nameWarns").isString().default("nattrmon_warn");
+        this.nameSelf  = _$(aMap.nameSelf, "nameSelf").isString().default("nattrmon_self")
+        this.nameCVals = _$(aMap.nameCVals, "nameCVals").isString().default("nattrmon")
+        this.nameLVals = _$(aMap.nameLVals, "nameLVals").isString().default("nattrmon_lval")
+        this.nameWarns = _$(aMap.nameWarns, "nameWarns").isString().default("nattrmon_warn")
 
 		this.chName   = _$(aMap.chName, "chName").isString().default(__);
 		this.chType   = _$(aMap.chType, "chType").isString().default(__);
@@ -26,6 +26,8 @@ var nOutput_HTTP_Metrics = function (aMap) {
 		this.chPeriod = _$(aMap.chPeriod, "chPeriod").isNumber().default(5000);
 
 		this.format   = _$(aMap.format, "format").isString().default(__)
+
+		this.removeIds = _$(aMap.removeIds, "removeIds").isBoolean().default(true)
 
 		if (isDef(this.chName) && this.chPeriod > 0) $ch(this.chName).create(1, this.chType, this.chParams);
 	} else {
@@ -193,6 +195,18 @@ var nOutput_HTTP_Metrics = function (aMap) {
 
 	if (isDef(this.chName) && this.chPeriod > 0) ow.metrics.startCollecting(this.chName, this.chPeriod);
 
+	var _filterIds = lines => {
+		if (this.removeIds) {
+			lines = lines.split("\n").map(line => {
+				if (line.indexOf("{_id=\"") >= 0) line = line.replace(/{_id=\"\d+\",/, "{")
+				if (line.indexOf(",_id=\"") >= 0) line = line.replace(/,_id=\"\d+\"}/, "}")
+				if (line.indexOf("_id=\"") >= 0) line = line.replace(/,_id=\"\d+\",/, ",")
+				return line
+			}).join("\n")
+		}
+		return lines
+	}
+
 	// Add function to server
 	//httpd.addEcho("/echo");
     var parent = this;
@@ -222,16 +236,16 @@ var nOutput_HTTP_Metrics = function (aMap) {
 				default:
 					if (isDef(req.params.type)) {
 						switch(req.params.type) {
-						case "self" : res += ow.metrics.fromObj2OpenMetrics(ow.metrics.getAll(), parent.nameSelf); break
-						case "cvals": res += _parse(nattrmon.getCurrentValues(), parent.nameCVals); break
-						case "lvals": res += _parse(nattrmon.getLastValues(), parent.nameLVals); break
-						case "warns": res += _parse(nattrmon.getWarnings(), parent.nameWarns); break
+						case "self" : res += _filterIds(ow.metrics.fromObj2OpenMetrics(ow.metrics.getAll(), parent.nameSelf)); break
+						case "cvals": res += _filterIds(_parse(nattrmon.getCurrentValues(), parent.nameCVals)); break
+						case "lvals": res += _filterIds(_parse(nattrmon.getLastValues(), parent.nameLVals)); break
+						case "warns": res += _filterIds(_parse(nattrmon.getWarnings(), parent.nameWarns)); break
 						}
 					} else {
-						if (parent.includeSelf)  res += ow.metrics.fromObj2OpenMetrics(ow.metrics.getAll(), parent.nameSelf);
-						if (parent.includeCVals) res += _parse(nattrmon.getCurrentValues(), parent.nameCVals);
-						if (parent.includeLVals) res += _parse(nattrmon.getLastValues(), parent.nameLVals);
-						if (parent.includeWarns) res += _parse(nattrmon.getWarnings(), parent.nameWarns);
+						if (parent.includeSelf)  res += _filterIds(ow.metrics.fromObj2OpenMetrics(ow.metrics.getAll(), parent.nameSelf));
+						if (parent.includeCVals) res += _filterIds(_parse(nattrmon.getCurrentValues(), parent.nameCVals));
+						if (parent.includeLVals) res += _filterIds(_parse(nattrmon.getLastValues(), parent.nameLVals));
+						if (parent.includeWarns) res += _filterIds(_parse(nattrmon.getWarnings(), parent.nameWarns));
 					}
 					break;
 				}
