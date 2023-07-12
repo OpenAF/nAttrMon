@@ -302,7 +302,7 @@ filesHash:
   config/inputs.disabled/yaml/12.shellCmd.yaml: 0788119c6d68336209422bf46f6dfa0c93880d14
   config/inputs.disabled/yaml/13.RAIDSchedulers.yaml: fb921e230bbd12f5b3d9910ad6ebf17bb8def3fe
   config/inputs.disabled/yaml/15.endpoint_nAttrMon.yaml: dfe0fe3f5df32cac9ec8960c83d688e785efef09
-  config/inputs.disabled/yaml/15.javagc.yaml: 4848e13929f83df4d728ebbf50e436768f17990a
+  config/inputs.disabled/yaml/15.javagc.yaml: e2c25bb7bbcd52dd7245c8a0c615f439581cf752
   config/inputs.disabled/yaml/15.jmx.yaml: 0a350b3a84a7f56b9c9380b56dcabd4723b22c31
   config/inputs.disabled/yaml/15.remote_nAttrMon.yaml: f042f233fac37d349890943ee6a3c3a0344015de
   config/inputs.disabled/yaml/20.chvals.yaml: d03ba1bb4f7953bdb7f30226a42004f21a460e79
@@ -378,7 +378,7 @@ filesHash:
   config/objects/nInput_IMMemory.js: 69f6e3d39aa5a75c83d2e4f8e2ece0b28df7e3f1
   config/objects/nInput_Init.js: f67f19f0e82f5ecbb20d06b07dfa4167090fa5de
   config/objects/nInput_JMX.js: fce9011c729efafd1abe79588a274ee36aac3c16
-  config/objects/nInput_JavaGC.js: a28bbf24766cff14d43ae23364dc6f43382b879a
+  config/objects/nInput_JavaGC.js: 913e3d39cdf2726668944d4c145df0f720c4b6d0
   config/objects/nInput_Kube_Events.js: 7a36aa2e72973d9369b856c6ef2ce4eddcab8459
   config/objects/nInput_Kube_NodesMetrics.js: 1eb83e5f43535c9b688424a022c4bcb38fc791f3
   config/objects/nInput_Kube_Pods.js: 3afb158052eb3eb1b9ffb70d68f0fa23c20b7c81
