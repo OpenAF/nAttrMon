@@ -1,4 +1,4 @@
-// Author: who
+// Author: Nuno Aguiar
 
 /**
  * <odoc>
@@ -24,6 +24,20 @@ var nInput_JavaGC = function(aMap) {
     this.params.type = _$(this.params.type, "type").oneOf(["local", "ssh", "kube"]).default("local")
 
     if (isUnDef(this.params.attrTemplate)) this.params.attrTemplate = "Java/{{_name}}"
+
+    this.params.includeSummary    = _$(this.params.includeSummary, "includeSummary").isBoolean().default(true)
+    this.params.includeCollectors = _$(this.params.includeCollectors, "includeCollectors").isBoolean().default(true)
+    this.params.includeThreads    = _$(this.params.includeThreads, "includeThreads").isBoolean().default(true)
+    this.params.includeSpaces     = _$(this.params.includeSpaces, "includeSpaces").isBoolean().default(true)
+    this.params.includeMem        = _$(this.params.includeMem, "includeMem").isBoolean().default(true)
+
+    this.params.nameSummary    = _$(this.params.nameSummary, "nameSummary").isString().default("GC Summary")
+    this.params.nameCollectors = _$(this.params.nameCollectors, "nameCollectors").isString().default("GC Collectors")
+    this.params.nameThreads    = _$(this.params.nameThreads, "nameThreads").isString().default("Threads")
+    this.params.nameSpaces     = _$(this.params.nameSpaces, "nameSpaces").isString().default("GC Spaces")
+    this.params.nameMem        = _$(this.params.nameMem, "nameMem").isString().default("Memory")
+
+    if (this.params.attrTemplate.indexOf("_name") < 0) logWarn("nInput_JavaGC attrTemplate needs to refer to _name.")
 
     nInput.call(this, this.input)
 };
@@ -60,10 +74,10 @@ nInput_JavaGC.prototype.get = function(keyData, extra) {
         var __res
         if (isString(keyData.key)) {
             nattrmon.useObject(keyData.key, _ssh => {
-                __res = _ssh.exec("/bin/sh -c 'echo ${TMPDIR:-/tmp} && echo \"||\" && find ${TMPDIR:-/tmp} -type f'", __, __, __, true)
+                __res = _ssh.exec("/bin/sh -c 'echo ${TMPDIR:-/tmp} && echo \"||\" && find ${TMPDIR:-/tmp} -readable -type f'", __, __, __, true)
             })
         } else {
-            __res = nattrmon.shExec("ssh", keyData).exec("/bin/sh -c 'echo ${TMPDIR:-/tmp} && echo \"||\" && find ${TMPDIR:-/tmp} -type f'")
+            __res = nattrmon.shExec("ssh", keyData).exec("/bin/sh -c 'echo ${TMPDIR:-/tmp} && echo \"||\" && find ${TMPDIR:-/tmp} -readable -type f'")
         }
         if (isDef(__res) && isDef(__res.stdout)) {
             var _tmp  = __res.stdout.split("||")
@@ -103,7 +117,7 @@ nInput_JavaGC.prototype.get = function(keyData, extra) {
           newM.pod       = r.metadata.name
           newM.namespace = r.metadata.namespace
           try {
-            var res = nattrmon.shExec("kube", newM).exec(["/bin/sh", "-c", "/bin/sh -c 'echo ${TMPDIR:-/tmp} && echo \"||\" && find ${TMPDIR:-/tmp} -type f'"])
+            var res = nattrmon.shExec("kube", newM).exec(["/bin/sh", "-c", "/bin/sh -c 'echo ${TMPDIR:-/tmp} && echo \"||\" && find ${TMPDIR:-/tmp} -readable -type f'"])
             if (isDef(res.stdout)) {
                 var _tmp = String(res.stdout).split("||")
                 var lst  = _tmp[1]
@@ -249,11 +263,11 @@ nInput_JavaGC.prototype.input = function(scope, args) {
     /*ret[templify(this.params.attrTemplate)] = {
         something: true
     };*/
-    var gcSummary    = templify(this.params.attrTemplate, { _name: "GC Summary" })
-    var gcCollectors = templify(this.params.attrTemplate, { _name: "GC Collectors" })
-    var gcThreads    = templify(this.params.attrTemplate, { _name: "Threads" })
-    var gcSpaces     = templify(this.params.attrTemplate, { _name: "GC Spaces" })
-    var gcMem        = templify(this.params.attrTemplate, { _name: "Memory" })
+    var gcSummary    = templify(this.params.attrTemplate, { _name: this.params.nameSummary })
+    var gcCollectors = templify(this.params.attrTemplate, { _name: this.params.nameCollectors })
+    var gcThreads    = templify(this.params.attrTemplate, { _name: this.params.nameThreads })
+    var gcSpaces     = templify(this.params.attrTemplate, { _name: this.params.nameSpaces })
+    var gcMem        = templify(this.params.attrTemplate, { _name: this.params.nameMem })
 
 	if (isDef(this.params.chKeys)) {
         var arrGCSummary = [], arrGCCollectors = [], arrGCThreads = [], arrGCSpaces = [], arrGCMem = []
@@ -265,18 +279,18 @@ nInput_JavaGC.prototype.input = function(scope, args) {
             arrGCSpaces = arrGCSpaces.concat(data.gcSpaces)
             arrGCMem = arrGCMem.concat(data.gcMem)
         })
-        ret[gcSummary]    = arrGCSummary
-        ret[gcCollectors] = arrGCCollectors
-        ret[gcThreads]    = arrGCThreads
-        ret[gcSpaces]     = arrGCSpaces
-        ret[gcMem]        = arrGCMem
+        if (this.params.includeSummary) ret[gcSummary]       = arrGCSummary
+        if (this.params.includeCollectors) ret[gcCollectors] = arrGCCollectors
+        if (this.params.includeThreads) ret[gcThreads]       = arrGCThreads
+        if (this.params.includeSpaces) ret[gcSpaces]         = arrGCSpaces
+        if (this.params.includeMem) ret[gcMem]               = arrGCMem
     } else {
         var data = this.get(this.params)
-        ret[gcSummary]    = data.gcSummary
-        ret[gcCollectors] = data.gcCollectors
-        ret[gcThreads]    = data.gcThreads
-        ret[gcSpaces]     = data.gcSpaces
-        ret[gcMem]        = data.gcMem
+        if (this.params.includeSummary) ret[gcSummary]       = data.gcSummary
+        if (this.params.includeCollectors) ret[gcCollectors] = data.gcCollectors
+        if (this.params.includeThreads) ret[gcThreads]       = data.gcThreads
+        if (this.params.includeSpaces) ret[gcSpaces]         = data.gcSpaces
+        if (this.params.includeMem) ret[gcMem]               = data.gcMem
     }
 
     return ret

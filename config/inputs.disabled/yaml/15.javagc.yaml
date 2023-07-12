@@ -1,29 +1,50 @@
 input:
 # -------------------------------
 - name       : Test Java GC local
-  #cron         : "*/15 * * * *"
+  #cron         : "*/15 * * * * *"
   #waitForFinish: true
-  #onlyOnEvent  : true
+  #onlyOnEvent  : false
   execFrom   : nInput_JavaGC
   execArgs   :
     type        : local
+    attrTemplate: "Java/{{_name}}"
+    #nameSummary   : GC Summary
+    #nameCollectors: GC Collectors
+    #nameThreads   : Threads
+    #nameSpaces    : GC Spaces
+    #nameMem       : Memory
+    #includeSummary   : true
+    #includeCollectors: true
+    #includeThreads   : true
+    #includeSpaces    : true
+    #includeMem       : true
 
 # -----------------------------
 - name       : Test Java GC ssh
-  #cron         : "*/15 * * * *"
+  #cron         : "*/15 * * * * *"
   #waitForFinish: true
-  #onlyOnEvent  : true
+  #onlyOnEvent  : false
   execFrom   : nInput_JavaGC
   execArgs   :
     type        : ssh
     chKeys      : sshServers
-    attrTemplate: Servers/Java GC
+    attrTemplate: "Remote/Java {{_name}}"
+    #nameSummary   : GC Summary
+    #nameCollectors: GC Collectors
+    #nameThreads   : Threads
+    #nameSpaces    : GC Spaces
+    #nameMem       : Memory
+    #includeSummary   : true
+    #includeCollectors: true
+    #includeThreads   : true
+    #includeSpaces    : true
+    #includeMem       : true
 
 # ------------------------------
 - name       : Test Java GC kube
-  #cron         : "*/15 * * * *"
+  #cron         : "*/15 * * * * *"
   #waitForFinish: true
-  #onlyOnEvent  : true
+  #onlyOnEvent  : false
   execFrom   : nInput_JavaGC
   execArgs   :
     type        : kube
@@ -39,4 +60,14 @@ input:
           args:
           - status.phase
           - Running
-    attrTemplate: Kube/Java GC
+    attrTemplate: "Kube/Java {{_name}}"
+    #nameSummary   : GC Summary
+    #nameCollectors: GC Collectors
+    #nameThreads   : Threads
+    #nameSpaces    : GC Spaces
+    #nameMem       : Memory
+    #includeSummary   : true
+    #includeCollectors: true
+    #includeThreads   : true
+    #includeSpaces    : true
+    #includeMem       : true
