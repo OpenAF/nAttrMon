@@ -3,11 +3,19 @@ output:
    description  : Outputs attributes, warnings, current and previous values in a JSON representation through HTTP.
    execFrom     : nOutput_HTTP_Metrics
    execArgs     :
-   #   includeSelf: false
+   #   includeSelf : false
    #   includeCVals: true
    #   includeLVals: false
    #   includeWarns: true
-   #   nameSelf    : "nattrmon"
-   #   nameCVals   : "nattrmon_cval"
+   #   nameSelf    : "nattrmon_self"
+   #   nameCVals   : "nattrmon"
    #   nameLVals   : "nattrmon_lval"
    #   nameWarns   : "nattrmon_warn"
+   #   include:
+   #   - "cat/attrToInclude"
+   #   exclude:
+   #   - "cat/attrToExclue"
+   #   findAndReplace:
+   #   - find   : "sometext"
+   #     replace: "areplace"
+   #     flags  : "mg"
