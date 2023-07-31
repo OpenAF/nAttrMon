@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20230721'
+version: '20230730'
 dependencies:
   openaf: '>=20221216'
 files:
@@ -465,7 +465,7 @@ filesHash:
   lib/nattributes.js: f28cee64a735e0e6ae3b520bbc59f74e6203e1db
   lib/nattributevalue.js: d6a378dba74922540bcc3e054222733f69d5cead
   lib/ninput.js: cb1a2bc442a0a3ac9e6237fd02b445e31bd518cf
-  lib/nmain.js: e6617b487786be20c246968df4c9bdde30c3e1ab
+  lib/nmain.js: 9bbccd42bcfea51962184b915d976858dbff9ccb
   lib/nmonitoredobject.js: da0b8a8590ce1534826750e2e70b3d6e4bee9f98
   lib/noutput.js: 097a89ae2ab12cb28d88034444a72d368464d14c
   lib/nplug.js: cfae6fc112042e574320895f406fddb942f4ff6d
@@ -475,7 +475,7 @@ filesHash:
   lib/nwarnings.js: 1988fb946cd19c29a3321e99ae21661643ec1fe3
   nAttrmon_single.yaml.sample: 1813c44306a7206721c200bcf794a4cb7842e6f7
   nattrmon.js: 0577704f46097906a7f715fd8bc8c913278e8b08
-  nattrmon.yaml.sample: de21b37a5628fa74adbbcb5883dca249c897ed3e
+  nattrmon.yaml.sample: e3e87e05975614d0d45c65b3ee436c1554cd0b4c
   oJob_nAttrMon.yaml: 1357cacccb72bccd5deb7d9e347c1100b3cb96eb
   tests/inputDBTest.yml: c38616606dc5956e449189d11f8e661170f94dfb
   tests/inputShellTest.yml: ce643955982cb16b53a8843acd3549466e5cddf5
