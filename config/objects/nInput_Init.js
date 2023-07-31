@@ -308,14 +308,21 @@ nInputInitList["Kube"] = {
 
         var getKubeLst = m => {
             m = parent.setSec(m)
+            traverse(m, (aK, aV, aP, aO) => {
+                if (isString(aV)) aO[aK] = templify(aV, m)
+            })
             m.kind      = _$(m.kind, "_kube.kind").isString().default("FPO")
             m.namespace = _$(m.namespace, "_kube.namespace").isString().default("default")
 
             var nss = m.namespace.split(/ *, */)
             var lst = []
             nss.forEach(ns => {
-                var its = $kube(m)["get" + m.kind](ns)
-                if (isMap(its) && isArray(its.items)) lst = lst.concat(its.items)
+                try {
+                    var its = $kube(m)["get" + m.kind](ns)
+                    if (isMap(its) && isArray(its.items)) lst = lst.concat(its.items)
+                } catch(nse) {
+                    logErr("nInput_Init | Kube | Error during get Kube listing: " + nse)
+                }
             })
             return lst
         }, procKubeLst = (m, lst) => {
