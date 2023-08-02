@@ -93,6 +93,9 @@ nInput_JavaGC.prototype.get = function(keyData, extra) {
         this.params.kube = _$(this.params.kube, "kube").isMap().default({})
 
         var m       = setSec(this.params.kube)
+        traverse(m, (aK, aV, aP, aO) => {
+            if (isString(aV)) aO[aK] = templify(aV, m)
+        })
         m.kind      = _$(m.kind, "kube.kind").isString().default("FPO")
         m.namespace = _$(m.namespace, "kube.namespace").isString().default("default")
 
