@@ -113,7 +113,13 @@ nInput_DB.prototype.get = function(aKey, parent, ret, scope) {
 						if (keyFieldExists) logWarn("nInput_DB | Result from '" + naAttr + "' for '" + parent.objectPoolKey + "' contains a 'key' field. It will be overwritten (to modify this behaviour use dontUseKey=true).")
 						
 						// Check if needs concat with previous results of other keys
-						ret[naAttr] = (isDef(ret[naAttr]) ? ret[naAttr].concat(res) : res)
+						if (isDef(ret[naAttr])) {
+							sync(() => {
+								ret[naAttr] = ret[naAttr].concat(res)
+							}, ret[naAttr])
+						} else {
+							ret[naAttr] = res
+						}
 					} else {
 						// Simplify result if one single column and/or one single value output
 						if (res.length == 1 && Object.keys(res[0]).length == 1) {
