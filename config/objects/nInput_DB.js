@@ -8,8 +8,9 @@
  *    - key        (the key for the database access)\
  *    - key.parent (in alternative provide the parent key (e.g. RAS))\
  *    - key.child  (in alternative provide the child key synonym (e.g. db.app))\
- *    - sqls       (a map of query templates (if a '{{lastdate}}' is included it will be replaced by the last checked date), each will become an attribute)
- *    - sqlsByType (in alternative to sqls lets you divide further into SQL statement per database product (e.g. postgresql, oracle, h2, etc...))
+ *    - sqls       (a map of query templates (if a '{{lastdate}}' is included it will be replaced by the last checked date), each will become an attribute)\
+ *    - sqlsByType (in alternative to sqls lets you divide further into SQL statement per database product (e.g. postgresql, oracle, h2, etc...))\
+ *    - dontUseKey (boolean to indicate if a key field should not be added in all records returned with chKeys)
  * </odoc>
  */
 var nInput_DB = function(aMap) {
@@ -19,18 +20,19 @@ var nInput_DB = function(aMap) {
         this.params = {};
     }
 
+	this.params.dontUseKey = _$(this.params.dontUseKey, "dontUseKey").isBoolean().default(isDef(this.params.key))
+
 	if (isUnDef(this.params.attrTemplate)) 
 		if (isDef(this.params.key)) 
 			this.params.attrTemplate = "{{query}}"
 		else
-			this.params.attrTemplate = "DB {{key}}/{{query}}"
+			this.params.attrTemplate = (this.params.dontUseKey ? "DB {{key}}/{{query}}" : "{{query}}")
 	
 	nInput.call(this, this.input)
 }
 inherit(nInput_DB, nInput)
 
 nInput_DB.prototype.get = function(aKey, parent, ret, scope) {
-	var res
 	var parent2 = parent
 	var queries
 
@@ -61,9 +63,10 @@ nInput_DB.prototype.get = function(aKey, parent, ret, scope) {
 			parent.objectPoolKey = parent.key
 		}
 
-		if (isUnDef(queries) || !isMap(queries)) throw "sqls or sqlsByType not defined or not a map."
+		if (isUnDef(queries) || !isMap(queries)) throw "nInput_DB | sqls or sqlsByType not defined or not a map."
 
-		parallel4Array(Object.keys(queries), function(aAttr) {		
+		parallel4Array(Object.keys(queries), function(aAttr) {	
+			var res	
 			try {
 				var aSQL = queries[aAttr]
 				var naAttr = templify(parent.attrTemplate, merge(parent, { query: aAttr }))
@@ -81,8 +84,8 @@ nInput_DB.prototype.get = function(aKey, parent, ret, scope) {
 								if (isDef(aDb.convertDates)) aDb.convertDates(true)
 								res = aDb.q(templify(aSQL, data)).results
 							} catch (e) {
-								logErr("Error while retriving DB query from '" + parent.objectPoolKey + "': " + e.message)
-								logErr("DB query = '" + templify(aSQL, data) + "'")
+								logErr("nInput_DB | Error while retriving DB query from '" + parent.objectPoolKey + "' for '" + parent.objectPoolKey + ": " + e.message)
+								logErr("nInput_DB | Key = '" + parent.objectPoolKey + "' DB query = '" + templify(aSQL, data) + "'")
 								throw e
 							}
 							
@@ -91,33 +94,46 @@ nInput_DB.prototype.get = function(aKey, parent, ret, scope) {
 							return true
 						})
 					} else {
-						logWarn("Object pool key = '" + parent.objectPoolKey + "' not found.")
+						logWarn("nInput_DB | Object pool key = '" + parent.objectPoolKey + "' not found.")
 					}
 				}
 	
-				// Handle result
+				// Handle result and adding or not the key field
 				if (isUnDef(res)) {
 					ret[naAttr] = __
 				} else {
-					if (res.length == 1 && Object.keys(res[0]).length == 1) {
-						ret[naAttr] = res[0][Object.keys(res[0])[0]]
+					// Verify if key field exists in res
+					if (!parent.dontUseKey) {
+						var keyFieldExists = false
+						res = res.map(record => {
+							if (!keyFieldExists) keyFieldExists = Object.keys(record).indexOf("key") >= 0
+							record.key = parent.objectPoolKey
+							return record
+						})
+						if (keyFieldExists) logWarn("nInput_DB | Result from '" + naAttr + "' for '" + parent.objectPoolKey + "' contains a 'key' field. It will be overwritten (to modify this behaviour use dontUseKey=true).")
+						
+						// Check if needs concat with previous results of other keys
+						ret[naAttr] = (isDef(ret[naAttr]) ? ret[naAttr].concat(res) : res)
 					} else {
-						if (res.length == 1) {
-							ret[naAttr] = res[0]
+						// Simplify result if one single column and/or one single value output
+						if (res.length == 1 && Object.keys(res[0]).length == 1) {
+							ret[naAttr] = res[0][Object.keys(res[0])[0]]
 						} else {
-							ret[naAttr] = res
+							if (res.length == 1) {
+								ret[naAttr] = res[0]
+							} else {
+								ret[naAttr] = res
+							}
 						}
 					}
 				}
 			} catch(ee) {
-				logErr("Problem trying to process query '" + aAttr + "': " + ee)
+				logErr("nInput_DB | Problem trying to process query '" + aAttr + "' for '" + parent.objectPoolKey + ": " + ee)
 			}
 			return 1
 		}, __NAM_WORKERS)
-
-
 	} catch (e) {
-		logErr("Error while retriving DB queries from '" + parent2.objectPoolKey + "': " + stringify(e))
+		logErr("nInput_DB | Error while retriving DB queries from '" + parent2.objectPoolKey + "': " + stringify(e))
 		if (isUnDef(parent2.objectPoolKey)) {
 			nattrmon.declareMonitoredObjectDirty(parent2.monitoredObjectKey)
 			parent2.db = nattrmon.getMonitoredObject(parent2.monitoredObjectKey)
@@ -138,10 +154,11 @@ nInput_DB.prototype.input = function(scope, args) {
 				key         : k.key,
 				sqls        : parent.params.sqls,
 				sqlsByType  : parent.params.sqlsByType,
-				attrTemplate: parent.params.attrTemplate
+				attrTemplate: parent.params.attrTemplate,
+				dontUseKey  : parent.params.dontUseKey
 			}
 			m = merge(v, m)
-			parent.get(k, m, ret, scope)
+			parent.get(k.key, m, ret, scope)
 		})
 	} else {
 		parent.get(parent.key, parent.params, ret, scope)
