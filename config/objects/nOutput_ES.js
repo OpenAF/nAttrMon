@@ -86,7 +86,7 @@ nOutput_ES.prototype.addToES = function (aCh, aVal, useTitle) {
 				if (!this.dontUseStampMapTemplating) {
 					traverse(stampM, (k, v, p, o) => {
 						if (isString(v)) {
-							o[k] = templify(v, aVal.val[i])
+							o[k] = templify(v, { name: aVal.name, val: aVal.val[i], date: aVal.date })
 						}
 					})
 				}
@@ -115,7 +115,7 @@ nOutput_ES.prototype.addToES = function (aCh, aVal, useTitle) {
 			if (!this.dontUseStampMapTemplating) { 
 				traverse(stampM, (k, v, p, o) => {
 					if (isString(v)) {
-						o[k] = templify(v, (useTitle ? aVal : aVal.val ))
+						o[k] = templify(v, aVal)
 					}
 				})
 			}
