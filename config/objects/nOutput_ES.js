@@ -35,6 +35,7 @@
 
 	this.considerSetAll = (isDef(aMap.considerSetAll)) ? aMap.considerSetAll : true;
 	this.stampMap = aMap.stampMap;
+	this.dontUseStampMapTemplating = _$(aMap.dontUseStampMapTemplating).isBoolean().default(false)
 
 	this.keyMap = _$(aMap.keyMap, "keyMap").isMap().default({})
 
@@ -64,8 +65,6 @@ nOutput_ES.prototype.addToES = function (aCh, aVal, useTitle) {
 	var data = [];
 	var extra = ""
 
-	if (isDef(this.stampMap)) extra = stringify(sortMapKeys(this.stampMap), __, "")
-
 	if (useTitle) {
 		obj = {
 			title: String(aVal.title.replace(/[\/ ]/g, "_")),
@@ -82,7 +81,19 @@ nOutput_ES.prototype.addToES = function (aCh, aVal, useTitle) {
 	try {
 		if (isArray(aVal.val)) {
 			for (var i in aVal.val) {
-				obj.id = sha1(obj.name + (this.unique ? "" : (this.noDateDocId ? "" : obj.date)) + i + extra);
+				// Calculate extra based on stampMap
+				var stampM = clone(this.stampMap)
+				if (!this.dontUseStampMapTemplating) {
+					traverse(stampM, (k, v, p, o) => {
+						if (isString(v)) {
+							o[k] = templify(v, { name: aVal.name, val: aVal.val[i], date: aVal.date })
+						}
+					})
+				}
+				if (isDef(stampM)) extra = stringify(sortMapKeys(stampM), __, "")
+
+				obj.id = sha1(obj.name + (this.unique ? "" : (this.noDateDocId ? "" : obj.date)) + i + extra)
+				obj = merge(obj, stampM)
 				obj[obj.name] = clone(aVal.val[i]);
 				this.addKeys(obj, obj[obj.name], this.keyMap)
 				
@@ -99,12 +110,25 @@ nOutput_ES.prototype.addToES = function (aCh, aVal, useTitle) {
 				data.push(clone(obj));
 			}
 		} else {
+			// Calculate extra based on stampMap
+			var stampM = clone(this.stampMap)
+			if (!this.dontUseStampMapTemplating) { 
+				traverse(stampM, (k, v, p, o) => {
+					if (isString(v)) {
+						o[k] = templify(v, aVal)
+					}
+				})
+			}
+			if (isDef(stampM)) extra = stringify(sortMapKeys(stampM), __, "")
+
 			if (useTitle) {
-				obj.id = sha1(obj.title + (this.noDateDocId ? "" : (this.unique ? obj.createdate : obj.date)) + obj.level + extra);
-				obj = merge(obj, clone(aVal));
+				obj.id = sha1(obj.title + (this.noDateDocId ? "" : (this.unique ? obj.createdate : obj.date)) + obj.level + extra)
+				obj = merge(obj, stampM)
+				obj = merge(obj, clone(aVal))
 				this.addKeys(obj, obj, this.keyMap)
 			} else {
-				obj.id = sha1(obj.name + (this.unique ? "" : (this.noDateDocId ? "" : obj.date)) + extra);
+				obj.id = sha1(obj.name + (this.unique ? "" : (this.noDateDocId ? "" : obj.date)) + extra)
+				obj = merge(obj, stampM)
 				obj[obj.name] = (isMap(aVal.val) ? clone(aVal.val) : aVal.val)
 				this.addKeys(obj, obj[obj.name], this.keyMap)
 			}
@@ -121,28 +145,29 @@ nOutput_ES.prototype.addToES = function (aCh, aVal, useTitle) {
 			data.push(obj);
 		}
 	} catch (e) {
-		logErr(e + " - " + stringify(obj) + " - (" + stringify(aVal) + ")");
+		logErr("nOutput_ES | " + e + " - " + stringify(obj) + " - (" + stringify(aVal) + ")");
 	}
 
 
 	try {
 		var cont = true, res;
 		if (isArray(data) && data.length == 0) cont = false;
-		if (cont) res = aCh.setAll(["id"], merge(data, this.stampMap));
+		//if (cont) res = aCh.setAll(["id"], merge(data, this.stampMap));
+		res = aCh.setAll(["id"], data)
 		if (cont && isMap(res) && isDef(res.response)) {
 		   var t = jsonParse(res.response);
 		   if (isDef(t.errors) && t.errors) {
-			  logErr("Error on sending '" + $from(data).select((r)=>{return r.name}).join(", ") + "': " + stringify(t));
+			  logErr("nOutput_ES | Error on sending '" + $from(data).select((r)=>{return r.name}).join(", ") + "': " + stringify(t));
 		   }
 		}		
 		if (cont && isMap(res) && isDef(res.error)) {
-			logErr("Error on sending '" + af.toSLON(res.error) + "'");
+			logErr("nOutput_ES | Error on sending '" + af.toSLON(res.error) + "'");
 		}
 		if (cont && isMap(res) && isDef(res.errors) && res.errors) {
-			logErr("Error on sending '" + $from(data).select((r)=>{return r.name}).join(", ") + "': " + stringify(res));
+			logErr("nOutput_ES | Error on sending '" + $from(data).select((r)=>{return r.name}).join(", ") + "': " + stringify(res));
 		}
 	} catch (e) {
-		sprintErr(e + " -- " + stringify(data));
+		logErr("nOutput_ES | " + e + " -- " + af.toSLON(data))
 	}
 };
 
