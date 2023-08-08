@@ -49,6 +49,7 @@ nInput_EndPoints.prototype.testURL = function(anEntry) {
         }
 
         return {
+            key: anEntry.key,
             result: canDoIt,
             errorMessage: errorMessage,
             latencyInMs: lat
@@ -83,6 +84,7 @@ nInput_EndPoints.prototype.testPort = function(anEntry) {
         }
 
         return {
+            key: anEntry.key,
             result: canDoIt,
             errorMessage: errorMessage,
             latencyInMs: lat
