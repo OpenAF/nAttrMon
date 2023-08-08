@@ -48,12 +48,13 @@ nInput_EndPoints.prototype.testURL = function(anEntry) {
             canDoIt = false;
         }
 
-        return {
-            key: anEntry.key,
+        var _res = {
             result: canDoIt,
             errorMessage: errorMessage,
             latencyInMs: lat
-        };
+        }
+        if (isDef(anEntry.key)) _res.key = anEntry.key
+        return _res
     }
 };
 
@@ -83,12 +84,13 @@ nInput_EndPoints.prototype.testPort = function(anEntry) {
             canDoIt = false;
         }
 
-        return {
-            key: anEntry.key,
+        var _res = {
             result: canDoIt,
             errorMessage: errorMessage,
             latencyInMs: lat
-        };
+        }
+        if (isDef(anEntry.key)) _res.key = anEntry.key
+        return _res
     }
 };
 
