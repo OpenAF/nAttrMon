@@ -26,12 +26,16 @@
 
 	this.include = aMap.include;
 	this.exclude = aMap.exclude;
+	this.includeRE = aMap.includeRE;
+	this.excludeRE = aMap.excludeRE;
 
 	this.unique = aMap.unique;
 	this.noDateDocId = _$(aMap.noDateDocId, "noDateDocId").isBoolean().default(false)
 
 	if (isDef(this.include) && !isArray(this.include)) throw "Include needs to be an array";
 	if (isDef(this.exclude) && !isArray(this.exclude)) throw "Exclude needs to be an array";
+	if (isDef(this.includeRE) && !isArray(this.includeRE)) throw "IncludeRE needs to be an array";
+	if (isDef(this.excludeRE) && !isArray(this.excludeRE)) throw "ExcludeRE needs to be an array";
 
 	this.considerSetAll = (isDef(aMap.considerSetAll)) ? aMap.considerSetAll : true;
 	this.stampMap = aMap.stampMap;
@@ -188,12 +192,14 @@ nOutput_ES.prototype.output = function (scope, args) {
 
 	for (var vi in v) {
 		var value = v[vi];
-		var isok = isDef(this.include) ? false : true;
+		var isok = (isDef(this.include) || isDef(this.includeRE)) ? false : true
 		var isWarns = (args.ch == "nattrmon::warnings" || args.ch == "nattrmon::warnings::buffer");
 		var kk = (isWarns) ? v[vi].title : v[vi].name;
 
-		if (isDef(this.include) && this.include.indexOf(kk) >= 0) isok = true;
-		if (isDef(this.exclude) && this.exclude.indexOf(kk) >= 0) isok = false;
+		if (isDef(this.include) && this.include.indexOf(kk) >= 0) isok = true
+		if (isDef(this.exclude) && this.exclude.indexOf(kk) >= 0) isok = false
+		if (isDef(this.includeRE) && kk.match(new RegExp(this.includeRE))) isok = true
+		if (isDef(this.excludeRE) && kk.match(new RegExp(this.excludeRE))) isok = false
 		if (isok) { this.addToES($ch(this.ch), value, isWarns); }
 	}
 };
