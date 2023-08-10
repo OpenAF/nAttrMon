@@ -1,0 +1,10 @@
+input: 
+  name    : Input java gc
+  cron    : "*/2 * * * * *"
+  execFrom: nInput_Shell
+  execArgs:
+    cmdEach      : "echo key: {{this}} && echo cmd: `cat /proc/{{this}}/cmdline` && cat /proc/{{this}}/io"
+    cmd          : "find /tmp -type f | grep /tmp/hsperfdata_ | sed 's,.*/,,' | sed 's,^,- ,'"
+    eachParseYaml: true
+    parseYaml    : true
+    attrTemplate : "Java processes/IO"
