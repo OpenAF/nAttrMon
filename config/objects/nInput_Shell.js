@@ -7,6 +7,7 @@
  * \
  *    - cmd (the command-line to execute)\
  *    - parseJson (boolean to indicate if the cmd output is json parsable)\
+ *    - parseYaml (boolean to indicate if the cmd output is yaml parsable)\
  *    - attrTemplate (a string template for the name of the attribute)\
  *    - keys (a map with a SSH key or array of maps with SSH keys)\
  *    - chKeys (a channel with similar maps as keys)\
@@ -14,10 +15,11 @@
  * </odoc>
  */
 var nInput_Shell = function(aCommand, isJson, attributeName) {
-	if (isObject(aCommand)) {
+	if (isMap(aCommand)) {
 		this.params = aCommand;
 		this.cmd = (isDef(aCommand.cmd) ? aCommand.cmd : ""); 
 		this.parseJson = (isDef(aCommand.parseJson) ? aCommand.parseJson : false);
+		this.parseYaml = (isDef(aCommand.parseYaml) ? aCommand.parseYaml : false)
 		this.name = (isDef(aCommand.name) ? aCommand.name : this.cmd);
 		this.attrTemplate = (isDef(aCommand.attrTemplate) ? aCommand.attrTemplate : "Server status/{{name}}"); 
 	} else {
@@ -35,6 +37,12 @@ inherit(nInput_Shell, nInput);
  */
 nInput_Shell.prototype.input = function(scope, args) {
     var ret = {};
+
+	// Generic parsing function
+	var _parse = s => {
+		if (this.params.parseJson) return jsonParse(s, true)
+		if (this.params.parseYaml) return af.fromYAML(s)
+	}
 
 	if (isDef(this.params.chKeys) || isDef(this.params.keys)) {
 		var res = [], attrname;
@@ -87,10 +95,10 @@ nInput_Shell.prototype.input = function(scope, args) {
 					epods.forEach(pod => {
 						try {
 							var rr = String(k.exec(v.namespace, pod, [ templify(parent.cmd) ], void 0, true));
-							if (parent.parseJson) {
+							if (parent.parseJson || parent.parseYaml) {
 								res.push({
 									key: parent.params.keys[i],
-									result: jsonParse(rr, true)
+									result: _parse(rr)
 								});
 							} else {
 								res.push({
@@ -108,10 +116,10 @@ nInput_Shell.prototype.input = function(scope, args) {
 				case "ssh":
 				default:
 					nattrmon.useObject(this.params.keys[i], (ssh) => {
-						if (this.parseJson) {
+						if (this.parseJson || this.parseYaml) {
 							res.push({
 								key: this.params.keys[i],
-								result: jsonParse(ssh.exec(templify(this.cmd)), true)
+								result: _parse(ssh.exec(templify(this.cmd)))
 							});
 						} else {
 							res.push({
@@ -140,8 +148,8 @@ nInput_Shell.prototype.input = function(scope, args) {
 
 		value = (isDef(value.stdin) ? value.stdin : "") + (isDef(value.stdout) ? value.stdout : "");
 
-		if (this.parseJson) {
-			ret[attrname] = jsonParse(value, true);
+		if (this.parseJson || this.parseYaml) {
+			ret[attrname] = _parse(value)
 		} else {
 			ret[attrname] = value;
 		}
