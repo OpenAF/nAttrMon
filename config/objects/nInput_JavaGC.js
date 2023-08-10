@@ -195,7 +195,8 @@ nInput_JavaGC.prototype.get = function(keyData, extra) {
                     totalRunningTimeMs: data.sun.rt.__totalRunningTime,
                     percAppTime       : data.sun.rt.__percAppTime,
                     gcCause           : data.sun.gc.cause,
-                    gcLastCause       : data.sun.gc.lastCause
+                    gcLastCause       : data.sun.gc.lastCause,
+                    accExecTimeMs     : (isDef(data.sun.gc.__collectorsAccTimeMs) ? data.sun.gc.__collectorsAccTimeMs : __)
                 })
                 
                 if (isArray(data.sun.gc.collector)) {
