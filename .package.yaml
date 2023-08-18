@@ -57,6 +57,7 @@ files:
 - config/inputs.disabled/yaml/10.filesystem.yaml
 - config/inputs.disabled/yaml/10.filesystemcount.fixed.yaml
 - config/inputs.disabled/yaml/10.filesystemcount.mobsubscribers.yaml
+- config/inputs.disabled/yaml/10.getIOPerProc.yaml
 - config/inputs.disabled/yaml/10.httpjson.yaml
 - config/inputs.disabled/yaml/10.kubeNodesMetrics.yaml
 - config/inputs.disabled/yaml/10.kubePodsMetrics.yaml
@@ -292,6 +293,7 @@ filesHash:
   config/inputs.disabled/yaml/10.filesystem.yaml: e8b8a6149c8f32128cd3c601081f6f67b3822e70
   config/inputs.disabled/yaml/10.filesystemcount.fixed.yaml: b36490b7dfa1794602a46c108e915d3bc45d55f8
   config/inputs.disabled/yaml/10.filesystemcount.mobsubscribers.yaml: 7a606e7180296c916b585bac13313452ca73840d
+  config/inputs.disabled/yaml/10.getIOPerProc.yaml: 83c30b8d21e94baa22f0d8fc8e5f90318cf601f6
   config/inputs.disabled/yaml/10.httpjson.yaml: ffa430a070894a0254a3ce6485eb32107a59e2ea
   config/inputs.disabled/yaml/10.kubeNodesMetrics.yaml: e09e05bbd3eddf6caf819e5d90cf6c2be45d45ca
   config/inputs.disabled/yaml/10.kubePodsMetrics.yaml: 99424c1726600399c7b83da537186048791a13b0
@@ -369,7 +371,7 @@ filesHash:
   config/objects/nInput_DB.js: 0cb30000004c1983d06a58ea72f453f7e69bdc8f
   config/objects/nInput_DMPerformance.js: c7b8d30f023cc550ea262333927cc1acf9cab3b6
   config/objects/nInput_ESSearch.js: 0f825f81de288367fde87f13be5e1ccfe072bd1c
-  config/objects/nInput_EndPoints.js: 5042270a025e040a844f79832c924aa20f0413b4
+  config/objects/nInput_EndPoints.js: 56ebe885b9af2e39d19578f0cf34df44ee9d5f6f
   config/objects/nInput_FMSRuleStatus.js: 1acccca00b89a38cd53891601f66401f3513f782
   config/objects/nInput_Filesystem.js: 59f6c245ec5acf11111d92ea0f83797214bf6030
   config/objects/nInput_FilesystemCount.js: e36218f7c2ffa39438f1c1d22ad982c04e0fd4a0
@@ -379,7 +381,7 @@ filesHash:
   config/objects/nInput_IMMemory.js: 69f6e3d39aa5a75c83d2e4f8e2ece0b28df7e3f1
   config/objects/nInput_Init.js: e4b1a5a6f6af20b7c3f6ef685b711b83c3b1aecb
   config/objects/nInput_JMX.js: fce9011c729efafd1abe79588a274ee36aac3c16
-  config/objects/nInput_JavaGC.js: 1ee9ed81dd87e1a92862038d635815f44d2b80ff
+  config/objects/nInput_JavaGC.js: a5a4df79a3180045e099cd1ec6c5d0dc107c94ed
   config/objects/nInput_Kube_Events.js: 7a36aa2e72973d9369b856c6ef2ce4eddcab8459
   config/objects/nInput_Kube_NodesMetrics.js: 1eb83e5f43535c9b688424a022c4bcb38fc791f3
   config/objects/nInput_Kube_Pods.js: 3afb158052eb3eb1b9ffb70d68f0fa23c20b7c81
@@ -397,13 +399,13 @@ filesHash:
   config/objects/nInput_Schedulers.js: 96771d166e2574b6d5a526cc6025ad3abf1363d4
   config/objects/nInput_Semaphores.js: 9b0c0d8ca1b1c33d8faeaae89738360c8569534e
   config/objects/nInput_Sessions.js: e4adb3f97db438aa0524ba3a1efebd615d7c3057
-  config/objects/nInput_Shell.js: 5888cc365bddaeef4d9f293dc02897e86f6747a9
+  config/objects/nInput_Shell.js: bc63fa2cc8f0e6cbf6a6ba4b9c76538f5fcfbe5a
   config/objects/nInput_nAttrMon.js: c8ec9f45f724e7372b02751b893178490587641b
   config/objects/nOutput_AWSCloudWatch.js: 7e481df8405dd5f00f62350af1e0a10feb7fb457
   config/objects/nOutput_ChMirror.js: c1b5d965320aac73d90f0a6e12ae0a4123f8afd5
   config/objects/nOutput_Channels.js: f6e277efa2c12c3d6dd8468facbfb1bb43828ed6
   config/objects/nOutput_DSV.js: b723aefe236bd464d215c52406cec796cd47d97f
-  config/objects/nOutput_ES.js: 3f210ff49cd1fd237bb353c3c7e051149a286d86
+  config/objects/nOutput_ES.js: 1ad06b12bc5a6e8aa36f99b045d0e1f252e1a9d9
   config/objects/nOutput_EmailWarnings.js: 9b9c296db9af55a53e0fe7722e128d12841ca4b0
   config/objects/nOutput_H2.js: f812e07f5bb7c396e55a8c70e7c4d8112b9435a6
   config/objects/nOutput_HK.js: c9887fd101189ea35deaa8cdaddb280563856e01
