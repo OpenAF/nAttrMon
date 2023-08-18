@@ -48,11 +48,13 @@ nInput_EndPoints.prototype.testURL = function(anEntry) {
             canDoIt = false;
         }
 
-        return {
+        var _res = {
             result: canDoIt,
             errorMessage: errorMessage,
             latencyInMs: lat
-        };
+        }
+        if (isDef(anEntry.key)) _res.key = anEntry.key
+        return _res
     }
 };
 
@@ -82,11 +84,13 @@ nInput_EndPoints.prototype.testPort = function(anEntry) {
             canDoIt = false;
         }
 
-        return {
+        var _res = {
             result: canDoIt,
             errorMessage: errorMessage,
             latencyInMs: lat
-        };
+        }
+        if (isDef(anEntry.key)) _res.key = anEntry.key
+        return _res
     }
 };
 
@@ -103,7 +107,9 @@ nInput_EndPoints.prototype.input = function(scope, args) {
     if (isDef(this.params.chUrls)) {
         $ch(this.params.chUrls).forEach((k, v) => {
             var attr;
-            if (isUnDef(this.params.attribute)) {
+            // For legacy compatibility
+            if (isDef(this.params.attribute)) this.params.attrTemplate = this.params.attribute
+            if (isUnDef(this.params.attrTemplate)) {
                 if (isDef(k.key))       attr = k.key;
                 if (isString(k))        attr = k;
                 if (isDef(k.attribute)) attr = k.attribute; 
@@ -111,11 +117,12 @@ nInput_EndPoints.prototype.input = function(scope, args) {
                 if (isDef(k.attribute))
                     attr = k.attribute
                 else
-                    attr = this.params.attribute
+                    attr = this.params.attrTemplate
             }
 
             if (isDef(attr)) {
-                ret[templify(attr, k)] = this.testURL(v);
+                if (isUnDef(ret[templify(attr, k)])) ret[templify(attr, k)] = []
+                ret[templify(attr, k)].push(this.testURL(v))
             }
         });
     }
@@ -130,7 +137,9 @@ nInput_EndPoints.prototype.input = function(scope, args) {
     if (isDef(this.params.chPorts)) {
         $ch(this.params.chPorts).forEach((k, v) => {
             var attr;
-            if (isUnDef(this.params.attribute)) {
+            // For legacy compatibility
+            if (isDef(this.params.attribute)) this.params.attrTemplate = this.params.attribute
+            if (isUnDef(this.params.attrTemplate)) {
                 if (isDef(k.key))       attr = k.key;
                 if (isString(k))        attr = k;
                 if (isDef(k.attribute)) attr = k.attribute;
@@ -138,13 +147,14 @@ nInput_EndPoints.prototype.input = function(scope, args) {
                 if (isDef(k.attribute))
                     attr = k.attribute
                 else
-                    attr = this.params.attribute
+                    attr = this.params.attrTemplate
             }
 
             if (isDef(attr)) {
-                ret[templify(attr, k)] = this.testPort(v);
+                if (isUnDef(ret[templify(attr, k)])) ret[templify(attr, k)] = []
+                ret[templify(attr, k)].push(this.testPort(v))
             }
-        });
+        })
     }
 
     return ret;
