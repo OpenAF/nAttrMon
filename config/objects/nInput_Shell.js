@@ -23,6 +23,7 @@ var nInput_Shell = function(params) {
 		this.parseYaml = (isDef(params.parseYaml) ? params.parseYaml : false)
 		this.eachParseJson = (isDef(params.eachParseJson) ? params.eachParseJson : false)
 		this.eachParseYaml = (isDef(params.eachParseYaml) ? params.eachParseYaml : false)
+		this.posExec = (isDef(params.posExec) ? params.posExec : __)
 		this.name = (isDef(params.name) ? params.name : this.cmd)
 		this.attrTemplate = (isDef(params.attrTemplate) ? params.attrTemplate : "Shell/{{name}}")
 	}
@@ -53,7 +54,7 @@ nInput_Shell.prototype.input = function(scope, args) {
 			if (isArray(lst)) {
 				var _r = []
 				lst.forEach(v => {
-					lprint(templify(cmdEach, v))
+					//lprint(templify(cmdEach, v))
 					var __r = _parseEach(fn(templify(cmdEach, v)))
 					_r.push(__r)
 				})
@@ -66,8 +67,36 @@ nInput_Shell.prototype.input = function(scope, args) {
 		}
 	}
 
+	// Determine attribute name
+	var attrname
+	if (isArray(this.params.keys) && this.params.keys.length == 1) {
+		attrname = templify(this.attrTemplate, { name: this.name, key: this.params.keys[0]})
+	} else {
+		attrname = templify(this.attrTemplate, { name: this.name })
+	}
+
+	// Pos-execution function
+	var _posExecFn
+	var _posExec = (inO) => {
+		if (isString(this.params.posExec)) {
+			try {
+				if (isUnDef(_posExecFn)) _posExecFn = af.eval("(val, attrname) => { " + this.params.posExec + " }")
+				if (isFunction(_posExecFn)) {
+					if (isArray(inO)) {
+						return inO.map(r => _posExecFn(r, attrname))
+					} else {
+						return _posExecFn(inO, attrname)
+					}
+				}
+			} catch(pefe) {
+				logErr("nInput_Shell | " + attrname + " | posExecFn | " + pefe)
+			}
+		}
+		return inO
+	}
+
 	if (isDef(this.params.chKeys) || isDef(this.params.keys)) {
-		var res = [], attrname
+		var res = []
 		var parent = this
 
 		if (isArray(this.cmd)) this.cmd = this.cmd.join(" && ")
@@ -120,16 +149,16 @@ nInput_Shell.prototype.input = function(scope, args) {
 							if (parent.parseJson || parent.parseYaml) {
 								res.push({
 									key: parent.params.keys[i],
-									result: _exec(c => {
+									result: _posExec(_exec(c => {
 										return String(k.exec(v.namespace, pod, [ templify(c) ], __, true))
-									}, parent.cmd, parent.cmdEach)
+									}, parent.cmd, parent.cmdEach))
 								});
 							} else {
 								res.push({
 									key: parent.params.keys[i],
-									result: _exec(c => {
+									result: _posExec(_exec(c => {
 										return String(k.exec(v.namespace, pod, [ templify(c) ], __, true))
-									}, parent.cmd, parent.cmdEach)
+									}, parent.cmd, parent.cmdEach))
 								});
 							}
 							;
@@ -145,16 +174,16 @@ nInput_Shell.prototype.input = function(scope, args) {
 						if (this.parseJson || this.parseYaml) {
 							res.push({
 								key: this.params.keys[i],
-								result: _exec(c => {
+								result: _posExec(_exec(c => {
 									return ssh.exec(templify(c))
-								}, this.cmd, this.cmdEach)
+								}, this.cmd, this.cmdEach))
 							})
 						} else {
 							res.push({
 								key: this.params.keys[i],
-								result: _exec(c => {
+								result: _posExec(_exec(c => {
 									return ssh.exec(templify(c))
-								}, this.cmd, this.cmdEach)
+								}, this.cmd, this.cmdEach))
 							})
 						}
 					})
@@ -165,22 +194,22 @@ nInput_Shell.prototype.input = function(scope, args) {
 		}
 
 		if (this.params.keys.length == 1) {
-			attrname = templify(this.attrTemplate, { name: this.name, key: this.params.keys[0]})
+			//attrname = templify(this.attrTemplate, { name: this.name, key: this.params.keys[0]})
 			res = res[0].result
 		} else {
-			attrname = templify(this.attrTemplate, { name: this.name })
+			//attrname = templify(this.attrTemplate, { name: this.name })
 		}
 
 		ret[attrname] = res
 	} else {
-		var attrname = templify(this.attrTemplate, { name: this.name })
+	    //attrname = templify(this.attrTemplate, { name: this.name })
 		var fn = c => {
 			var value = $sh(templify(c)).get(0)
 			value = (isDef(value.stdin) ? value.stdin : "") + (isDef(value.stdout) ? value.stdout : "")
 			return value
 		}
 		
-		ret[attrname] = _exec(fn, this.cmd, this.cmdEach)
+		ret[attrname] = _posExec(_exec(fn, this.cmd, this.cmdEach))
 	}
 
     return ret
