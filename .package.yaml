@@ -57,6 +57,7 @@ files:
 - config/inputs.disabled/yaml/10.filesystem.yaml
 - config/inputs.disabled/yaml/10.filesystemcount.fixed.yaml
 - config/inputs.disabled/yaml/10.filesystemcount.mobsubscribers.yaml
+- config/inputs.disabled/yaml/10.getIOPerProc.yaml
 - config/inputs.disabled/yaml/10.httpjson.yaml
 - config/inputs.disabled/yaml/10.kubeNodesMetrics.yaml
 - config/inputs.disabled/yaml/10.kubePodsMetrics.yaml
@@ -292,6 +293,7 @@ filesHash:
   config/inputs.disabled/yaml/10.filesystem.yaml: e8b8a6149c8f32128cd3c601081f6f67b3822e70
   config/inputs.disabled/yaml/10.filesystemcount.fixed.yaml: b36490b7dfa1794602a46c108e915d3bc45d55f8
   config/inputs.disabled/yaml/10.filesystemcount.mobsubscribers.yaml: 7a606e7180296c916b585bac13313452ca73840d
+  config/inputs.disabled/yaml/10.getIOPerProc.yaml: 83c30b8d21e94baa22f0d8fc8e5f90318cf601f6
   config/inputs.disabled/yaml/10.httpjson.yaml: ffa430a070894a0254a3ce6485eb32107a59e2ea
   config/inputs.disabled/yaml/10.kubeNodesMetrics.yaml: e09e05bbd3eddf6caf819e5d90cf6c2be45d45ca
   config/inputs.disabled/yaml/10.kubePodsMetrics.yaml: 99424c1726600399c7b83da537186048791a13b0
@@ -369,7 +371,7 @@ filesHash:
   config/objects/nInput_DB.js: 0cb30000004c1983d06a58ea72f453f7e69bdc8f
   config/objects/nInput_DMPerformance.js: c7b8d30f023cc550ea262333927cc1acf9cab3b6
   config/objects/nInput_ESSearch.js: 0f825f81de288367fde87f13be5e1ccfe072bd1c
-  config/objects/nInput_EndPoints.js: 5042270a025e040a844f79832c924aa20f0413b4
+  config/objects/nInput_EndPoints.js: 56ebe885b9af2e39d19578f0cf34df44ee9d5f6f
   config/objects/nInput_FMSRuleStatus.js: 1acccca00b89a38cd53891601f66401f3513f782
   config/objects/nInput_Filesystem.js: 59f6c245ec5acf11111d92ea0f83797214bf6030
   config/objects/nInput_FilesystemCount.js: e36218f7c2ffa39438f1c1d22ad982c04e0fd4a0
@@ -379,7 +381,7 @@ filesHash:
   config/objects/nInput_IMMemory.js: 69f6e3d39aa5a75c83d2e4f8e2ece0b28df7e3f1
   config/objects/nInput_Init.js: e4b1a5a6f6af20b7c3f6ef685b711b83c3b1aecb
   config/objects/nInput_JMX.js: fce9011c729efafd1abe79588a274ee36aac3c16
-  config/objects/nInput_JavaGC.js: 1ee9ed81dd87e1a92862038d635815f44d2b80ff
+  config/objects/nInput_JavaGC.js: a5a4df79a3180045e099cd1ec6c5d0dc107c94ed
   config/objects/nInput_Kube_Events.js: 7a36aa2e72973d9369b856c6ef2ce4eddcab8459
   config/objects/nInput_Kube_NodesMetrics.js: 1eb83e5f43535c9b688424a022c4bcb38fc791f3
   config/objects/nInput_Kube_Pods.js: 3afb158052eb3eb1b9ffb70d68f0fa23c20b7c81
@@ -397,13 +399,13 @@ filesHash:
   config/objects/nInput_Schedulers.js: 96771d166e2574b6d5a526cc6025ad3abf1363d4
   config/objects/nInput_Semaphores.js: 9b0c0d8ca1b1c33d8faeaae89738360c8569534e
   config/objects/nInput_Sessions.js: e4adb3f97db438aa0524ba3a1efebd615d7c3057
-  config/objects/nInput_Shell.js: 5888cc365bddaeef4d9f293dc02897e86f6747a9
+  config/objects/nInput_Shell.js: bc63fa2cc8f0e6cbf6a6ba4b9c76538f5fcfbe5a
   config/objects/nInput_nAttrMon.js: c8ec9f45f724e7372b02751b893178490587641b
   config/objects/nOutput_AWSCloudWatch.js: 7e481df8405dd5f00f62350af1e0a10feb7fb457
   config/objects/nOutput_ChMirror.js: c1b5d965320aac73d90f0a6e12ae0a4123f8afd5
   config/objects/nOutput_Channels.js: f6e277efa2c12c3d6dd8468facbfb1bb43828ed6
   config/objects/nOutput_DSV.js: b723aefe236bd464d215c52406cec796cd47d97f
-  config/objects/nOutput_ES.js: 3f210ff49cd1fd237bb353c3c7e051149a286d86
+  config/objects/nOutput_ES.js: 1ad06b12bc5a6e8aa36f99b045d0e1f252e1a9d9
   config/objects/nOutput_EmailWarnings.js: 9b9c296db9af55a53e0fe7722e128d12841ca4b0
   config/objects/nOutput_H2.js: f812e07f5bb7c396e55a8c70e7c4d8112b9435a6
   config/objects/nOutput_HK.js: c9887fd101189ea35deaa8cdaddb280563856e01
@@ -463,31 +465,31 @@ filesHash:
   docs/images/logo.png: ee5366a3aa207c69d5139e04e7a4523078b974ba
   docs/images/nAttrMon.png: 298fb1bb1e7c004b6204069d2a3319fbdebedea0
   docs/images/nAttrMon.xcf: ae00e462f4b6c18adc55b6ddc4900ab3e0ffac35
-  lib/nattribute.js: 957b3e1e4d55c554e029229dae26e838df1da7b4
-  lib/nattributes.js: f28cee64a735e0e6ae3b520bbc59f74e6203e1db
-  lib/nattributevalue.js: d6a378dba74922540bcc3e054222733f69d5cead
-  lib/ninput.js: cb1a2bc442a0a3ac9e6237fd02b445e31bd518cf
-  lib/nmain.js: 9bbccd42bcfea51962184b915d976858dbff9ccb
-  lib/nmonitoredobject.js: da0b8a8590ce1534826750e2e70b3d6e4bee9f98
-  lib/noutput.js: 097a89ae2ab12cb28d88034444a72d368464d14c
-  lib/nplug.js: cfae6fc112042e574320895f406fddb942f4ff6d
-  lib/ntmplhelpers.js: eaa9d6188a1636cc26dfc2ccfce6a27bd34f8fba
-  lib/nvalidation.js: 252998540faca7913211029f1bdd4397beba3ce9
-  lib/nwarning.js: 9a430f79f35de1a298285eccda8b5885a5f85fad
-  lib/nwarnings.js: 1988fb946cd19c29a3321e99ae21661643ec1fe3
+  lib/nattribute.js: 26d360eebba48fdd6ebd715224ce62f69d5e094b
+  lib/nattributes.js: 58c0d8f1dcb36244afc91bdd7678dc9b639f1f38
+  lib/nattributevalue.js: 216e3ed7187625320ac73fa2f4c9974a1c52d3c0
+  lib/ninput.js: 1c1f8be902e3ace70f762a1b038e4271513b121c
+  lib/nmain.js: de64ddb5544803903e810add7a15e4fb128d6879
+  lib/nmonitoredobject.js: bb75336ba5a66fbba2db45faeb06ec9b3bc4f6a7
+  lib/noutput.js: 15b98844838bdd503e6bcc9f8b39ecd681c6a49b
+  lib/nplug.js: df6a1feb12a0791adf6a8dd5a2e47c675a02a375
+  lib/ntmplhelpers.js: 7f0b4bac176622ea777a5067a5be7f9d39d6dd82
+  lib/nvalidation.js: 42673ed243b144946f7299c4f8c329e73d8f09ab
+  lib/nwarning.js: 195735ff51fc1bb26adcb6da25bdcae3e1513aa6
+  lib/nwarnings.js: 441517fb9a74f556cfe7c3dc445f8c3dc093d02a
   nAttrmon_single.yaml.sample: 1813c44306a7206721c200bcf794a4cb7842e6f7
-  nattrmon.js: 0577704f46097906a7f715fd8bc8c913278e8b08
+  nattrmon.js: e025e73feb3cf363de474e5992b954cfc10fa2f0
   nattrmon.yaml.sample: e3e87e05975614d0d45c65b3ee436c1554cd0b4c
-  oJob_nAttrMon.yaml: 1357cacccb72bccd5deb7d9e347c1100b3cb96eb
+  oJob_nAttrMon.yaml: fd5ce2142596ec5110922ae79eefae80448132cd
   tests/inputDBTest.yml: c38616606dc5956e449189d11f8e661170f94dfb
   tests/inputShellTest.yml: ce643955982cb16b53a8843acd3549466e5cddf5
   tests/nattrmonTester.js: 1676171ab793cdb67da4de3e033aee110aa8ef20
   tests/outputTest.yml: 0c4ba4176163e4aa9ff7fd4ae4128339d8384581
   tests/unitTest.js: 067565f7c1517b331684246f5c9a7949124417ea
   tests/unitTestYAML.js: 1d943c734c6bcacd46fe6de29275997b925cc19e
-  util/backupConfig.yaml: cecdefad82f0c4e23d5341cb97bb6deccf6fd0ff
-  util/clean.yaml: bff9881af13c3775ed9c09916be8f8ced13aecc4
-  util/genScripts.yaml: 5dbc6e2e44c9c70cbf84905a857794d4cb1ac8f6
+  util/backupConfig.yaml: 5eec368c37f05a6a7028f88b641882c8686e0f0b
+  util/clean.yaml: ebee3a4f8c0efc278bd2dbc9fce271eae8245247
+  util/genScripts.yaml: 7678a09a512db6346c029e32d9f94af00942dc05
   util/loadDB2Elastic.js: 190b68c03e71fa859df71429da4c31035f20ce94
   util/loadFile2Elastic.yaml: 8ba828ece6a9796db21a691f2b32ad21a2caf214
   util/templates/Object_nInput_template.js: 179fb16e105eb56394aaf591d7a3a55983fd687a
