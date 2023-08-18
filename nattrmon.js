@@ -1,3 +1,6 @@
+// nAttrMon startup script
+// Copyright 2023 Nuno Aguiar
+
 // check version
 af.getVersion() >= "20170101" || (print("Version " + af.getVersion() + ". You need OpenAF version 20170101 to run.")) || exit(-1);
 

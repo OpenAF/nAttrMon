@@ -1,3 +1,6 @@
+# Generate scripts to support running nAttrmon
+# Copyright 2023 Nuno Aguiar and other nAttrMon authors
+
 ojob:
   async: true
 

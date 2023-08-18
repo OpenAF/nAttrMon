@@ -1,3 +1,6 @@
+# nAttrMon ojob functionality
+# Copyright 2023 Nuno Aguiar
+
 # oJob_nAttrMon.yaml __NAM_DEBUG=1 __NAM_NEED_CH_PERSISTENCE=
 #ojob:
 #  daemon: true
