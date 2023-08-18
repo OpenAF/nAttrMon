@@ -1,11 +1,13 @@
 input: 
   name    : Input Java IO
-  cron    : "*/2 * * * * *"
+  cron    : "*/5 * * * * *"
   execFrom: nInput_Shell
   execArgs:
     #type         : local
-    cmdEach      : "echo key: {{this}} && echo cmd: `cat /proc/{{this}}/cmdline` && cat /proc/{{this}}/io"
-    cmd          : "find /tmp -type f | grep /tmp/hsperfdata_ | sed 's,.*/,,' | sed 's,^,- ,'"
+    cmdEach      : |
+      echo "key: {{host}}:{{pid}}" && cat /proc/{{pid}}/io
+    cmd          : |
+      find /tmp -type f -readable | grep /tmp/hsperfdata_ | sed "s,.*/,{'host':'$HOSTNAME'\,'pid':," | sed 's,^,- ,' | sed 's,$,},'
     eachParseYaml: true
     parseYaml    : true
     attrTemplate : "Java/IO"

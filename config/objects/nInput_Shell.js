@@ -47,6 +47,14 @@ nInput_Shell.prototype.input = function(scope, args) {
 		if (this.params.eachParseYaml) return af.fromYAML(s)
 	}
 
+    var setSec = aEntry => {
+        if (isDef(aEntry.secKey)) {
+            return __nam_getSec(aEntry)
+        } else {
+            return aEntry
+        }
+    }
+
 	// Generic execution functions
 	var _exec = (fn, cmd, cmdEach) => {
 		if (isDef(cmdEach)) {
@@ -203,13 +211,66 @@ nInput_Shell.prototype.input = function(scope, args) {
 		ret[attrname] = res
 	} else {
 	    //attrname = templify(this.attrTemplate, { name: this.name })
-		var fn = c => {
-			var value = $sh(templify(c)).get(0)
-			value = (isDef(value.stdin) ? value.stdin : "") + (isDef(value.stdout) ? value.stdout : "")
-			return value
+		switch(this.params.type) {
+		case "kube":
+			if (isUnDef(getOPackPath("Kube"))) throw "Kube opack not installed."
+			loadLib("kube.js")
+
+			this.params.kube = _$(this.params.kube, "kube").isMap().default({})
+
+			var m       = setSec(this.params.kube)
+			traverse(m, (aK, aV, aP, aO) => {
+				if (isString(aV)) aO[aK] = templify(aV, m)
+			})
+			m.kind      = _$(m.kind, "kube.kind").isString().default("FPO")
+			m.namespace = _$(m.namespace, "kube.namespace").isString().default("default")
+
+			var nss = m.namespace.split(/ *, */), lst = []
+
+			nss.forEach(ns => {
+				var its = $kube(m)["get" + m.kind](ns)
+				if (isMap(its) && isArray(its.items)) lst = lst.concat(its.items)
+			})
+
+			if (isMap(m.selector)) {
+				ow.obj.filter(lst, m.selector).forEach(r => {
+					var newM = clone(m)
+					traverse(newM, (aK, aV, aP, aO) => {
+						if (isString(aV)) aO[aK] = templify(aV, r)
+					})
+				})
+			}
+
+			ow.obj.filter(lst, m.selector).forEach(r => {
+				var newM    = clone(m)
+				newM.pod       = r.metadata.name
+				newM.namespace = r.metadata.namespace
+				try {
+					var fn = c => {
+						var res = nattrmon.shExec("kube", newM).exec(["/bin/sh", "-c", c])
+						if (isDef(res.stdout)) {
+							return res.stdout
+						} else {
+							return __
+						}
+					}
+
+					if (isUnDef(ret[attrname])) ret[attrname] = []
+					var _v = _posExec(_exec(fn, this.cmd, this.cmdEach))
+					if (isArray(_v)) ret[attrname] = ret[attrname].concat(_v); else ret[attrname].push(_v)
+				} catch(fe) { logErr("nInput_Shell | Kube " + newM.namespace + "::" + newM.pod + " | " + fe) }
+			})
+			break
+		case "local":
+		default     :
+			var fn = c => {
+				var value = $sh(templify(c)).get(0)
+				value = (isDef(value.stdin) ? value.stdin : "") + (isDef(value.stdout) ? value.stdout : "")
+				return value
+			}
+			
+			ret[attrname] = _posExec(_exec(fn, this.cmd, this.cmdEach))
 		}
-		
-		ret[attrname] = _posExec(_exec(fn, this.cmd, this.cmdEach))
 	}
 
     return ret
