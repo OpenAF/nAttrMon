@@ -144,6 +144,9 @@ var nOutput_HTTP_Metrics = function (aMap) {
             var d = (new Date(r.date)).getTime();
             delete r.date;
             var m = {}; m[r.name] = r.val;
+			traverse(m, (k, v, p, o) => {
+				if (isNull(v)) delete o[k]
+			})
             return ow.metrics.fromObj2OpenMetrics(m, n, d);
         }).join("");
     }
