@@ -1,0 +1,45 @@
+validation:
+  name         : Validation generic with healing
+  chSubscribe  : nattrmon::cvals::buffer
+  waitForFinish: true
+  execFrom     : nValidation_Generic
+  execArgs     :
+    checks:
+    - #attribute        : "Test 1"
+      attrPattern      : "Test \\d+"
+      expr             : |
+        {{value}} >= 5
+      warnLevel        : HIGH
+      warnTitleTemplate: "Warning {{name}}"
+      warnDescTemplate : "{{name}} had value {{value}}"
+      healing          :
+        # If 'execOJob' is defined will run the oJob with the 'execArgs' provided
+        #execOJob: anOJob.yaml
+
+        # If 'exec' is defined will run the OpenAF code receiving 'execArgs' as the map variable 'args'
+        #exec: |
+        #  print("running this code!! (arg1 = " + args.arg1 + ")")
+
+        #execArgs:
+        #  arg1: "{{value}}"
+
+        # If 'execSh' is defined will run the shell command line (cmd) provided with the provided environment variables
+        execSh:
+          cmd     : "echo HEALING STARTING... && echo VAR1=$ENV_VAR1 && echo HEALING DONE!"
+          pwd     : /tmp
+          dontWait: false
+          prefix  : healing
+          envs    :
+            ENV_VAR1: "'{{value}}'"
+            ENV_VAR2: VAL2
+          #timeout : 5000    # If defined this is the amount of time after which the shell command will timeout if still executing
+
+        #always: true   # If true will execute not only when the warning is created but also when it's reinforced (validation runs again updating the warning)
+        endRetriesInMS   : 20000     # After this amount of time if the warning persists healing executions will stop
+        retryInMS        : 3000      # After the first healing execution it will wait this amount of time to repeat a healing execution
+
+        # When execOJob or exec end with an exception OR if execSh (if dontWait = false) ends with an exit code different from 0 
+        # then if the following warn* keys are defined a new nAttrMon warning will be created (for execSh, the exceptionMessage will be a print out of stdout, stderr and the exitcode)
+        warnTitleTemplate: Healing failed
+        warnDescTemplate : "Healing execution failed with exception: {{exceptionMessage}}"
+        warnLevel        : MEDIUM

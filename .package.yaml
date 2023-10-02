@@ -230,6 +230,7 @@ files:
 - config/validations.disabled/yaml/03.validateSemaphores.yaml
 - config/validations.disabled/yaml/05.validateErrorFlows.yaml
 - config/validations.disabled/yaml/14.validateCompareTimes.yaml
+- config/validations.disabled/yaml/15.validateHealing.yaml
 - config/validations/move_files_from_validations_disabled.dummy
 - docs/images/logo.png
 - docs/images/nAttrMon.png
@@ -423,7 +424,7 @@ filesHash:
   config/objects/nOutput_HTTP.js: 503eb7a2f8125aae56757ded7ae0e64915193aa5
   config/objects/nOutput_HTTP_HealthZ.js: 557b493bc6cba42bc913376b8bc607700521f730
   config/objects/nOutput_HTTP_JSON.js: 73c4619994bf56f923fc3d2860e0aa6b422e3748
-  config/objects/nOutput_HTTP_Metrics.js: a237c7aafceacb213437869223788350e9531111
+  config/objects/nOutput_HTTP_Metrics.js: 8beacc2cd166866cbc4ca645cb7ac4ca819fc639
   config/objects/nOutput_HTTP_Status.js: c4e56e646bfe3dd1d063604b5ab40bc0f618ff66
   config/objects/nOutput_Log.js: 69ef02bb37d306deb390f303a8bbf6e2234be792
   config/objects/nOutput_Log2ES.js: 4ff766b80b2e03f08f9f38e5a8dba4115d62bf81
@@ -471,6 +472,7 @@ filesHash:
   config/validations.disabled/yaml/03.validateSemaphores.yaml: 816f0dbf1a1bc73752e2778a79a123ce2e0e14bc
   config/validations.disabled/yaml/05.validateErrorFlows.yaml: f731dc209dda8d2f060cc00bd780e5d387a4045a
   config/validations.disabled/yaml/14.validateCompareTimes.yaml: bdb52db703195dfe5fcd732f95a16333f8eed56b
+  config/validations.disabled/yaml/15.validateHealing.yaml: e17f5bacbc4538da44cd0154f4290c760978a161
   config/validations/move_files_from_validations_disabled.dummy: b858cb282617fb0956d960215c8e84d1ccf909c6
   docs/images/logo.png: ee5366a3aa207c69d5139e04e7a4523078b974ba
   docs/images/nAttrMon.png: 298fb1bb1e7c004b6204069d2a3319fbdebedea0
