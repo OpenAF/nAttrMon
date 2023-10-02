@@ -19,10 +19,14 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20230823'
+version: '20231001'
 dependencies:
   openaf: '>=20230704'
 files:
+- .github/ISSUE_TEMPLATE/bug_report.md
+- .github/ISSUE_TEMPLATE/feature_request.md
+- .github/version.svg
+- .github/workflows/update-pack.yml
 - .gitignore
 - .package.yaml
 - .precompile
@@ -67,6 +71,7 @@ files:
 - config/inputs.disabled/yaml/12.connections.yaml
 - config/inputs.disabled/yaml/12.elastic.yaml
 - config/inputs.disabled/yaml/12.shellCmd.yaml
+- config/inputs.disabled/yaml/12.shellProcCmd.yaml
 - config/inputs.disabled/yaml/13.RAIDSchedulers.yaml
 - config/inputs.disabled/yaml/15.endpoint_nAttrMon.yaml
 - config/inputs.disabled/yaml/15.javagc.yaml
@@ -261,6 +266,10 @@ files:
 - util/templates/Object_nOutput_template.js
 - util/watchdog.yaml.hbs
 filesHash:
+  .github/ISSUE_TEMPLATE/bug_report.md: 83d211c67c12e8c1f6e9f796cfd0cecbf5160e15
+  .github/ISSUE_TEMPLATE/feature_request.md: f6867a2f0417fe89a0f2008730ee19dd38422021
+  .github/version.svg: 6414a5d6e4a494f24dd823e8cdd3f9e58bbb9755
+  .github/workflows/update-pack.yml: a5b671f4a44acf73876e29eb7db8ef09cccc12ea
   .gitignore: 39785e9c0e444387c904a807d9e506a0215ca099
   .precompile: 52743b858c620cbf8590846495d282efc2ce0060
   CONTRIBUTING.md: c39f66b369fdd4722819997ac9c0f2a1cf6219ec
@@ -304,6 +313,7 @@ filesHash:
   config/inputs.disabled/yaml/12.connections.yaml: dd4105f60dc97c5af96f738eaabd4a8b6747e35f
   config/inputs.disabled/yaml/12.elastic.yaml: af153e168e3497c28704eaf192bd1c653b86eb97
   config/inputs.disabled/yaml/12.shellCmd.yaml: 0788119c6d68336209422bf46f6dfa0c93880d14
+  config/inputs.disabled/yaml/12.shellProcCmd.yaml: 1d76f6032fdcb37daefc808e154072ed8ab41b20
   config/inputs.disabled/yaml/13.RAIDSchedulers.yaml: fb921e230bbd12f5b3d9910ad6ebf17bb8def3fe
   config/inputs.disabled/yaml/15.endpoint_nAttrMon.yaml: dfe0fe3f5df32cac9ec8960c83d688e785efef09
   config/inputs.disabled/yaml/15.javagc.yaml: e2c25bb7bbcd52dd7245c8a0c615f439581cf752
@@ -400,7 +410,7 @@ filesHash:
   config/objects/nInput_Schedulers.js: 96771d166e2574b6d5a526cc6025ad3abf1363d4
   config/objects/nInput_Semaphores.js: 9b0c0d8ca1b1c33d8faeaae89738360c8569534e
   config/objects/nInput_Sessions.js: e4adb3f97db438aa0524ba3a1efebd615d7c3057
-  config/objects/nInput_Shell.js: bc63fa2cc8f0e6cbf6a6ba4b9c76538f5fcfbe5a
+  config/objects/nInput_Shell.js: 665ceb67aa726a20b370ada8cd412bcb530335f9
   config/objects/nInput_nAttrMon.js: c8ec9f45f724e7372b02751b893178490587641b
   config/objects/nOutput_AWSCloudWatch.js: 7e481df8405dd5f00f62350af1e0a10feb7fb457
   config/objects/nOutput_ChMirror.js: c1b5d965320aac73d90f0a6e12ae0a4123f8afd5
