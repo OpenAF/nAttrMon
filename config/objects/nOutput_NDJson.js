@@ -31,6 +31,27 @@ var nOutput_NDJson = function(aMap) {
     this.include = aMap.include
 	this.exclude = aMap.exclude
 
+    // S3 sync
+    this.s3sync = _$(aMap.s3sync, "s3sync").isMap().default(__)
+    if (isDef(this.s3sync)) {
+        loadLib("s3.js")
+
+        // Load sec buckets
+        this.s3sync = __nam_getSec(this.s3sync)
+
+        // Verify the necessary arguments to connect to S3
+        _$(this.s3sync.url, "s3sync.url").isString().$_()
+        _$(this.s3sync.bucket, "s3sync.bucket").isString().$_()
+        _$(this.s3sync.prefix, "s3sync.prefix").isString().$_()
+
+        var s3 = new S3(this.s3sync.url, this.s3sync.accessKey, this.s3sync.secret, this.s3sync.region, this.s3sync.useVersion1)
+        // Check for the S3 bucket
+        if (isUnDef(s3) || !s3.bucketExists(this.s3sync.bucket)) {
+            tlogErr("nOutput_NDJson | Bucket '{{bucket}}' not found in '{{url}}'.", this.s3sync)
+        }
+        s3.close()
+    }
+
     if (isDef(this.include) && !isArray(this.include)) throw "Include needs to be an array"
 	if (isDef(this.exclude) && !isArray(this.exclude)) throw "Exclude needs to be an array"
 	this.considerSetAll = (isDef(aMap.considerSetAll)) ? aMap.considerSetAll : true
@@ -118,4 +139,14 @@ nOutput_NDJson.prototype.output = function(scope, args) {
 
         writeLine(data)
     })
+
+    if (isMap(this.s3sync)) {
+        var s3 = new S3(this.s3sync.url, this.s3sync.accessKey, this.s3sync.secret, this.s3sync.region, this.s3sync.useVersion1)
+        var actions = s3.squashRemoteActions(this.s3sync.bucket, this.s3sync.prefix, this.folder)
+        // Remove delete actions
+        actions = $from(actions).except( $from(actions).equals("cmd", "delRemote").ends("target", ".gz").select() ).select()
+        // Execute actions
+        s3.execActions(actions)
+        s3.close()
+    }
 }
