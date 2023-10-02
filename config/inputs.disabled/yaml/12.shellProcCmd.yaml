@@ -1,0 +1,39 @@
+input: 
+  name    : Input Java IO
+  cron    : "*/5 * * * * *"
+  execFrom: nInput_Shell
+  execArgs:
+    #type         : local
+    cmdEach      : |
+      echo "key: {{host}}:{{pid}}" && cat /proc/{{pid}}/io
+    cmd          : |
+      find /tmp -type f -readable | grep /tmp/hsperfdata_ | sed "s,.*/,{'host':'$HOSTNAME'\,'pid':," | sed 's,^,- ,' | sed 's,$,},'
+    eachParseYaml: true
+    parseYaml    : true
+    attrTemplate : "Java/IO"
+    posExec      : |
+      // Get previous value
+      var lval = clone(nattrmon.getLastValues()[attrname])
+      if (!isArray(lval.val)) lval.val = [ lval.val ]
+
+      $from(lval.val).equals("key", val.key).select(r => {
+        // Calculate time diff (in secs)
+        var timeDiff = ((new Date()).getTime() - lval.date.getTime()) / 1000
+
+        // Calculate value diff for each key of value
+        /*Object.keys(val).filter(k => k != "key").forEach(k => {
+          if (isNumber(val[k])) {
+            val["diff-" + k] = Math.round( (val[k] - r[k]) / timeDiff )
+          }
+        })
+        val["timeDiff"] = timeDiff*/
+
+        val.readIOPS  = Math.round( (val["syscr"] - r["syscr"]) / timeDiff )
+        val.writeIOPS = Math.round( (val["syscw"] - r["syscw"]) / timeDiff )
+        val.totalIOPS = val.readIOPS + val.writeIOPS
+        val.readBps   = Math.round( (val["read_bytes"] - r["read_bytes"]) / timeDiff )
+        val.writeBps  = Math.round( (val["write_bytes"] - r["write_bytes"]) / timeDiff )
+        val.totalBps  = val.readBps + val.writeBps
+      })
+
+      return val
