@@ -9,7 +9,7 @@ output:
     #fileDateFormat        : "yyyy-MM-dd"
     fileDateFormat        : "yyyyMMdd-HHmm"
     #backupFilenameTemplate: "\\d{4}-\\d{2}-\\d{2}\\.ndjson"
-    backupFilenameTemplate: "\\d{4}\\d{2}\\d{2}-\\d{2}\\d{2}\\.ndjson"
+    backupFilenameTemplate: "\\d{4}\\d{2}\\d{2}-\\d{2}\\d{2}\\.ndjson.gz"
     #howLongAgoInMinutes   : 7200
     #includeValues         : true
     #includeWarns          : false
@@ -28,4 +28,4 @@ output:
       #accessKey: minio
       #secret   : minio123
       bucket   : logs
-      prefix   : monitoring/logs
+      prefix   : "monitoring/logs/{{owFormat_fromDate now 'yyyyMMdd'}}/"

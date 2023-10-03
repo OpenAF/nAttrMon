@@ -42,7 +42,7 @@ var nOutput_NDJson = function(aMap) {
         // Verify the necessary arguments to connect to S3
         _$(this.s3sync.url, "s3sync.url").isString().$_()
         _$(this.s3sync.bucket, "s3sync.bucket").isString().$_()
-        _$(this.s3sync.prefix, "s3sync.prefix").isString().$_()
+        this.s3sync.prefix = _$(this.s3sync.prefix, "s3sync.prefix").isString().default("")
 
         var s3 = new S3(this.s3sync.url, this.s3sync.accessKey, this.s3sync.secret, this.s3sync.region, this.s3sync.useVersion1)
         // Check for the S3 bucket
@@ -142,7 +142,7 @@ nOutput_NDJson.prototype.output = function(scope, args) {
 
     if (isMap(this.s3sync)) {
         var s3 = new S3(this.s3sync.url, this.s3sync.accessKey, this.s3sync.secret, this.s3sync.region, this.s3sync.useVersion1)
-        var actions = s3.squashRemoteActions(this.s3sync.bucket, this.s3sync.prefix, this.folder)
+        var actions = s3.squashRemoteActions(this.s3sync.bucket, templify(this.s3sync.prefix, { now: newd, folder: this.s3sync.folder, region: this.s3sync.region, bucket: this.s3sync.bucket }), this.folder)
         // Remove delete actions
         actions = $from(actions).except( $from(actions).equals("cmd", "delRemote").ends("target", ".gz").select() ).select()
         // Execute actions
