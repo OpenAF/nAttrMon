@@ -167,7 +167,8 @@ nInput_DB.prototype.input = function(scope, args) {
 			parent.get(k.key, m, ret, scope)
 		})
 	} else {
-		parent.get(parent.key, parent.params, ret, scope)
+		//parent.get(parent.key, parent.params, ret, scope)
+		parent.get(parent.params.key, parent.params, ret, scope)
 	}
 
 	ow.template.delHelper("toDate")
