@@ -23,10 +23,6 @@ version: '20231001'
 dependencies:
   openaf: '>=20230704'
 files:
-- .github/ISSUE_TEMPLATE/bug_report.md
-- .github/ISSUE_TEMPLATE/feature_request.md
-- .github/version.svg
-- .github/workflows/update-pack.yml
 - .gitignore
 - .package.yaml
 - .precompile
@@ -266,10 +262,6 @@ files:
 - util/templates/Object_nOutput_template.js
 - util/watchdog.yaml.hbs
 filesHash:
-  .github/ISSUE_TEMPLATE/bug_report.md: 83d211c67c12e8c1f6e9f796cfd0cecbf5160e15
-  .github/ISSUE_TEMPLATE/feature_request.md: f6867a2f0417fe89a0f2008730ee19dd38422021
-  .github/version.svg: 6414a5d6e4a494f24dd823e8cdd3f9e58bbb9755
-  .github/workflows/update-pack.yml: a5b671f4a44acf73876e29eb7db8ef09cccc12ea
   .gitignore: 39785e9c0e444387c904a807d9e506a0215ca099
   .precompile: 52743b858c620cbf8590846495d282efc2ce0060
   CONTRIBUTING.md: c39f66b369fdd4722819997ac9c0f2a1cf6219ec
@@ -379,7 +371,7 @@ filesHash:
   config/objects/nInput_ChVals.js: d6689e116dd3c5f92905b9bd2e87a2828f8ea70c
   config/objects/nInput_Channel.js: 50c33108574630f6da6850f4e7f93f34a8632a62
   config/objects/nInput_CompareTimes.js: 5c95c1387549e405031414b430c98951ed591d1c
-  config/objects/nInput_DB.js: 0cb30000004c1983d06a58ea72f453f7e69bdc8f
+  config/objects/nInput_DB.js: 8e46fb72eb454812020ffb8a8bfc6608fb332950
   config/objects/nInput_DMPerformance.js: c7b8d30f023cc550ea262333927cc1acf9cab3b6
   config/objects/nInput_ESSearch.js: 0f825f81de288367fde87f13be5e1ccfe072bd1c
   config/objects/nInput_EndPoints.js: 56ebe885b9af2e39d19578f0cf34df44ee9d5f6f
