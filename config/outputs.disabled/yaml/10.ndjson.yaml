@@ -1,0 +1,31 @@
+output:
+  name       : Output ndjson
+  chSubscribe: nattrmon::cvals::buffer
+  execFrom   : nOutput_NDJson
+  execArgs   :
+    folder                : /tmp/logs
+    #dontCompress          : true
+    #filenameTemplate      : {{timedate}}.ndjson
+    #fileDateFormat        : "yyyy-MM-dd"
+    fileDateFormat        : "yyyyMMdd-HHmm"
+    #backupFilenameTemplate: "\\d{4}-\\d{2}-\\d{2}\\.ndjson"
+    backupFilenameTemplate: "\\d{4}\\d{2}\\d{2}-\\d{2}\\d{2}\\.ndjson"
+    #howLongAgoInMinutes   : 7200
+    #includeValues         : true
+    #includeWarns          : false
+    #includeLValues        : false
+    #includeAttrs          : false
+    #include               :
+    #- Some/Attribute 1
+    #exclude               :
+    #- Some/Attribute 2
+    #considerSetAll        : true
+    s3sync                :
+      secFile  : /secrets/secrets.yaml
+      secBucket: nattrmon
+      secKey   : s3
+      #url      : http://127.0.0.1:9000
+      #accessKey: minio
+      #secret   : minio123
+      bucket   : logs
+      prefix   : monitoring/logs
