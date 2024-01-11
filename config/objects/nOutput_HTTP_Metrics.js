@@ -1,3 +1,145 @@
+// Correcting bug on stable ow.metrics.fromObj2OpenMetrics for incorrect labels on arrays of maps
+var __ow_metrics_oafVersion = getVersion()
+var __ow_metrics_fromObj2OpenMetrics = function(aObj, aPrefix, aTimestamp, aHelpMap, aConvMap) {
+	if (__ow_metrics_oafVersion < "20230705" || __ow_metrics_oafVersion > "20240111") return ow.metrics.fromObj2OpenMetrics(aObj, aPrefix, aTimestamp, aHelpMap, aConvMap)
+
+    let handled = false
+    aPrefix = _$(aPrefix, "prefix").isString().default("metric")
+    const _reInitTxt = new RegExp("[^a-zA-Z0-9]", "g")
+    aPrefix = aPrefix.replace(_reInitTxt, "_")
+    if (/^\d.+/.test(aPrefix)) aPrefix = "_" + aPrefix
+
+    aConvMap = _$(aConvMap, "aConvMap").isMap().default({})
+
+    // https://github.com/OpenObservability/OpenMetrics/blob/main/specification/OpenMetrics.md
+
+    let _help = aMetric => {
+        // NOTE: In rare cases isMap will return true despite aHelpMap is not defined
+        if (isDef(aHelpMap) && isMap(aHelpMap)) {
+            let far = []
+            if (isDef(aMetric) && isDef(aHelpMap[aMetric])) {
+                let h = aHelpMap[aMetric];
+                if (isDef(h.text)) far.push("# " + h.text)
+                if (isDef(h.help)) far.push("# HELP " + aMetric + " " + h.help)
+                if (isDef(h.type)) far.push("# TYPE " + aMetric + " " + h.type)
+            }
+            return far.filter(l=>l.length > 0).join("\n")
+        } else {
+            return ""
+        }
+    }
+
+    let _map = (obj, prefix, lbs, suf) => {
+        suf = _$(suf).default("")
+        suf = suf.replace(_reInitTxt, "_")
+        var ar = []
+        if (isMap(obj)) {
+            // build labels
+            lbs = _$(lbs).default({})
+            for (var key in obj) {
+                var _v = obj[key]
+
+                if (!isNumber(_v) && !isBoolean(_v) && isDef(_v) && !isArray(_v) && !isMap(_v)) {
+                    var _key = String(key)
+                    var _value = String(_v)
+                    // Handling limits
+                    if (__flags.OPENMETRICS_LABEL_MAX) {
+                        if (_key.length > 128) _key = _key.substring(0, 128)
+                        if (_value.length > 128) _value = _value.substring(0, 128)
+                    }
+
+                    // Escaping
+                    if (/\d.+/.test(_key)) _key = "_" + _key
+                    _key = _key.replace(_reInitTxt, "_")
+                    _value = _value.replace(/\n/g, "\\\\n").replace(/\\/g, "\\\\").replace(/\"/g, "\\\"")
+
+                    // Adding
+                    if (_key[0] == "_") _key = aPrefix + _key
+                    lbs[_key] = "\"" + _value + "\""
+                }
+            }
+            let _kLbs = Object.keys(lbs)
+
+            var lprefix = (_kLbs.length > 0 ? "{" + _kLbs.map(k => k + "=" + lbs[k]).join(",") + "}" : "")
+
+            // build each map metric entry
+            for (var key in obj) {
+                var _v = obj[key]
+                if (isDef(_v)) {
+                    var k = key.replace(_reInitTxt, "_")
+                    if (isMap(aConvMap) && isString(_v) && isDef(aConvMap[key])) {
+                        if (isMap(aConvMap[key]) && isNumber(aConvMap[key][_v])) {
+                            ar.push(_help(prefix + "_" + k) + prefix + "_" + k + suf + lprefix + " " + (aConvMap[key][_v]) + (isDef(aTimestamp) ? " " + Number(aTimestamp) : ""))
+                            continue
+                        }
+                        if (isMap(aConvMap[prefix + "_" + k + suf]) && isNumber(aConvMap[prefix + "_" + k + suf][_v])) {
+                            ar.push(_help(prefix + "_" + k) + prefix + "_" + k + suf + lprefix + " " + (aConvMap[prefix + "_" + k + suf][_v]) + (isDef(aTimestamp) ? " " + Number(aTimestamp) : ""))
+                            continue
+                        }
+                    }
+                    if (isBoolean(_v)) ar.push(_help(prefix + "_" + k) + prefix + "_" + k + suf + lprefix + " " + (_v ? "1" : "0") + (isDef(aTimestamp) ? " " + Number(aTimestamp) : ""))
+                    if (isNumber(_v)) ar.push(_help(prefix + "_" + k) + prefix + "_" + k + suf + lprefix + " " + Number(_v) + (isDef(aTimestamp) ? " " + Number(aTimestamp) : ""))
+                    if (isMap(_v)) ar.push(_map(_v, prefix + "_" + k, clone(lbs), suf))
+                    if (isArray(_v)) ar.push(_arr(_v, prefix + "_" + k, clone(lbs), suf))
+                }
+            }
+        }
+        return ar.filter(l=>l.length > 0).join("\n")
+    }
+    let _arr = (obj, prefix, lbs, suf) => {
+        suf = _$(suf).default("")
+        var ar = []
+        if (isArray(obj)) {
+            lbs = _$(lbs).default({})
+            var orig = String(suf)
+            for (var i in obj) {
+                if (isDef(obj[i])) {
+                    var tlbs = clone(lbs)
+                    if (isDef(tlbs["_id"])) tlbs["_id"] = "\"" + tlbs["_id"].replace(/"/g, "") + "." + String(i) + "\""; else tlbs["_id"] = "\"" + String(i) + "\""
+
+                    if (isMap(obj[i])) ar.push(_map(obj[i], prefix, tlbs, suf))
+                    if (isArray(obj[i])) ar.push(_arr(obj[i], prefix, tlbs, suf))
+                    if (isNumber(obj[i]) || isBoolean(obj[i])) ar.push(_sim(obj[i], prefix, tlbs, suf))
+                }
+            }
+        }
+        return ar.filter(l=>l.length > 0).join("\n")
+    }
+    let _sim = (obj, prefix, tlbs, suf) => {
+        suf = _$(suf).default("")
+        suf = suf.replace(_reInitTxt, "_")
+        var ar = ""
+        if (isBoolean(obj)) {
+            obj = (obj ? 1 : 0);
+        }
+
+        tlbs = _$(tlbs).default({})
+        var lprefix = (Object.keys(tlbs).length > 0 ? "{" + Object.keys(tlbs).map(k => k + "=" + tlbs[k]).join(",") + "}" : "")
+
+        if (isNumber(obj)) {
+            ar = _help(prefix) + prefix + suf + lprefix + " " + Number(aObj) + (isDef(aTimestamp) ? " " + Number(aTimestamp) : "")
+        }
+        return ar
+    }
+
+    let ar = []
+    if (isMap(aObj)) {
+        handled = true;
+        ar.push(_map(aObj, aPrefix))
+    }
+
+    if (isArray(aObj)) {
+        handled = true;
+        ar.push(_arr(aObj, aPrefix))
+    }
+
+    if (!handled) {
+        ar.push(_sim(aObj, aPrefix))
+    }
+
+    return ar.filter(l=>l.length > 0).join("\n").trim() + "\n"
+}
+
 var nOutput_HTTP_Metrics = function (aMap) {
 	var AUDIT_TEMPLATE = "AUDIT HTTP | {{method}} {{uri}} {{{user}}} {{reply.status}} {{reply.mimetype}} ({{header.remote-addr}}; {{header.user-agent}})";
 
@@ -147,7 +289,7 @@ var nOutput_HTTP_Metrics = function (aMap) {
 			traverse(m, (k, v, p, o) => {
 				if (isNull(v)) delete o[k]
 			})
-            return ow.metrics.fromObj2OpenMetrics(m, n, d);
+            return __ow_metrics_fromObj2OpenMetrics(m, n, d);
         }).join("");
     }
 
@@ -160,7 +302,7 @@ var nOutput_HTTP_Metrics = function (aMap) {
 				delete m[w.title].lastupdate
 				delete m[w.title].notifications
 				m[w.title].num = 1
-				return ow.metrics.fromObj2OpenMetrics(m, n, d)
+				return __ow_metrics_fromObj2OpenMetrics(m, n, d)
 			}))
 		})
 		return _e.join("")
@@ -283,13 +425,13 @@ var nOutput_HTTP_Metrics = function (aMap) {
 				default:
 					if (isDef(req.params.type)) {
 						switch(req.params.type) {
-						case "self" : res += _filterIds(ow.metrics.fromObj2OpenMetrics(ow.metrics.getAll(), parent.nameSelf)); break
+						case "self" : res += _filterIds(__ow_metrics_fromObj2OpenMetrics(ow.metrics.getAll(), parent.nameSelf)); break
 						case "cvals": res += _filterIds(_parse(_filter(nattrmon.getCurrentValues()), parent.nameCVals)); break
 						case "lvals": res += _filterIds(_parse(_filter(nattrmon.getLastValues()), parent.nameLVals)); break
 						case "warns": res += _filterIds(_parsew(nattrmon.getWarnings(), parent.nameWarns)); break
 						}
 					} else {
-						if (parent.includeSelf)  res += _filterIds(ow.metrics.fromObj2OpenMetrics(ow.metrics.getAll(), parent.nameSelf));
+						if (parent.includeSelf)  res += _filterIds(__ow_metrics_fromObj2OpenMetrics(ow.metrics.getAll(), parent.nameSelf));
 						if (parent.includeCVals) res += _filterIds(_parse(_filter(nattrmon.getCurrentValues()), parent.nameCVals));
 						if (parent.includeLVals) res += _filterIds(_parse(_filter(nattrmon.getLastValues()), parent.nameLVals));
 						if (parent.includeWarns) res += _filterIds(_parsew(nattrmon.getWarnings(), parent.nameWarns));
