@@ -16,10 +16,10 @@ nInputInitList["AF"] = {
         content.forEach(entry => {
             entry = $ch(ikey).get({ key: entry.key })
             if (isDef(entry.key)) {
-                log("Destroying AF object pool to access " + entry.key + "...")
+                log("Destroying AF object pool to access '" + entry.key + "'...")
                 nattrmon.delObjectPool(entry.key)
 
-                log("Destroying object pool to access " + entry.key + " associations...")
+                log("Destroying object pool to access '" + entry.key + "' associations...")
                 parent.unsetAssociations("AF", entry, ikey)
 
                 $ch(ikey).unset({ key: entry.key })
@@ -40,12 +40,21 @@ nInputInitList["AF"] = {
 
             $ch(ikey).set({ key: entry.key }, entry);
 
-            log("Creating AF object pool to access " + entry.key + "...");
+            log("Creating AF object pool to access key '" + entry.key + "'...");
+
+            try {
+                let _url = java.net.URL(entry.url)
+                log("AF object pool to access key '" + entry.key + "': proto=" + _url.getProtocol() + ", host=" + _url.getHost() + ", port=" + _url.getPort() + ", path=" + _url.getPath())
+            } catch(_urle) {
+                logErr("Error during URL parsing for AF object pool access key '" + entry.key + "': " + _urle)
+                throw _urle
+            }
+
             var p = ow.obj.pool.AF(entry.url, entry.timeout, entry.conTimeout, entry.dontUseTransaction);
             parent.setPool(p, entry);
             nattrmon.addObjectPool(entry.key, p);
 
-            log("Created object pool to access " + entry.key);
+            log("Created object pool to access '" + entry.key + "'")
             parent.setAssociations("AF", entry, ikey);
         })
 

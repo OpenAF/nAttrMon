@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20231001'
+version: '20240111'
 dependencies:
   openaf: '>=20230704'
 files:
@@ -383,7 +383,7 @@ filesHash:
   config/objects/nInput_IMAbnormalLoadings.js: b7d86f2f5b70e218de6967a52114cac15fe5b570
   config/objects/nInput_IMLoadingsProgress.js: 1987633b3cf1ee4f8a1f74a7441f386637aa93a6
   config/objects/nInput_IMMemory.js: 69f6e3d39aa5a75c83d2e4f8e2ece0b28df7e3f1
-  config/objects/nInput_Init.js: e4b1a5a6f6af20b7c3f6ef685b711b83c3b1aecb
+  config/objects/nInput_Init.js: 9631c3e1fb87117000eb9da225ae760c9a4cd1a0
   config/objects/nInput_JMX.js: fce9011c729efafd1abe79588a274ee36aac3c16
   config/objects/nInput_JavaGC.js: a5a4df79a3180045e099cd1ec6c5d0dc107c94ed
   config/objects/nInput_Kube_Events.js: 7a36aa2e72973d9369b856c6ef2ce4eddcab8459
@@ -417,7 +417,7 @@ filesHash:
   config/objects/nOutput_HTTP.js: 503eb7a2f8125aae56757ded7ae0e64915193aa5
   config/objects/nOutput_HTTP_HealthZ.js: 557b493bc6cba42bc913376b8bc607700521f730
   config/objects/nOutput_HTTP_JSON.js: 73c4619994bf56f923fc3d2860e0aa6b422e3748
-  config/objects/nOutput_HTTP_Metrics.js: 8beacc2cd166866cbc4ca645cb7ac4ca819fc639
+  config/objects/nOutput_HTTP_Metrics.js: 5bded6aa018da2ca1657806048560aac5c59e4a0
   config/objects/nOutput_HTTP_Status.js: c4e56e646bfe3dd1d063604b5ab40bc0f618ff66
   config/objects/nOutput_Log.js: 69ef02bb37d306deb390f303a8bbf6e2234be792
   config/objects/nOutput_Log2ES.js: 4ff766b80b2e03f08f9f38e5a8dba4115d62bf81
