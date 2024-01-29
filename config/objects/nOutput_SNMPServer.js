@@ -36,7 +36,6 @@ var nOutput_SNMPServer = function (aMap) {
     if (isUnDef(aMap.snmpSecurityName) || aMap.snmpSecurityName === null) aMap.snmpSecurityName = "NMS";
     if (isUnDef(aMap.timeOut) || aMap.timeOut === null) aMap.timeOut = 5000;
     if (isUnDef(aMap.numOfRetries) || aMap.timeOut === null) aMap.numOfRetries = 3;
-    if (isUnDef(aMap.snmpSecurityName) || aMap.snmpSecurityName === null) aMap.snmpSecurityName = "NMS";
 
     this.IDMapping = aMap.oidMapping
     this.params = {
