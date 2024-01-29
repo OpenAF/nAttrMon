@@ -1,5 +1,6 @@
 /** 
- * Author: Surya Kalyan Jaddu
+ * Author: Surya Kalyan Jaddu 
+ * Changes: Andreia Brizida
  * 
  * <odoc>
  * <key>nAttrmon.nOutput_SNMPServer(aMap)</key>
@@ -9,6 +10,7 @@
  *    - baseOID((string) Base Oid is used to send traps.\
  *    - snmpVersion(string) it defines version of SNMP server.\
  *    - oidMapping(Map) it contains keys mapped with OID values to send traps.\
+ *    - sysUpTime(double) it defines how long ago in milliseconds the trap occurred.\
  *
  * </odoc>
  */
@@ -23,6 +25,7 @@ var nOutput_SNMPServer = function (aMap) {
     baseOID = _$(aMap.baseOID, "var aMap.baseOID").isString().regexp(/([0-9]{1,4}\.)/).$_("something")
     snmpVersion = _$(aMap.snmpVersion, "snmpVersion").oneOf([1, 2, 3]).isNumber().default(2)
     oidMapping = _$(aMap.oidMapping, "oidMapping").isObject().$_("Please Map the oid's")
+    sysUpTime = _$(aMap.sysUpTime, "var aMap.sysUpTime").isDouble().default(0)
 
     snmpAuthPassPhrase = _$(aMap.snmpAuthPassPhrase, "snmpAuthPassPhrase").isString().$_("Please provide snmpAuthPhrase")
     snmpPrivPassPhrase = _$(aMap.snmpPrivPassPhrase, "snmpPrivPassPhrase").isString().$_("Please Provoide snmpPrivPassPhrase")
@@ -33,6 +36,7 @@ var nOutput_SNMPServer = function (aMap) {
     if (isUnDef(aMap.snmpSecurityName) || aMap.snmpSecurityName === null) aMap.snmpSecurityName = "NMS";
     if (isUnDef(aMap.timeOut) || aMap.timeOut === null) aMap.timeOut = 5000;
     if (isUnDef(aMap.numOfRetries) || aMap.timeOut === null) aMap.numOfRetries = 3;
+    if (isUnDef(aMap.snmpSecurityName) || aMap.snmpSecurityName === null) aMap.snmpSecurityName = "NMS";
 
     this.IDMapping = aMap.oidMapping
     this.params = {
@@ -42,7 +46,8 @@ var nOutput_SNMPServer = function (aMap) {
         "numOfRetries": aMap.numOfRetries,
         "snmpVersion": snmpVersion,
         "snmpEngineID": snmpEngineID,
-        "snmpBaseOID": baseOID
+        "snmpBaseOID": baseOID,
+        "sysUpTime": sysUpTime
     }
 
     this.snmpProtocols = {
@@ -165,7 +170,8 @@ nOutput_SNMPServer.prototype.sendTrap = function (argsValue, params, snmpProtoco
         if (params.snmpVersion <= 2) var snmp = new SNMP(params.snmpIPAddress, params.snmpCommunity); else var snmp = new SNMP(params.snmpIPAddress, params.snmpCommunity, params.snmpTimeout, params.numOfRetries, params.snmpVersion, snmpProtocols);
         var response = this.entitiesExtraction(argsValue, IDMapping)
         log(stringify(response.trapArr))
-        snmp.trap(params.snmpBaseOID, response.trapArr)
+        //snmp.trap(params.snmpBaseOID, response.trapArr)
+        snmp.trap(params.snmpBaseOID, params.sysUpTime, response.trapArr)
         log("Trap Sent Successfully")
     }
     catch (e) {
