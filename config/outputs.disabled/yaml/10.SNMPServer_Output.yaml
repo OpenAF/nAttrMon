@@ -19,4 +19,5 @@ output:
     snmpAuthProtocol: "MD5"
     snmpPrivProtocol: "AES128"
     snmpSecurityName: "NMS"
+    sysUpTime: 0
 
