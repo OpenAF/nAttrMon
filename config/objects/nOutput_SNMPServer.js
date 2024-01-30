@@ -170,7 +170,12 @@ nOutput_SNMPServer.prototype.sendTrap = function (argsValue, params, snmpProtoco
         var response = this.entitiesExtraction(argsValue, IDMapping)
         log(stringify(response.trapArr))
         //snmp.trap(params.snmpBaseOID, response.trapArr)
-        snmp.trap(params.snmpBaseOID, params.sysUpTime, response.trapArr)
+        if (getVersion() > "20231221") {
+            snmp.trap(params.snmpBaseOID, params.sysUpTime, response.trapArr)
+         } else {
+            logWarn("nOutput_SNMPServer | sysUpTime functionality is not available on the current version " + getVersion() + ". Please upgrade to a more recent version.")
+            snmp.trap(params.snmpBaseOID, response.trapArr)
+         }
         log("Trap Sent Successfully")
     }
     catch (e) {
