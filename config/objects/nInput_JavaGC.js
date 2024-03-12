@@ -98,8 +98,14 @@ nInput_JavaGC.prototype.get = function(keyData, extra) {
         })
         m.kind      = _$(m.kind, "kube.kind").isString().default("FPO")
         m.namespace = _$(m.namespace, "kube.namespace").isString().default("default")
+        m.namespacere = _$(m.namespacere, "kube.namespacere").isString().default(__)
 
-        var nss = m.namespace.split(/ *, */), lst = []
+        let lst = [], nss = []
+        if (isDef(m.namespacere)) {
+            nss = $kube(m).getNS().map(r => r.Metadata.Name).filter(r => (new RegExp(m.namespacere)).test(r))
+        } else {
+            nss = m.namespace.split(/ *, */)
+        }
 
         nss.forEach(ns => {
             var its = $kube(m)["get" + m.kind](ns)
@@ -116,11 +122,11 @@ nInput_JavaGC.prototype.get = function(keyData, extra) {
         }
 
         ow.obj.filter(lst, m.selector).forEach(r => {
-          var newM    = clone(m)
+          var newM       = clone(m)
           newM.pod       = r.metadata.name
           newM.namespace = r.metadata.namespace
           try {
-            var res = nattrmon.shExec("kube", newM).exec(["/bin/sh", "-c", "/bin/sh -c 'echo ${TMPDIR:-/tmp} && echo \"||\" && find ${TMPDIR:-/tmp} -readable -type f'"])
+            var res = nattrmon.shExec("kube", newM).exec(["/bin/sh", "-c", "/bin/sh -c 'echo ${TMPDIR:-/tmp} && echo \"||\" && find ${TMPDIR:-/tmp} -perm -u+r -type f'"])
             if (isDef(res.stdout)) {
                 var _tmp = String(res.stdout).split("||")
                 var lst  = _tmp[1]

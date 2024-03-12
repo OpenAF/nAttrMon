@@ -50,6 +50,9 @@ input:
     type        : kube
     kube        :
       namespace: my-namespace-1, my-namespace-2
+      #namespacere: "^my"
+      #selector:
+      #  path: "[?status.phase=='Running']|[?starts_with(metadata.name, 'socks')]"
       selector :
         where:
         - cond: starts
