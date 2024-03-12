@@ -126,9 +126,10 @@ nInput_JavaGC.prototype.get = function(keyData, extra) {
           newM.pod       = r.metadata.name
           newM.namespace = r.metadata.namespace
           try {
-            var res = nattrmon.shExec("kube", newM).exec(["/bin/sh", "-c", "/bin/sh -c 'echo ${TMPDIR:-/tmp} && echo \"||\" && find ${TMPDIR:-/tmp} -perm -u+r -type f'"])
+            var res = nattrmon.shExec("kube", newM).exec(["/bin/sh", "-c", "/bin/sh -c 'echo ${TMPDIR:-/tmp} && echo \"||\" && find ${TMPDIR:-/tmp} -type f -exec test -r {} \\\; -print'"])
             if (isDef(res.stdout)) {
                 var _tmp = String(res.stdout).split("||")
+                if (isUnDef(_tmp) || isUnDef(_tmp[1])) return
                 var lst  = _tmp[1]
                            .split("\n")
                            .filter(l => l.indexOf(_tmp[0].replace(/\n/g, "") + "/hsperfdata_") == 0)
