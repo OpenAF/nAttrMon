@@ -1,0 +1,10 @@
+input:
+   name         : RAID Files Processed by hour in last 48h
+   cron         : "*/10 * * * *"
+   waitForFinish: true
+   onlyOnEvent  : true
+   execFrom     : nInput_FilesProcessed
+   execArgs     : 
+      key : FMS ADM
+      attrName: FilesProcessedByHour
+      number: 48

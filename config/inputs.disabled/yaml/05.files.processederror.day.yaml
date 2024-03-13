@@ -1,0 +1,11 @@
+input:
+   name         : RAID Files in Error by day in last 7 days
+   cron         : "*/10 * * * *"
+   waitForFinish: true
+   onlyOnEvent  : true
+   execFrom     : nInput_FilesProcessed
+   execArgs     :
+      key : FMS ADM
+      attrName: FilesInErrorByDay
+      number: 7
+
