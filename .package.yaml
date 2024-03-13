@@ -53,6 +53,12 @@ files:
 - config/inputs.disabled/yaml/03.flows.yaml
 - config/inputs.disabled/yaml/03.semaphores.yaml
 - config/inputs.disabled/yaml/04.db.appadm.yaml
+- config/inputs.disabled/yaml/05.files.processed.day.yaml
+- config/inputs.disabled/yaml/05.files.processed.hour.yaml
+- config/inputs.disabled/yaml/05.files.processed.twice.yaml
+- config/inputs.disabled/yaml/05.files.processederror.day.yaml
+- config/inputs.disabled/yaml/05.files.processederror.hour.yaml
+- config/inputs.disabled/yaml/05.files.processing.backlog.yaml
 - config/inputs.disabled/yaml/09.memory.yaml
 - config/inputs.disabled/yaml/10.filesystem.yaml
 - config/inputs.disabled/yaml/10.filesystemcount.fixed.yaml
@@ -84,6 +90,7 @@ files:
 - config/inputs/move_files_from_inputs_disabled.dummy
 - config/move_files_from_the_disabled_folders.dummy
 - config/nattrmonignore.js.sample
+- config/objects.assets/ninputfilesprocessed/nInput_FilesProcessed_config.yml
 - config/objects.assets/noutputemailwarnings/logo.png
 - config/objects.assets/noutputemailwarnings/warningEmailTemplate.hbs
 - config/objects.assets/noutputhttp/css/bootstrap-theme.min.css
@@ -138,6 +145,7 @@ files:
 - config/objects/nInput_ESSearch.js
 - config/objects/nInput_EndPoints.js
 - config/objects/nInput_FMSRuleStatus.js
+- config/objects/nInput_FilesProcessed.js
 - config/objects/nInput_Filesystem.js
 - config/objects/nInput_FilesystemCount.js
 - config/objects/nInput_HTTPJson.js
@@ -292,6 +300,12 @@ filesHash:
   config/inputs.disabled/yaml/03.flows.yaml: 8748a1200859bcfb349baccf8c513541777a0032
   config/inputs.disabled/yaml/03.semaphores.yaml: fd31533483b329db1cf558eb8607e2fd0cdf7328
   config/inputs.disabled/yaml/04.db.appadm.yaml: eb64f93d7b7695edc9fd36caeb2bd53157a329db
+  config/inputs.disabled/yaml/05.files.processed.day.yaml: eeb4ebc58f96c0668bae6f346c837c001015f554
+  config/inputs.disabled/yaml/05.files.processed.hour.yaml: ee9e240f48780c55e57b26cfd3040d0eb1056fe1
+  config/inputs.disabled/yaml/05.files.processed.twice.yaml: 21fee6d271991453cd83063d7969a086aabacf9d
+  config/inputs.disabled/yaml/05.files.processederror.day.yaml: 18768bbe3b18c494225cedd51b3a77480736ad24
+  config/inputs.disabled/yaml/05.files.processederror.hour.yaml: 46178a8c2d8f7aa6e4d63cb1f7e1aeee0c92d3ce
+  config/inputs.disabled/yaml/05.files.processing.backlog.yaml: f6ed2a18301a91d1a7ce33d9881299dbffcc4b07
   config/inputs.disabled/yaml/09.memory.yaml: 7f25e9591f3bc16d3181a56a92b1100709afccd3
   config/inputs.disabled/yaml/10.filesystem.yaml: e8b8a6149c8f32128cd3c601081f6f67b3822e70
   config/inputs.disabled/yaml/10.filesystemcount.fixed.yaml: b36490b7dfa1794602a46c108e915d3bc45d55f8
@@ -323,6 +337,7 @@ filesHash:
   config/inputs/move_files_from_inputs_disabled.dummy: b858cb282617fb0956d960215c8e84d1ccf909c6
   config/move_files_from_the_disabled_folders.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
   config/nattrmonignore.js.sample: dad08a2c3a4fdba2f45c5d357aa2ebb7971d73e5
+  config/objects.assets/ninputfilesprocessed/nInput_FilesProcessed_config.yml: b67359898801cfb73cacd31d16c23463d4b4ef08
   config/objects.assets/noutputemailwarnings/logo.png: ee5366a3aa207c69d5139e04e7a4523078b974ba
   config/objects.assets/noutputemailwarnings/warningEmailTemplate.hbs: 632c53556ade3ec6842ca1fb188199498df7cfcd
   config/objects.assets/noutputhttp/css/bootstrap-theme.min.css: fc6b4268fbd57ad95d2b41a1d4d6866f222fbdb2
@@ -377,6 +392,7 @@ filesHash:
   config/objects/nInput_ESSearch.js: 0f825f81de288367fde87f13be5e1ccfe072bd1c
   config/objects/nInput_EndPoints.js: 56ebe885b9af2e39d19578f0cf34df44ee9d5f6f
   config/objects/nInput_FMSRuleStatus.js: 1acccca00b89a38cd53891601f66401f3513f782
+  config/objects/nInput_FilesProcessed.js: c633511203a0b8bcf996a71fc4cded70d06aec8c
   config/objects/nInput_Filesystem.js: 59f6c245ec5acf11111d92ea0f83797214bf6030
   config/objects/nInput_FilesystemCount.js: e36218f7c2ffa39438f1c1d22ad982c04e0fd4a0
   config/objects/nInput_HTTPJson.js: 3bf9fc0a1d15592f46331725370577bbadc382b9
