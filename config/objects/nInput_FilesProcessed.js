@@ -13,7 +13,6 @@
  *    - number     (number of days/hours ago the files were processed/errored out)
  * </odoc>
  */
-var var_yaml_file = nattrmon.getConfigPath("objects.assets/ninputfilesprocessed/") + "/objects.assets/ninputfilesprocessed/nInput_FilesProcessed_config.yml"
 
 var nInput_FilesProcessed = function(aMap) {
     if (!isNull(aMap) && isMap(aMap)) {
@@ -23,13 +22,6 @@ var nInput_FilesProcessed = function(aMap) {
     }
 	this.params.dontUseKey = _$(this.params.dontUseKey, "dontUseKey").isBoolean().default(isDef(this.params.key))
 
-    
-	try {
-		var attributeObject = io.readFileYAML(var_yaml_file);
-	} catch (e) { 
-		logErr("nInput_FilesProcessed | MAIN: Error reading configuration file from " + var_yaml_file + ".")
-		throw e
-	}
 	
 	if (isUnDef(this.params.attrName))
 	{
@@ -37,7 +29,16 @@ var nInput_FilesProcessed = function(aMap) {
 		return 0
 	}
 
-	if (isUnDef(attributeObject[this.params.attrName].name))
+	this.var_yaml_file = nattrmon.getConfigPath("objects.assets/ninputfilesprocessed/") + "/objects.assets/ninputfilesprocessed/nInput_FilesProcessed_config.yml"
+    
+	try {
+		this.attributeObject = io.readFileYAML(this.var_yaml_file);
+	} catch (e) { 
+		logErr("nInput_FilesProcessed | MAIN: Error reading configuration file from " + this.var_yaml_file + ".")
+		throw e
+	}
+
+	if (isUnDef(this.attributeObject[this.params.attrName].name))
 	{
 		logErr("nInput_FilesProcessed | MAIN: Cannot find configuration for attrName " + this.params.attrName + ".")
 		return 0
@@ -50,9 +51,9 @@ var nInput_FilesProcessed = function(aMap) {
 
 	if (isUnDef(this.params.attrTemplate)) 
 		if (isDef(this.params.key)) 
-			this.params.attrTemplate = "RAID/" + attributeObject[this.params.attrName].name
+			this.params.attrTemplate = "RAID/" + this.attributeObject[this.params.attrName].name
 		else
-			this.params.attrTemplate = "RAID/DB {{key}}/"  + attributeObject[this.params.attrName].name
+			this.params.attrTemplate = "RAID/DB {{key}}/"  + this.attributeObject[this.params.attrName].name
 
 	nInput.call(this, this.input)
 }
@@ -61,10 +62,10 @@ inherit(nInput_FilesProcessed, nInput)
 nInput_FilesProcessed.prototype.get = function(aKey, parent, ret, scope) {
 	var parent2 = parent
 	try {
-		var queries = io.readFileYAML(var_yaml_file);
+		var queries = this.attributeObject;
 		queries = queries[parent.attrName];
 	} catch (e) { 
-		logErr("nInput_FilesProcessed | GET: Error reading configuration file from " + var_yaml_file + ".")
+		logErr("nInput_FilesProcessed | GET: Error reading configuration file from " + this.var_yaml_file + ".")
 		throw e
 	}
 
