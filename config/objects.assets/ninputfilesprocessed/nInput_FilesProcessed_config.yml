@@ -1,0 +1,544 @@
+FilesProcessedByHour:
+   name: Files processed by hour
+   oracle: >
+      select "Stream", "Loading Process", "Date", "Hour",
+               count("INPUT_ID") "Total Files Processed",
+               max(aux."Number of Events") "Max Events per File",
+               min(aux."Number of Events") "Min Events per File",
+               avg(aux."Number of Events") "Avg Events per File",
+               sum(aux."Number of Events") "Total Events Processed",
+               sum(DECODE(NVL(aux."Number of Events", 0), 0, 1, 0)) "Total Files with 0 records"
+         from
+            (
+            select
+               dci."STREAM_UUID",
+               atos."SHORT_NAME" "Stream",
+               atoslp."OBJ_SPEC_UUID" "Loading Process ID",
+               atoslp."SHORT_NAME" "Loading Process",
+               TO_CHAR(dcc."MODIFIED_DATE", 'YYYY-MM-DD') "Date",
+               TO_CHAR(dcc."MODIFIED_DATE", 'HH24') "Hour",
+               dci."INPUT_ID",
+               sum(cast(dcc."PROGRESS" as integer)) "Number of Events"
+            from
+               "DP_C_INPUT" dci ,
+               "AF_T_OBJ_SPEC" atos,
+               "DP_C_CONTROL" dcc,
+               "AF_T_OBJ_SPEC" atoslp  
+            where
+                  dci."STREAM_UUID" = atos."OBJ_SPEC_UUID"
+               and dci."INPUT_ID" = dcc."INPUT_ID"
+               and dcc."STATUS" = 2
+               and dcc."MODIFIED_DATE" >= TRUNC(sysdate, 'HH') - {{number}}/24
+               and dcc."LOADING_PROCESS_SPEC_ID" = atoslp."OBJ_SPEC_ID"
+               and atoslp."OBJ_TYPE_NAME" = 'DATAPUMP.LoadingProcess'
+               and exists (select 0
+                            from "AF_T_OBJ" ato
+                            where ATOS."OBJ_SPEC_UUID" = ATO."OBJ_SPEC_UUID"
+                                and ATOS."LAST_VERSION" = ATO."VERSION"
+                                and DBMS_LOB.instr(ATO."OBJ_DEFINITION", 'n="dataStreamType">file<') > 0)
+            group by
+               dci."STREAM_UUID",
+               atos."SHORT_NAME",
+               atoslp."OBJ_SPEC_UUID",
+               atoslp."SHORT_NAME",
+               TO_CHAR(dcc."MODIFIED_DATE", 'YYYY-MM-DD'),
+               TO_CHAR(dcc."MODIFIED_DATE", 'HH24'),
+               dci."INPUT_ID") aux
+         group by "STREAM_UUID",
+            "Stream",
+            "Loading Process ID",
+            "Loading Process",
+            "Date",
+            "Hour" 
+         order by "Stream", "Loading Process", "Date" DESC, "Hour" desc                                              
+         
+   postgresql: >
+      select "Stream", "Loading Process", "Date", "Hour",
+               count("INPUT_ID") "Total Files Processed",
+               max(aux."Number of Events") "Max Events per File",
+               min(aux."Number of Events") "Min Events per File",
+               avg(aux."Number of Events") "Avg Events per File",
+               sum(aux."Number of Events") "Total Events Processed",
+               sum(case (COALESCE(aux."Number of Events", 0)) when 0 then 1 else 0 end) "Total Files with 0 records"
+         from
+            (
+            select
+               dci."STREAM_UUID",
+               atos."SHORT_NAME" "Stream",      
+               atoslp."OBJ_SPEC_UUID" "Loading Process ID",
+               atoslp."SHORT_NAME" "Loading Process",
+               TO_CHAR(dcc."MODIFIED_DATE", 'YYYY-MM-DD') "Date",
+               TO_CHAR(dcc."MODIFIED_DATE", 'HH24') "Hour",
+               dci."INPUT_ID",
+               sum(cast(dcc."PROGRESS" as integer)) "Number of Events"
+            from
+               "DP_C_INPUT" dci ,
+               "AF_T_OBJ_SPEC" atos,
+               "DP_C_CONTROL" dcc,
+               "AF_T_OBJ_SPEC" atoslp 
+            where
+                  dci."STREAM_UUID" = atos."OBJ_SPEC_UUID"
+               and dci."INPUT_ID" = dcc."INPUT_ID"
+               and dcc."STATUS" = 2
+               and dcc."MODIFIED_DATE" >= DATE_TRUNC('HOUR', CURRENT_DATE) - INTERVAL '{{number}} Hours'
+               and dcc."LOADING_PROCESS_SPEC_ID" = atoslp."OBJ_SPEC_ID"
+               and atoslp."OBJ_TYPE_NAME" = 'DATAPUMP.LoadingProcess'
+               and exists (select 0
+                            from "AF_T_OBJ" ato
+                            where ATOS."OBJ_SPEC_UUID" = ATO."OBJ_SPEC_UUID"
+                                and ATOS."LAST_VERSION" = ATO."VERSION"
+                                and position ( 'n="dataStreamType">file<' in ATO."OBJ_DEFINITION") > 0)
+            group by
+               dci."STREAM_UUID",
+               atos."SHORT_NAME",
+               atoslp."OBJ_SPEC_UUID",
+               atoslp."SHORT_NAME",
+               TO_CHAR(dcc."MODIFIED_DATE", 'YYYY-MM-DD'),
+               TO_CHAR(dcc."MODIFIED_DATE", 'HH24'),
+               dci."INPUT_ID") aux
+         group by "STREAM_UUID",
+            "Stream",
+            "Loading Process ID",
+            "Loading Process",
+            "Date",
+            "Hour"
+         order by "Stream", "Loading Process", "Date" desc, "Hour" desc
+
+FilesProcessedByDay:
+   name: Files processed by day
+   oracle: >
+      select "Stream", "Loading Process", "Date", 
+               count("INPUT_ID") "Total Files Processed",
+               max(aux."Number of Events") "Max Events per File",
+               min(aux."Number of Events") "Min Events per File",
+               avg(aux."Number of Events") "Avg Events per File",
+               sum(aux."Number of Events") "Total Events Processed",
+               sum(DECODE(NVL(aux."Number of Events", 0), 0, 1, 0)) "Total Files with 0 records"
+         from
+            (
+            select
+               dci."STREAM_UUID",
+               atos."SHORT_NAME" "Stream",
+               atoslp."OBJ_SPEC_UUID" "Loading Process ID",
+               atoslp."SHORT_NAME" "Loading Process",
+               TO_CHAR(dcc."MODIFIED_DATE", 'YYYY-MM-DD') "Date",
+               dci."INPUT_ID",
+               sum(cast(dcc."PROGRESS" as integer)) "Number of Events"
+            from
+               "DP_C_INPUT" dci ,
+               "AF_T_OBJ_SPEC" atos,
+               "DP_C_CONTROL" dcc,
+               "AF_T_OBJ_SPEC" atoslp 
+            where
+                  dci."STREAM_UUID" = atos."OBJ_SPEC_UUID"
+               and dci."INPUT_ID" = dcc."INPUT_ID"
+               and dcc."STATUS" = 2
+               and dcc."MODIFIED_DATE" >= TRUNC(sysdate) - {{number}}
+               and dcc."LOADING_PROCESS_SPEC_ID" = atoslp."OBJ_SPEC_ID"
+               and atoslp."OBJ_TYPE_NAME" = 'DATAPUMP.LoadingProcess'
+               and exists (select 0
+                            from "AF_T_OBJ" ato
+                            where ATOS."OBJ_SPEC_UUID" = ATO."OBJ_SPEC_UUID"
+                                and ATOS."LAST_VERSION" = ATO."VERSION"
+                                and DBMS_LOB.instr(ATO."OBJ_DEFINITION", 'n="dataStreamType">file<') > 0)
+            group by
+               dci."STREAM_UUID",
+               atos."SHORT_NAME",
+               atoslp."OBJ_SPEC_UUID",
+               atoslp."SHORT_NAME",
+               TO_CHAR(dcc."MODIFIED_DATE", 'YYYY-MM-DD'),
+               dci."INPUT_ID") aux
+         group by "STREAM_UUID",
+            "Stream",
+            "Loading Process ID",
+            "Loading Process",
+            "Date"
+         order by "Stream", "Loading Process", "Date" DESC                                             
+         
+   postgresql: >
+      select "Stream", "Loading Process", "Date", 
+               count("INPUT_ID") "Total Files Processed",
+               max(aux."Number of Events") "Max Events per File",
+               min(aux."Number of Events") "Min Events per File",
+               avg(aux."Number of Events") "Avg Events per File",
+               sum(aux."Number of Events") "Total Events Processed",
+               sum(case (COALESCE(aux."Number of Events", 0)) when 0 then 1 else 0 end) "Total Files with 0 records"
+         from
+            (select
+               dci."STREAM_UUID",
+               atos."SHORT_NAME" "Stream",
+               atoslp."OBJ_SPEC_UUID" "Loading Process ID",
+               atoslp."SHORT_NAME" "Loading Process",
+               TO_CHAR(dcc."MODIFIED_DATE", 'YYYY-MM-DD') "Date",
+               dci."INPUT_ID",
+               sum(cast(dcc."PROGRESS" as integer)) "Number of Events"
+            from
+               "DP_C_INPUT" dci ,
+               "AF_T_OBJ_SPEC" atos,
+               "DP_C_CONTROL" dcc,
+               "AF_T_OBJ_SPEC" atoslp 
+            where
+                  dci."STREAM_UUID" = atos."OBJ_SPEC_UUID"
+               and dci."INPUT_ID" = dcc."INPUT_ID"
+               and dcc."STATUS" = 2
+               and dcc."MODIFIED_DATE" >= DATE_TRUNC('DAY', CURRENT_DATE) - INTERVAL '{{number}} Days'
+               and dcc."LOADING_PROCESS_SPEC_ID" = atoslp."OBJ_SPEC_ID"
+               and atoslp."OBJ_TYPE_NAME" = 'DATAPUMP.LoadingProcess'
+               and exists (select 0
+                            from "AF_T_OBJ" ato
+                            where ATOS."OBJ_SPEC_UUID" = ATO."OBJ_SPEC_UUID"
+                                and ATOS."LAST_VERSION" = ATO."VERSION"
+                                and position ( 'n="dataStreamType">file<' in ATO."OBJ_DEFINITION") > 0)
+            group by
+               dci."STREAM_UUID",
+               atos."SHORT_NAME",
+               atoslp."OBJ_SPEC_UUID",
+               atoslp."SHORT_NAME",
+               TO_CHAR(dcc."MODIFIED_DATE", 'YYYY-MM-DD'),
+               dci."INPUT_ID"
+            ) aux
+         group by "STREAM_UUID",
+            "Stream",
+            "Loading Process ID",
+            "Loading Process",
+            "Date"
+         order by "Stream", "Loading Process", "Date" desc
+
+FilesInErrorByHour:
+   name: Files in error by hour
+   oracle: >
+      select "Stream", "Loading Process", "Date", "Hour",
+               count(distinct "INPUT_ID") "Total Files in Error"
+         from
+            (
+            select
+               dci."STREAM_UUID",
+               atos."SHORT_NAME" "Stream",
+               atoslp."OBJ_SPEC_UUID" "Loading Process ID",
+               atoslp."SHORT_NAME" "Loading Process",
+               TO_CHAR(dcc."MODIFIED_DATE", 'YYYY-MM-DD') "Date",
+               TO_CHAR(dcc."MODIFIED_DATE", 'HH24') "Hour",
+               dci."INPUT_ID"
+            from
+               "DP_C_INPUT" dci ,
+               "AF_T_OBJ_SPEC" atos,
+               "DP_C_CONTROL" dcc,
+               "AF_T_OBJ_SPEC" atoslp  
+            where
+                  dci."STREAM_UUID" = atos."OBJ_SPEC_UUID"
+               and dci."INPUT_ID" = dcc."INPUT_ID"
+               and dcc."STATUS" = 3
+               and dcc."MODIFIED_DATE" >= TRUNC(sysdate, 'HH') - {{number}}/24
+               and dcc."LOADING_PROCESS_SPEC_ID" = atoslp."OBJ_SPEC_ID"
+               and atoslp."OBJ_TYPE_NAME" = 'DATAPUMP.LoadingProcess'
+               and exists (select 0
+                            from "AF_T_OBJ" ato
+                            where ATOS."OBJ_SPEC_UUID" = ATO."OBJ_SPEC_UUID"
+                                and ATOS."LAST_VERSION" = ATO."VERSION"
+                                and DBMS_LOB.instr(ATO."OBJ_DEFINITION", 'n="dataStreamType">file<') > 0)
+            group by
+               dci."STREAM_UUID",
+               atos."SHORT_NAME",
+               atoslp."OBJ_SPEC_UUID",
+               atoslp."SHORT_NAME",
+               TO_CHAR(dcc."MODIFIED_DATE", 'YYYY-MM-DD'),
+               TO_CHAR(dcc."MODIFIED_DATE", 'HH24'),
+               dci."INPUT_ID") aux
+         group by "STREAM_UUID",
+            "Stream",
+            "Loading Process ID",
+            "Loading Process",
+            "Date",
+            "Hour"
+         order by "Stream", "Loading Process", "Date" desc, "Hour" desc
+         
+   postgresql: >
+      select "Stream", "Loading Process", "Date", "Hour",
+               count(distinct "INPUT_ID") "Total Files in Error"
+         from
+            (
+            select
+               dci."STREAM_UUID",
+               atos."SHORT_NAME" "Stream",
+               atoslp."OBJ_SPEC_UUID" "Loading Process ID",
+               atoslp."SHORT_NAME" "Loading Process",
+               TO_CHAR(dcc."MODIFIED_DATE", 'YYYY-MM-DD') "Date",
+               TO_CHAR(dcc."MODIFIED_DATE", 'HH24') "Hour",
+               dci."INPUT_ID"
+            from
+               "DP_C_INPUT" dci ,
+               "AF_T_OBJ_SPEC" atos,
+               "DP_C_CONTROL" dcc,
+               "AF_T_OBJ_SPEC" atoslp  
+            where
+                  dci."STREAM_UUID" = atos."OBJ_SPEC_UUID"
+               and dci."INPUT_ID" = dcc."INPUT_ID"
+               and dcc."STATUS" = 3
+               and dcc."MODIFIED_DATE" >= DATE_TRUNC('HOUR', CURRENT_DATE) - INTERVAL '{{number}} Hours'
+               and dcc."LOADING_PROCESS_SPEC_ID" = atoslp."OBJ_SPEC_ID"
+               and atoslp."OBJ_TYPE_NAME" = 'DATAPUMP.LoadingProcess'
+               and exists (select 0
+                            from "AF_T_OBJ" ato
+                            where ATOS."OBJ_SPEC_UUID" = ATO."OBJ_SPEC_UUID"
+                                and ATOS."LAST_VERSION" = ATO."VERSION"
+                                and position ( 'n="dataStreamType">file<' in ATO."OBJ_DEFINITION") > 0)
+            group by
+               dci."STREAM_UUID",
+               atos."SHORT_NAME",
+               atoslp."OBJ_SPEC_UUID",
+               atoslp."SHORT_NAME",
+               TO_CHAR(dcc."MODIFIED_DATE", 'YYYY-MM-DD'),
+               TO_CHAR(dcc."MODIFIED_DATE", 'HH24'),
+               dci."INPUT_ID") aux
+         group by "STREAM_UUID",
+            "Stream",
+            "Loading Process ID",
+            "Loading Process",
+            "Date",
+            "Hour"
+         order by "Stream", "Loading Process", "Date" desc, "Hour" desc
+
+FilesInErrorByDay:
+   name: Files in error by day
+   oracle: >
+      select "Stream", "Loading Process", "Date", 
+               count(distinct "INPUT_ID") "Total Files Processed"
+         from
+            (select
+               dci."STREAM_UUID",
+               atos."SHORT_NAME" "Stream",
+               atoslp."OBJ_SPEC_UUID" "Loading Process ID",
+               atoslp."SHORT_NAME" "Loading Process",
+               TO_CHAR(dcc."MODIFIED_DATE", 'YYYY-MM-DD') "Date",
+               dci."INPUT_ID"
+            from
+               "DP_C_INPUT" dci ,
+               "AF_T_OBJ_SPEC" atos,
+               "DP_C_CONTROL" dcc,
+               "AF_T_OBJ_SPEC" atoslp  
+            where
+                  dci."STREAM_UUID" = atos."OBJ_SPEC_UUID"
+               and dci."INPUT_ID" = dcc."INPUT_ID"
+               and dcc."STATUS" = 3
+               and dcc."MODIFIED_DATE" >= TRUNC(sysdate) - {{number}} 
+               and dcc."LOADING_PROCESS_SPEC_ID" = atoslp."OBJ_SPEC_ID"
+               and atoslp."OBJ_TYPE_NAME" = 'DATAPUMP.LoadingProcess'              
+               and exists (select 0
+                            from "AF_T_OBJ" ato
+                            where ATOS."OBJ_SPEC_UUID" = ATO."OBJ_SPEC_UUID"
+                                and ATOS."LAST_VERSION" = ATO."VERSION"
+                                and DBMS_LOB.instr(ATO."OBJ_DEFINITION", 'n="dataStreamType">file<') > 0)
+            group by
+               dci."STREAM_UUID",
+               atos."SHORT_NAME",
+               atoslp."OBJ_SPEC_UUID",
+               atoslp."SHORT_NAME",
+               TO_CHAR(dcc."MODIFIED_DATE", 'YYYY-MM-DD'),
+               dci."INPUT_ID") aux
+         group by "STREAM_UUID",
+            "Stream",
+            "Loading Process ID",
+            "Loading Process",
+            "Date"
+         order by "Stream", "Loading Process", "Date" desc
+         
+   postgresql: >
+      select "Stream", "Loading Process", "Date", 
+               count(distinct "INPUT_ID") "Total Files in Error"
+         from
+            (select
+               dci."STREAM_UUID",
+               atos."SHORT_NAME" "Stream",
+               atoslp."OBJ_SPEC_UUID" "Loading Process ID",
+               atoslp."SHORT_NAME" "Loading Process",
+               TO_CHAR(dcc."MODIFIED_DATE", 'YYYY-MM-DD') "Date",
+               dci."INPUT_ID",
+               sum(cast(dcc."PROGRESS" as integer)) "Number of Events"
+            from
+               "DP_C_INPUT" dci ,
+               "AF_T_OBJ_SPEC" atos,
+               "DP_C_CONTROL" dcc,
+               "AF_T_OBJ_SPEC" atoslp  
+            where
+                  dci."STREAM_UUID" = atos."OBJ_SPEC_UUID"
+               and dci."INPUT_ID" = dcc."INPUT_ID"
+               and dcc."STATUS" = 3
+               and dcc."MODIFIED_DATE" >= DATE_TRUNC('DAY', CURRENT_DATE) - INTERVAL '{{number}} Days'
+               and dcc."LOADING_PROCESS_SPEC_ID" = atoslp."OBJ_SPEC_ID"
+               and atoslp."OBJ_TYPE_NAME" = 'DATAPUMP.LoadingProcess'
+               and exists (select 0
+                            from "AF_T_OBJ" ato
+                            where ATOS."OBJ_SPEC_UUID" = ATO."OBJ_SPEC_UUID"
+                                and ATOS."LAST_VERSION" = ATO."VERSION"
+                                and position ( 'n="dataStreamType">file<' in ATO."OBJ_DEFINITION") > 0)
+            group by
+               dci."STREAM_UUID",
+               atos."SHORT_NAME",
+               atoslp."OBJ_SPEC_UUID",
+               atoslp."SHORT_NAME",
+               TO_CHAR(dcc."MODIFIED_DATE", 'YYYY-MM-DD'),
+               dci."INPUT_ID") aux
+         group by "STREAM_UUID",
+            "Stream",
+            "Loading Process ID",
+            "Loading Process",
+            "Date"
+         order by "Stream", "Loading Process", "Date" desc
+
+FilesProcessedMoreThanOnce:
+   name: Files processed more than once
+   oracle: >
+      select atos."SHORT_NAME" "Stream",
+            atoslp."SHORT_NAME" "Loading Process",
+            dci."SOURCE",
+            TO_CHAR(MIN(dcc."MODIFIED_DATE"), 'YYYY-MM-DD HH24:MI:SS') "Min Date",
+            TO_CHAR(MAX(dcc."MODIFIED_DATE"), 'YYYY-MM-DD HH24:MI:SS') "Max Date",
+            COUNT(DISTINCT dcc."INPUT_ID") "Times Processed"                        
+         from
+            "DP_C_INPUT" dci ,
+            "AF_T_OBJ_SPEC" atos,
+            "DP_C_CONTROL" dcc,
+            "AF_T_OBJ_SPEC" atoslp  
+         where
+               dci."STREAM_UUID" = atos."OBJ_SPEC_UUID"
+            and dci."INPUT_ID" = dcc."INPUT_ID"
+            and dcc."STATUS" = 2
+            and dcc."MODIFIED_DATE" >= TRUNC(SYSDATE) - {{number}}
+            and dcc."LOADING_PROCESS_SPEC_ID" = atoslp."OBJ_SPEC_ID"
+            and atoslp."OBJ_TYPE_NAME" = 'DATAPUMP.LoadingProcess'
+            and exists (select 0
+                           from "AF_T_OBJ" ato
+                           where ATOS."OBJ_SPEC_UUID" = ATO."OBJ_SPEC_UUID"
+                              and ATOS."LAST_VERSION" = ATO."VERSION"
+                              and DBMS_LOB.instr(ATO."OBJ_DEFINITION", 'n="dataStreamType">file<') > 0)
+         group by
+            dci."STREAM_UUID",
+            atos."SHORT_NAME",
+            atoslp."OBJ_SPEC_UUID",
+            atoslp."SHORT_NAME",
+            dci."SOURCE" 
+         having count(0) > 1  
+         ORDER BY "Stream", "Loading Process", "Times Processed" DESC                                         
+   
+   postgresql: >
+      select atos."SHORT_NAME" "Stream",
+            atoslp."SHORT_NAME" "Loading Process",
+            dci."SOURCE",
+            TO_CHAR(MIN(dcc."MODIFIED_DATE"), 'YYYY-MM-DD HH24:MI:SS') "Min Date",
+            TO_CHAR(MAX(dcc."MODIFIED_DATE"), 'YYYY-MM-DD HH24:MI:SS') "Max Date",
+            COUNT(DISTINCT dcc."INPUT_ID") "Times Processed"                        
+         from
+            "DP_C_INPUT" dci ,
+            "AF_T_OBJ_SPEC" atos,
+            "DP_C_CONTROL" dcc,
+            "AF_T_OBJ_SPEC" atoslp  
+         where
+               dci."STREAM_UUID" = atos."OBJ_SPEC_UUID"
+            and dci."INPUT_ID" = dcc."INPUT_ID"
+            and dcc."STATUS" = 2
+            and dcc."MODIFIED_DATE" >= DATE_TRUNC('DAY', CURRENT_DATE) - INTERVAL '{{number}} Days'
+            and dcc."LOADING_PROCESS_SPEC_ID" = atoslp."OBJ_SPEC_ID"
+            and atoslp."OBJ_TYPE_NAME" = 'DATAPUMP.LoadingProcess'
+            and exists (select 0
+                           from "AF_T_OBJ" ato
+                           where ATOS."OBJ_SPEC_UUID" = ATO."OBJ_SPEC_UUID"
+                              and ATOS."LAST_VERSION" = ATO."VERSION"
+                              and position ( 'n="dataStreamType">file<' in ATO."OBJ_DEFINITION") > 0)
+         group by
+            dci."STREAM_UUID",
+            atos."SHORT_NAME",
+            atoslp."OBJ_SPEC_UUID",
+            atoslp."SHORT_NAME",
+            dci."SOURCE" 
+         having count(0) > 1  
+         ORDER BY "Stream", "Loading Process", "Times Processed" DESC    
+         
+FilesBacklog:
+   name: Files backlog
+   oracle: >
+      select "Stream", "Loading Process", "Date", 
+               count(distinct "INPUT_ID") "Total Files Backlog",
+              MIN("Min Date") "Min Date" 
+         from
+            (select
+               dci."STREAM_UUID",
+               atos."SHORT_NAME" "Stream",
+               atoslp."OBJ_SPEC_UUID" "Loading Process ID",
+               atoslp."SHORT_NAME" "Loading Process",
+               TO_CHAR(dcc."MODIFIED_DATE", 'YYYY-MM-DD') "Date",
+               dci."INPUT_ID",
+               MIN(TO_CHAR(dcc."MODIFIED_DATE", 'YYYY-MM-DD HH24:MI')) "Min Date"
+            from
+               "DP_C_INPUT" dci ,
+               "AF_T_OBJ_SPEC" atos,
+               "DP_C_CONTROL" dcc,
+               "AF_T_OBJ_SPEC" atoslp  
+            where
+                  dci."STREAM_UUID" = atos."OBJ_SPEC_UUID"
+               and dci."INPUT_ID" = dcc."INPUT_ID"
+               and dcc."STATUS" = 0
+               and dcc."MODIFIED_DATE" >= TRUNC(sysdate) - {{number}} 
+               and dcc."LOADING_PROCESS_SPEC_ID" = atoslp."OBJ_SPEC_ID"
+               and atoslp."OBJ_TYPE_NAME" = 'DATAPUMP.LoadingProcess'              
+               and exists (select 0
+                            from "AF_T_OBJ" ato
+                            where ATOS."OBJ_SPEC_UUID" = ATO."OBJ_SPEC_UUID"
+                                and ATOS."LAST_VERSION" = ATO."VERSION"
+                                and DBMS_LOB.instr(ATO."OBJ_DEFINITION", 'n="dataStreamType">file<') > 0)
+            group by
+               dci."STREAM_UUID",
+               atos."SHORT_NAME",
+               atoslp."OBJ_SPEC_UUID",
+               atoslp."SHORT_NAME",
+               TO_CHAR(dcc."MODIFIED_DATE", 'YYYY-MM-DD'),
+               dci."INPUT_ID") aux
+         group by "STREAM_UUID",
+            "Stream",
+            "Loading Process ID",
+            "Loading Process",
+            "Date"
+         order by "Stream", "Loading Process", "Date" desc
+         
+   postgresql: >
+      select "Stream", "Loading Process", "Date", 
+               count(distinct "INPUT_ID") "Total Files Backlog",
+              MIN("Min Date") "Min Date" 
+         from
+            (select
+               dci."STREAM_UUID",
+               atos."SHORT_NAME" "Stream",
+               atoslp."OBJ_SPEC_UUID" "Loading Process ID",
+               atoslp."SHORT_NAME" "Loading Process",
+               TO_CHAR(dcc."MODIFIED_DATE", 'YYYY-MM-DD') "Date",
+               dci."INPUT_ID",
+               MIN(TO_CHAR(dcc."MODIFIED_DATE", 'YYYY-MM-DD HH24:MI')) "Min Date"
+            from
+               "DP_C_INPUT" dci ,
+               "AF_T_OBJ_SPEC" atos,
+               "DP_C_CONTROL" dcc,
+               "AF_T_OBJ_SPEC" atoslp  
+            where
+                  dci."STREAM_UUID" = atos."OBJ_SPEC_UUID"
+               and dci."INPUT_ID" = dcc."INPUT_ID"
+               and dcc."STATUS" = 0
+               and dcc."MODIFIED_DATE" >= DATE_TRUNC('DAY', CURRENT_DATE) - INTERVAL '{{number}} Days'
+               and dcc."LOADING_PROCESS_SPEC_ID" = atoslp."OBJ_SPEC_ID"
+               and atoslp."OBJ_TYPE_NAME" = 'DATAPUMP.LoadingProcess'
+               and exists (select 0
+                            from "AF_T_OBJ" ato
+                            where ATOS."OBJ_SPEC_UUID" = ATO."OBJ_SPEC_UUID"
+                                and ATOS."LAST_VERSION" = ATO."VERSION"
+                                and position ( 'n="dataStreamType">file<' in ATO."OBJ_DEFINITION") > 0)
+            group by
+               dci."STREAM_UUID",
+               atos."SHORT_NAME",
+               atoslp."OBJ_SPEC_UUID",
+               atoslp."SHORT_NAME",
+               TO_CHAR(dcc."MODIFIED_DATE", 'YYYY-MM-DD'),
+               dci."INPUT_ID") aux
+         group by "STREAM_UUID",
+            "Stream",
+            "Loading Process ID",
+            "Loading Process",
+            "Date"
+         order by "Stream", "Loading Process", "Date" desc
