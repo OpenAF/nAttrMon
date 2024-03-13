@@ -1,0 +1,11 @@
+input:
+   name         : RAID Files Backlog by day in last 7 days
+   cron         : "*/10 * * * *"
+   waitForFinish: true
+   onlyOnEvent  : true
+   execFrom     : nInput_FilesProcessed
+   execArgs     :
+      key : FMS ADM
+      attrName: FilesBacklog
+      number: 7
+

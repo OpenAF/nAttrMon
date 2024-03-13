@@ -1,0 +1,11 @@
+input:
+   name         : RAID Files in Error by hour in last 48 hours
+   cron         : "*/10 * * * *"
+   waitForFinish: true
+   onlyOnEvent  : true
+   execFrom     : nInput_FilesProcessed
+   execArgs     :
+      key : FMS ADM
+      attrName: FilesInErrorByHour
+      number: 48
+
