@@ -5,4 +5,5 @@ input:
    onlyOnEvent  : true
    execFrom     : nInput_RAIDMemory
    execArgs     : 
-      chKeys      : raidServers
+      chKeys            : raidServers
+      #extraMemoryDetails: true
