@@ -31,7 +31,7 @@ var nInput_RAIDMemory = function(anMonitoredAFObjectKey, attributePrefix) {
 	
 		this.params.extraMemoryDetails = _$(this.params.extraMemoryDetails).isBoolean().default(false)
 		if (this.params.extraMemoryDetails) {
-			this._args = { ShowMemoryDetails: true }
+			this._args = { ShowMemoryDetails: true }
 		} else {
 			this._args = { }
 		}
