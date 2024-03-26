@@ -29,6 +29,13 @@ var nInput_RAIDMemory = function(anMonitoredAFObjectKey, attributePrefix) {
 		if (isUnDef(this.params.attrTemplate)) 
 			this.params.attrTemplate = "Server status/Memory";
 	
+		this.params.extraMemoryDetails = _$(this.params.extraMemoryDetails).isBoolean().default(false)
+		if (this.params.extraMemoryDetails) {
+			this._args = { ShowMemoryDetails: true }
+		} else {
+			this._args = { }
+		}
+
 		if (isUnDef(this.params.extra)) this.params.extra = [];
 
 	} else {
@@ -62,13 +69,14 @@ nInput_RAIDMemory.prototype.__getMemory = function(aKey, aExtra) {
 		var mems;
 		var parent = this;
 		if (isString(parent.params.useCache)) {
-			var res = $cache("nattrmon::" + parent.params.useCache + "::" + aKey).get({ op: "StatusReport", args: {} });
+			var res = $cache("nattrmon::" + parent.params.useCache + "::" + aKey).get({ op: "StatusReport", args: this._args })
 			if (isMap(res) && isDef(res.__error)) throw res.__error;
 			mems = res.MemoryInfo;
 		} else {
+			var parent = this
 			nattrmon.useObject(aKey, function(s) {
 				try {
-					mems = s.exec("StatusReport", {}).MemoryInfo;
+					mems = s.exec("StatusReport", parent._args).MemoryInfo
 				} catch(e) {
 					logErr("Error while retrieving memory using '" + aKey + "': " + e.message);
 					throw e;
@@ -85,9 +93,9 @@ nInput_RAIDMemory.prototype.__getMemory = function(aKey, aExtra) {
 	}
 
 	if(!this.params.single) {
-		ret = {"Free heap (MB)": freemem, "Used heap (MB)": usedmem, "Total heap (MB)": totalmem, "Max memory (MB)": maxmem};
+		ret = {"Free heap (MB)": freemem, "Used heap (MB)": usedmem, "Total heap (MB)": totalmem, "Max memory (MB)": maxmem, "GCCollectors": mems.GCCollectors, "GCSpaces": mems.GCSpaces};
 	} else {
-		ret = {"Name": aKey, "Free heap (MB)": freemem, "Used heap (MB)": usedmem, "Total heap (MB)": totalmem, "Max memory (MB)": maxmem};
+		ret = {"Name": aKey, "Free heap (MB)": freemem, "Used heap (MB)": usedmem, "Total heap (MB)": totalmem, "Max memory (MB)": maxmem, "GCCollectors": mems.GCCollectors, "GCSpaces": mems.GCSpaces};
 		ret = merge(ret, aExtra);
 	}
 
