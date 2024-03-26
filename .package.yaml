@@ -411,7 +411,7 @@ filesHash:
   config/objects/nInput_OpenMetrics.js: 67c90bf64c35d639499c7bbf8273af715050ee5d
   config/objects/nInput_RAIDGCMemory.js: 28aefad8696236df00e681ea00d85679d9481a9f
   config/objects/nInput_RAIDLookups.js: 9a56cb2550a5c254097337f4da7191f58a685caa
-  config/objects/nInput_RAIDMemory.js: 5348b1917c698d5fcbb8b56cd6553a657af81bb8
+  config/objects/nInput_RAIDMemory.js: bce4c8ed301ee25a931c518eabf2718704de69fe
   config/objects/nInput_RAIDStatus_DB.js: ff3e9eeeecc7092e855000ce3a90181f297f46c4
   config/objects/nInput_RemoteChannel.js: 42b87110cc2a584907920c79c2ddfb49c1e92383
   config/objects/nInput_RunningFlows.js: 7d8d77a702b4f9f2f719679052cba240798fa5f8
