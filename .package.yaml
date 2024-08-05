@@ -491,7 +491,7 @@ filesHash:
   lib/nattributes.js: 58c0d8f1dcb36244afc91bdd7678dc9b639f1f38
   lib/nattributevalue.js: 216e3ed7187625320ac73fa2f4c9974a1c52d3c0
   lib/ninput.js: 1c1f8be902e3ace70f762a1b038e4271513b121c
-  lib/nmain.js: de64ddb5544803903e810add7a15e4fb128d6879
+  lib/nmain.js: 8f2decc322a89d220662f75a6d7a70daaca4f0b3
   lib/nmonitoredobject.js: bb75336ba5a66fbba2db45faeb06ec9b3bc4f6a7
   lib/noutput.js: 15b98844838bdd503e6bcc9f8b39ecd681c6a49b
   lib/nplug.js: df6a1feb12a0791adf6a8dd5a2e47c675a02a375
@@ -501,8 +501,8 @@ filesHash:
   lib/nwarnings.js: 441517fb9a74f556cfe7c3dc445f8c3dc093d02a
   nAttrmon_single.yaml.sample: 1813c44306a7206721c200bcf794a4cb7842e6f7
   nattrmon.js: e025e73feb3cf363de474e5992b954cfc10fa2f0
-  nattrmon.yaml.sample: e3e87e05975614d0d45c65b3ee436c1554cd0b4c
-  oJob_nAttrMon.yaml: fd5ce2142596ec5110922ae79eefae80448132cd
+  nattrmon.yaml.sample: aa9dad8c808dd465c2e8f68522ce45b6f140f76a
+  oJob_nAttrMon.yaml: 55aa4809661c306a2db9ea2a33c6a4f542835ebd
   tests/inputDBTest.yml: c38616606dc5956e449189d11f8e661170f94dfb
   tests/inputShellTest.yml: ce643955982cb16b53a8843acd3549466e5cddf5
   tests/nattrmonTester.js: 1676171ab793cdb67da4de3e033aee110aa8ef20
