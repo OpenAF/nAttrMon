@@ -62,3 +62,6 @@
 
 # Custom order of loading plugs
 #PLUGSORDER: "outputs,inputs,validations"
+
+# Pre-loading of external OpenAF libraries (useful for adding OpenAF channel types)
+#LIBS: "aws.js,s3.js"
