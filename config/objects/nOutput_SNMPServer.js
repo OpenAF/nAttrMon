@@ -10,7 +10,6 @@
  *    - baseOID((string) Base Oid is used to send traps.\
  *    - snmpVersion(string) it defines version of SNMP server.\
  *    - oidMapping(Map) it contains keys mapped with OID values to send traps.\
- *    - sysUpTime(double) it defines how long ago in milliseconds the trap occurred.\
  *
  * </odoc>
  */
@@ -20,43 +19,49 @@ var nOutput_SNMPServer = function (aMap) {
     plugin("SNMP");
     if (isUnDef(aMap) || !isObject(aMap)) aMap = {}
 
-    snmpAddress = _$(aMap.snmpAddress, "var aMap.snmpAddress").regexp(/^udp:[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\/[0-9]{3}/).default("something")
-    snmpEngineID = _$(aMap.snmpEngineID, "var aMap.snmpEngineID").isString().regexp(/[0-9]{1,18}/).default("something")
-    baseOID = _$(aMap.baseOID, "var aMap.baseOID").isString().regexp(/([0-9]{1,4}\.)/).$_("something")
-    snmpVersion = _$(aMap.snmpVersion, "snmpVersion").oneOf([1, 2, 3]).isNumber().default(2)
-    oidMapping = _$(aMap.oidMapping, "oidMapping").isObject().$_("Please Map the oid's")
-    sysUpTime = _$(aMap.sysUpTime, "var aMap.sysUpTime").isDouble().default(0)
+    if (isUnDef(aMap.enabled) || aMap.enabled === null) aMap.enabled = true;
 
-    snmpAuthPassPhrase = _$(aMap.snmpAuthPassPhrase, "snmpAuthPassPhrase").isString().$_("Please provide snmpAuthPhrase")
-    snmpPrivPassPhrase = _$(aMap.snmpPrivPassPhrase, "snmpPrivPassPhrase").isString().$_("Please Provoide snmpPrivPassPhrase")
+    if (aMap.enabled == false) return;
 
-    if (isUnDef(aMap.snmpCommunity) || aMap.snmpCommunity === null) aMap.snmpCommunity = "MD5";
-    if (isUnDef(aMap.snmpAuthProtocol) || aMap.snmpAuthProtocol === null) aMap.snmpAuthProtocol = "MD5";
-    if (isUnDef(aMap.snmpPrivProtocol) || aMap.snmpPrivProtocol === null) aMap.snmpPrivProtocol = "AES128";
-    if (isUnDef(aMap.snmpSecurityName) || aMap.snmpSecurityName === null) aMap.snmpSecurityName = "NMS";
-    if (isUnDef(aMap.timeOut) || aMap.timeOut === null) aMap.timeOut = 5000;
-    if (isUnDef(aMap.numOfRetries) || aMap.timeOut === null) aMap.numOfRetries = 3;
+    if (aMap.enabled == true) { 
+        this.enabled = true
+        snmpAddress = _$(aMap.snmpAddress, "var aMap.snmpAddress").regexp(/^udp:[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\/[0-9]{3}/).default("something")
+        snmpEngineID = _$(aMap.snmpEngineID, "var aMap.snmpEngineID").isString().regexp(/[0-9]{1,18}/).default("something")
+        baseOID = _$(aMap.baseOID, "var aMap.baseOID").isString().regexp(/([0-9]{1,4}\.)/).$_("something")
+        snmpVersion = _$(aMap.snmpVersion, "snmpVersion").oneOf([1, 2, 3]).isNumber().default(2)
+        oidMapping = _$(aMap.oidMapping, "oidMapping").isObject().$_("Please Map the oid's")
 
-    this.IDMapping = aMap.oidMapping
-    this.params = {
-        "snmpIPAddress": snmpAddress,
-        "snmpCommunity": aMap.snmpCommunity,
-        "snmpTimeout": aMap.timeOut,
-        "numOfRetries": aMap.numOfRetries,
-        "snmpVersion": snmpVersion,
-        "snmpEngineID": snmpEngineID,
-        "snmpBaseOID": baseOID,
-        "sysUpTime": sysUpTime
+        snmpAuthPassPhrase = _$(aMap.snmpAuthPassPhrase, "snmpAuthPassPhrase").isString().$_("Please provide snmpAuthPhrase")
+        snmpPrivPassPhrase = _$(aMap.snmpPrivPassPhrase, "snmpPrivPassPhrase").isString().$_("Please Provoide snmpPrivPassPhrase")
+
+        if (isUnDef(aMap.snmpCommunity) || aMap.snmpCommunity === null) aMap.snmpCommunity = "MD5";
+        if (isUnDef(aMap.snmpAuthProtocol) || aMap.snmpAuthProtocol === null) aMap.snmpAuthProtocol = "MD5";
+        if (isUnDef(aMap.snmpPrivProtocol) || aMap.snmpPrivProtocol === null) aMap.snmpPrivProtocol = "AES128";
+        if (isUnDef(aMap.snmpSecurityName) || aMap.snmpSecurityName === null) aMap.snmpSecurityName = "NMS";
+        if (isUnDef(aMap.timeOut) || aMap.timeOut === null) aMap.timeOut = 5000;
+        if (isUnDef(aMap.numOfRetries) || aMap.timeOut === null) aMap.numOfRetries = 3;
+
+        this.IDMapping = aMap.oidMapping
+        this.params = {
+            "snmpIPAddress": snmpAddress,
+            "snmpCommunity": aMap.snmpCommunity,
+            "snmpTimeout": aMap.timeOut,
+            "numOfRetries": aMap.numOfRetries,
+            "snmpVersion": snmpVersion,
+            "snmpEngineID": snmpEngineID,
+            "snmpBaseOID": baseOID
+        }
+
+        this.snmpProtocols = {
+            "engineId": snmpEngineID,
+            "authPassphrase": snmpAuthPassPhrase,
+            "privPassphrase": aMap.nmpPrivPassPhrase,
+            "authProtocol": aMap.snmpAuthProtocol,
+            "privProtocol": aMap.snmpPrivProtocol,
+            "securityName": aMap.snmpSecurityName
+        }
     }
-
-    this.snmpProtocols = {
-        "engineId": snmpEngineID,
-        "authPassphrase": snmpAuthPassPhrase,
-        "privPassphrase": aMap.nmpPrivPassPhrase,
-        "authProtocol": aMap.snmpAuthProtocol,
-        "privProtocol": aMap.snmpPrivProtocol,
-        "securityName": aMap.snmpSecurityName
-    }
+    else this.enabled = false;
 
     nOutput.call(this, this.output);
 };
@@ -168,15 +173,15 @@ nOutput_SNMPServer.prototype.sendTrap = function (argsValue, params, snmpProtoco
     try {
         if (params.snmpVersion <= 2) var snmp = new SNMP(params.snmpIPAddress, params.snmpCommunity); else var snmp = new SNMP(params.snmpIPAddress, params.snmpCommunity, params.snmpTimeout, params.numOfRetries, params.snmpVersion, snmpProtocols);
         var response = this.entitiesExtraction(argsValue, IDMapping)
-        log(stringify(response.trapArr))
+        log("nOutput_SNMPServer - stringify(response.trapArr) - " + stringify(response.trapArr))
         //snmp.trap(params.snmpBaseOID, response.trapArr)
         if (getVersion() > "20231221") {
-            snmp.trap(params.snmpBaseOID, params.sysUpTime, response.trapArr)
+            snmp.trap(params.snmpBaseOID, 0, response.trapArr, {})
          } else {
             logWarn("nOutput_SNMPServer | sysUpTime functionality is not available on the current version " + getVersion() + ". Please upgrade to a more recent version.")
-            snmp.trap(params.snmpBaseOID, response.trapArr)
+            snmp.trap(params.snmpBaseOID, response.trapArr, {})
          }
-        log("Trap Sent Successfully")
+        log("nOutput_SNMPServer - Trap Sent Successfully")
     }
     catch (e) {
         if (isJavaException(e)) logErr(e.javaException.printStackTrace()); else (logErr(e));
@@ -186,6 +191,8 @@ nOutput_SNMPServer.prototype.sendTrap = function (argsValue, params, snmpProtoco
 
 
 nOutput_SNMPServer.prototype.output = function (scope, args) {
+    
+    if (this.enabled == false) return;
 
     if (args.op != "setall" && args.op != "set") return;
     if (args.op == "setall" && !this.considerSetAll) return;
@@ -203,6 +210,7 @@ nOutput_SNMPServer.prototype.output = function (scope, args) {
         var isok = isDef(this.include) ? false : true;
         var isWarns = (ch == "nattrmon::warnings" || ch == "nattrmon::warnings::buffer");
         var kk = (isWarns) ? value.title : value.name;
+        
         if (isDef(this.include)) isok = this.include.filter(inc => kk.match(inc)).length > 0;
         if (isDef(this.exclude)) isok = this.exclude.filter(exc => kk.match(exc)).length <= 0;
         if (isok) {
