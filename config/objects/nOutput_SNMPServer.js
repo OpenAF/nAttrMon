@@ -168,7 +168,7 @@ nOutput_SNMPServer.prototype.entitiesExtraction = function (args, IDMapping) {
 
 
 
-nOutput_SNMPServer.prototype.sendTrap = function (argsValue, params, snmpProtocols, IDMapping) {
+nOutput_SNMPServer.prototype.sendTrap = function (argsValue, params, snmpProtocols, IDMapping, sysUpTime) {
 
     try {
         if (params.snmpVersion <= 2) var snmp = new SNMP(params.snmpIPAddress, params.snmpCommunity); else var snmp = new SNMP(params.snmpIPAddress, params.snmpCommunity, params.snmpTimeout, params.numOfRetries, params.snmpVersion, snmpProtocols);
@@ -176,7 +176,7 @@ nOutput_SNMPServer.prototype.sendTrap = function (argsValue, params, snmpProtoco
         log("nOutput_SNMPServer - stringify(response.trapArr) - " + stringify(response.trapArr))
         //snmp.trap(params.snmpBaseOID, response.trapArr)
         if (getVersion() > "20231221") {
-            snmp.trap(params.snmpBaseOID, 0, response.trapArr, {})
+            snmp.trap(params.snmpBaseOID, sysUpTime, response.trapArr, {})
          } else {
             logWarn("nOutput_SNMPServer | sysUpTime functionality is not available on the current version " + getVersion() + ". Please upgrade to a more recent version.")
             snmp.trap(params.snmpBaseOID, response.trapArr, {})
@@ -215,7 +215,12 @@ nOutput_SNMPServer.prototype.output = function (scope, args) {
         if (isDef(this.exclude)) isok = this.exclude.filter(exc => kk.match(exc)).length <= 0;
         if (isok) {
             if (isArray(v)) argsValue = v[0]; else argsValue = v
-            mappingObject = this.sendTrap(argsValue, this.params, this.snmpProtocols, this.IDMapping)
+            var diff_now = 0
+            if (isWarns) {
+                var now_date = new Date();
+                diff_now = now_date - value.lastupdate;
+            }
+            mappingObject = this.sendTrap(argsValue, this.params, this.snmpProtocols, this.IDMapping, diff_now)
         }
     });
 };
