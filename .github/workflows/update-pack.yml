@@ -16,22 +16,22 @@ jobs:
     
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Cache OpenAF runtime
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         key : oaf-t8
         path: /tmp/oaf
 
     - name: Generate oPack
-      uses: openaf/ojob-action@v4
+      uses: openaf/ojob-action@v5
       with:
         script: oPack("genpack . --exclude .github")
         dist  : 't8'
         
     - name: Update version badge
-      uses: openaf/ojob-action@v4
+      uses: openaf/ojob-action@v5
       with:
         def : |
           todo:
@@ -65,20 +65,20 @@ jobs:
     - name: Checkin
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      uses: openaf/ojob-action@v4
+      uses: openaf/ojob-action@v5
       with:
         ojob: 'ojob.io/git/hub/contentIn'
-        args: 'message="Update\ package" title="Update\ package" paths=.github/version.svg,.package.yaml'
+        args: "message=\"Update package\" title=\"Update package\" paths=.github/version.svg,.package.yaml branch=\"${{ github.ref_name }}\""
         dist: 't8'
 
     - name: Pack oPack
-      uses: openaf/ojob-action@v4
+      uses: openaf/ojob-action@v5
       with:
         script: oPack("pack . --exclude .github")
         dist  : 't8'
         
     - name: Upload oPack artifact
-      uses: actions/upload-artifact@v3.1.2
+      uses: actions/upload-artifact@v4
       with:
         name: nAttrMon.opack
         path: nAttrMon-*.opack
