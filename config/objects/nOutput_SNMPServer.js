@@ -21,8 +21,6 @@ var nOutput_SNMPServer = function (aMap) {
 
     if (isUnDef(aMap.enabled) || aMap.enabled === null) aMap.enabled = true;
 
-    if (aMap.enabled == false) return;
-
     if (aMap.enabled == true) { 
         this.enabled = true
         snmpAddress = _$(aMap.snmpAddress, "var aMap.snmpAddress").regexp(/^udp:[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\/[0-9]{3}/).default("something")
