@@ -441,7 +441,7 @@ filesHash:
   config/objects/nOutput_Notifications.js: 4a20e3ee7334f78b9b7ab36730000530fb63d598
   config/objects/nOutput_Oracle.js: ab0f2fe7958952437ae93030715633858462269f
   config/objects/nOutput_RemoteChannel.js: 8dcadaf89c78f31707c45d615a3941ce0547cd33
-  config/objects/nOutput_SNMPServer.js: f9fcf1841f8620889c28b71ae86b833f393c71f3
+  config/objects/nOutput_SNMPServer.js: c1f949b2c104ad078ffa2355c5058ede4798d8f7
   config/objects/nOutput_Slack.js: bf5205bfd1b76b48345ec99bb407438eb3f1b0c9
   config/objects/nOutput_Stdout.js: eddd09834507308573f289b6a4c92e7cdd6b1b70
   config/objects/nOutput_WarnsHistory.js: 53820893e6a8f4a63b2ad93ffc7e7094c6bcdf1f
