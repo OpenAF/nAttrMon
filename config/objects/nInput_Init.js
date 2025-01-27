@@ -16,10 +16,13 @@ nInputInitList["AF"] = {
         content.forEach(entry => {
             entry = $ch(ikey).get({ key: entry.key })
             if (isDef(entry.key)) {
-                log("Destroying AF object pool to access '" + entry.key + "'...")
+                if (noclean)
+                    if (isDef(entry.podStatefullset))
+                        if (entry.podStatefullset === "") return							
+                log("nInputInit | Destroying AF object pool to access '" + entry.key + "'...")
                 nattrmon.delObjectPool(entry.key)
 
-                log("Destroying object pool to access '" + entry.key + "' associations...")
+                log("nInputInit | Destroying object pool to access '" + entry.key + "' associations...")
                 parent.unsetAssociations("AF", entry, ikey)
 
                 $ch(ikey).unset({ key: entry.key })
@@ -31,22 +34,28 @@ nInputInitList["AF"] = {
 
         $ch(ikey).create()
         content
-        .filter(r => isUnDef($ch(ikey).get({ key: r.key })))
+        //.filter(r => isUnDef($ch(ikey).get({ key: r.key })))
         .forEach(entry => {
             entry      = _$(entry, "AF " + ikey + " entry").isMap().$_();
             entry      = parent.setSec(entry);
             entry.pool = _$(entry.pool, "AF " + ikey + " - " + entry.key + " pool").isMap().default({});
             entry.key  = _$(entry.key, "AF " + ikey + " entry key").isString().$_();
+            if (isDef($ch(ikey).get({ key: entry.key }))) {
+                var aux_old = $ch(ikey).get({ key: entry.key })
+                if (entry.url === aux_old.url) return
+
+                $ch(ikey).unset({ key: entry.key });
+            }
 
             $ch(ikey).set({ key: entry.key }, entry);
 
-            log("Creating AF object pool to access key '" + entry.key + "'...");
+            log("nInputInit | Creating AF object pool to access key '" + entry.key + "'...");
 
             try {
                 let _url = java.net.URL(entry.url)
-                log("AF object pool to access key '" + entry.key + "': proto=" + _url.getProtocol() + ", host=" + _url.getHost() + ", port=" + _url.getPort() + ", path=" + _url.getPath())
+                log("nInputInit | AF object pool to access key '" + entry.key + "': proto=" + _url.getProtocol() + ", host=" + _url.getHost() + ", port=" + _url.getPort() + ", path=" + _url.getPath())
             } catch(_urle) {
-                logErr("Error during URL parsing for AF object pool access key '" + entry.key + "': " + _urle)
+                logErr("nInputInit | Error during URL parsing for AF object pool access key '" + entry.key + "': " + _urle)
                 throw _urle
             }
 
@@ -54,7 +63,7 @@ nInputInitList["AF"] = {
             parent.setPool(p, entry);
             nattrmon.addObjectPool(entry.key, p);
 
-            log("Created object pool to access '" + entry.key + "'")
+            log("nInputInit | Created object pool to access '" + entry.key + "'")
             parent.setAssociations("AF", entry, ikey);
         })
 
@@ -111,7 +120,7 @@ nInputInitList["CH"] = {
 
                     $ch(content.name).set(entry.key, entry.value);
                 } catch(e1) {
-                    logErr(e1);
+                    logErr("nInputInit | factory for CH - " + e1);
                 }
             })
 
@@ -130,16 +139,16 @@ nInputInitList["DB"] = {
     list   : (parent, ikey, content) => {
         return ($ch().list().indexOf(ikey) >= 0 ? $ch(ikey).getKeys() : [])
     },
-    recycle: (parent, ikey, content) => {
+    recycle: (parent, ikey, content, noclean) => {
         content = _$(content, "content").isArray().default([])
 
         content.forEach(entry => {
             entry = $ch(ikey).get({ key: entry.key })
             if (isDef(entry.key)) {
-                log("Destroying DB object pool to access " + entry.key + "...")
+                log("nInputInit | Destroying DB object pool to access " + entry.key + "...")
                 nattrmon.delObjectPool(entry.key)
 
-                log("Destroying object pool to access " + entry.key + " associations...")
+                log("nInputInit | Destroying object pool to access " + entry.key + " associations...")
                 parent.unsetAssociations("DB", entry, ikey)
 
                 $ch(ikey).unset({ key: entry.key })
@@ -159,7 +168,7 @@ nInputInitList["DB"] = {
 
                 $ch(ikey).set({ key: entry.key }, entry);
 
-                log("Creating DB object pool to access " + entry.key + "...");
+                log("nInputInit | Creating DB object pool to access " + entry.key + "...");
                 var p;
                 if (isDef(entry.driver)) {
                     p = ow.obj.pool.DB(entry.driver, entry.url, entry.login, entry.pass, __, entry.timeout);
@@ -169,10 +178,10 @@ nInputInitList["DB"] = {
                 parent.setPool(p, entry);
                 nattrmon.addObjectPool(entry.key, p);
 
-                log("Created object pool to access " + entry.key);
+                log("nInputInit | Created object pool to access " + entry.key);
                 parent.setAssociations("DB", entry, ikey);
             } catch(e1) {
-                logErr(e1);
+                logErr("nInputInit | factory for DB - " +e1);
             }
         })
 
@@ -188,16 +197,16 @@ nInputInitList["SSH"] = {
     list   : (parent, ikey, content) => {
         return ($ch().list().indexOf(ikey) >= 0 ? $ch(ikey).getKeys() : [])
     },
-    recycle: (parent, ikey, content) => {
+    recycle: (parent, ikey, content, noclean) => {
         content = _$(content, "content").isArray().default([])
 
         content.forEach(entry => {
             entry = $ch(ikey).get({ key: entry.key })
             if (isDef(entry.key)) {
-                log("Destroying SSH object pool to access " + entry.key + "...")
+                log("nInputInit | Destroying SSH object pool to access " + entry.key + "...")
                 nattrmon.delObjectPool(entry.key)
 
-                log("Destroying object pool to access " + entry.key + " associations...")
+                log("nInputInit | Destroying object pool to access " + entry.key + " associations...")
                 parent.unsetAssociations("SSH", entry, ikey)
 
                 $ch(ikey).unset({ key: entry.key })
@@ -218,16 +227,16 @@ nInputInitList["SSH"] = {
 
                 $ch(ikey).set({ key: entry.key }, entry);
 
-                log("Creating SSH object pool to access " + entry.key + "...");
+                log("nInputInit | Creating SSH object pool to access " + entry.key + "...");
                 var p = ow.obj.pool.SSH(entry.host, entry.port, entry.login, entry.pass, entry.idkey, entry.withCompression);
 
                 parent.setPool(p, entry);
                 nattrmon.addObjectPool(entry.key, p);
 
-                log("Created object pool to access " + entry.key);
+                log("nInputInit | Created object pool to access " + entry.key);
                 parent.setAssociations("SSH", entry, ikey);
             } catch(e1) {
-                logErr(e1);
+                logErr("nInputInit | factory for SSH - " +e1);
             }
         })
 
@@ -246,7 +255,7 @@ nInputInitList["AFCache"] = {
                .filter(r => r.startsWith("nattrmon::" + ikey + "::") && !r.endsWith("::__cache"))
                .map(r => ({ key: r.replace("nattrmon::" + ikey + "::", "") }))
     },
-    recycle: (parent, ikey, content) => {
+    recycle: (parent, ikey, content, noclean) => {
         content = _$(content, "content").isArray().default([])
         
         content.forEach(entry => {
@@ -255,7 +264,7 @@ nInputInitList["AFCache"] = {
             entry.key  = _$(entry.key, "AFCache '" + ikey + "' entry key").isString().$_()
             entry.ttl  = _$(entry.ttl, "AFCache '" + ikey + "' " + entry.key + " ttl key").isNumber().default(__)
 
-            log("Destroying AF operation cache '" + ikey + "' to access " + entry.key + "...")
+            log("nInputInit | Destroying AF operation cache '" + ikey + "' to access " + entry.key + "...")
             $cache("nattrmon::" + ikey + "::" + entry.key)
             .destroy()
         })
@@ -272,7 +281,7 @@ nInputInitList["AFCache"] = {
                 entry.key  = _$(entry.key, "AFCache '" + ikey + "' entry key").isString().$_();
                 entry.ttl  = _$(entry.ttl, "AFCache '" + ikey + "' " + entry.key + " ttl key").isNumber().default(__);
 
-                log("Creating AF operation cache '" + ikey + "' to access " + entry.key + "...");
+                log("nInputInit | Creating AF operation cache '" + ikey + "' to access " + entry.key + "...");
                 $cache("nattrmon::" + ikey + "::" + entry.key)
                 .ttl(entry.ttl)
                 .fn(aK => {
@@ -292,9 +301,9 @@ nInputInitList["AFCache"] = {
                 })
                 .create();
 
-                log("Created AF operation cache to access " + entry.key);
+                log("nInputInit | Created AF operation cache to access " + entry.key);
             } catch(e1) {
-                logErr(e1);
+                logErr("nInputInit | factory for AFCache - " +e1);
             }
         })
 
@@ -312,7 +321,7 @@ nInputInitList["Kube"] = {
         var entry = {}
         entry[ikey] = clone(content)
 
-        if (isUnDef(getOPackPath("Kube"))) throw "Kube opack not installed."
+        if (isUnDef(getOPackPath("Kube"))) throw "nInputInit | Kube opack not installed."
         loadLib("kube.js")
 
         var getKubeLst = m => {
@@ -373,7 +382,7 @@ nInputInitList["Kube"] = {
             }
         }
 
-        parent.procList(nInputInitList[ikey], entry, inc)
+        parent.procList(nInputInitList[ikey], entry, inc, true)
     }
 }
 
@@ -411,7 +420,7 @@ var nInput_Init = function(aMap) {
                     _$(aci.type      , aType + " " + ichkey + " - " + aEntry.key + " type for " + aci.parentKey).isString().$_();
     
                     nattrmon.associateObjectPool(aci.parentKey, aEntry.key, aci.type);
-                    log("Object pool " + aEntry.key + " associated with " + aci.parentKey + " as " + aci.type);
+                    log("nInputInit | Object pool " + aEntry.key + " associated with " + aci.parentKey + " as " + aci.type);
                 })
             }
         },
@@ -422,7 +431,7 @@ var nInput_Init = function(aMap) {
                     _$(aci.type      , aType + " " + ichkey + " - " + aEntry.key + " type for " + aci.parentKey).isString().$_();
     
                     nattrmon.deassociateObjectPool(aci.parentKey, aci.type);
-                    log("Object pool " + aEntry.key + " deassociated from " + aci.parentKey + " as " + aci.type);
+                    log("nInputInit | Object pool " + aEntry.key + " deassociated from " + aci.parentKey + " as " + aci.type);
                 })
             }
         },
@@ -435,7 +444,7 @@ var nInput_Init = function(aMap) {
             }
         },
         getParent: () => { return parent },
-        procList: (init, params, inc) => {
+        procList: (init, params, inc, iskube) => {
             inc = _$(inc).isBoolean().default(false)
 
             if (init.type == "map") {
@@ -449,12 +458,12 @@ var nInput_Init = function(aMap) {
                             lstNew = init.factory(parent.fns, ikey, content, inc)
        
                             lstNew = _$(lstNew).isArray().default([])
-                            init.recycle(parent.fns, ikey, $from(lstPrev).except(lstNew).select(), inc)
+                            init.recycle(parent.fns, ikey, $from(lstPrev).except(lstNew).select(), inc, true)
                         } else {
                             if (!inc || init.dynamic) init.factory(parent.fns, ikey, content, inc)
                         }
                     } catch(e) {
-                        logErr(e);
+                        logErr("nInputInit | Error in ProcList (map) " + init.name + ": " + e);
                     }
                 })
             }
@@ -474,7 +483,7 @@ var nInput_Init = function(aMap) {
                             if (!inc || init.dynamic) init.factory(parent.fns, content, inc)
                         }
                     } catch(e) {
-                        logErr(e);
+                        logErr("nInputInit | Error in ProcList (array) " + init.name + ": " + e);
                     }
                 })
             }
@@ -482,7 +491,7 @@ var nInput_Init = function(aMap) {
     }
 
     Object.keys(nInputInitList).forEach(iinit => {
-        parent.fns.procList(nInputInitList[iinit], this.params, false)
+        parent.fns.procList(nInputInitList[iinit], this.params, false, false)
     })
 
     nInput.call(this, this.input);
@@ -496,7 +505,7 @@ nInput_Init.prototype.input = function(scope, args) {
     Object.keys(nInputInitList)
     .filter(n => nInputInitList[n].dynamic)
     .forEach(iinit => {
-        parent.fns.procList(nInputInitList[iinit], parent.params, true)
+        parent.fns.procList(nInputInitList[iinit], parent.params, true, false)
     })
 
     return ret;
