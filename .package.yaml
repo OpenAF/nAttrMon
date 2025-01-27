@@ -288,7 +288,7 @@ filesHash:
   config/inputs.disabled/js/13.ListDirFiles.js: 036bbed7d54bc873a5437fa757af5e7b757b9345
   config/inputs.disabled/js/22.fraud.snapshots.js: 1af700aa9302c8a0b0a3e381dac357922d2d2a39
   config/inputs.disabled/js/41.fms.rulestatus.js: cd8b30f94543a6fa3ada1c455da4e0accc3ca770
-  config/inputs.disabled/yaml/00.init.yaml: 05be480e07dd873a157efc1b868ffd15e75d1897
+  config/inputs.disabled/yaml/00.init.yaml: 3c923e7775f12058ad7ad1b6ebc872595da3604b
   config/inputs.disabled/yaml/01.ping.yaml: fe3c634d7b0beff66a59484a315fcc205ffe1ca9
   config/inputs.disabled/yaml/01.test.yaml: 1f769bf740a9820d8ed8f4684f74c7e53611a765
   config/inputs.disabled/yaml/02.showIgnoredPlugs.yaml: 4d9c788bb2069018ab4f3f9ce41504ddc8931670
@@ -399,7 +399,7 @@ filesHash:
   config/objects/nInput_IMAbnormalLoadings.js: b7d86f2f5b70e218de6967a52114cac15fe5b570
   config/objects/nInput_IMLoadingsProgress.js: 1987633b3cf1ee4f8a1f74a7441f386637aa93a6
   config/objects/nInput_IMMemory.js: 69f6e3d39aa5a75c83d2e4f8e2ece0b28df7e3f1
-  config/objects/nInput_Init.js: 9631c3e1fb87117000eb9da225ae760c9a4cd1a0
+  config/objects/nInput_Init.js: 11b289c19a0c43d84def775bbd966af8201a014f
   config/objects/nInput_JMX.js: fce9011c729efafd1abe79588a274ee36aac3c16
   config/objects/nInput_JavaGC.js: 49acab1ac18ee25630e1845ee9d4f5a17b5767ef
   config/objects/nInput_Kube_Events.js: 7a36aa2e72973d9369b856c6ef2ce4eddcab8459
