@@ -119,6 +119,7 @@ input:
       #   raidServers:
       #   - key: "RAS {{metadata.name}}"
       #     url: "http://{{status.podIP}}:1234"
+      #     podStatefullset: "{{$path metadata.labels '[?key==`statefulset.kubernetes.io/pod-name1`].value'}}"
       #     _kube:
       #       selector:
       #         where:
