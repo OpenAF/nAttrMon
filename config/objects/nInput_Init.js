@@ -18,7 +18,7 @@ nInputInitList["AF"] = {
             if (isDef(entry.key)) {
                 if (noclean)
                     if (isDef(entry.podStatefullset))
-                        if (entry.podStatefullset === "") return							
+                        if (!(entry.podStatefullset === "")) return							
                 log("nInputInit | Destroying AF object pool to access '" + entry.key + "'...")
                 nattrmon.delObjectPool(entry.key)
 
