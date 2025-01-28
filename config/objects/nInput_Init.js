@@ -10,7 +10,7 @@ nInputInitList["AF"] = {
     list   : (parent, ikey, content) => {
         return ($ch().list().indexOf(ikey) >= 0 ? $ch(ikey).getKeys() : [])
     },
-    recycle: (parent, ikey, content) => {
+    recycle: (parent, ikey, content, noclean) => {
         content = _$(content, "content").isArray().default([])
 
         content.forEach(entry => {
