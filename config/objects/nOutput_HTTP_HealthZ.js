@@ -82,9 +82,9 @@ var nOutput_HTTP_HealthZ = function (aMap) {
 					try { 
 						tlog(parent.auditTemplate, data);
 					} catch(e) {
-						logErr("Error on auditing access: " + String(e));
+						logErr("nOutput_HTTP_HealthZ | Error on auditing access: " + String(e));
 					}
-					return aReply; } catch(e) {sprintErr(e)}
+					return aReply; } catch(e) { sprintErr("nOutput_HTTP_HealthZ | " + e); if (isDef(e.javaException)) e.javaException.printStackTrace(); }
 				}, hss => {
 					if (user != "") tlogWarn(parent.auditTemplate, merge(aReq, {
 						method: "AUTH_FAILED",
@@ -107,7 +107,7 @@ var nOutput_HTTP_HealthZ = function (aMap) {
 			try { 
 				tlog(parent.auditTemplate, data);
 			} catch(e) {
-				logErr("Error on auditing access: " + String(e));
+				logErr("nOutput_HTTP_HealthZ | Error on auditing access: " + String(e));
 			}
 		}
 
@@ -133,7 +133,7 @@ var nOutput_HTTP_HealthZ = function (aMap) {
 				var hres = ow.server.httpd.reply("OK", 200, "text/plain", {});
 				return preProcess(req, hres);
 			} catch(e) {
-				logErr("Error in HTTP request: " + stringify(req, __, "") + "; exception: " + String(e))
+				logErr("nOutput_HTTP_HealthZ | Error in HTTP request: " + stringify(req, __, "") + "; exception: " + String(e))
 				if (isJavaException(e)) e.javaException.printStackTrace()
 				return ow.server.httpd.reply("Error (check logs)", 500)
 			}
@@ -151,7 +151,7 @@ var nOutput_HTTP_HealthZ = function (aMap) {
 				} 
 				return preProcess(req, hres);
 			} catch(e) {
-				logErr("Error in HTTP request: " + stringify(req, __, "") + "; exception: " + String(e))
+				logErr("nOutput_HTTP_HealthZ | Error in HTTP request: " + stringify(req, __, "") + "; exception: " + String(e))
 				if (isJavaException(e)) e.javaException.printStackTrace()
 				return ow.server.httpd.reply("Error (check logs)", 500)
 			}
@@ -168,7 +168,7 @@ var nOutput_HTTP_HealthZ = function (aMap) {
 					return preProcess(req, hres);
 				}
 			} catch(e) {
-				logErr("Error in HTTP request: " + stringify(req, __, "") + "; exception: " + String(e))
+				logErr("nOutput_HTTP_HealthZ | Error in HTTP request: " + stringify(req, __, "") + "; exception: " + String(e))
 				if (isJavaException(e)) e.javaException.printStackTrace()
 				return ow.server.httpd.reply("Error (check logs)", 500)
 			}
@@ -179,7 +179,7 @@ var nOutput_HTTP_HealthZ = function (aMap) {
 			var hres = ow.server.httpd.reply("", 200, "text/plain", {});
 			return preProcess(r, hres);
 		} catch(e) {
-			logErr("Error in HTTP request: " + stringify(r, __, "") + "; exception: " + String(e))
+			logErr("nOutput_HTTP_HealthZ | Error in HTTP request: " + stringify(r, __, "") + "; exception: " + String(e))
 			if (isJavaException(e)) e.javaException.printStackTrace()
 			return ow.server.httpd.reply("Error (check logs)", 500)
 		}
