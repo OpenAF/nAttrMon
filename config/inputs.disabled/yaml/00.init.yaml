@@ -95,6 +95,7 @@ input:
             responseCode  : 200
             includeLatency: true
     
+    # _retriesBeforeDestroy: 3
     # Kube:
 
       # DB:
@@ -103,6 +104,7 @@ input:
       #     url  : "jdbc:postgresql://{{status.podIP}}:5432/db"
       #     login: user
       #     pass : pass
+      ##     _noDestroy: true
       #     _kube:
       #       selector:
       #         where:
@@ -119,7 +121,7 @@ input:
       #   raidServers:
       #   - key: "RAS {{metadata.name}}"
       #     url: "http://{{status.podIP}}:1234"
-      #     podStatefullset: "{{$path metadata.labels '[?key==`statefulset.kubernetes.io/pod-name`].value'}}"
+      ##     _noDestroy: true
       #     _kube:
       #       selector:
       #         where:
@@ -136,6 +138,7 @@ input:
       #   raidCaches:
       #   - key: "RAS {{metadata.name}}"
       #     ttl: 5000
+      ##     _noDestroy: true
       #     _kube:
       #       selector:
       #         where:

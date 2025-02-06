@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20250113'
+version: '20250205'
 dependencies:
   openaf: '>=20230704'
 files:
@@ -288,7 +288,7 @@ filesHash:
   config/inputs.disabled/js/13.ListDirFiles.js: 036bbed7d54bc873a5437fa757af5e7b757b9345
   config/inputs.disabled/js/22.fraud.snapshots.js: 1af700aa9302c8a0b0a3e381dac357922d2d2a39
   config/inputs.disabled/js/41.fms.rulestatus.js: cd8b30f94543a6fa3ada1c455da4e0accc3ca770
-  config/inputs.disabled/yaml/00.init.yaml: 05be480e07dd873a157efc1b868ffd15e75d1897
+  config/inputs.disabled/yaml/00.init.yaml: feca4a372c6164730d8796044f3c9109f06a1aa2
   config/inputs.disabled/yaml/01.ping.yaml: fe3c634d7b0beff66a59484a315fcc205ffe1ca9
   config/inputs.disabled/yaml/01.test.yaml: 1f769bf740a9820d8ed8f4684f74c7e53611a765
   config/inputs.disabled/yaml/02.showIgnoredPlugs.yaml: 4d9c788bb2069018ab4f3f9ce41504ddc8931670
@@ -399,7 +399,7 @@ filesHash:
   config/objects/nInput_IMAbnormalLoadings.js: b7d86f2f5b70e218de6967a52114cac15fe5b570
   config/objects/nInput_IMLoadingsProgress.js: 1987633b3cf1ee4f8a1f74a7441f386637aa93a6
   config/objects/nInput_IMMemory.js: 69f6e3d39aa5a75c83d2e4f8e2ece0b28df7e3f1
-  config/objects/nInput_Init.js: 9631c3e1fb87117000eb9da225ae760c9a4cd1a0
+  config/objects/nInput_Init.js: d2541ef0d2696ab1d4ecc338a4aa91a2154c19c8
   config/objects/nInput_JMX.js: fce9011c729efafd1abe79588a274ee36aac3c16
   config/objects/nInput_JavaGC.js: 49acab1ac18ee25630e1845ee9d4f5a17b5767ef
   config/objects/nInput_Kube_Events.js: 7a36aa2e72973d9369b856c6ef2ce4eddcab8459
@@ -430,9 +430,9 @@ filesHash:
   config/objects/nOutput_H2.js: f812e07f5bb7c396e55a8c70e7c4d8112b9435a6
   config/objects/nOutput_HK.js: c9887fd101189ea35deaa8cdaddb280563856e01
   config/objects/nOutput_HTMLStatus.js: 5672ea6092958891bb4a3a8eb3e8317c6e250600
-  config/objects/nOutput_HTTP.js: 503eb7a2f8125aae56757ded7ae0e64915193aa5
-  config/objects/nOutput_HTTP_HealthZ.js: 557b493bc6cba42bc913376b8bc607700521f730
-  config/objects/nOutput_HTTP_JSON.js: 73c4619994bf56f923fc3d2860e0aa6b422e3748
+  config/objects/nOutput_HTTP.js: cf45ff36043e11dd5ebffa51151d87a385950aea
+  config/objects/nOutput_HTTP_HealthZ.js: 11e2470b1cd0894be17315c80479c036d29485db
+  config/objects/nOutput_HTTP_JSON.js: 21f249491a75cddb6450c01efc53b4b25bafe982
   config/objects/nOutput_HTTP_Metrics.js: 5bded6aa018da2ca1657806048560aac5c59e4a0
   config/objects/nOutput_HTTP_Status.js: c4e56e646bfe3dd1d063604b5ab40bc0f618ff66
   config/objects/nOutput_Log.js: 69ef02bb37d306deb390f303a8bbf6e2234be792
