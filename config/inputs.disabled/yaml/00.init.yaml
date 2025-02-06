@@ -122,6 +122,7 @@ input:
       #   - key: "RAS {{metadata.name}}"
       #     url: "http://{{status.podIP}}:1234"
       ##     _noDestroy: true
+      ##     _noDestroy: "{{$path metadata.labels '[?key==`statefulset.kubernetes.io/pod-name`].value'}}"
       #     _kube:
       #       selector:
       #         where:
