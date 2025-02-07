@@ -39,6 +39,7 @@ nInput_Kube_Pods.prototype.input = function(scope, args) {
 
     var kube = new Kube(this.params.kubeURL, this.params.kubeUser, this.params.kubePass, __, this.params.kubeToken);
     var o = kube.getPods(this.params.kubeNamespace);
+    kube.close()
     var res = o.map(r=>({
        namespace   : r.Metadata.Namespace,
        name        : r.Metadata.Name,

@@ -98,26 +98,33 @@ nInput_Filesystem.prototype.input = function (scope, args) {
 						throw "Kube opack not installed.";
 					}  
 					var s = $sec(v.secRepo, v.secBucket, v.secBucketPass, v.secMainPass, v.secFile);
-					var k;
+					var k, ka, km
 					if (isDef(v.secObjKey)) {
 						var k = s.getObj(v.secObjKey);
 					}
 					if (isDef(v.secKey)) {
 						var ka = s.get(v.secKey);
-						k = new Kube(ka.url, ka.user, ka.pass, ka.wsTimeout, ka.token);
+						//k = new Kube(ka.url, ka.user, ka.pass, ka.wsTimeout, ka.token);
+						km = {
+							url: ka.url,
+							user: ka.user,
+							pass: ka.pass,
+							wsTimeout: ka.wsTimeout,
+							token: ka.token
+						}
 					}
-					if (isUnDef(k) || isUnDef(k.getNamespaces)) {
+					/*if (isUnDef(k) || isUnDef(k.getNamespaces)) {
 						throw "Couldn't create a valid Kube object.";
-					}
+					}*/
 
 					var epods = [];
 					if (isUnDef(v.pod)) {
 						if (isDef(v.podTemplate)) {
-							var pods = k.getPods(v.namespace);
-							epods = $from(pods)
+							var pods = $kube(km).getFPO(v.namespace)
+							epods = $from(pods.items)
 							        .equals("Kind", "Pod")
 							        .match("Metadata.Name", v.podTemplate)
-						          	.select(r => r.Metadata.Name);
+						          	.select(r => r.Metadata.Name)
 						} else {
 							throw "No pod determined for '" + v.secObjKey + "'";
 						}
@@ -127,8 +134,8 @@ nInput_Filesystem.prototype.input = function (scope, args) {
 				
 					epods.forEach(pod => {
 						try {
-							resSpace = String( k.exec(v.namespace, pod, "df -P") );
-							resINode = String( k.exec(v.namespace, pod, "df -i -P") );
+							resSpace = String( $kube(km).ns(v.namespace).exec(pod, "df -P") )
+							resINode = String( $kube(km).ns(v.namespace).exec(pod, "df -i -P") )
 
 							var rr = parent.__parseCmd(resSpace, resINode).map(r => {
 								var res = { key: parent.params.keys[i], pod: pod };

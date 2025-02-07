@@ -35,6 +35,7 @@ nInput_Kube_NodesMetrics.prototype.input = function(scope, args) {
 
     var kube = new Kube(this.params.kubeURL, this.params.kubeUser, this.params.kubePass, __, this.params.kubeToken)
     var o = kube.getNodesMetrics()
+    kube.close()
     var res = []
 
     var _fromSIAbbrev = function(aStr) {

@@ -39,6 +39,7 @@ nInput_Kube_PodsMetrics.prototype.input = function(scope, args) {
 
     var kube = new Kube(this.params.kubeURL, this.params.kubeUser, this.params.kubePass, __, this.params.kubeToken)
     var o = kube.getPodsMetrics(this.params.kubeNamespace)
+    kube.close()
     var res = []
 
     var _fromSIAbbrev = function(aStr) {
