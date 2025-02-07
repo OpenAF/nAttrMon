@@ -41,10 +41,12 @@ nInput_Shell.prototype.input = function(scope, args) {
 	var _parse = s => {
 		if (this.params.parseJson) return jsonParse(s, true)
 		if (this.params.parseYaml) return af.fromYAML(s)
+		return s
 	}
     var _parseEach = s => {
 		if (this.params.eachParseJson) return jsonParse(s, true)
 		if (this.params.eachParseYaml) return af.fromYAML(s)
+		return s
 	}
 
     var setSec = aEntry => {
@@ -67,7 +69,8 @@ nInput_Shell.prototype.input = function(scope, args) {
 					_r.push(__r)
 				})
 			} else {
-				throw "nInput_Shell | Not a list/array (" + af.toSLON(lst) + ")"
+				_r = lst
+				//throw "nInput_Shell | Not a list/array (" + af.toSLON(lst) + ")"
 			}
 			return _r
 		} else {
@@ -236,6 +239,7 @@ nInput_Shell.prototype.input = function(scope, args) {
 				if (isMap(its) && isArray(its.items)) lst = lst.concat(its.items)
 			})
 
+			if (isString(m.selector)) m.selector = af.fromNLinq(m.selector)
 			if (isMap(m.selector)) {
 				ow.obj.filter(lst, m.selector).forEach(r => {
 					var newM = clone(m)
