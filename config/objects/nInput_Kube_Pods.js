@@ -37,16 +37,22 @@ inherit(nInput_Kube_Pods, nInput);
 nInput_Kube_Pods.prototype.input = function(scope, args) {
     var ret = {};
 
-    var kube = new Kube(this.params.kubeURL, this.params.kubeUser, this.params.kubePass, __, this.params.kubeToken);
-    var o = kube.getPods(this.params.kubeNamespace);
+    //var kube = new Kube(this.params.kubeURL, this.params.kubeUser, this.params.kubePass, __, this.params.kubeToken);
+    var o = $kube({
+         url: this.params.kubeURL,
+         user: this.params.kubeUser,
+         pass: this.params.kubePass,
+         token: this.params.kubeToken
+    }).getFPO(this.params.kubeNamespace).items
+    //kube.close()
     var res = o.map(r=>({
-       namespace   : r.Metadata.Namespace,
-       name        : r.Metadata.Name,
-       generateName: r.Metadata.GenerateName,
-       creationDate: r.Metadata.CreationTimestamp,
-       status      : r.Status.Phase,
-       podIP       : r.Status.PodIP,
-       hostIP      : r.Status.HostIP
+       namespace   : r.metadata.namespace,
+       name        : r.metadata.name,
+       generateName: r.metadata.generateName,
+       creationDate: r.metadata.creationTimestamp,
+       status      : r.status.phase,
+       podIP       : r.status.podIP,
+       hostIP      : r.status.hostIP
     }))
 
     if (isDef(this.params.podName)) res = $from(res).match("name", this.params.podName).select();

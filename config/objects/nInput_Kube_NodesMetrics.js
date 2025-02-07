@@ -33,8 +33,14 @@ inherit(nInput_Kube_NodesMetrics, nInput);
 nInput_Kube_NodesMetrics.prototype.input = function(scope, args) {
     var ret = {}
 
-    var kube = new Kube(this.params.kubeURL, this.params.kubeUser, this.params.kubePass, __, this.params.kubeToken)
-    var o = kube.getNodesMetrics()
+    //var kube = new Kube(this.params.kubeURL, this.params.kubeUser, this.params.kubePass, __, this.params.kubeToken)
+    var o = $kube({
+        url: this.params.kubeURL,
+        user: this.params.kubeUser,
+        pass: this.params.kubePass,
+        token: this.params.kubeToken
+    }).getNodesMetrics()
+    //kube.close()
     var res = []
 
     var _fromSIAbbrev = function(aStr) {

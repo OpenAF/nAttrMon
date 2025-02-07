@@ -37,8 +37,14 @@ inherit(nInput_Kube_PodsMetrics, nInput);
 nInput_Kube_PodsMetrics.prototype.input = function(scope, args) {
     var ret = {}
 
-    var kube = new Kube(this.params.kubeURL, this.params.kubeUser, this.params.kubePass, __, this.params.kubeToken)
-    var o = kube.getPodsMetrics(this.params.kubeNamespace)
+    //var kube = new Kube(this.params.kubeURL, this.params.kubeUser, this.params.kubePass, __, this.params.kubeToken)
+    var o = $kube({
+        url: this.params.kubeURL,
+        user: this.params.kubeUser,
+        pass: this.params.kubePass,
+        token: this.params.kubeToken
+    }).getPodsMetrics(this.params.kubeNamespace)
+    //kube.close()
     var res = []
 
     var _fromSIAbbrev = function(aStr) {

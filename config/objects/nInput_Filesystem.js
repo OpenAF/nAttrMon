@@ -89,7 +89,11 @@ nInput_Filesystem.prototype.input = function (scope, args) {
 			if (isDef(this.params.chKeys)) this.params.keys = $ch(this.params.chKeys).getKeys().map(r => r.key); 
 
 			for (var i in this.params.keys) {
-				var v = $ch(this.params.chKeys).get({ key: this.params.keys[i] });
+				var v
+				if (isDef(this.params.chKeys)) 
+					$ch(this.params.chKeys).get({ key: this.params.keys[i] })
+				else
+					v = this.params.keys[i]
 				v = __nam_getSec(v);
 				
 				switch(v.type) {
@@ -97,27 +101,35 @@ nInput_Filesystem.prototype.input = function (scope, args) {
 					if (isUnDef(getOPackPath("Kube"))) {
 						throw "Kube opack not installed.";
 					}  
+					loadLib("kube.js")
 					var s = $sec(v.secRepo, v.secBucket, v.secBucketPass, v.secMainPass, v.secFile);
-					var k;
+					var ka, km
 					if (isDef(v.secObjKey)) {
 						var k = s.getObj(v.secObjKey);
 					}
 					if (isDef(v.secKey)) {
 						var ka = s.get(v.secKey);
-						k = new Kube(ka.url, ka.user, ka.pass, ka.wsTimeout, ka.token);
+						//k = new Kube(ka.url, ka.user, ka.pass, ka.wsTimeout, ka.token);
+						km = {
+							url: ka.url,
+							user: ka.user,
+							pass: ka.pass,
+							wsTimeout: ka.wsTimeout,
+							token: ka.token
+						}
 					}
-					if (isUnDef(k) || isUnDef(k.getNamespaces)) {
+					/*if (isUnDef(k) || isUnDef(k.getNamespaces)) {
 						throw "Couldn't create a valid Kube object.";
-					}
+					}*/
 
 					var epods = [];
 					if (isUnDef(v.pod)) {
 						if (isDef(v.podTemplate)) {
-							var pods = k.getPods(v.namespace);
-							epods = $from(pods)
-							        .equals("Kind", "Pod")
-							        .match("Metadata.Name", v.podTemplate)
-						          	.select(r => r.Metadata.Name);
+							var pods = $kube(km).getFPO(v.namespace)
+							epods = $from(pods.items)
+							        .equals("kind", "Pod")
+							        .match("metadata.name", v.podTemplate)
+						          	.select(r => r.metadata.name)
 						} else {
 							throw "No pod determined for '" + v.secObjKey + "'";
 						}
@@ -127,8 +139,8 @@ nInput_Filesystem.prototype.input = function (scope, args) {
 				
 					epods.forEach(pod => {
 						try {
-							resSpace = String( k.exec(v.namespace, pod, "df -P") );
-							resINode = String( k.exec(v.namespace, pod, "df -i -P") );
+							resSpace = String( isDef(v.namespace) ? $kube(km).ns(v.namespace).exec(pod, "df -P") : $kube(km).exec(pod, "df -P") )
+							resINode = String( isDef(v.namespace) ? $kube(km).ns(v.namespace).exec(pod, "df -i -P") : $kube(km).exec(pod, "df -i -P") )
 
 							var rr = parent.__parseCmd(resSpace, resINode).map(r => {
 								var res = { key: parent.params.keys[i], pod: pod };

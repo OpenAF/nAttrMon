@@ -41,10 +41,12 @@ nInput_Shell.prototype.input = function(scope, args) {
 	var _parse = s => {
 		if (this.params.parseJson) return jsonParse(s, true)
 		if (this.params.parseYaml) return af.fromYAML(s)
+		return s
 	}
     var _parseEach = s => {
 		if (this.params.eachParseJson) return jsonParse(s, true)
 		if (this.params.eachParseYaml) return af.fromYAML(s)
+		return s
 	}
 
     var setSec = aEntry => {
@@ -67,7 +69,8 @@ nInput_Shell.prototype.input = function(scope, args) {
 					_r.push(__r)
 				})
 			} else {
-				throw "nInput_Shell | Not a list/array (" + af.toSLON(lst) + ")"
+				_r = lst
+				//throw "nInput_Shell | Not a list/array (" + af.toSLON(lst) + ")"
 			}
 			return _r
 		} else {
@@ -119,62 +122,66 @@ nInput_Shell.prototype.input = function(scope, args) {
 			try {
 				switch(v.type) {
 				case "kube":
-					if (isUnDef(getOPackPath("Kube"))) {
-						throw "Kube opack not installed."
-					} 
-	
-					var s = $sec(v.secRepo, v.secBucket, v.secBucketPass, v.secMainPass, v.secFile)
-					var k;
-					if (isDef(v.secObjKey)) {
-						var k = s.getObj(v.secObjKey)
-					}
-					if (isDef(v.secKey)) {
-						var ka = s.get(v.secKey)
-						k = new Kube(ka.url, ka.user, ka.pass, ka.wsTimeout, ka.token)
-					}
-					if (isUnDef(k) || isUnDef(k.getNamespaces)) {
-						throw "The secObjKey = '" + v.secObjKey + "' is not a valid Kube object."
-					}
-	
-					var epods = []
-					if (isUnDef(v.pod)) {
-						if (isDef(v.podTemplate)) {
-							var pods = k.getPods(v.namespace)
-							epods = $from(pods)
-									.equals("Kind", "Pod")
-									.match("Metadata.Name", v.podTemplate)
-									.select(r => r.Metadata.Name)
-						} else {
-							throw "No pod determined for '" + v.secObjKey + "'"
+					var k
+					try {
+						if (isUnDef(getOPackPath("Kube"))) {
+							throw "Kube opack not installed."
+						} 
+		
+						var s = $sec(v.secRepo, v.secBucket, v.secBucketPass, v.secMainPass, v.secFile)
+						if (isDef(v.secObjKey)) {
+							k = s.getObj(v.secObjKey)
 						}
-					} else {
-						epods = [ v.pod ]
-					}
-				
-					epods.forEach(pod => {
-						try {
-							//var rr = String(k.exec(v.namespace, pod, [ templify(parent.cmd) ], __, true))
-							if (parent.parseJson || parent.parseYaml) {
-								res.push({
-									key: parent.params.keys[i],
-									result: _posExec(_exec(c => {
-										return String(k.exec(v.namespace, pod, [ templify(c) ], __, true))
-									}, parent.cmd, parent.cmdEach))
-								});
+						if (isDef(v.secKey)) {
+							var ka = s.get(v.secKey)
+							k = new Kube(ka.url, ka.user, ka.pass, ka.wsTimeout, ka.token)
+						}
+						if (isUnDef(k) || isUnDef(k.getNamespaces)) {
+							throw "The secObjKey = '" + v.secObjKey + "' is not a valid Kube object."
+						}
+		
+						var epods = []
+						if (isUnDef(v.pod)) {
+							if (isDef(v.podTemplate)) {
+								var pods = k.getPods(v.namespace)
+								epods = $from(pods)
+										.equals("Kind", "Pod")
+										.match("Metadata.Name", v.podTemplate)
+										.select(r => r.Metadata.Name)
 							} else {
-								res.push({
-									key: parent.params.keys[i],
-									result: _posExec(_exec(c => {
-										return String(k.exec(v.namespace, pod, [ templify(c) ], __, true))
-									}, parent.cmd, parent.cmdEach))
-								});
+								throw "No pod determined for '" + v.secObjKey + "'"
 							}
-							;
-						} catch(e) {
-							logErr("nInput_Shell | Error on namespace '"+ v.namespace + "', pod '" + pod + "': " + String(e))
+						} else {
+							epods = [ v.pod ]
 						}
-					})
 					
+						epods.forEach(pod => {
+							try {
+								//var rr = String(k.exec(v.namespace, pod, [ templify(parent.cmd) ], __, true))
+								if (parent.parseJson || parent.parseYaml) {
+									res.push({
+										key: parent.params.keys[i],
+										result: _posExec(_exec(c => {
+											return String(k.exec(v.namespace, pod, [ templify(c) ], __, true))
+										}, parent.cmd, parent.cmdEach))
+									});
+								} else {
+									res.push({
+										key: parent.params.keys[i],
+										result: _posExec(_exec(c => {
+											return String(k.exec(v.namespace, pod, [ templify(c) ], __, true))
+										}, parent.cmd, parent.cmdEach))
+									});
+								}
+								;
+							} catch(e) {
+								logErr("nInput_Shell | Error on namespace '"+ v.namespace + "', pod '" + pod + "': " + String(e))
+							}
+						})	
+					} finally {
+						if (isDef(k)) k.close()
+					}
+										
 					break
 				case "ssh":
 				default:
@@ -232,6 +239,7 @@ nInput_Shell.prototype.input = function(scope, args) {
 				if (isMap(its) && isArray(its.items)) lst = lst.concat(its.items)
 			})
 
+			if (isString(m.selector)) m.selector = af.fromNLinq(m.selector)
 			if (isMap(m.selector)) {
 				ow.obj.filter(lst, m.selector).forEach(r => {
 					var newM = clone(m)

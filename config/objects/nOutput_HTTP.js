@@ -82,9 +82,9 @@ var nOutput_HTTP = function (aMap) {
 					try { 
 						tlog(parent.auditTemplate, data);
 					} catch(e) {
-						logErr("Error on auditing access: " + String(e));
+						logErr("nOutput_HTTP | Error on auditing access: " + String(e));
 					}
-					return aReply; } catch(e) {sprintErr(e)}
+					return aReply; } catch(e) { sprintErr("nOutput_HTTP | " + e); if (isDef(e.javaException)) e.javaException.printStackTrace(); }
 				}, hss => {
 					if (user != "") tlogWarn(parent.auditTemplate, merge(aReq, {
 						method: "AUTH_FAILED",
@@ -107,7 +107,7 @@ var nOutput_HTTP = function (aMap) {
 			try { 
 				tlog(parent.auditTemplate, data);
 			} catch(e) {
-				logErr("Error on auditing access: " + String(e));
+				logErr("nOutput_HTTP | Error on auditing access: " + String(e));
 			}
 		}
 
@@ -122,7 +122,7 @@ var nOutput_HTTP = function (aMap) {
 				var hres = ow.server.httpd.replyFile(httpd, path + "/objects.assets/noutputhttp", "/f", r.uri)		
 				return preProcess(r, hres)
 			} catch(e) {
-				logErr("Error in HTTP request: " + stringify(r, __, "") + "; exception: " + String(e))
+				logErr("nOutput_HTTP | Error in HTTP request: " + stringify(r, __, "") + "; exception: " + String(e))
 				if (isJavaException(e)) e.javaException.printStackTrace()
 				return ow.server.httpd.reply("Error (check logs)", 500)
 			}
@@ -135,7 +135,7 @@ var nOutput_HTTP = function (aMap) {
 				var hres = httpd.replyOKJSON(beautifier(ret))
 				return preProcess(req, hres)
 			} catch(e) {
-				logErr("Error in HTTP request: " + stringify(req, __, "") + "; exception: " + String(e))
+				logErr("nOutput_HTTP | Error in HTTP request: " + stringify(req, __, "") + "; exception: " + String(e))
 				if (isJavaException(e)) e.javaException.printStackTrace()
 				return ow.server.httpd.reply("Error (check logs)", 500)
 			}
@@ -146,7 +146,7 @@ var nOutput_HTTP = function (aMap) {
 				var hres = ow.server.httpd.replyFile(httpd, path + "/objects.assets/noutputhttp", "/", r.uri)			
 				return preProcess(r, hres)
 			} catch(e) {
-				logErr("Error in HTTP request: " + stringify(r, __, "") + "; exception: " + String(e))
+				logErr("nOutput_HTTP | Error in HTTP request: " + stringify(r, __, "") + "; exception: " + String(e))
 				if (isJavaException(e)) e.javaException.printStackTrace()
 				return ow.server.httpd.reply("Error (check logs)", 500)
 			}
@@ -157,16 +157,21 @@ var nOutput_HTTP = function (aMap) {
 			var hres = ow.server.httpd.replyFile(httpd, path + "/objects.assets/noutputhttp", "/", r.uri);
 			return preProcess(r, hres);
 		} catch(e) {
-			logErr("Error in HTTP request: " + stringify(r, __, "") + "; exception: " + String(e))
+			logErr("nOutput_HTTP | Error in HTTP request: " + stringify(r, __, "") + "; exception: " + String(e))
 			if (isJavaException(e)) e.javaException.printStackTrace()
 			return ow.server.httpd.reply("Error (check logs)", 500)
 		}
 	}));
 
-	nattrmon.setSessionData("httpd.summary.custom", {
-		"title": this.title,
-		"refresh": aRefreshTime
-	});
+	try {
+		nattrmon.setSessionData("httpd.summary.custom", {
+			"title": this.title,
+			"refresh": aRefreshTime
+		});
+	} catch(e) {
+		logErr("nOutput_HTTP | Error in setSessionData " + String(e))
+		if (isJavaException(e)) e.javaException.printStackTrace()
+	}
 
 	log("Output_HTTP | Output HTTP created on " + aPort);
 
@@ -182,5 +187,11 @@ nOutput_HTTP.prototype.output = function (scope, args, meta) {
 };
 
 nOutput_HTTP.prototype.close = function () {
-	nattrmon.getSessionData(hS).stop();
+	try {
+		if (nattrmon.hasSessionData(hS)) nattrmon.getSessionData(hS).stop();
+		else log("nOutput_HTTP | Close | There is no session for (" + stringify(hs) + " - exception: " + stringify(e) + ")")
+	} catch (e) {
+		logErr("nOutput_HTTP | Close exception: " + stringify(e))
+		if (isJavaException(e)) e.javaException.printStackTrace()
+	}
 };
