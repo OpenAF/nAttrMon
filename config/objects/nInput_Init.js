@@ -558,8 +558,8 @@ var nInput_Init = function(aMap) {
                                     parent._entryRetries[init.name][ikey].set(0)
                                 } else {
                                     if (isDef(_tries) && _tries > 0) {
-                                        parent._entryRetries[init.name][i].inc()
-                                        log("nInputInit | Graceful retries before destroy for (" + init.name + ") #" + i + " (" + parent._entryRetries[init.name][i].get() + "/" + _tries + ")")
+                                        parent._entryRetries[init.name][ikey].inc()
+                                        log("nInputInit | Graceful retries before destroy for (" + init.name + ") #" + ikey + " (" + parent._entryRetries[init.name][ikey].get() + "/" + _tries + ")")
                                     } else {
                                         init.recycle(parent.fns, ikey, _res.select(), iskube)
                                     }
