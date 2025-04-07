@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20250211'
+version: '20250406'
 dependencies:
   openaf: '>=20241117'
 files:
@@ -402,7 +402,7 @@ filesHash:
   config/objects/nInput_Init.js: 16875d3a28997a934d7e54c5c76a7eaa94fc148b
   config/objects/nInput_JMX.js: fce9011c729efafd1abe79588a274ee36aac3c16
   config/objects/nInput_JavaGC.js: 49acab1ac18ee25630e1845ee9d4f5a17b5767ef
-  config/objects/nInput_Kube_Events.js: 7a36aa2e72973d9369b856c6ef2ce4eddcab8459
+  config/objects/nInput_Kube_Events.js: 547d59fe2d69b3594c849ad6e8cdaa7402ca8577
   config/objects/nInput_Kube_NodesMetrics.js: 182bc697ef68d44db0f31ee5483e7157aaa7ec66
   config/objects/nInput_Kube_Pods.js: 920eb13eecc2ff12d565278292d3a98d300812f5
   config/objects/nInput_Kube_PodsMetrics.js: ad2ce33e1dfa3b085f0289b4e2a9a5fa7cd7c408

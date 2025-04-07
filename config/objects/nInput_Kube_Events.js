@@ -36,9 +36,9 @@ inherit(nInput_Kube_Events, nInput);
 nInput_Kube_Events.prototype.input = function(scope, args) {
     var ret = {};
 
-    var kube = new Kube(this.params.kubeURL, this.params.kubeUser, this.params.kubePass, __, this.params.kubeToken);    
+    //var kube = new Kube(this.params.kubeURL, this.params.kubeUser, this.params.kubePass, __, this.params.kubeToken);    
     if (!this.params.full) {
-        ret[templify(this.params.attrTemplate)] = kube.getEvents().map(r => ({
+        ret[templify(this.params.attrTemplate)] = $kube().events().map(r => ({
             startTime         : (isDef(r.FirstTimestamp) ? r.FirstTimestamp : "n/a"),
             endTime           : (isDef(r.LastTimestamp) ? r.LastTimestamp: "n/a"), 
             type              : (isDef(r.Type) ? r.Type : "n/a"),
@@ -50,10 +50,10 @@ nInput_Kube_Events.prototype.input = function(scope, args) {
             reason            : (isDef(r.Reason) ? r.Reason : "n/a")
         }));
     } else {
-        ret[templify(this.params.attrTemplate, this.params)] = kube.getEvents();
+        ret[templify(this.params.attrTemplate, this.params)] = $kube().events()
     }
     
-    kube.close();
+    //kube.close();
 
     return ret;
 };
