@@ -84,7 +84,7 @@ ojob:
   #daemon      : true
   opacks      :
   - openaf: 20210412
-  catch       : "logErr(job.name + ' | ' + exception + ' | ' + ow.format.toSLON(args));"
+  catch       : "logErr(job.name + ' | ' + __nam_err(exception, false, true, job.exec))"
   logToConsole: false   # change to true for debugging
 
 jobs:

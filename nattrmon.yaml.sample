@@ -65,3 +65,6 @@
 
 # Pre-loading of external OpenAF libraries (useful for adding OpenAF channel types)
 #LIBS: "aws.js,s3.js"
+
+# If true (default) will try to print a stack trace when an exception occurs
+#ERRSTACK: false
