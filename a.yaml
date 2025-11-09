@@ -1,0 +1,98 @@
+# nAttrMon single run ojob
+# Usage:
+#   ojob nAttrmon_single.yaml.sample
+#
+# Author: Nuno Aguiar
+init:
+  daemon: true
+  # These parameters are similar to nattrmon.yaml
+  nattrmonInit: &INIT
+    __NAM_DEBUG              : false  # change to true for debugging
+    __NAM_NEED_CH_PERSISTENCE: false
+    __NAM_LOGCONSOLE         : true
+    __NAM_NOPLUGFILES        : true
+    #__NAM_BUFFERCHANNELS     : true
+    #__NAM_BUFFERBYNUMBER     : 100
+    #__NAM_BUFFERBYTIME       : 1000
+
+nattrmon: &NATTRMON
+  # ------
+  # INPUTS
+  - input:
+      name: Input test
+      cron: "*/5 * * * * *"
+      exec: |
+        return { "Test 1": now() }
+  
+  # -----------
+  # VALIDATIONS
+  - validation:
+      name         : Validation generic
+      chSubscribe  : nattrmon::cvals
+      waitForFinish: true
+      execFrom     : nValidation_Generic
+      execArgs     :
+        checks:
+        - #attribute        : "Test 1"
+          attrPattern      : "Test \\d+"
+          expr             : |
+            {{value}} > 0
+          warnLevel        : MEDIUM
+          warnTitleTemplate: "Problem with {{name}}"
+          warnDescTemplate : "{{name}} had value {{value}}"
+
+  # ------
+  # OUTPUT
+  - output:
+      name       : Output Debug Inputs
+      chSubscribe: nattrmon::cvals
+      exec       : |
+        _$(args.v, "args.v").$_();
+        print("VAL  | " + ow.format.toSLON(args.v));
+
+  - output:
+      name       : Output Debug Warns
+      chSubscribe: nattrmon::warnings
+      exec       : |
+        _$(args.v, "args.v").$_();
+        print("WARN | " + ow.format.toSLON(args.v));
+
+# -------------------------
+# -------------------------
+
+todo:
+- name: nAttrMon Prepare shutdown
+- name: nAttrMon Init
+  args: *INIT
+
+- name: Add plugs
+- (if    ): 'args.init.daemon == false'
+  ((then)):
+  - name: nAttrMon Run Single
+    #args:
+    #  onStart:
+    #  - job 1
+    #  - job 2
+    #  onStop:
+    #  - job 3
+    #  - job 4
+  ((else )):
+  - nAttrMon Start
+
+include:
+- oJob_nAttrMon.yaml
+
+ojob:
+  # Uncomment "daemon" for daemon mode
+  daemon      : true
+  opacks      :
+  - openaf: 20210412
+  catch       : "logErr(job.name + ' | ' + __nam_err(exception, false, true, job.exec))"
+  logToConsole: false   # change to true for debugging
+
+jobs:
+# ---------------
+- name: Add plugs
+  deps: nAttrMon Init
+  to  : nAttrMon Add Plugs
+  args: *NATTRMON
