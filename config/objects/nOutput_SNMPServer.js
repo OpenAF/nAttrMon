@@ -151,7 +151,7 @@ nOutput_SNMPServer.prototype.arrayMapping = function (flag, nAttrbuteName, nAttr
         while (index < nAttrValueKeys.length) {
             var response = this.typeCasting(nAttrNameValues[nAttrValueKeys[index]])
             if (!(flag)) {
-                userDefKeys = Object.keys(IDMapping[nAttrbuteName]["OID"])
+                var userDefKeys = Object.keys(IDMapping[nAttrbuteName]["OID"])
                 if (userDefKeys.includes(nAttrValueKeys[index])) {
                     oIDMapping[nAttrValueKeys[index]] = {
                         "OID": IDMapping[nAttrbuteName]["OID"][nAttrValueKeys[index]],
