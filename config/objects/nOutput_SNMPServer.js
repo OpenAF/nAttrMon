@@ -49,7 +49,7 @@ var nOutput_SNMPServer = function (aMap) {
             }
 
             if (isUnDef(aMap.snmpCommunity) || aMap.snmpCommunity === null) {
-                throw new Error("SNMP community string must be explicitly set in aMap.snmpCommunity for security reasons.");
+                throw new Error("SNMP community string must be explicitly set in snmpCommunity for security reasons.");
             }
             if (isUnDef(aMap.snmpAuthProtocol) || aMap.snmpAuthProtocol === null) aMap.snmpAuthProtocol = "MD5";
             if (isUnDef(aMap.snmpPrivProtocol) || aMap.snmpPrivProtocol === null) aMap.snmpPrivProtocol = "AES128";
@@ -81,7 +81,7 @@ var nOutput_SNMPServer = function (aMap) {
 
         nOutput.call(this, this.output);
     } catch (e) {
-        if (isJavaException(e)) logErr("Error in step "+ vstep + ":: Error: " + e.javaException.printStackTrace()); else (logErr("Error in step "+ vstep + ":: Error: " + e));
+        if (isJavaException(e)) { logErr("Error in step "+ vstep + ":"); e.javaException.printStackTrace(); } else (logErr("Error in step "+ vstep + ":: Error: " + e));
     }
 };
 
@@ -128,7 +128,7 @@ nOutput_SNMPServer.prototype.stringMapping = function (nAttrbuteName, nAttrNameV
             "trapArr": trapArr
         }
     } catch (e) {
-        if (isJavaException(e)) logErr("Error in step "+ vstep + ":: Error: " + e.javaException.printStackTrace()); else (logErr("Error in step "+ vstep + ":: Error: " + e));
+        if (isJavaException(e)) { logErr("Error in step "+ vstep + ":"); e.javaException.printStackTrace(); } else (logErr("Error in step "+ vstep + ":: Error: " + e));
     }
 }
 
@@ -172,7 +172,7 @@ nOutput_SNMPServer.prototype.arrayMapping = function (flag, nAttrbuteName, nAttr
         }
         return { "mapping": oIDMapping, "trapArr": trapArr }
     } catch (e) {
-        if (isJavaException(e)) logErr("Error in step "+ vstep + ":: Error: " + e.javaException.printStackTrace()); else (logErr("Error in step "+ vstep + ":: Error: " + e));
+        if (isJavaException(e))  { logErr("Error in step "+ vstep + ":"); e.javaException.printStackTrace(); } else (logErr("Error in step "+ vstep + ":: Error: " + e));
     }
 }
 
@@ -219,7 +219,7 @@ nOutput_SNMPServer.prototype.entitiesExtraction = function (args, IDMapping) {
         }
         return response;
     } catch (e) {
-        if (isJavaException(e)) logErr("Error in step "+ vstep + ":: Error: " + e.javaException.printStackTrace()); else (logErr("Error in step "+ vstep + ":: Error: " + e)); throw new Error("Error in step " + vstep + ":: " + e);
+        if (isJavaException(e))  { logErr("Error in step "+ vstep + ":"); e.javaException.printStackTrace(); } else (logErr("Error in step "+ vstep + ":: Error: " + e)); throw new Error("Error in step " + vstep + ":: " + e);
     };
 }
 
@@ -242,7 +242,7 @@ nOutput_SNMPServer.prototype.sendTrap = function (argsValue, params, snmpProtoco
         }
     }
     catch (e) {
-        if (isJavaException(e)) logErr("Error in step "+ vstep + ":: Error: " + e.javaException.printStackTrace()); else (logErr("Error in step "+ vstep + ":: Error: " + e));
+        if (isJavaException(e))  { logErr("Error in step "+ vstep + ":"); e.javaException.printStackTrace(); } else (logErr("Error in step "+ vstep + ":: Error: " + e));
     }
 };
 
@@ -259,10 +259,10 @@ nOutput_SNMPServer.prototype.output = function (scope, args) {
 
         var k, v, ch = args.ch;
         if (args.op == "set") {
-            k = [args.k];
+            //k = [args.k];
             v = [args.v];
         } else {
-            k = args.k;
+            //k = args.k;
             v = args.v;
 
         }
@@ -285,7 +285,7 @@ nOutput_SNMPServer.prototype.output = function (scope, args) {
         });
     }
     catch (e) {
-        if (isJavaException(e)) logErr("Error in step "+ vstep + ":: Error: " + e.javaException.printStackTrace()); else (logErr("Error in step "+ vstep + ":: Error: " + e));
+        if (isJavaException(e))  { logErr("Error in step "+ vstep + ":"); e.javaException.printStackTrace(); } else (logErr("Error in step "+ vstep + ":: Error: " + e));
     }
 };
 
