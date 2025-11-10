@@ -91,6 +91,7 @@ inherit(nOutput_SNMPServer, nOutput);
 nOutput_SNMPServer.prototype.typeCasting = function (value) {
     var vstep = 'nOutput_SNMPServer.typeCasting ';
     try {
+        var response;
         if (isNumber(value)) {
             if (value < -2147483648 || value > 2147483647) response = { "type": "s", "value": String(value) }; else response = { "type": "i", "value": Number(value) };
             return response
