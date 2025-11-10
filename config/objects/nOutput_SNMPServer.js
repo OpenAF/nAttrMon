@@ -48,7 +48,9 @@ var nOutput_SNMPServer = function (aMap) {
                 }
             }
 
-            if (isUnDef(aMap.snmpCommunity) || aMap.snmpCommunity === null) aMap.snmpCommunity = "public";
+            if (isUnDef(aMap.snmpCommunity) || aMap.snmpCommunity === null) {
+                throw new Error("SNMP community string must be explicitly set in aMap.snmpCommunity for security reasons.");
+            }
             if (isUnDef(aMap.snmpAuthProtocol) || aMap.snmpAuthProtocol === null) aMap.snmpAuthProtocol = "MD5";
             if (isUnDef(aMap.snmpPrivProtocol) || aMap.snmpPrivProtocol === null) aMap.snmpPrivProtocol = "AES128";
             if (isUnDef(aMap.snmpSecurityName) || aMap.snmpSecurityName === null) aMap.snmpSecurityName = "NMS";
