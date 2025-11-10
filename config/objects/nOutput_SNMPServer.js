@@ -219,7 +219,7 @@ nOutput_SNMPServer.prototype.entitiesExtraction = function (args, IDMapping) {
         }
         return response;
     } catch (e) {
-        if (isJavaException(e)) logErr("Error in step "+ vstep + ":: Error: " + e.javaException.printStackTrace()); else (logErr("Error in step "+ vstep + ":: Error: " + e)); throw "Error";
+        if (isJavaException(e)) logErr("Error in step "+ vstep + ":: Error: " + e.javaException.printStackTrace()); else (logErr("Error in step "+ vstep + ":: Error: " + e)); throw new Error("Error in step " + vstep + ":: " + e);
     };
 }
 
