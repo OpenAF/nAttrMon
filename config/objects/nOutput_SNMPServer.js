@@ -26,7 +26,7 @@ var nOutput_SNMPServer = function (aMap) {
             this.enabled = true
             snmpAddress = _$(aMap.snmpAddress, "var aMap.snmpAddress").regexp(/^udp:[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\/[0-9]{3}/).default("something")            
             snmpEngineID = _$(aMap.snmpEngineID, "var aMap.snmpEngineID").isString().regexp(/[0-9a-zA-Z]{1,18}/).default("something")            
-            baseOID = _$(aMap.baseOID, "var aMap.baseOID").isString().regexp(/([0-9]{1,4}\.)/).$_("Please provide a base OID")            
+            baseOID = _$(aMap.baseOID, "var aMap.baseOID").isString().regexp(/^([0-9]{1,4}\.)+[0-9]{1,4}$/).$_("Please provide a base OID")            
             snmpVersion = _$(aMap.snmpVersion, "snmpVersion").oneOf([1, 2, 3]).isNumber().default(2)
             oidMapping = _$(aMap.oidMapping, "oidMapping").isObject().$_("Please Map the oid's")
             
