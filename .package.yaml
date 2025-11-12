@@ -441,7 +441,7 @@ filesHash:
   config/objects/nOutput_Notifications.js: 4a20e3ee7334f78b9b7ab36730000530fb63d598
   config/objects/nOutput_Oracle.js: ab0f2fe7958952437ae93030715633858462269f
   config/objects/nOutput_RemoteChannel.js: 8dcadaf89c78f31707c45d615a3941ce0547cd33
-  config/objects/nOutput_SNMPServer.js: c1f949b2c104ad078ffa2355c5058ede4798d8f7
+  config/objects/nOutput_SNMPServer.js: 2586b13edf3f9572d5f774af7aed7fa2d185d7c7
   config/objects/nOutput_Slack.js: bf5205bfd1b76b48345ec99bb407438eb3f1b0c9
   config/objects/nOutput_Stdout.js: eddd09834507308573f289b6a4c92e7cdd6b1b70
   config/objects/nOutput_WarnsHistory.js: 53820893e6a8f4a63b2ad93ffc7e7094c6bcdf1f
@@ -469,7 +469,7 @@ filesHash:
   config/outputs.disabled/yaml/05.es.warnings.yaml: aae14cc418d27202c3511fb897efdab1d1d2dac4
   config/outputs.disabled/yaml/08.warnsHistory.yaml: 3109d018544d5c1ab9424cecde0e27635c0447a2
   config/outputs.disabled/yaml/09.channels.yaml: f38c539f163ec3457267c55d4248237b76caee14
-  config/outputs.disabled/yaml/10.SNMPServer_Output.yaml: a8a30b2665cdb1d15b2910e5b39b25cf0a9bcbc8
+  config/outputs.disabled/yaml/10.SNMPServer_Output.yaml: a96e62eaa6bd5231bb8c555976c1869e851fdbb3
   config/outputs.disabled/yaml/10.ndjson.yaml: fdc7581edc2277adfd4265bc3504d4ac3bd7e0c5
   config/outputs/move_files_from_outputs_disabled.dummy: b858cb282617fb0956d960215c8e84d1ccf909c6
   config/validations.disabled/js/01.validatePing.js: cc572c157971ebdccd0a40a261f199cb9e509b5c
