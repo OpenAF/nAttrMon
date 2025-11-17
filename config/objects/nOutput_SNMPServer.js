@@ -230,10 +230,14 @@ nOutput_SNMPServer.prototype.sendTrap = function (argsValue, params, snmpProtoco
         var response = this.entitiesExtraction(argsValue, IDMapping);
         if(isDefined(response.trapArr)) 
         {
-            if (params.snmpVersion <= 2) var snmp = new SNMP(params.snmpIPAddress, params.snmpCommunity); else var snmp = new SNMP(params.snmpIPAddress, params.snmpCommunity, params.snmpTimeout, params.numOfRetries, params.snmpVersion, snmpProtocols);
+            if (params.snmpVersion <= 2) {
+                var snmp = new SNMP(params.snmpIPAddress, params.snmpCommunity); 
+            } else {
+                var snmp = new SNMP(params.snmpIPAddress, params.snmpCommunity, params.snmpTimeout, params.numOfRetries, params.snmpVersion, snmpProtocols);
+            }
             if (getVersion() > "20231221") {
                 response.trapArr = response.trapArr.map(e => ({"OID": String(e.OID), "type": String(e.type), "value": (String(e.type) == "i" || String(e.type) == "t")?parseInt(e.value, 10):String(e.value) }));
-                snmp.trap(params.snmpBaseOID, sysUpTime, response.trapArr, {})
+                snmp.trap(params.snmpBaseOID, sysUpTime, response.trapArr, false)
             } else {
                 logWarn("nOutput_SNMPServer | sysUpTime functionality is not available on the current version " + getVersion() + ". Please upgrade to a more recent version.")
                 snmp.trap(params.snmpBaseOID, response.trapArr, {})
