@@ -242,6 +242,7 @@ nInput_JavaGC.prototype.get = function(keyData, extra) {
                 res.gcMem.push({
                     key: cmdH,
                     pid: p.pid,
+					max: r.max,
                     total: r.total,
                     used: r.used,
                     free: r.total - r.used,
@@ -305,4 +306,5 @@ nInput_JavaGC.prototype.input = function(scope, args) {
     }
 
     return ret
+
 };
