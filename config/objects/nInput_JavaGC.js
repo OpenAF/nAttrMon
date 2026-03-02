@@ -306,5 +306,4 @@ nInput_JavaGC.prototype.input = function(scope, args) {
     }
 
     return ret
-
 };
