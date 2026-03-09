@@ -433,7 +433,7 @@ filesHash:
   config/objects/nOutput_HTTP.js: cf45ff36043e11dd5ebffa51151d87a385950aea
   config/objects/nOutput_HTTP_HealthZ.js: 11e2470b1cd0894be17315c80479c036d29485db
   config/objects/nOutput_HTTP_JSON.js: 21f249491a75cddb6450c01efc53b4b25bafe982
-  config/objects/nOutput_HTTP_Metrics.js: 5bded6aa018da2ca1657806048560aac5c59e4a0
+  config/objects/nOutput_HTTP_Metrics.js: 4a2ec7f0ee029f9b76547a4e109fe2d5797fd6de
   config/objects/nOutput_HTTP_Status.js: c4e56e646bfe3dd1d063604b5ab40bc0f618ff66
   config/objects/nOutput_Log.js: 69ef02bb37d306deb390f303a8bbf6e2234be792
   config/objects/nOutput_Log2ES.js: 4ff766b80b2e03f08f9f38e5a8dba4115d62bf81
