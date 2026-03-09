@@ -117,7 +117,7 @@ var __ow_metrics_fromObj2OpenMetrics = function(aObj, aPrefix, aTimestamp, aHelp
         var lprefix = (Object.keys(tlbs).length > 0 ? "{" + Object.keys(tlbs).map(k => k + "=" + tlbs[k]).join(",") + "}" : "")
 
         if (isNumber(obj)) {
-            ar = _help(prefix) + prefix + suf + lprefix + " " + Number(aObj) + (isDef(aTimestamp) ? " " + Number(aTimestamp) : "")
+            ar = _help(prefix) + prefix + suf + lprefix + " " + Number(obj) + (isDef(aTimestamp) ? " " + Number(aTimestamp) : "")
         }
         return ar
     }
