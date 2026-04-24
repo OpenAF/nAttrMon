@@ -401,7 +401,7 @@ filesHash:
   config/objects/nInput_IMMemory.js: 69f6e3d39aa5a75c83d2e4f8e2ece0b28df7e3f1
   config/objects/nInput_Init.js: 16875d3a28997a934d7e54c5c76a7eaa94fc148b
   config/objects/nInput_JMX.js: fce9011c729efafd1abe79588a274ee36aac3c16
-  config/objects/nInput_JavaGC.js: b440bbe13d57e0a4f126ad330aa5308038d4a4ba
+  config/objects/nInput_JavaGC.js: 756d21b19ac9ba32e8fed92d93af7b50d4dad504
   config/objects/nInput_Kube_Events.js: 547d59fe2d69b3594c849ad6e8cdaa7402ca8577
   config/objects/nInput_Kube_NodesMetrics.js: 182bc697ef68d44db0f31ee5483e7157aaa7ec66
   config/objects/nInput_Kube_Pods.js: 920eb13eecc2ff12d565278292d3a98d300812f5
