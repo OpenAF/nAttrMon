@@ -64,7 +64,7 @@ nInput_JavaGC.prototype.get = function(keyData, extra) {
         }
     }
 
-    if (isUnDef(keyData)) return
+    if (isUnDef(keyData)) return res
 
     switch(this.params.type) {
     case "local":
