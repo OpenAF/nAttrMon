@@ -64,7 +64,7 @@ nInput_JavaGC.prototype.get = function(keyData, extra) {
         }
     }
 
-    if (isUnDef(keyData)) return
+    if (isUnDef(keyData)) return res
 
     switch(this.params.type) {
     case "local":
@@ -291,18 +291,18 @@ nInput_JavaGC.prototype.input = function(scope, args) {
             arrGCSpaces = arrGCSpaces.concat(data.gcSpaces)
             arrGCMem = arrGCMem.concat(data.gcMem)
         })
-        if (this.params.includeSummary) ret[gcSummary]       = arrGCSummary
-        if (this.params.includeCollectors) ret[gcCollectors] = arrGCCollectors
-        if (this.params.includeThreads) ret[gcThreads]       = arrGCThreads
-        if (this.params.includeSpaces) ret[gcSpaces]         = arrGCSpaces
-        if (this.params.includeMem) ret[gcMem]               = arrGCMem
+        if (this.params.includeSummary && arrGCSummary.length > 0)       ret[gcSummary]    = arrGCSummary
+        if (this.params.includeCollectors && arrGCCollectors.length > 0) ret[gcCollectors] = arrGCCollectors
+        if (this.params.includeThreads && arrGCThreads.length > 0)       ret[gcThreads]    = arrGCThreads
+        if (this.params.includeSpaces && arrGCSpaces.length > 0)         ret[gcSpaces]     = arrGCSpaces
+        if (this.params.includeMem && arrGCMem.length > 0)               ret[gcMem]        = arrGCMem
     } else {
         var data = this.get(this.params)
-        if (this.params.includeSummary) ret[gcSummary]       = data.gcSummary
-        if (this.params.includeCollectors) ret[gcCollectors] = data.gcCollectors
-        if (this.params.includeThreads) ret[gcThreads]       = data.gcThreads
-        if (this.params.includeSpaces) ret[gcSpaces]         = data.gcSpaces
-        if (this.params.includeMem) ret[gcMem]               = data.gcMem
+        if (this.params.includeSummary && data.gcSummary.length > 0)       ret[gcSummary]    = data.gcSummary
+        if (this.params.includeCollectors && data.gcCollectors.length > 0) ret[gcCollectors] = data.gcCollectors
+        if (this.params.includeThreads && data.gcThreads.length > 0)       ret[gcThreads]    = data.gcThreads
+        if (this.params.includeSpaces && data.gcSpaces.length > 0)         ret[gcSpaces]     = data.gcSpaces
+        if (this.params.includeMem && data.gcMem.length > 0)               ret[gcMem]        = data.gcMem
     }
 
     return ret
