@@ -121,6 +121,9 @@ nInput_RAIDMemory.prototype.input = function(scope, args) {
 		arr.push(this.__getMemory(this.params.keys[i], extra));
 	}
 
-	res[templify(this.params.attrTemplate)] = arr;
+	if (arr.length > 0) {
+	    res[templify(this.params.attrTemplate)] = arr;
+	}
+	
 	return res;
 }
