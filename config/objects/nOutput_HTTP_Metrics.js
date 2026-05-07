@@ -184,6 +184,12 @@ var nOutput_HTTP_Metrics = function (aMap) {
 		aMap = {};
 	}
 
+	var relativePath = _$(aMap.relativePath, "relativePath").isString().default("/");
+	relativePath = templify(relativePath);
+	if (!relativePath.startsWith("/")) relativePath = "/" + relativePath;
+	relativePath = relativePath.replace(/\/+$/, "");
+	if (relativePath == "") relativePath = "/";
+
 	var hauth_perms, hauth_func;
 	var hauth_type = _$(aMap.authType, "hauthType").isString().default("none");
 	if (isDef(aMap.auth)) hauth_perms = aMap.auth;
@@ -396,11 +402,28 @@ var nOutput_HTTP_Metrics = function (aMap) {
 		return lines
 	}
 
+	var routePath = (aSuffix) => {
+		if (relativePath == "/") return aSuffix;
+		if (aSuffix == "/") return relativePath;
+		return relativePath + aSuffix;
+	};
+
+	var stripBasePath = (aUri) => {
+		if (relativePath == "/") return aUri;
+		if (isUnDef(aUri)) return "/";
+		if (aUri.indexOf(relativePath) == 0) {
+			var localUri = aUri.substring(relativePath.length);
+			return (localUri == "") ? "/" : localUri;
+		}
+		return aUri;
+	};
+
+	var routes = {};
+
 	// Add function to server
 	//httpd.addEcho("/echo");
     var parent = this;
-	ow.server.httpd.route(httpd, ow.server.httpd.mapWithExistingRoutes(httpd, {
-		"/metrics": function (req) {
+	routes[routePath("/metrics")] = function (req) {
 			try {
 				var res = "";
 				var fmt = _$(req.params.format).default(parent.format)
@@ -452,17 +475,20 @@ var nOutput_HTTP_Metrics = function (aMap) {
 				if (isJavaException(e)) e.javaException.printStackTrace()
 				return ow.server.httpd.reply("Error (check logs)", 500)
 			}
-		}
-	}), function (r) {
+		};
+
+	ow.server.httpd.route(httpd, ow.server.httpd.mapWithExistingRoutes(httpd, ow.server.httpd.mapRoutesWithLibs(httpd, routes), function (r) {
 		try {
+			var localUri = stripBasePath(r.uri);
 			var hres = ow.server.httpd.reply("", 200, "text/plain", {});
+			if (localUri == "/") hres.data = "";
 			return preProcess(r, hres);
 		} catch(e) {
 			logErr("Error in HTTP request: " + stringify(r, __, "") + "; exception: " + String(e))
 			if (isJavaException(e)) e.javaException.printStackTrace()
 			return ow.server.httpd.reply("Error (check logs)", 500)
 		}
-	});
+	}));
 
 	nOutput.call(this, this.output);
 };

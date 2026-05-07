@@ -6,14 +6,38 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="">
         <meta name="author" content="">
-        <script src="/js/jquery.js"></script>
+        <script>
+            (function() {
+                var currentPath = window.location.pathname || "/";
+                var baseDir = currentPath;
+
+                if (!baseDir.endsWith("/")) {
+                    if (baseDir.lastIndexOf(".") > baseDir.lastIndexOf("/")) {
+                        baseDir = baseDir.substring(0, baseDir.lastIndexOf("/") + 1);
+                    } else {
+                        baseDir += "/";
+                    }
+                }
+
+                if (baseDir === "") baseDir = "/";
+                document.write('<base href="' + baseDir + '">');
+
+                window.nattrmonBasePath = (baseDir.length > 1 && baseDir.endsWith("/")) ? baseDir.slice(0, -1) : baseDir;
+                window.withBasePath = function(path) {
+                    if (window.nattrmonBasePath === "/") return path;
+                    if (path.indexOf("/") !== 0) path = "/" + path;
+                    return window.nattrmonBasePath + path;
+                };
+            })();
+        </script>
+        <script src="js/jquery.js"></script>
         <script src="js/angular.min.js"></script>
         <script src="js/angular-animate.min.js"></script>
         <script src="js/nattrmon_js.js"></script>
-        <link rel="icon" type="image/png" href="/f/favicon.png" />
+        <link rel="icon" type="image/png" href="favicon.png" />
         <!-- Bootstrap core CSS -->
         <link href="css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="/f/css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/font-awesome.min.css">
         <!-- Custom styles for this template -->
         <link href="dashboard.css" rel="stylesheet">
         <link href="css/nattrmon.css" rel="stylesheet">
@@ -26,10 +50,11 @@
             var nattrmonApp = angular.module('nattrmonApp', ['ngAnimate']);
             var extra = "?";
             if (getUrlParameter("ct") != "") extra = "?ct=" + getUrlParameter("ct");
+            var withBasePath = window.withBasePath;
 
             nattrmonApp.service('MetaService', function($http) {
                 this.getMeta = function() {
-                    return $http.get('/meta').then(function(result) {
+                    return $http.get(withBasePath('/meta')).then(function(result) {
                         return result;
                     });
                 };
@@ -37,7 +62,7 @@
 
 			nattrmonApp.service('JsonService', function($http) {
                 this.getJson = function() {
-                    return $http.get('/json' + extra).then(function(result) {
+					return $http.get(withBasePath('/json') + extra).then(function(result) {
                         return result;
                     });
                 };
@@ -181,16 +206,16 @@
                     <br>
                     <ul class="nav nav-sidebar">
                         <li>
-                            <a href="#High">High (#{{warnsHigh}})</a>
+                            <a href="index.html{{extra}}#High">High (#{{warnsHigh}})</a>
                         </li>
                         <li>
-                            <a href="#Medium">Medium (#{{warnsMedium}})</a>
+                            <a href="index.html{{extra}}#Medium">Medium (#{{warnsMedium}})</a>
                         </li>
                         <li>
-                            <a href="#Low">Low (#{{warnsLow}})</a>
+                            <a href="index.html{{extra}}#Low">Low (#{{warnsLow}})</a>
                         </li>
                         <li>
-                            <a href="#Info">Info (#{{warnsInfo}})</a>
+                            <a href="index.html{{extra}}#Info">Info (#{{warnsInfo}})</a>
                         </li>
                     </ul>
                 </div>
