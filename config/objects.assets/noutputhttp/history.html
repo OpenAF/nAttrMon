@@ -20,7 +20,7 @@
                 }
 
                 if (baseDir === "") baseDir = "/";
-                document.write('<base href="' + baseDir + '">');
+                document.write('<base href="' + baseDir.replace(/"/g, '%22') + '">');
 
                 window.nattrmonBasePath = (baseDir.length > 1 && baseDir.endsWith("/")) ? baseDir.slice(0, -1) : baseDir;
                 window.withBasePath = function(path) {

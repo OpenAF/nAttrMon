@@ -402,21 +402,23 @@ var nOutput_HTTP_Metrics = function (aMap) {
 		return lines
 	}
 
-	var routePath = (aSuffix) => {
-		if (relativePath == "/") return aSuffix;
-		if (aSuffix == "/") return relativePath;
-		return relativePath + aSuffix;
-	};
+	var useNativePrefix = isDef(__flags.HTTPD_PREFIX) && isDef(ow.server.httpd.stripPrefix);
+	if (useNativePrefix && relativePath !== "/") __flags.HTTPD_PREFIX[String(aPort)] = relativePath;
 
-	var stripBasePath = (aUri) => {
-		if (relativePath == "/") return aUri;
-		if (isUnDef(aUri)) return "/";
-		if (aUri.indexOf(relativePath) == 0) {
-			var localUri = aUri.substring(relativePath.length);
-			return (localUri == "") ? "/" : localUri;
-		}
-		return aUri;
-	};
+	var routePath = (!useNativePrefix && relativePath !== "/")
+		? (aSuffix) => { if (aSuffix == "/") return relativePath; return relativePath + aSuffix; }
+		: (aSuffix) => aSuffix;
+
+	var stripBasePath = (!useNativePrefix && relativePath !== "/")
+		? (aUri) => {
+			if (isUnDef(aUri)) return "/";
+			if (aUri === relativePath || aUri.startsWith(relativePath + "/")) {
+				var localUri = aUri.substring(relativePath.length);
+				return (localUri == "") ? "/" : localUri;
+			}
+			return aUri;
+		  }
+		: (aUri) => isUnDef(aUri) ? "/" : aUri;
 
 	var routes = {};
 

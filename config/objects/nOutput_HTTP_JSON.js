@@ -116,21 +116,12 @@ var nOutput_HTTP_JSON = function (aMap) {
 		return res;
 	}
 
-	var routePath = (aSuffix) => {
-		if (relativePath == "/") return aSuffix;
-		if (aSuffix == "/") return relativePath;
-		return relativePath + aSuffix;
-	};
+	var useNativePrefix = isDef(__flags.HTTPD_PREFIX) && isDef(ow.server.httpd.stripPrefix);
+	if (useNativePrefix && relativePath !== "/") __flags.HTTPD_PREFIX[String(aPort)] = relativePath;
 
-	var stripRelativePath = (aUri) => {
-		if (relativePath == "/") return aUri;
-		if (isUnDef(aUri)) return "/";
-		if (aUri.indexOf(relativePath) == 0) {
-			var localUri = aUri.substring(relativePath.length);
-			return (localUri == "") ? "/" : localUri;
-		}
-		return aUri;
-	};
+	var routePath = (!useNativePrefix && relativePath !== "/")
+		? (aSuffix) => { if (aSuffix == "/") return relativePath; return relativePath + aSuffix; }
+		: (aSuffix) => aSuffix;
 
 	var routes = {};
 

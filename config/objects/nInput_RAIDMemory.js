@@ -7,7 +7,7 @@
  *    - attrTemplate (a template for the name of the attribute)\
  *    - single (boolean when false display the corresponding key)\
  *    - extra (an array of extra map values to include from the chKeys channel values)\
- *    - useCache (boolean when true cache is used)\
+ *    - useCache (string cache name to use; or boolean true to enable with default cache name)\
  * \
  * </odoc>
  */
@@ -30,16 +30,13 @@ var nInput_RAIDMemory = function(anMonitoredAFObjectKey, attributePrefix) {
 		if (isUnDef(this.params.attrTemplate)) 
 			this.params.attrTemplate = "Server status/Memory";
 
-        if (isUnDef(this.params.useCache))
+        if (isUnDef(this.params.useCache) || this.params.useCache === false) {
             this.params.useCache = false;
-        else if (!(isBoolean(this.params.useCache)))
-        {
-            try {
-                this.params.useCache = toBoolean(this.params.useCache);
-            } catch(e) {
-                this.params.useCache = false;
-                logWarn("nInput_RAIDMemory | Parameter useCache must be boolean, setting it as false.");
-            }
+        } else if (this.params.useCache === true) {
+            this.params.useCache = "memory";
+        } else if (!isString(this.params.useCache)) {
+            this.params.useCache = false;
+            logWarn("nInput_RAIDMemory | Parameter useCache must be a string (cache name) or boolean, setting it as false.");
         }
 	
 		this.params.extraMemoryDetails = _$(this.params.extraMemoryDetails).isBoolean().default(false)
@@ -90,7 +87,11 @@ nInput_RAIDMemory.prototype.__getMemory = function(aKey, aExtra) {
 		} else {
 			var parent = this
 			nattrmon.useObject(aKey, function(s) {
-				mems = s.exec("StatusReport", parent._args).MemoryInfo	
+				try {
+					mems = s.exec("StatusReport", parent._args).MemoryInfo;
+				} catch(e) {
+					throw e;
+				}
 			});
 		}
 
