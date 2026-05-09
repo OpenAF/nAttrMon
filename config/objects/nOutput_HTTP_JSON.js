@@ -13,7 +13,11 @@ var nOutput_HTTP_JSON = function (aMap) {
 		this.auditTemplate = AUDIT_TEMPLATE;
 	}
 
-	var relativePath = _$(aMap.relativePath, "relativePath").isString().default("/");
+	var relativePath = _$(aMap.relativePath, "relativePath").isString().default(
+		isDef(__flags.HTTPD_PREFIX) && isDef(ow.server.httpd.stripPrefix)
+			? (ow.server.httpd.getPrefix(aPort) || "/")
+			: "/"
+	);
 	relativePath = templify(relativePath);
 	if (!relativePath.startsWith("/")) relativePath = "/" + relativePath;
 	relativePath = relativePath.replace(/\/+$/, "");

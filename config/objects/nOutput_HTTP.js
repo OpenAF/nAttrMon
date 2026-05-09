@@ -6,7 +6,11 @@ var nOutput_HTTP = function (aMap) {
 	var aPort = isDef(aMap.port) ? aMap.port : 8090;
 	var aRefreshTime = isDef(aMap.refreshTime) ? aMap.refreshTime : 2500;
 	var path = isDef(aMap.path) ? aMap.path : io.fileInfo(nattrmon.getConfigPath("objects.assets/noutputhttp")).canonicalPath;
-	var relativePath = _$(aMap.relativePath, "relativePath").isString().default("/");
+	var relativePath = _$(aMap.relativePath, "relativePath").isString().default(
+		isDef(__flags.HTTPD_PREFIX) && isDef(ow.server.httpd.stripPrefix)
+			? (ow.server.httpd.getPrefix(aPort) || "/")
+			: "/"
+	);
 	relativePath = templify(relativePath);
 
 	if (!relativePath.startsWith("/")) relativePath = "/" + relativePath;
