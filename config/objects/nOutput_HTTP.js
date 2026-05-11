@@ -6,6 +6,16 @@ var nOutput_HTTP = function (aMap) {
 	var aPort = isDef(aMap.port) ? aMap.port : 8090;
 	var aRefreshTime = isDef(aMap.refreshTime) ? aMap.refreshTime : 2500;
 	var path = isDef(aMap.path) ? aMap.path : io.fileInfo(nattrmon.getConfigPath("objects.assets/noutputhttp")).canonicalPath;
+	var relativePath = _$(aMap.relativePath, "relativePath").isString().default(
+		isDef(__flags.HTTPD_PREFIX) && isDef(ow.server.httpd.stripPrefix)
+			? (ow.server.httpd.getPrefix(aPort) || "/")
+			: "/"
+	);
+	relativePath = templify(relativePath);
+
+	if (!relativePath.startsWith("/")) relativePath = "/" + relativePath;
+	relativePath = relativePath.replace(/\/+$/, "");
+	if (relativePath == "") relativePath = "/";
 
 	this.audit = (isDef(aMap.audit) ? aMap.audit : true);
 	this.auditTemplate = (isDef(aMap.auditTemplate) ? aMap.auditTemplate : AUDIT_TEMPLATE);
@@ -114,20 +124,40 @@ var nOutput_HTTP = function (aMap) {
 		return res;
 	}
 
-	// Add function to server
-	ow.server.httpd.route(httpd, ow.server.httpd.mapWithExistingRoutes(httpd, ow.server.httpd.mapRoutesWithLibs(httpd, {
-		"/f": function (r) {
+	var useNativePrefix = isDef(__flags.HTTPD_PREFIX) && isDef(ow.server.httpd.stripPrefix);
+	if (useNativePrefix && relativePath !== "/") __flags.HTTPD_PREFIX[String(aPort)] = relativePath;
+
+	var routePath = (!useNativePrefix && relativePath !== "/")
+		? (aSuffix) => { if (aSuffix == "/") return relativePath; return relativePath + aSuffix; }
+		: (aSuffix) => aSuffix;
+
+	var stripBasePath = (!useNativePrefix && relativePath !== "/")
+		? (aUri) => {
+			if (isUnDef(aUri)) return "/";
+			if (aUri === relativePath || aUri.startsWith(relativePath + "/")) {
+				var localUri = aUri.substring(relativePath.length);
+				return (localUri == "") ? "/" : localUri;
+			}
+			return aUri;
+		  }
+		: (aUri) => isUnDef(aUri) ? "/" : aUri;
+
+	var routes = {};
+
+	routes[routePath("/f")] = function (r) {
 			try {
-				if (r.uri == "/f") r.uri = "/index.html"
-				var hres = ow.server.httpd.replyFile(httpd, path + "/objects.assets/noutputhttp", "/f", r.uri)		
+				var localUri = stripBasePath(r.uri);
+				if (localUri == "/f") localUri = "/index.html"
+				var hres = ow.server.httpd.replyFile(httpd, path + "/objects.assets/noutputhttp", "/f", localUri)
 				return preProcess(r, hres)
 			} catch(e) {
 				logErr("nOutput_HTTP | Error in HTTP request: " + stringify(r, __, "") + "; exception: " + String(e))
 				if (isJavaException(e)) e.javaException.printStackTrace()
 				return ow.server.httpd.reply("Error (check logs)", 500)
 			}
-		},
-		"/meta": function (req) {
+		};
+
+	routes[routePath("/meta")] = function (req) {
 			try {
 				var ret = {}
 				ret = nattrmon.getSessionData("httpd.summary.custom")
@@ -139,22 +169,29 @@ var nOutput_HTTP = function (aMap) {
 				if (isJavaException(e)) e.javaException.printStackTrace()
 				return ow.server.httpd.reply("Error (check logs)", 500)
 			}
-		},
-		"/": function (r) {
+		};
+
+	routes[routePath("/")] = function (r) {
 			try {
-				if (r.uri == "/") r.uri = "/index.html"
-				var hres = ow.server.httpd.replyFile(httpd, path + "/objects.assets/noutputhttp", "/", r.uri)			
+				var localUri = stripBasePath(r.uri);
+				if (localUri == "/") localUri = "/index.html"
+				var hres = ow.server.httpd.replyFile(httpd, path + "/objects.assets/noutputhttp", "/", localUri)
 				return preProcess(r, hres)
 			} catch(e) {
 				logErr("nOutput_HTTP | Error in HTTP request: " + stringify(r, __, "") + "; exception: " + String(e))
 				if (isJavaException(e)) e.javaException.printStackTrace()
 				return ow.server.httpd.reply("Error (check logs)", 500)
 			}
-		}
-	}), function (r) {
+		};
+
+	if (!useNativePrefix && relativePath !== "/") routes[relativePath + "/"] = routes[routePath("/")];
+
+	// Add function to server
+	ow.server.httpd.route(httpd, ow.server.httpd.mapWithExistingRoutes(httpd, ow.server.httpd.mapRoutesWithLibs(httpd, routes), function (r) {
 		try {
-			if (r.uri == "/") r.uri = "/index.html";
-			var hres = ow.server.httpd.replyFile(httpd, path + "/objects.assets/noutputhttp", "/", r.uri);
+			var localUri = stripBasePath(r.uri);
+			if (localUri == "/") localUri = "/index.html";
+			var hres = ow.server.httpd.replyFile(httpd, path + "/objects.assets/noutputhttp", "/", localUri);
 			return preProcess(r, hres);
 		} catch(e) {
 			logErr("nOutput_HTTP | Error in HTTP request: " + stringify(r, __, "") + "; exception: " + String(e))
@@ -173,7 +210,7 @@ var nOutput_HTTP = function (aMap) {
 		if (isJavaException(e)) e.javaException.printStackTrace()
 	}
 
-	log("Output_HTTP | Output HTTP created on " + aPort);
+	log("Output_HTTP | Output HTTP created on " + aPort + " with relativePath '" + relativePath + "'");
 
 	nOutput.call(this, this.output);
 };

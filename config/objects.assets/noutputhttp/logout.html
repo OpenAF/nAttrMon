@@ -1,7 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="/js/jquery.js"></script>
+    <script>
+        (function() {
+            var currentPath = window.location.pathname || "/";
+            var baseDir = currentPath;
+
+            if (!baseDir.endsWith("/")) {
+                if (baseDir.lastIndexOf(".") > baseDir.lastIndexOf("/")) {
+                    baseDir = baseDir.substring(0, baseDir.lastIndexOf("/") + 1);
+                } else {
+                    baseDir += "/";
+                }
+            }
+
+            if (baseDir === "") baseDir = "/";
+            document.write('<base href="' + baseDir.replace(/"/g, '%22') + '">');
+
+            window.nattrmonBasePath = (baseDir.length > 1 && baseDir.endsWith("/")) ? baseDir.slice(0, -1) : baseDir;
+            window.withBasePath = function(path) {
+                if (window.nattrmonBasePath === "/") return path;
+                if (path.indexOf("/") !== 0) path = "/" + path;
+                return window.nattrmonBasePath + path;
+            };
+        })();
+    </script>
+    <script src="js/jquery.js"></script>
 </head>
 <body>
     <script>
@@ -15,19 +39,19 @@
         if (isIE) {
             // Logoff Internet Explorer
             document.execCommand("ClearAuthenticationCache");
-            window.location = "/logout.html";
+            window.location = withBasePath('/logout.html');
         } else {
             $.ajax({
                 username  : '-u',
                 password  : '-p',
-                url       : '/',
+                url       : withBasePath('/'),
                 type      : 'GET',
                 beforeSend: xhr => {
                     xhr.setRequestHeader('Authorization', 'Basic AAAAAAAAAAAAAAAAAAA=');
                 },
                 error     : err => {
-                    window.location = window.location.protocol + '//-u:-p@' + window.location.host + "/logout.html";
-                    window.location = window.location.protocol + '//' + window.location.host + "/logout.html";
+                    window.location = window.location.protocol + '//-u:-p@' + window.location.host + withBasePath('/logout.html');
+                    window.location = window.location.protocol + '//' + window.location.host + withBasePath('/logout.html');
                 }
             });
         }

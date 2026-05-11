@@ -7,6 +7,7 @@
  *    - attrTemplate (a template for the name of the attribute)\
  *    - single (boolean when false display the corresponding key)\
  *    - extra (an array of extra map values to include from the chKeys channel values)\
+ *    - useCache (string cache name to use; or boolean true to enable with default cache name)\
  * \
  * </odoc>
  */
@@ -28,6 +29,15 @@ var nInput_RAIDMemory = function(anMonitoredAFObjectKey, attributePrefix) {
 
 		if (isUnDef(this.params.attrTemplate)) 
 			this.params.attrTemplate = "Server status/Memory";
+
+        if (isUnDef(this.params.useCache) || this.params.useCache === false) {
+            this.params.useCache = false;
+        } else if (this.params.useCache === true) {
+            this.params.useCache = "memory";
+        } else if (!isString(this.params.useCache)) {
+            this.params.useCache = false;
+            logWarn("nInput_RAIDMemory | Parameter useCache must be a string (cache name) or boolean, setting it as false.");
+        }
 	
 		this.params.extraMemoryDetails = _$(this.params.extraMemoryDetails).isBoolean().default(false)
 		if (this.params.extraMemoryDetails) {
@@ -64,11 +74,13 @@ nInput_RAIDMemory.prototype.__getMemory = function(aKey, aExtra) {
 	var usedmem  = -1;
 	var maxmem   = -1;
 	var totalmem = -1;
+	var gccoll   = {};
+	var gcspace  = {};
 
 	try {
 		var mems;
 		var parent = this;
-		if (isString(parent.params.useCache)) {
+		if (parent.params.useCache) {
 			var res = $cache("nattrmon::" + parent.params.useCache + "::" + aKey).get({ op: "StatusReport", args: this._args })
 			if (isMap(res) && isDef(res.__error)) throw res.__error;
 			mems = res.MemoryInfo;
@@ -76,11 +88,10 @@ nInput_RAIDMemory.prototype.__getMemory = function(aKey, aExtra) {
 			var parent = this
 			nattrmon.useObject(aKey, function(s) {
 				try {
-					mems = s.exec("StatusReport", parent._args).MemoryInfo
+					mems = s.exec("StatusReport", parent._args).MemoryInfo;
 				} catch(e) {
-					logErr("Error while retrieving memory using '" + aKey + "': " + e.message);
 					throw e;
-				}		
+				}
 			});
 		}
 
@@ -88,14 +99,26 @@ nInput_RAIDMemory.prototype.__getMemory = function(aKey, aExtra) {
 		usedmem = Math.round(Number(mems.UsedHeapMemory.replace(/MB/,"")));
 		maxmem = Math.round(Number(mems.MaxMemory.replace(/MB/,"")));
 		totalmem = Math.round(Number(mems.TotalHeapMemory.replace(/MB/,"")));
+        if (parent.params.extraMemoryDetails) {
+            gccoll = mems.GCCollectors;
+            gcspace = mems.GCSpaces;            
+        }
 	} catch(e) {
-		logErr("Error while retrieving memory using '" + aKey + "': " + e.message);
+		logErr("nInput_RAIDMemory || Error while retrieving memory using '" + aKey + "': " + e.message);
 	}
 
 	if(!this.params.single) {
-		ret = {"Free heap (MB)": freemem, "Used heap (MB)": usedmem, "Total heap (MB)": totalmem, "Max memory (MB)": maxmem, "GCCollectors": mems.GCCollectors, "GCSpaces": mems.GCSpaces};
+		ret = {"Free heap (MB)": freemem, "Used heap (MB)": usedmem, "Total heap (MB)": totalmem, "Max memory (MB)": maxmem};        
+        if (parent.params.extraMemoryDetails) {
+            ret["GCCollectors"] = gccoll;
+            ret["GCSpaces"] = gcspace;
+        }
 	} else {
-		ret = {"Name": aKey, "Free heap (MB)": freemem, "Used heap (MB)": usedmem, "Total heap (MB)": totalmem, "Max memory (MB)": maxmem, "GCCollectors": mems.GCCollectors, "GCSpaces": mems.GCSpaces};
+		ret = {"Name": aKey, "Free heap (MB)": freemem, "Used heap (MB)": usedmem, "Total heap (MB)": totalmem, "Max memory (MB)": maxmem};
+        if (parent.params.extraMemoryDetails) {
+            ret["GCCollectors"] = gccoll;
+            ret["GCSpaces"] = gcspace;
+        }
 		ret = merge(ret, aExtra);
 	}
 
