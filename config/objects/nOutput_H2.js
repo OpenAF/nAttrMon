@@ -143,8 +143,8 @@ nOutput_H2.prototype.output = function(scope, args) {
 		// Create if doesn't exist
 		var parent = this;
 		sync(function() {
-			db.u("create table if not exists ATTRIBUTES(name varchar(255) primary key, description varchar(4000), last_seen datetime)");
-			db.u("create table if not exists ATTRIBUTE_VALUES(name varchar(255), val clob, date_modified datetime, date_checked datetime)");
+			db.u("create table if not exists ATTRIBUTES(name varchar(255) primary key, description varchar(4000), last_seen timestamp)");
+			db.u("create table if not exists ATTRIBUTE_VALUES(name varchar(255), val clob, date_modified datetime, date_checked timestamp)");
 			db.u("create index if not exists IDX_ATTRIBUTE_VALUES on ATTRIBUTE_VALUES (NAME, DATE_MODIFIED, DATE_CHECKED)");
 
 			// Get attributes
