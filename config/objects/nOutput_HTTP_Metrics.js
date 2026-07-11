@@ -117,7 +117,7 @@ var __ow_metrics_fromObj2OpenMetrics = function(aObj, aPrefix, aTimestamp, aHelp
         var lprefix = (Object.keys(tlbs).length > 0 ? "{" + Object.keys(tlbs).map(k => k + "=" + tlbs[k]).join(",") + "}" : "")
 
         if (isNumber(obj)) {
-            ar = _help(prefix) + prefix + suf + lprefix + " " + Number(aObj) + (isDef(aTimestamp) ? " " + Number(aTimestamp) : "")
+            ar = _help(prefix) + prefix + suf + lprefix + " " + Number(obj) + (isDef(aTimestamp) ? " " + Number(aTimestamp) : "")
         }
         return ar
     }
@@ -156,6 +156,7 @@ var nOutput_HTTP_Metrics = function (aMap) {
         this.includeCVals = _$(aMap.includeCVals, "includeCVals").isBoolean().default(true);
         this.includeLVals = _$(aMap.includeLVals, "includeLVals").isBoolean().default(false);
         this.includeWarns = _$(aMap.includeWarns, "includeWarns").isBoolean().default(true);
+        this.useCurrentTime = _$(aMap.useCurrentTime, "useCurrentTime").isBoolean().default(false);
 
         this.nameSelf  = _$(aMap.nameSelf, "nameSelf").isString().default("nattrmon_self")
         this.nameCVals = _$(aMap.nameCVals, "nameCVals").isString().default("nattrmon")
@@ -183,6 +184,16 @@ var nOutput_HTTP_Metrics = function (aMap) {
 	} else {
 		aMap = {};
 	}
+
+	var relativePath = _$(aMap.relativePath, "relativePath").isString().default(
+		isDef(__flags.HTTPD_PREFIX) && isDef(ow.server.httpd.stripPrefix)
+			? (ow.server.httpd.getPrefix(aPort) || "/")
+			: "/"
+	);
+	relativePath = templify(relativePath);
+	if (!relativePath.startsWith("/")) relativePath = "/" + relativePath;
+	relativePath = relativePath.replace(/\/+$/, "");
+	if (relativePath == "") relativePath = "/";
 
 	var hauth_perms, hauth_func;
 	var hauth_type = _$(aMap.authType, "hauthType").isString().default("none");
@@ -283,7 +294,7 @@ var nOutput_HTTP_Metrics = function (aMap) {
 
     var _parse = (e, n) => {
         return ow.obj.fromObj2Array(e).map(r => {
-            var d = (new Date(r.date)).getTime();
+            var d = parent.useCurrentTime ? Date.now() : (new Date(r.date)).getTime();
             delete r.date;
             var m = {}; m[r.name] = r.val;
 			traverse(m, (k, v, p, o) => {
@@ -297,7 +308,7 @@ var nOutput_HTTP_Metrics = function (aMap) {
 		var _e = []
 		Object.keys(e).forEach(k => {
 			_e = _e.concat(e[k].map(w => {
-				var d = (new Date(w.lastupdate)).getTime()
+				var d = parent.useCurrentTime ? Date.now() : (new Date(w.lastupdate)).getTime()
 				var m = {}; m[w.title] = clone(w)
 				delete m[w.title].lastupdate
 				delete m[w.title].notifications
@@ -396,11 +407,30 @@ var nOutput_HTTP_Metrics = function (aMap) {
 		return lines
 	}
 
+	var useNativePrefix = isDef(__flags.HTTPD_PREFIX) && isDef(ow.server.httpd.stripPrefix);
+	if (useNativePrefix && relativePath !== "/") __flags.HTTPD_PREFIX[String(aPort)] = relativePath;
+
+	var routePath = (!useNativePrefix && relativePath !== "/")
+		? (aSuffix) => { if (aSuffix == "/") return relativePath; return relativePath + aSuffix; }
+		: (aSuffix) => aSuffix;
+
+	var stripBasePath = (!useNativePrefix && relativePath !== "/")
+		? (aUri) => {
+			if (isUnDef(aUri)) return "/";
+			if (aUri === relativePath || aUri.startsWith(relativePath + "/")) {
+				var localUri = aUri.substring(relativePath.length);
+				return (localUri == "") ? "/" : localUri;
+			}
+			return aUri;
+		  }
+		: (aUri) => isUnDef(aUri) ? "/" : aUri;
+
+	var routes = {};
+
 	// Add function to server
 	//httpd.addEcho("/echo");
     var parent = this;
-	ow.server.httpd.route(httpd, ow.server.httpd.mapWithExistingRoutes(httpd, {
-		"/metrics": function (req) {
+	routes[routePath("/metrics")] = function (req) {
 			try {
 				var res = "";
 				var fmt = _$(req.params.format).default(parent.format)
@@ -425,13 +455,13 @@ var nOutput_HTTP_Metrics = function (aMap) {
 				default:
 					if (isDef(req.params.type)) {
 						switch(req.params.type) {
-						case "self" : res += _filterIds(__ow_metrics_fromObj2OpenMetrics(ow.metrics.getAll(), parent.nameSelf)); break
+						case "self" : res += _filterIds(__ow_metrics_fromObj2OpenMetrics(ow.metrics.getAll(), parent.nameSelf, parent.useCurrentTime ? Date.now() : undefined)); break
 						case "cvals": res += _filterIds(_parse(_filter(nattrmon.getCurrentValues()), parent.nameCVals)); break
 						case "lvals": res += _filterIds(_parse(_filter(nattrmon.getLastValues()), parent.nameLVals)); break
 						case "warns": res += _filterIds(_parsew(nattrmon.getWarnings(), parent.nameWarns)); break
 						}
 					} else {
-						if (parent.includeSelf)  res += _filterIds(__ow_metrics_fromObj2OpenMetrics(ow.metrics.getAll(), parent.nameSelf));
+						if (parent.includeSelf)  res += _filterIds(__ow_metrics_fromObj2OpenMetrics(ow.metrics.getAll(), parent.nameSelf, parent.useCurrentTime ? Date.now() : undefined));
 						if (parent.includeCVals) res += _filterIds(_parse(_filter(nattrmon.getCurrentValues()), parent.nameCVals));
 						if (parent.includeLVals) res += _filterIds(_parse(_filter(nattrmon.getLastValues()), parent.nameLVals));
 						if (parent.includeWarns) res += _filterIds(_parsew(nattrmon.getWarnings(), parent.nameWarns));
@@ -452,17 +482,20 @@ var nOutput_HTTP_Metrics = function (aMap) {
 				if (isJavaException(e)) e.javaException.printStackTrace()
 				return ow.server.httpd.reply("Error (check logs)", 500)
 			}
-		}
-	}), function (r) {
+		};
+
+	ow.server.httpd.route(httpd, ow.server.httpd.mapWithExistingRoutes(httpd, ow.server.httpd.mapRoutesWithLibs(httpd, routes), function (r) {
 		try {
+			var localUri = stripBasePath(r.uri);
 			var hres = ow.server.httpd.reply("", 200, "text/plain", {});
+			if (localUri == "/") hres.data = "";
 			return preProcess(r, hres);
 		} catch(e) {
 			logErr("Error in HTTP request: " + stringify(r, __, "") + "; exception: " + String(e))
 			if (isJavaException(e)) e.javaException.printStackTrace()
 			return ow.server.httpd.reply("Error (check logs)", 500)
 		}
-	});
+	}));
 
 	nOutput.call(this, this.output);
 };

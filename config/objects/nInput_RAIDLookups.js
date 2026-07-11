@@ -120,9 +120,11 @@ nInput_RAIDLookups.prototype.input = function(scope, args) {
           }
         });
 
-        res[templify(this.attrTemplate, {
-            key: aKey
-        })] = $from(arr).sort("Name", "Lookup").select();
+        if (arr.length > 0) { 
+            res[templify(this.attrTemplate, {
+                key: aKey
+            })] = $from(arr).sort("Name", "Lookup").select();
+        }
     }
 
     return res;

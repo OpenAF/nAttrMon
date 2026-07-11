@@ -12,6 +12,16 @@ var nOutput_HTTP_JSON = function (aMap) {
 		this.audit = true;
 		this.auditTemplate = AUDIT_TEMPLATE;
 	}
+
+	var relativePath = _$(aMap.relativePath, "relativePath").isString().default(
+		isDef(__flags.HTTPD_PREFIX) && isDef(ow.server.httpd.stripPrefix)
+			? (ow.server.httpd.getPrefix(aPort) || "/")
+			: "/"
+	);
+	relativePath = templify(relativePath);
+	if (!relativePath.startsWith("/")) relativePath = "/" + relativePath;
+	relativePath = relativePath.replace(/\/+$/, "");
+	if (relativePath == "") relativePath = "/";
 	
 	var hauth_perms, hauth_func;
 	var hauth_type = _$(aMap.authType, "hauthType").isString().default("none");
@@ -110,10 +120,18 @@ var nOutput_HTTP_JSON = function (aMap) {
 		return res;
 	}
 
+	var useNativePrefix = isDef(__flags.HTTPD_PREFIX) && isDef(ow.server.httpd.stripPrefix);
+	if (useNativePrefix && relativePath !== "/") __flags.HTTPD_PREFIX[String(aPort)] = relativePath;
+
+	var routePath = (!useNativePrefix && relativePath !== "/")
+		? (aSuffix) => { if (aSuffix == "/") return relativePath; return relativePath + aSuffix; }
+		: (aSuffix) => aSuffix;
+
+	var routes = {};
+
 	// Add function to server
 	//httpd.addEcho("/echo");
-	ow.server.httpd.route(httpd, ow.server.httpd.mapWithExistingRoutes(httpd, {
-		"/json": function (req) {
+	routes[routePath("/json")] = function (req) {
 			try {
 				switch (req.params.op) {
 					case "histtime":
@@ -164,8 +182,9 @@ var nOutput_HTTP_JSON = function (aMap) {
 				if (isJavaException(e)) e.javaException.printStackTrace()
 				return ow.server.httpd.reply("Error (check logs)", 500)
 			}
-		}
-	}), function (r) {
+	};
+
+	ow.server.httpd.route(httpd, ow.server.httpd.mapWithExistingRoutes(httpd, routes), function (r) {
 		try {
 			var hres = httpd.replyOKJSON(stringify({}));
 			return preProcess(r, hres);
@@ -175,6 +194,8 @@ var nOutput_HTTP_JSON = function (aMap) {
 			return ow.server.httpd.reply("Error (check logs)", 500)
 		}
 	});
+
+	log("Output_HTTP_JSON | Output HTTP JSON created on " + aPort + " with relativePath '" + relativePath + "'");
 
 	nOutput.call(this, this.output);
 };

@@ -46,11 +46,11 @@ text-align: center;
 
 @font-face {
 	font-family: 'icon';
-	src:  url('/f/fonts/icon.eot?axcame');
-	src:  url('/f/fonts/icon.eot?axcame#iefix') format('embedded-opentype'),
-	  url('/f/fonts/icon.ttf?axcame') format('truetype'),
-	  url('/f/fonts/icon.woff?axcame') format('woff'),
-	  url('/f/fonts/icon.svg?axcame#icon') format('svg');
+	src:  url('../fonts/icon.eot?axcame');
+	src:  url('../fonts/icon.eot?axcame#iefix') format('embedded-opentype'),
+	  url('../fonts/icon.ttf?axcame') format('truetype'),
+	  url('../fonts/icon.woff?axcame') format('woff'),
+	  url('../fonts/icon.svg?axcame#icon') format('svg');
 	font-weight: normal;
 	font-style: normal;
   }

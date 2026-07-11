@@ -8,6 +8,7 @@
  *    - useMountPoint (if useMountPoint=true the mount point will be used instead of the filesystem)
  *    - keys (a map with a SSH key or array of maps with SSH keys)\
  *    - chKeys (a channel with similar maps as keys)\
+ *    - execTimeout (timeout for the exec instruction, default 120000 miliseconds - 2 minutes)\
  * \
  * </odoc>
  */
@@ -19,6 +20,7 @@ nInput_Filesystem = function (aMap) {
 		this.params = {};
 	}
 	this.params.useMountPoint = _$(this.params.useMountPoint, "useMountPoint").isBoolean().default(false)
+	this.params.execTimeout = _$(this.params.execTimeout, "execTimeout").isNumber().default(120000)
 	if (!isArray(this.params.volumeNames) || this.params.volumeNames.length == 0) throw "No volumeNames defined.";
 
 	nInput.call(this, this.input);
@@ -34,28 +36,33 @@ nInput_Filesystem.prototype.__parseCmd = function (resSpace, resINode) {
 		var vname = this.params.volumeNames[j];
 		var space = {};
 		var inode = {};
+		var match_regex;
+
+		if (this.params.useMountPoint) {
+			match_regex = new RegExp(" " + vname + "$");
+		} else {
+			match_regex = new RegExp("^" + vname + "\\s+");
+		}
 
 		for (var i in linesSpace) {
-			if ((!this.params.useMountPoint && linesSpace[i].match(new RegExp("^" + vname + "\\s+")))
-			   || (this.params.useMountPoint && linesSpace[i].match(new RegExp(" " + vname + "$")))) {
+			if (linesSpace[i].match(match_regex)) {
 				var line = linesSpace[i].split(/\s+/);
 				space = {
 					"total": line[1],
-					"free": line[2],
-					"used": line[3],
+					"used": line[2],
+					"free": line[3],
 					"perc": line[4]
 				};
 			}
 		}
 
 		for (var i in linesINode) {
-			if ((!this.params.useMountPoint && linesINode[i].match(new RegExp("^" + vname + "\\s+")))
-			   || (this.params.useMountPoint && linesINode[i].match(new RegExp("\\s+" + vname + "$")))) {
+			if (linesINode[i].match(match_regex)) {
 				var line = linesINode[i].split(/\s+/);
 				inode = {
 					"total": line[1],
-					"free": line[2],
-					"used": line[3],
+					"used": line[2],
+					"free": line[3],
 					"perc": line[4]
 				};
 			}
@@ -64,12 +71,12 @@ nInput_Filesystem.prototype.__parseCmd = function (resSpace, resINode) {
 		dfs.push({
 			"Volume": vname,
 			"Total space": space.total,
-			"Used space": space.free,
-			"Free space": space.used,
+			"Used space": space.used,
+			"Free space": space.free,
 			"% Used space": space.perc,
 			"Total inode": inode.total,
-			"Used inode": inode.free,
-			"Free inode": inode.used,
+			"Used inode": inode.used,
+			"Free inode": inode.free,
 			"% Used inode": inode.perc
 		});
 	}
@@ -109,7 +116,6 @@ nInput_Filesystem.prototype.input = function (scope, args) {
 					}
 					if (isDef(v.secKey)) {
 						var ka = s.get(v.secKey);
-						//k = new Kube(ka.url, ka.user, ka.pass, ka.wsTimeout, ka.token);
 						km = {
 							url: ka.url,
 							user: ka.user,
@@ -118,9 +124,6 @@ nInput_Filesystem.prototype.input = function (scope, args) {
 							token: ka.token
 						}
 					}
-					/*if (isUnDef(k) || isUnDef(k.getNamespaces)) {
-						throw "Couldn't create a valid Kube object.";
-					}*/
 
 					var epods = [];
 					if (isUnDef(v.pod)) {
@@ -131,24 +134,27 @@ nInput_Filesystem.prototype.input = function (scope, args) {
 							        .match("metadata.name", v.podTemplate)
 						          	.select(r => r.metadata.name)
 						} else {
-							throw "No pod determined for '" + v.secObjKey + "'";
+							throw "nInput_Filesystem | No pod determined for '" + v.secObjKey + "'";
 						}
 					} else {
 						epods = [ v.pod ];
 					}
-				
+				    var step;
 					epods.forEach(pod => {
 						try {
-							resSpace = String( isDef(v.namespace) ? $kube(km).ns(v.namespace).exec(pod, "df -P") : $kube(km).exec(pod, "df -P") )
-							resINode = String( isDef(v.namespace) ? $kube(km).ns(v.namespace).exec(pod, "df -i -P") : $kube(km).exec(pod, "df -i -P") )
-
+							step = "Retrieve filesystem information";
+							resSpace = String( isDef(v.namespace) ? $kube(km).ns(v.namespace).exec(pod, "df -P", parent.params.execTimeout) : $kube(km).exec(pod, "df -P", parent.params.execTimeout) )
+							step = "Retrieve inode information";
+							resINode = String( isDef(v.namespace) ? $kube(km).ns(v.namespace).exec(pod, "df -i -P", parent.params.execTimeout) : $kube(km).exec(pod, "df -i -P", parent.params.execTimeout) )
+                            step = "Parse filesystem information";
 							var rr = parent.__parseCmd(resSpace, resINode).map(r => {
 								var res = { key: parent.params.keys[i], pod: pod };
 								return merge(res, r);
 							});
+							step = "Adding parsed filesystem information";
 							ddfs = ddfs.concat(rr);
 						} catch(e) {
-							logErr("nInput_Filesystem | Error on namespace '"+ v.namespace + "', pod '" + pod + "': " + String(e));
+							logErr("nInput_Filesystem | Error on namespace '"+ v.namespace + "', pod '" + pod + "' - " + step + ": " + String(e));
 						}
 					})
 
@@ -157,8 +163,8 @@ nInput_Filesystem.prototype.input = function (scope, args) {
 				default   :
 					// Default SSH
 					nattrmon.useObject(this.params.keys[i], (ssh) => {
-						resSpace = ssh.exec("df -P");
-						resINode = ssh.exec("df -i -P");
+						resSpace = ssh.exec("df -P", parent.params.execTimeout);
+						resINode = ssh.exec("df -i -P", parent.params.execTimeout);
 					});
 					var rr = this.__parseCmd(resSpace, resINode).map(r => {
 						var res = { key: this.params.keys[i] };
@@ -168,30 +174,38 @@ nInput_Filesystem.prototype.input = function (scope, args) {
 				}
 			}
 
-			if (this.params.keys.length == 1 && ddfs.length == 1) {
-				attrname = templify(this.params.attrTemplate, {
-					name: this.name,
-					key: this.params.keys[0]
-				});
-				ddfs = ddfs[0].result;
-			} else {
-				attrname = templify(this.params.attrTemplate, {
-					name: this.name
-				});
-			}
+            if (ddfs.length > 0) {
+				if (this.params.keys.length == 1 && ddfs.length == 1) {
+					attrname = templify(this.params.attrTemplate, {
+						name: this.name,
+						key: this.params.keys[0]
+					});
 
-			ret[attrname] = ddfs;
+					if (isDef(ddfs[0].result)) {
+						ddfs = ddfs[0].result;
+					} else {
+						ddfs = ddfs[0];
+					}				
+				} else {
+					attrname = templify(this.params.attrTemplate, {
+						name: this.name
+					});
+				}
+
+				ret[attrname] = ddfs;
+			}
 		} else {
 			resSpace = sh("df -P");
 			resINode = sh("df -i -P");
 
 			ddfs = this.__parseCmd(resSpace, resINode);
-			
-			ret[templify(this.params.attrTemplate)] = ddfs;
+			if (ddfs.length > 0) { 
+				ret[templify(this.params.attrTemplate)] = ddfs; 
+			}
 		}
 
 	} catch (e) {
-		logErr("Error executing command: " + e.message);
+		logErr("nInput_Filesystem | Error executing command: " + e.message);
 	}
 
 	return ret;
