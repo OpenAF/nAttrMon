@@ -157,23 +157,12 @@ nInput_Shell.prototype.input = function(scope, args) {
 					
 						epods.forEach(pod => {
 							try {
-								//var rr = String(k.exec(v.namespace, pod, [ templify(parent.cmd) ], __, true))
-								if (parent.parseJson || parent.parseYaml) {
-									res.push({
-										key: parent.params.keys[i],
-										result: _posExec(_exec(c => {
-											return String(k.exec(v.namespace, pod, [ templify(c) ], __, true))
-										}, parent.cmd, parent.cmdEach))
-									});
-								} else {
-									res.push({
-										key: parent.params.keys[i],
-										result: _posExec(_exec(c => {
-											return String(k.exec(v.namespace, pod, [ templify(c) ], __, true))
-										}, parent.cmd, parent.cmdEach))
-									});
-								}
-								;
+								res.push({
+									key: parent.params.keys[i],
+									result: _posExec(_exec(c => {
+										return String(k.exec(v.namespace, pod, [ templify(c) ], __, true))
+									}, parent.cmd, parent.cmdEach))
+								});
 							} catch(e) {
 								logErr("nInput_Shell | Error on namespace '"+ v.namespace + "', pod '" + pod + "': " + String(e))
 							}
@@ -186,21 +175,12 @@ nInput_Shell.prototype.input = function(scope, args) {
 				case "ssh":
 				default:
 					nattrmon.useObject(this.params.keys[i], (ssh) => {
-						if (this.parseJson || this.parseYaml) {
-							res.push({
-								key: this.params.keys[i],
-								result: _posExec(_exec(c => {
-									return ssh.exec(templify(c))
-								}, this.cmd, this.cmdEach))
-							})
-						} else {
-							res.push({
-								key: this.params.keys[i],
-								result: _posExec(_exec(c => {
-									return ssh.exec(templify(c))
-								}, this.cmd, this.cmdEach))
-							})
-						}
+						res.push({
+							key: this.params.keys[i],
+							result: _posExec(_exec(c => {
+								return ssh.exec(templify(c))
+							}, this.cmd, this.cmdEach))
+						})
 					})
 				}
 			} catch(pke) {
@@ -209,10 +189,8 @@ nInput_Shell.prototype.input = function(scope, args) {
 		}
 
 		if (this.params.keys.length == 1) {
-			//attrname = templify(this.attrTemplate, { name: this.name, key: this.params.keys[0]})
-			res = res[0].result
-		} else {
-			//attrname = templify(this.attrTemplate, { name: this.name })
+			// Guard against every key having failed (caught above, leaving res empty)
+			res = (res.length > 0 ? res[0].result : __)
 		}
 
 		ret[attrname] = res

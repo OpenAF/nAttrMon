@@ -50,8 +50,8 @@ var nOutput_AWSCloudWatch = function(aMap) {
 	this.params.logGroup = _$(this.params.logGroup, "aws cloudwatch logGroup").isString().default("nattrmon")
 
 	this.params.accesskey = _$(this.params.accessKey, "aws accesskey").isString().default(__)
-	this.params.secretkey = _$(this.params.secretkey, "aws secretkey").isString().default(__)
-	this.params.sessiontoken = _$(this.params.sessiontoken, "aws sessiontoken").isString().default(__)
+	this.params.secretkey = _$(this.params.secretKey, "aws secretkey").isString().default(__)
+	this.params.sessiontoken = _$(this.params.sessionToken, "aws sessiontoken").isString().default(__)
 
 	this.params.debug = _$(this.params.debug, "aws debug").isBoolean().default(false)
 
@@ -105,11 +105,37 @@ nOutput_AWSCloudWatch.prototype.imds = function() {
 		return {
 			accessKey: _cred.AccessKeyId,
 			secretKey: _cred.SecretAccessKey,
-			token: _cred.Token
+			token: _cred.Token,
+			expiration: isDef(_cred.Expiration) ? (new Date(_cred.Expiration)).getTime() : __
 		}
 	} else {
 		logWarn("No AWS IMDS found.")
 	}
+}
+
+// Returns a cached AWS client, reused across flushes instead of being rebuilt (and,
+// for IMDS, possibly re-fetched from the instance metadata service) on every one.
+// Explicit static credentials never expire, so the client is built once. IMDS-derived
+// (temporary) credentials are refreshed once they're within 60s of Expiration.
+// ----------------------------------------
+nOutput_AWSCloudWatch.prototype.getClient = function() {
+	var _useIMDS = isUnDef(this.params.accesskey) && isUnDef(this.params.secretkey) && isUnDef(this.params.sessiontoken)
+
+	var _needsRefresh = isUnDef(this.__aws) ||
+		(_useIMDS && isDef(this.__awsExpiration) && now() >= (this.__awsExpiration - 60000))
+
+	if (_needsRefresh) {
+		if (_useIMDS) {
+			var _c = this.imds()
+			this.__aws = new AWS(_c.accessKey, _c.secretKey, _c.token)
+			this.__awsExpiration = _c.expiration
+		} else {
+			this.__aws = new AWS(this.params.accesskey, this.params.secretkey, this.params.sessiontoken)
+			this.__awsExpiration = __
+		}
+	}
+
+	return this.__aws
 }
 
 nOutput_AWSCloudWatch.prototype.output = function(scope, args) {
@@ -166,13 +192,7 @@ nOutput_AWSCloudWatch.prototype.output = function(scope, args) {
 	})
 	if (metrics.length > 0) {
 		loadLib("aws.js")
-		var aws
-		if (isUnDef(this.params.accesskey) && isUnDef(this.params.secretkey) && isUnDef(this.params.sessiontoken)) {
-			var _c = this.imds()
-			aws = new AWS(_c.accessKey, _c.secretKey, _c.token)
-		} else {
-			aws = new AWS(this.params.accesskey, this.params.secretkey, this.params.sessiontoken)
-		}
+		var aws = this.getClient()
 		var res = aws.CLOUDWATCH_PutMetricData(this.params.region, this.params.logGroup, metrics)
 		if (isMap(res) && isDef(res.ErrorResponse)) {
 			logWarn(af.toSLON(res) + (this.params.debug ? stringify(metrics, __, "") : ""))

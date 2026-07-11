@@ -178,6 +178,10 @@ var nOutput_HTTP_Metrics = function (aMap) {
 		if (isDef(this.include) && !isArray(this.include)) throw "attrInclude needs to be an array"
 		if (isDef(this.exclude) && !isArray(this.exclude)) throw "attrExclude needs to be an array"
 
+		// Compile each pattern once (was: `new RegExp(f)` recompiled per key per scrape)
+		this.__includeRE = isDef(this.include) ? this.include.map(f => new RegExp(f)) : __
+		this.__excludeRE = isDef(this.exclude) ? this.exclude.map(f => new RegExp(f)) : __
+
 		this.removeIds = _$(aMap.removeIds, "removeIds").isBoolean().default(true)
 
 		if (isDef(this.chName) && this.chPeriod > 0) $ch(this.chName).create(1, this.chType, this.chParams);
@@ -220,12 +224,17 @@ var nOutput_HTTP_Metrics = function (aMap) {
 	var httpd = nattrmon.getSessionData(hS);
 	var parent = this;
 
-    var fnAuth = function(u, p, s, r) { 
+	// Compile the custom-auth handler once (was: `new Function` on every request)
+	var fnCustomAuth = (isDef(hauth_func) && isString(hauth_func))
+		? new Function('u', 'p', 's', 'r', hauth_func)
+		: __;
+
+    var fnAuth = function(u, p, s, r) {
 		u = String(u);
 	    p = String(p);
 
-		if (isDef(hauth_func) && isString(hauth_func)) {
-		  return (new Function('u', 'p', 's', 'r', hauth_func))(u, p, s, r);
+		if (isDef(fnCustomAuth)) {
+		  return fnCustomAuth(u, p, s, r);
 		} else {
 		  if (isDef(hauth_perms) && isDef(hauth_perms[u])) {
 			if (p == Packages.openaf.AFCmdBase.afc.dIP(hauth_perms[u].p)) {
@@ -374,26 +383,7 @@ var nOutput_HTTP_Metrics = function (aMap) {
 
 	if (isDef(this.chName) && this.chPeriod > 0) ow.metrics.startCollecting(this.chName, this.chPeriod);
 
-    var _filter = m => {
-		var _r = {}
-		if (isArray(this.include) && this.include.length > 0) {
-			Object.keys(m).filter(k => {
-				this.include.forEach(f => {
-					if (k.match(new RegExp(f))) _r[k] = m[k]
-				})
-			})
-		} else {
-			_r = m
-		}
-		if (isArray(this.exclude) && this.exclude.length > 0) {
-			Object.keys(m).filter(k => {
-				this.exclude.forEach(f => {
-					if (k.match(new RegExp(f))) delete m[k]
-				})
-			})
-		}
-		return _r
-	}
+    var _filter = m => this.__filter(m)
 
 	var _filterIds = lines => {
 		if (this.removeIds) {
@@ -500,6 +490,34 @@ var nOutput_HTTP_Metrics = function (aMap) {
 	nOutput.call(this, this.output);
 };
 inherit(nOutput_HTTP_Metrics, nOutput);
+
+// Filters a map of attribute/warning entries by attrInclude/attrExclude (compiled
+// once into __includeRE/__excludeRE in the constructor, matched with .some()).
+// NOTE: preserves the existing semantics -- when both include and exclude are
+// configured, exclude is applied against the ORIGINAL map (not the include-filtered
+// result), so it has no effect in that combination; this only changes performance
+// (was: `new RegExp` recompiled per key per scrape), not behavior.
+// ----------------------------------------
+// m = map to filter
+// Returns the filtered map
+// ----------------------------------------
+nOutput_HTTP_Metrics.prototype.__filter = function (m) {
+	var _r
+	if (isArray(this.include) && this.include.length > 0) {
+		_r = {}
+		Object.keys(m).forEach(k => {
+			if (this.__includeRE.some(re => re.test(k))) _r[k] = m[k]
+		})
+	} else {
+		_r = m
+	}
+	if (isArray(this.exclude) && this.exclude.length > 0) {
+		Object.keys(m).forEach(k => {
+			if (this.__excludeRE.some(re => re.test(k))) delete m[k]
+		})
+	}
+	return _r
+}
 
 nOutput_HTTP_Metrics.prototype.output = function (scope, args) {
 	//this.refresh(scope);

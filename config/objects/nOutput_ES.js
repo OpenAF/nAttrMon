@@ -37,6 +37,12 @@
 	if (isDef(this.includeRE) && !isArray(this.includeRE)) throw "IncludeRE needs to be an array";
 	if (isDef(this.excludeRE) && !isArray(this.excludeRE)) throw "ExcludeRE needs to be an array";
 
+	// Compile each pattern once into a RegExp array (was: new RegExp(anArray), which
+	// coerces the whole array to a comma-joined string -- multi-element lists never
+	// worked -- and recompiled per value per run)
+	this.includeRE = isDef(this.includeRE) ? this.includeRE.map(r => new RegExp(r)) : __;
+	this.excludeRE = isDef(this.excludeRE) ? this.excludeRE.map(r => new RegExp(r)) : __;
+
 	this.considerSetAll = (isDef(aMap.considerSetAll)) ? aMap.considerSetAll : true;
 	this.stampMap = aMap.stampMap;
 	this.dontUseStampMapTemplating = _$(aMap.dontUseStampMapTemplating).isBoolean().default(false)
@@ -57,6 +63,24 @@
 	nOutput.call(this, this.output);
 };
 inherit(nOutput_ES, nOutput);
+
+// Determines whether an attribute/warning name should be sent to ES, given
+// include/exclude (exact match) and includeRE/excludeRE (compiled RegExp array,
+// matched with .some()) filters. Extracted from output() for unit testing.
+// ----------------------------------------
+// kk = the attribute name (or warning title)
+// Returns true/false
+// ----------------------------------------
+nOutput_ES.prototype.__selected = function (kk) {
+	var isok = (isDef(this.include) || isDef(this.includeRE)) ? false : true
+
+	if (isDef(this.include) && this.include.indexOf(kk) >= 0) isok = true
+	if (isDef(this.exclude) && this.exclude.indexOf(kk) >= 0) isok = false
+	if (isDef(this.includeRE) && this.includeRE.some(re => re.test(kk))) isok = true
+	if (isDef(this.excludeRE) && this.excludeRE.some(re => re.test(kk))) isok = false
+
+	return isok
+}
 
 nOutput_ES.prototype.addKeys = function(aVal, aOrig, aKeyMap) {
 	Object.keys(aKeyMap).forEach(k => {
@@ -86,7 +110,7 @@ nOutput_ES.prototype.addToES = function (aCh, aVal, useTitle) {
 		if (isArray(aVal.val)) {
 			for (var i in aVal.val) {
 				// Calculate extra based on stampMap
-				var stampM = clone(this.stampMap)
+				var stampM = isDef(this.stampMap) ? clone(this.stampMap) : __
 				if (!this.dontUseStampMapTemplating) {
 					traverse(stampM, (k, v, p, o) => {
 						if (isString(v)) {
@@ -96,12 +120,15 @@ nOutput_ES.prototype.addToES = function (aCh, aVal, useTitle) {
 				}
 				if (isDef(stampM)) extra = stringify(sortMapKeys(stampM), __, "")
 
-				obj.id = sha1(obj.name + (this.unique ? "" : (this.noDateDocId ? "" : obj.date)) + i + extra)
-				obj = merge(obj, stampM)
-				obj[obj.name] = clone(aVal.val[i]);
-				this.addKeys(obj, obj[obj.name], this.keyMap)
-				
-				traverse(obj, function (k, v, p, o) {
+				// A fresh object per element (was: mutating/reusing the shared `obj` across
+				// iterations then cloning it at the end -- which could leak fields from one
+				// element into the next when they didn't all set the same keys)
+				var elObj = merge(clone(obj), stampM)
+				elObj.id = sha1(obj.name + (this.unique ? "" : (this.noDateDocId ? "" : obj.date)) + i + extra)
+				elObj[elObj.name] = clone(aVal.val[i]);
+				this.addKeys(elObj, elObj[elObj.name], this.keyMap)
+
+				traverse(elObj, function (k, v, p, o) {
 					if (v == null || v == "n/a") {
 						delete o[k];
 					} else {
@@ -111,12 +138,12 @@ nOutput_ES.prototype.addToES = function (aCh, aVal, useTitle) {
 						}
 					}
 				});
-				data.push(clone(obj));
+				data.push(elObj);
 			}
 		} else {
 			// Calculate extra based on stampMap
-			var stampM = clone(this.stampMap)
-			if (!this.dontUseStampMapTemplating) { 
+			var stampM = isDef(this.stampMap) ? clone(this.stampMap) : __
+			if (!this.dontUseStampMapTemplating) {
 				traverse(stampM, (k, v, p, o) => {
 					if (isString(v)) {
 						o[k] = templify(v, aVal)
@@ -192,14 +219,9 @@ nOutput_ES.prototype.output = function (scope, args) {
 
 	for (var vi in v) {
 		var value = v[vi];
-		var isok = (isDef(this.include) || isDef(this.includeRE)) ? false : true
 		var isWarns = (args.ch == "nattrmon::warnings" || args.ch == "nattrmon::warnings::buffer");
 		var kk = (isWarns) ? v[vi].title : v[vi].name;
 
-		if (isDef(this.include) && this.include.indexOf(kk) >= 0) isok = true
-		if (isDef(this.exclude) && this.exclude.indexOf(kk) >= 0) isok = false
-		if (isDef(this.includeRE) && kk.match(new RegExp(this.includeRE))) isok = true
-		if (isDef(this.excludeRE) && kk.match(new RegExp(this.excludeRE))) isok = false
-		if (isok) { this.addToES($ch(this.ch), value, isWarns); }
+		if (this.__selected(kk)) { this.addToES($ch(this.ch), value, isWarns); }
 	}
 };

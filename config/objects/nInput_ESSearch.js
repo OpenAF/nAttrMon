@@ -58,11 +58,9 @@ inherit(nInput_ESSearch, nInput);
 
 nInput_ESSearch.prototype.get = function(keyData, extra) {
     // Get metrics based on keyData
-    var res = {}
-    if (isDef(keyData.key)) res = { key: keyData }
-
     var res = this.es.search(this.funcIndex(), this.params.search)
     if (isDef(this.params.path)) res = $$(res).get(this.params.path)
+    if (isDef(keyData.key)) res = merge({ key: keyData.key }, res)
 
     return merge(extra, res)
 }

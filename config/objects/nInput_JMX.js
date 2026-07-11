@@ -108,9 +108,26 @@ nInput_JMX.prototype.get = function(keyData) {
     keyData.pass = _$(keyData.pass, "pass").isString().default(__)
     keyData.provider = _$(keyData.provider, "provider").isString().default(__)
 
+    // Reuse one JMX connection per url|user across MBean objects (was: a brand new
+    // connection per MBean object, per run -- 7 connections/run with the default
+    // object list) and across scheduled runs. The underlying openaf.plugins.JMX class
+    // has no exposed close/disconnect method (verified: only getClassName, newJMX,
+    // getObject, getJavaServerConnection, getLocals, attach2Local are public), so the
+    // best available fix is to stop creating new connections instead of closing old
+    // ones -- see close() below, which drops the cache on plug reload/removal.
+    if (isUnDef(this.__conns)) this.__conns = {}
+    var _connKey = keyData.url + "|" + keyData.user
+    var _reused = isDef(this.__conns[_connKey])
+    var jmx = this.__conns[_connKey]
+    if (isUnDef(jmx)) {
+        jmx = new JMX(keyData.url, keyData.user, keyData.pass, keyData.provider)
+        this.__conns[_connKey] = jmx
+    }
+
+    var _anySuccess = false
     this.params.objects.forEach(obj => {
-        var jmx = new JMX(keyData.url, keyData.user, keyData.pass, keyData.provider)
         var data = getObj(jmx, obj.object)
+        if (isDef(data)) _anySuccess = true
 
         var type, name
         obj.object.substring(obj.object.indexOf(":") + 1).split(",").forEach(r => {
@@ -118,7 +135,7 @@ nInput_JMX.prototype.get = function(keyData) {
             if (ar[0] == "type") type = ar[1]
             if (ar[0] == "name") name = ar[1]
         })
-        
+
         if (isDef(obj.selector)) data = ow.obj.filter(data, obj.selector)
         if (isDef(obj.path))     data = $path(data, obj.path)
 
@@ -129,7 +146,17 @@ nInput_JMX.prototype.get = function(keyData) {
         }, data))
     })
 
+    // A reused connection that failed for every configured object is likely dead --
+    // drop it so the next get() call reconnects instead of failing forever
+    if (_reused && !_anySuccess && this.params.objects.length > 0) delete this.__conns[_connKey]
+
     return res
+}
+
+// Drop cached JMX connections (called by nPlug.close() on plug reload/removal)
+// ----------------------------------------
+nInput_JMX.prototype.close = function() {
+    this.__conns = {}
 }
 
 nInput_JMX.prototype.input = function(scope, args) {

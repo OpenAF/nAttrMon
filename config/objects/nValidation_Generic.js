@@ -35,6 +35,32 @@
 };
 inherit(nValidation_Generic, nValidation);
 
+// Compiles (once per distinct pattern) and caches a RegExp -- was: `new RegExp`
+// recompiled on every value/every event for what are, in practice, static patterns
+// coming from this.params/check config. Bounded implicitly by the (small, static)
+// set of distinct patterns actually configured.
+// ----------------------------------------
+// aPattern = regex source string
+// Returns the cached RegExp
+// ----------------------------------------
+nValidation_Generic.prototype.__getRE = function(aPattern) {
+    if (isUnDef(this.__reCache)) this.__reCache = {};
+    if (isUnDef(this.__reCache[aPattern])) this.__reCache[aPattern] = new RegExp(aPattern);
+    return this.__reCache[aPattern];
+};
+
+// Compiles (once per distinct source) and caches a healing-exec function -- was:
+// `new Function` recompiled on every healing run for a static, per-check exec body.
+// ----------------------------------------
+// aSource = function body source string
+// Returns the cached function
+// ----------------------------------------
+nValidation_Generic.prototype.__getFn = function(aSource) {
+    if (isUnDef(this.__fnCache)) this.__fnCache = {};
+    if (isUnDef(this.__fnCache[aSource])) this.__fnCache[aSource] = new Function('args', aSource);
+    return this.__fnCache[aSource];
+};
+
 nValidation_Generic.prototype.pathMapper = function(path) {
     if (path == ".") return obj => obj
 
@@ -72,7 +98,7 @@ nValidation_Generic.prototype.checkEntry = function(ret, k, v, args) {
 
         if (isDef(v) && 
             ((isDef(check.attribute) && v.name == check.attribute) || 
-             (isDef(check.attrPattern) && v.name.match(new RegExp(check.attrPattern)))
+             (isDef(check.attrPattern) && v.name.match(this.__getRE(check.attrPattern)))
             )
            ) {
             go = true
@@ -80,7 +106,7 @@ nValidation_Generic.prototype.checkEntry = function(ret, k, v, args) {
 
         if (isDef(v) && 
             ((isDef(check.title) && v.title == check.title) || 
-             (isDef(check.titlePattern) && v.title.match(new RegExp(check.titlePattern)))
+             (isDef(check.titlePattern) && v.title.match(this.__getRE(check.titlePattern)))
             )
            ) {
             go = true
@@ -266,7 +292,7 @@ nValidation_Generic.prototype.checkEntry = function(ret, k, v, args) {
                                     }
                                     if (isDef(cHealing.exec)) {
                                         logWarn("Running healing execution for '" + warnTitle + "'");
-                                        (new Function('args', cHealing.exec))(cHealing.execArgs);
+                                        this.__getFn(cHealing.exec)(cHealing.execArgs);
                                     }
                                     if (isDef(cHealing.execOJob)) {
                                         logWarn("Running healing ojob for '" + warnTitle + "'");
@@ -319,29 +345,29 @@ nValidation_Generic.prototype.validate = function(warns, scope, args) {
         if (args.op == "setall") {
             for(var ii in args.v) {
                 var go = true
-                if (isDef(this.params.attrPattern) && !args.v[ii].name.match(new RegExp(this.params.attrPattern))) go = false
-                if (isDef(this.params.attribute) && !args.v[ii].name.match(new RegExp(this.params.attribute))) go = false
-                if (isDef(this.params.titlePattern) && !args.v[ii].title.match(new RegExp(this.params.titlePattern))) go = false
-                if (isDef(this.params.title) && !args.v[ii].title.match(new RegExp(this.params.title))) go = false
+                if (isDef(this.params.attrPattern) && !args.v[ii].name.match(this.__getRE(this.params.attrPattern))) go = false
+                if (isDef(this.params.attribute) && !args.v[ii].name.match(this.__getRE(this.params.attribute))) go = false
+                if (isDef(this.params.titlePattern) && !args.v[ii].title.match(this.__getRE(this.params.titlePattern))) go = false
+                if (isDef(this.params.title) && !args.v[ii].title.match(this.__getRE(this.params.title))) go = false
                 if (go) ret = this.checkEntry(ret, args.k, args.v[ii], args)
             }
         }
         if (args.op == "set") {
             var go = true
-            if (isDef(this.params.attrPattern) && !args.v.name.match(new RegExp(this.params.attrPattern))) go = false
-            if (isDef(this.params.attribute) && !args.v.name.match(new RegExp(this.params.attribute))) go = false
-            if (isDef(this.params.titlePattern) && !args.v.title.match(new RegExp(this.params.titlePattern))) go = false
-            if (isDef(this.params.title) && !args.v.title.match(new RegExp(this.params.title))) go = false
+            if (isDef(this.params.attrPattern) && !args.v.name.match(this.__getRE(this.params.attrPattern))) go = false
+            if (isDef(this.params.attribute) && !args.v.name.match(this.__getRE(this.params.attribute))) go = false
+            if (isDef(this.params.titlePattern) && !args.v.title.match(this.__getRE(this.params.titlePattern))) go = false
+            if (isDef(this.params.title) && !args.v.title.match(this.__getRE(this.params.title))) go = false
             if (go) ret = this.checkEntry(ret, args.k, args.v, args)
         }
     } else {
         var cvals = scope.getCurrentValues();
         for(var i in cvals) {
             var go = true
-            if (isDef(this.params.attrPattern) && !cvals[i].name.match(new RegExp(this.params.attrPattern))) go = false
-            if (isDef(this.params.attribute) && !cvals[i].name.match(new RegExp(this.params.attribute))) go = false
-            if (isDef(this.params.titlePattern) && !cvals[i].title.match(new RegExp(this.params.titlePattern))) go = false
-            if (isDef(this.params.title) && !cvals[i].title.match(new RegExp(this.params.title))) go = false
+            if (isDef(this.params.attrPattern) && !cvals[i].name.match(this.__getRE(this.params.attrPattern))) go = false
+            if (isDef(this.params.attribute) && !cvals[i].name.match(this.__getRE(this.params.attribute))) go = false
+            if (isDef(this.params.titlePattern) && !cvals[i].title.match(this.__getRE(this.params.titlePattern))) go = false
+            if (isDef(this.params.title) && !cvals[i].title.match(this.__getRE(this.params.title))) go = false
             if (go) ret = this.checkEntry(ret, { name: cvals[i].name }, cvals[i], args)
         }
     }

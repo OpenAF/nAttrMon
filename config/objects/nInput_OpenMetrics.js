@@ -151,7 +151,7 @@ nInput_OpenMetrics.prototype.input = function(scope, args) {
                     // Call _get to get the corresponding array of results per storage class
                     res = res.concat(this._get(v))
                 } catch(e1) {
-                    logErr("OpenMetrics error (key=" + this.params.keys[i] + "): "+ stringify(e))
+                    logErr("OpenMetrics error (key=" + this.params.keys[i] + "): "+ stringify(e1))
                 }
             }
         } else {

@@ -43,15 +43,22 @@ var nOutput_HTTP = function (aMap) {
 
 	// Get server
 	var httpd = nattrmon.getSessionData(hS);
+	this.hS = hS;
+	this.httpd = httpd;
 	var parent = this;
 	this.title = aTitle;
-	
-    var fnAuth = function(u, p, s, r) { 
+
+	// Compile the custom-auth handler once (was: `new Function` on every request)
+	var fnCustomAuth = (isDef(hauth_func) && isString(hauth_func))
+		? new Function('u', 'p', 's', 'r', hauth_func)
+		: __;
+
+    var fnAuth = function(u, p, s, r) {
 		u = String(u);
 	    p = String(p);
 
-		if (isDef(hauth_func) && isString(hauth_func)) {
-		  return (new Function('u', 'p', 's', 'r', hauth_func))(u, p, s, r);
+		if (isDef(fnCustomAuth)) {
+		  return fnCustomAuth(u, p, s, r);
 		} else {
 		  if (isDef(hauth_perms) && isDef(hauth_perms[u])) {
 			if (p == Packages.openaf.AFCmdBase.afc.dIP(hauth_perms[u].p)) {
@@ -225,8 +232,15 @@ nOutput_HTTP.prototype.output = function (scope, args, meta) {
 
 nOutput_HTTP.prototype.close = function () {
 	try {
-		if (nattrmon.hasSessionData(hS)) nattrmon.getSessionData(hS).stop();
-		else log("nOutput_HTTP | Close | There is no session for (" + stringify(hs) + " - exception: " + stringify(e) + ")")
+		// Multiple output plugs (JSON, Channels, Metrics, HealthZ, ...) can share the same
+		// httpd session (keyed by hS). Only stop the server this instance started/reused if
+		// the session no longer points at it -- e.g. a port-change reload repointed the
+		// session to a new server, orphaning this one. On a same-port reload the session
+		// still points at this same server (reused, not restarted, by the just-constructed
+		// replacement instance), so it must be left running for that instance and any siblings.
+		if (isDef(this.httpd) && nattrmon.getSessionData(this.hS) !== this.httpd) {
+			this.httpd.stop();
+		}
 	} catch (e) {
 		logErr("nOutput_HTTP | Close exception: " + stringify(e))
 		if (isJavaException(e)) e.javaException.printStackTrace()

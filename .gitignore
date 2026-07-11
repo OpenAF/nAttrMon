@@ -7,3 +7,5 @@ util/nattrmonConfig.zip
 configTest
 nattrmon.yaml
 config/.nattrmonignore
+tests/.tmp
+lib/.openaf_precompiled

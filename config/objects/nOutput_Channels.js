@@ -39,10 +39,15 @@ var nOutput_Channels = function(aMap) {
   this.channels = _$(aMap.channels, "channels").isArray().default([]);
 
   if (isDef(httpd)) {
+    // Compile the custom-auth handler once (was: `new Function` on every request)
+    var fnCustomAuth = (isDef(cauth_func) && isString(cauth_func))
+      ? new Function('u', 'p', 's', 'r', cauth_func)
+      : __;
+
     // Channel authentication
     var chAuth = function(u, p, s, r) {
-      if (isDef(cauth_func) && isString(cauth_func)) {
-        return (new Function('u', 'p', 's', 'r', cauth_func))(u, p, s, r);
+      if (isDef(fnCustomAuth)) {
+        return fnCustomAuth(u, p, s, r);
       } else {
         if (isDef(cauth_perms) && isDef(cauth_perms[u])) {
           if (p == cauth_perms[u].p) {
@@ -192,7 +197,7 @@ var nOutput_Channels = function(aMap) {
               name: value.name
             };
           } else {
-            logErr("OPS | Error: " + stringify(e));
+            logErr("OPS | Error: Attribute '" + value.name + "' not found");
             return {
               error: "Attribute '" + value.name + "' not found"
             };

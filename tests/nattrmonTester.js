@@ -34,7 +34,7 @@ ow.template.addHelper("attr", (a, p, isN) => {
 		} else {
 			res = stringify(res, void 0, "");
 		}
-		return (isDef(res) ? isN : res);
+		return (isDef(res) ? res : isN);
 	} else {
 		return (isString(isN) ? isN : null);
 	}
@@ -47,7 +47,7 @@ ow.template.addHelper("cval", (a, p, isN) => {
 		} else {
 			res = stringify(res, void 0, "");
 		}
-		return (isDef(res) ? isN : res);
+		return (isDef(res) ? res : isN);
 	} else {
 		return (isString(isN) ? isN : null);
 	}
@@ -60,7 +60,7 @@ ow.template.addHelper("lval", (a, p, isN) => {
 		} else {
 			res = stringify(res, void 0, "");
 		}
-		return (isDef(res) ? isN : res);
+		return (isDef(res) ? res : isN);
 	} else {
 		return (isString(isN) ? isN : null);
 	}
@@ -73,7 +73,7 @@ ow.template.addHelper("warn", (a, p, isN) => {
 		} else {
 			res = stringify(res, void 0, "");
 		}
-		return (isDef(res) ? isN : res);
+		return (isDef(res) ? res : isN);
 	} else {
 		return (isString(isN) ? isN : null);
 	}
