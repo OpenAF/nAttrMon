@@ -19,16 +19,19 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20260528'
+version: '20260710'
 dependencies:
   openaf: '>=20241117'
 files:
 - .gitignore
 - .package.yaml
 - .precompile
+- AGENTS.md
 - CONTRIBUTING.md
+- IMPROVE-PLAN.md
 - LICENSE
 - README.md
+- a.yaml
 - config/inputs.disabled/js/00.kube.init.js
 - config/inputs.disabled/js/00.raid.init.js
 - config/inputs.disabled/js/05.filesystemCount.js
@@ -87,6 +90,7 @@ files:
 - config/inputs.disabled/yaml/30.openmetrics.yaml
 - config/inputs.disabled/yaml/41.rulestatus.yaml
 - config/inputs.disabled/yaml/secrets.yaml.sample
+- config/inputs/01.test.yaml
 - config/inputs/move_files_from_inputs_disabled.dummy
 - config/move_files_from_the_disabled_folders.dummy
 - config/nattrmonignore.js.sample
@@ -225,6 +229,7 @@ files:
 - config/outputs.disabled/yaml/09.channels.yaml
 - config/outputs.disabled/yaml/10.SNMPServer_Output.yaml
 - config/outputs.disabled/yaml/10.ndjson.yaml
+- config/outputs/00.httpAll.yaml
 - config/outputs/move_files_from_outputs_disabled.dummy
 - config/validations.disabled/js/01.validatePing.js
 - config/validations.disabled/js/03.validateSemaphores.js
@@ -241,6 +246,19 @@ files:
 - docs/images/logo.png
 - docs/images/nAttrMon.png
 - docs/images/nAttrMon.xcf
+- lib/.openaf_precompiled/.t8-20260711
+- lib/.openaf_precompiled/nattribute_js.class
+- lib/.openaf_precompiled/nattributes_js.class
+- lib/.openaf_precompiled/nattributevalue_js.class
+- lib/.openaf_precompiled/ninput_js.class
+- lib/.openaf_precompiled/nmain_js.class
+- lib/.openaf_precompiled/nmonitoredobject_js.class
+- lib/.openaf_precompiled/noutput_js.class
+- lib/.openaf_precompiled/nplug_js.class
+- lib/.openaf_precompiled/ntmplhelpers_js.class
+- lib/.openaf_precompiled/nvalidation_js.class
+- lib/.openaf_precompiled/nwarning_js.class
+- lib/.openaf_precompiled/nwarnings_js.class
 - lib/nattribute.js
 - lib/nattributes.js
 - lib/nattributevalue.js
@@ -257,12 +275,6 @@ files:
 - nattrmon.js
 - nattrmon.yaml.sample
 - oJob_nAttrMon.yaml
-- tests/inputDBTest.yml
-- tests/inputShellTest.yml
-- tests/nattrmonTester.js
-- tests/outputTest.yml
-- tests/unitTest.js
-- tests/unitTestYAML.js
 - util/backupConfig.yaml
 - util/clean.yaml
 - util/genScripts.yaml
@@ -272,11 +284,14 @@ files:
 - util/templates/Object_nOutput_template.js
 - util/watchdog.yaml.hbs
 filesHash:
-  .gitignore: 39785e9c0e444387c904a807d9e506a0215ca099
+  .gitignore: 429e77906f8a83c159a2afa647d49c2073fe245a
   .precompile: 52743b858c620cbf8590846495d282efc2ce0060
+  AGENTS.md: 96203488c9c454bb0f203e3d1a97b6a37313cd84
   CONTRIBUTING.md: c39f66b369fdd4722819997ac9c0f2a1cf6219ec
+  IMPROVE-PLAN.md: 258f125318f74ac95ebb0f76e98aae2f2610346e
   LICENSE: 7df059597099bb7dcf25d2a9aedfaf4465f72d8d
-  README.md: 706d0c7091c90d5405471ca1927f08fe2dc32020
+  README.md: 3c6cc29fbcf7f42a1efd27a66ff9317ecd5908ab
+  a.yaml: 88f72904ae52020408c2ac7934a318335e68e838
   config/inputs.disabled/js/00.kube.init.js: 0be5054088e13053ffd86c7a7f3a710120330337
   config/inputs.disabled/js/00.raid.init.js: d6c7847577ab7a88cf84e2d6ce24b2d0258213ef
   config/inputs.disabled/js/05.filesystemCount.js: e8d4d119ec2d022033309bc18de8a2dc3a9d66aa
@@ -335,6 +350,7 @@ filesHash:
   config/inputs.disabled/yaml/30.openmetrics.yaml: 4f291c2f415714e179385b3a150f0d7b106b1d10
   config/inputs.disabled/yaml/41.rulestatus.yaml: 1d6e902d7b0ff9617df9a843f406fe5e95a4bb4c
   config/inputs.disabled/yaml/secrets.yaml.sample: e9a1c16fa032f87ccb5cc4d8cb81f4d7ffba3e64
+  config/inputs/01.test.yaml: 2d80e3ec0869f3a88ba1036eaec7744aed289831
   config/inputs/move_files_from_inputs_disabled.dummy: b858cb282617fb0956d960215c8e84d1ccf909c6
   config/move_files_from_the_disabled_folders.dummy: da39a3ee5e6b4b0d3255bfef95601890afd80709
   config/nattrmonignore.js.sample: dad08a2c3a4fdba2f45c5d357aa2ebb7971d73e5
@@ -391,7 +407,7 @@ filesHash:
   config/objects/nInput_CompareTimes.js: 5c95c1387549e405031414b430c98951ed591d1c
   config/objects/nInput_DB.js: 8e46fb72eb454812020ffb8a8bfc6608fb332950
   config/objects/nInput_DMPerformance.js: c7b8d30f023cc550ea262333927cc1acf9cab3b6
-  config/objects/nInput_ESSearch.js: 0f825f81de288367fde87f13be5e1ccfe072bd1c
+  config/objects/nInput_ESSearch.js: cb2e5a6e59150a04b17155f06d06759fe4dae743
   config/objects/nInput_EndPoints.js: 56ebe885b9af2e39d19578f0cf34df44ee9d5f6f
   config/objects/nInput_FMSRuleStatus.js: 1acccca00b89a38cd53891601f66401f3513f782
   config/objects/nInput_FilesProcessed.js: 66538c2281edbbc8598a5f9d212f9c6e247384d4
@@ -402,7 +418,7 @@ filesHash:
   config/objects/nInput_IMLoadingsProgress.js: 1987633b3cf1ee4f8a1f74a7441f386637aa93a6
   config/objects/nInput_IMMemory.js: 69f6e3d39aa5a75c83d2e4f8e2ece0b28df7e3f1
   config/objects/nInput_Init.js: 16875d3a28997a934d7e54c5c76a7eaa94fc148b
-  config/objects/nInput_JMX.js: fce9011c729efafd1abe79588a274ee36aac3c16
+  config/objects/nInput_JMX.js: 4633d76938844f9c4bf1f1ab4ef38f356f0f8376
   config/objects/nInput_JavaGC.js: f445dbab81d6accab09734a61abe8c80dd49cae1
   config/objects/nInput_Kube_Events.js: 547d59fe2d69b3594c849ad6e8cdaa7402ca8577
   config/objects/nInput_Kube_NodesMetrics.js: 182bc697ef68d44db0f31ee5483e7157aaa7ec66
@@ -410,7 +426,7 @@ filesHash:
   config/objects/nInput_Kube_PodsMetrics.js: ad2ce33e1dfa3b085f0289b4e2a9a5fa7cd7c408
   config/objects/nInput_LogErrorAgg.js: 43e3809d524752c55f7c58403661beb8e623f52b
   config/objects/nInput_OSInfo.js: b8548f6d69dea80553fbef3e6e8d6552c15362e9
-  config/objects/nInput_OpenMetrics.js: 67c90bf64c35d639499c7bbf8273af715050ee5d
+  config/objects/nInput_OpenMetrics.js: 7381d144463db124a4deee05822aeb0295dbadc9
   config/objects/nInput_RAIDGCMemory.js: e81fb2f99c6ddb42fc5c248b70906e4532f9f4fe
   config/objects/nInput_RAIDLookups.js: 638064728e01de70ae2908d2ddd5db35bdf86301
   config/objects/nInput_RAIDMemory.js: 5682c87b931d7f97b20d6dde0a4a7ab981b1806b
@@ -421,21 +437,21 @@ filesHash:
   config/objects/nInput_Schedulers.js: 96771d166e2574b6d5a526cc6025ad3abf1363d4
   config/objects/nInput_Semaphores.js: 9b0c0d8ca1b1c33d8faeaae89738360c8569534e
   config/objects/nInput_Sessions.js: e4adb3f97db438aa0524ba3a1efebd615d7c3057
-  config/objects/nInput_Shell.js: 06740a834815c664f3a28018a533d37e3d8f3427
+  config/objects/nInput_Shell.js: f659465ea4a02c762a462ec3fe50430e3343870b
   config/objects/nInput_nAttrMon.js: c8ec9f45f724e7372b02751b893178490587641b
-  config/objects/nOutput_AWSCloudWatch.js: 7e481df8405dd5f00f62350af1e0a10feb7fb457
+  config/objects/nOutput_AWSCloudWatch.js: 7c50e68c60272e138dc75a1551590c9b86f93e64
   config/objects/nOutput_ChMirror.js: c1b5d965320aac73d90f0a6e12ae0a4123f8afd5
-  config/objects/nOutput_Channels.js: f6e277efa2c12c3d6dd8468facbfb1bb43828ed6
+  config/objects/nOutput_Channels.js: 983e0b62876e052ae86160e612db288e5e9ecfbc
   config/objects/nOutput_DSV.js: b723aefe236bd464d215c52406cec796cd47d97f
-  config/objects/nOutput_ES.js: 1ad06b12bc5a6e8aa36f99b045d0e1f252e1a9d9
+  config/objects/nOutput_ES.js: 314a12f599bf10bc1c0ec21f70434ce912b10343
   config/objects/nOutput_EmailWarnings.js: 9b9c296db9af55a53e0fe7722e128d12841ca4b0
   config/objects/nOutput_H2.js: d161d36c8ed2c5b6bcbc19ae8ef291bf56e5474a
   config/objects/nOutput_HK.js: c9887fd101189ea35deaa8cdaddb280563856e01
   config/objects/nOutput_HTMLStatus.js: 5672ea6092958891bb4a3a8eb3e8317c6e250600
-  config/objects/nOutput_HTTP.js: 043278dcbed94f2d8ca2aa57f4253426ee2dcdd9
+  config/objects/nOutput_HTTP.js: 9658bf4b3a62b811622fd39741d6a5e2aa804361
   config/objects/nOutput_HTTP_HealthZ.js: 11e2470b1cd0894be17315c80479c036d29485db
   config/objects/nOutput_HTTP_JSON.js: 29252d69746972486590fbdcc85f5a11b5050ab8
-  config/objects/nOutput_HTTP_Metrics.js: 9b21ab65906137fd0b1d2f287924fa33c6a8281c
+  config/objects/nOutput_HTTP_Metrics.js: 67ba4f0181c30a1d83f20188203779d854321b0b
   config/objects/nOutput_HTTP_Status.js: c4e56e646bfe3dd1d063604b5ab40bc0f618ff66
   config/objects/nOutput_Log.js: 69ef02bb37d306deb390f303a8bbf6e2234be792
   config/objects/nOutput_Log2ES.js: 4ff766b80b2e03f08f9f38e5a8dba4115d62bf81
@@ -444,11 +460,11 @@ filesHash:
   config/objects/nOutput_Oracle.js: ab0f2fe7958952437ae93030715633858462269f
   config/objects/nOutput_RemoteChannel.js: 8dcadaf89c78f31707c45d615a3941ce0547cd33
   config/objects/nOutput_SNMPServer.js: 130bc6d74d981eb5ac6118690473cfa366516c81
-  config/objects/nOutput_Slack.js: bf5205bfd1b76b48345ec99bb407438eb3f1b0c9
+  config/objects/nOutput_Slack.js: ae64561bab719c81df5af0a57540476abb3d48a5
   config/objects/nOutput_Stdout.js: eddd09834507308573f289b6a4c92e7cdd6b1b70
   config/objects/nOutput_WarnsHistory.js: 53820893e6a8f4a63b2ad93ffc7e7094c6bcdf1f
   config/objects/nValidation_AFPing.js: f48325d605e693dee3ab2912224cda0fde11e490
-  config/objects/nValidation_Generic.js: 8e1eb380d91542a06412d67300b60ba30953706a
+  config/objects/nValidation_Generic.js: 1ea55b74bb9f70e27e3c625ec5dd0c5ecb0b558d
   config/objects/nValidation_Semaphores.js: 97b6c1850b80d95cc92c1c50b05fdfa26467fd94
   config/objects/nValidation_Yellows.js: 942478fcd710e392add0b6ef6349ef51a895b764
   config/outputs.disabled/js/00.extraHelpers.js: 945ab0b535c36242a92ba9624407dc012dc5d3d5
@@ -473,6 +489,7 @@ filesHash:
   config/outputs.disabled/yaml/09.channels.yaml: f38c539f163ec3457267c55d4248237b76caee14
   config/outputs.disabled/yaml/10.SNMPServer_Output.yaml: a96e62eaa6bd5231bb8c555976c1869e851fdbb3
   config/outputs.disabled/yaml/10.ndjson.yaml: fdc7581edc2277adfd4265bc3504d4ac3bd7e0c5
+  config/outputs/00.httpAll.yaml: fcf74237eb55874c6e031c2586c85343e1b69b4b
   config/outputs/move_files_from_outputs_disabled.dummy: b858cb282617fb0956d960215c8e84d1ccf909c6
   config/validations.disabled/js/01.validatePing.js: cc572c157971ebdccd0a40a261f199cb9e509b5c
   config/validations.disabled/js/03.validateSemaphores.js: 6ded3ea530db8b5d4621fa8bad510e281ebd632d
@@ -489,28 +506,35 @@ filesHash:
   docs/images/logo.png: ee5366a3aa207c69d5139e04e7a4523078b974ba
   docs/images/nAttrMon.png: 298fb1bb1e7c004b6204069d2a3319fbdebedea0
   docs/images/nAttrMon.xcf: ae00e462f4b6c18adc55b6ddc4900ab3e0ffac35
-  lib/nattribute.js: 26d360eebba48fdd6ebd715224ce62f69d5e094b
-  lib/nattributes.js: 58c0d8f1dcb36244afc91bdd7678dc9b639f1f38
-  lib/nattributevalue.js: 216e3ed7187625320ac73fa2f4c9974a1c52d3c0
-  lib/ninput.js: 76ff84febc3c97b366cba9f8bb05282b2f92e713
-  lib/nmain.js: 0476988bf90c9290a593f0c1513d499d50a5a63d
-  lib/nmonitoredobject.js: 901e6287ef688dde4ba4427b0a7cde756962a16f
-  lib/noutput.js: 8ca864209278d51bf99f16eefb6e71001d442ec9
-  lib/nplug.js: df6a1feb12a0791adf6a8dd5a2e47c675a02a375
-  lib/ntmplhelpers.js: 7f0b4bac176622ea777a5067a5be7f9d39d6dd82
-  lib/nvalidation.js: 641437c9abc7d376d28948c36725f52cf291f253
-  lib/nwarning.js: 195735ff51fc1bb26adcb6da25bdcae3e1513aa6
-  lib/nwarnings.js: 441517fb9a74f556cfe7c3dc445f8c3dc093d02a
+  lib/.openaf_precompiled/.t8-20260711: da39a3ee5e6b4b0d3255bfef95601890afd80709
+  lib/.openaf_precompiled/nattribute_js.class: a3d054b8c412c01d4e23ac252aab11d7b08fe5b4
+  lib/.openaf_precompiled/nattributes_js.class: 14529230aaeb6cc348784b3441621cc69722fcab
+  lib/.openaf_precompiled/nattributevalue_js.class: 5ce2da16d562f0b9997f54b471029ab84bbfd6e0
+  lib/.openaf_precompiled/ninput_js.class: 1fc481db61f355cde4556dde9393781be80b5613
+  lib/.openaf_precompiled/nmain_js.class: 41710d1c48c6ca985390aff96668b34fd6bb9be2
+  lib/.openaf_precompiled/nmonitoredobject_js.class: eae62041e85fca3b8d5ce25e67182fd95a83ae8e
+  lib/.openaf_precompiled/noutput_js.class: 1254cc8020db4c0482f4123f9ef1a1af83d16ed6
+  lib/.openaf_precompiled/nplug_js.class: d7d7a044ab16d20640574bdcb68058d499170ea0
+  lib/.openaf_precompiled/ntmplhelpers_js.class: 00ad02d35e94e8e29ac23b656f77ede24bc60915
+  lib/.openaf_precompiled/nvalidation_js.class: a23376e512b16f0e54c39b9ef00b68ae996015de
+  lib/.openaf_precompiled/nwarning_js.class: 2e82c37cdc38623ed5cc5d31c7d252d186822ba7
+  lib/.openaf_precompiled/nwarnings_js.class: 6c35fa61c5d9561eeff3e0599d24e3c617b096ce
+  lib/nattribute.js: 67623155dc72d429d617561b93a9a7792c327fbe
+  lib/nattributes.js: e2910b06665d819507ebcc0dd929dc14658277d0
+  lib/nattributevalue.js: 722772c991655e06eb7289bc408b58158ca2655d
+  lib/ninput.js: e4df8ce41b22dc402f7f1244f141f3097fb8ace4
+  lib/nmain.js: fb494d97b5a84128c448b07095c72d04fe4d73a1
+  lib/nmonitoredobject.js: f983f1df596dc86154e9b3556318fb8c12cabbd0
+  lib/noutput.js: 391a56d9d21e7687dd11ef89b296b9e1e2aa2009
+  lib/nplug.js: 7865a927354d033cd9d684e00e58a505a1e635dd
+  lib/ntmplhelpers.js: 83d5919162ad9d01a4b48175c655a2a2e7691755
+  lib/nvalidation.js: ef84121e02b9472bc64558ade2242d8cac101ad5
+  lib/nwarning.js: a3e9afcda2cfb62b8d88461c12ac7cb99d11ffb8
+  lib/nwarnings.js: 4b9268ff27d4cef6ac82026882c5b8faadbcb4e1
   nAttrmon_single.yaml.sample: 5b5cd4971d3582ea328f2f83dc0a610ea43a4be4
   nattrmon.js: e025e73feb3cf363de474e5992b954cfc10fa2f0
   nattrmon.yaml.sample: edb5069e0d2b4db6c1779e91523c263aae3fcd3f
   oJob_nAttrMon.yaml: 55aa4809661c306a2db9ea2a33c6a4f542835ebd
-  tests/inputDBTest.yml: c38616606dc5956e449189d11f8e661170f94dfb
-  tests/inputShellTest.yml: ce643955982cb16b53a8843acd3549466e5cddf5
-  tests/nattrmonTester.js: 1676171ab793cdb67da4de3e033aee110aa8ef20
-  tests/outputTest.yml: 0c4ba4176163e4aa9ff7fd4ae4128339d8384581
-  tests/unitTest.js: 067565f7c1517b331684246f5c9a7949124417ea
-  tests/unitTestYAML.js: 1d943c734c6bcacd46fe6de29275997b925cc19e
   util/backupConfig.yaml: 5eec368c37f05a6a7028f88b641882c8686e0f0b
   util/clean.yaml: ebee3a4f8c0efc278bd2dbc9fce271eae8245247
   util/genScripts.yaml: 7678a09a512db6346c029e32d9f94af00942dc05
