@@ -4,6 +4,23 @@ var nattrmonAttrs = [];
 var nattrmonWarns = [];
 var plugs = [];
 
+function __namEscapeHtml(v) {
+    return String(v)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
+function __namSafeColor(v) {
+    var c = String(v).trim();
+    if (/^#[0-9a-fA-F]{3,8}$/.test(c)) return c;
+    if (/^(rgb|hsl)a?\([0-9\s,%.+-]+\)$/i.test(c)) return c;
+    if (/^[a-zA-Z]+$/.test(c)) return c;
+    return "transparent";
+}
+
 function refresh(data) {
     var attrs = data.attributes;
     var values = data.values;
@@ -61,10 +78,10 @@ function render(sce, aValue, aType) {
         aType = "undefined";
     }
 
-    var _determineKeys = ar => {
-        return ar.reduce((keys, map) => {
+    var _determineKeys = function(ar) {
+        return ar.reduce(function(keys, map) {
             if ("[object Object]" == Object.prototype.toString.call(map)) {
-                for (const key in map) {
+                for (var key in map) {
                     keys.add(key)
                 }
             }
@@ -72,16 +89,18 @@ function render(sce, aValue, aType) {
         }, new Set())
     }
 
+    var _isObjRendered = false;
+
     // If object
-    var _render = (aValue) => {
-        if (typeof aValue != 'object') return aValue;
+    var _render = function(aValue) {
+        if (typeof aValue != 'object') return __namEscapeHtml(aValue);
 
         var out = "";
         if (aValue instanceof Array && aValue.length > 0) {
             var _keys = Array.from(_determineKeys(aValue))
             var out = "<table class=\"nattributetable\"><tr>";
             for (var i in _keys) {
-                out += "<th class=\"nattributetablehead\"><b>" + _keys[i] + "</b></th>";
+                out += "<th class=\"nattributetablehead\"><b>" + __namEscapeHtml(_keys[i]) + "</b></th>";
             }
             out += "</tr>";
             for (var x in aValue) {
@@ -105,7 +124,7 @@ function render(sce, aValue, aType) {
                     if ("undefined" != aValue[i]) _v = aValue[i]
                     if ("undefined" == typeof _v) _v = ""
                 }
-                out += "<tr><td class=\"nattributetablecell\"><b>" + i + "</b></td><td class=\"nattributetablecell\">" + _render(_v) + "</td></tr>";
+                out += "<tr><td class=\"nattributetablecell\"><b>" + __namEscapeHtml(i) + "</b></td><td class=\"nattributetablecell\">" + _render(_v) + "</td></tr>";
             }
             out += "</table>";
         }
@@ -116,15 +135,22 @@ function render(sce, aValue, aType) {
         var out = "";
         out += _render(aValue);
         aValue = out;
+        _isObjRendered = true;
     }
 
+    var _safeText = function(v) {
+        return _isObjRendered ? String(v) : __namEscapeHtml(v);
+    };
+
     switch (aType) {
-        case "sem": return sce.trustAsHtml("<span style=\"background-color:" + aValue + "\">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class=\"nattributevalue\"> - " + aValue + "</span>");
-        case "desc": return sce.trustAsHtml("<span class=\"nattributedesc\">" + aValue + "</span>");
+        case "sem":
+            var _semColor = __namSafeColor(aValue);
+            return sce.trustAsHtml("<span style=\"background-color:" + _semColor + "\">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class=\"nattributevalue\"> - " + __namEscapeHtml(aValue) + "</span>");
+        case "desc": return sce.trustAsHtml("<span class=\"nattributedesc\">" + _safeText(aValue) + "</span>");
         case "date": return sce.trustAsHtml((new Date(aValue)).toLocaleString() + "");
-        case "undefined": return sce.trustAsHtml("<span class=\"nattributevalueNA\">" + aValue + "</span>")
+        case "undefined": return sce.trustAsHtml("<span class=\"nattributevalueNA\">" + _safeText(aValue) + "</span>")
         default:
-            return sce.trustAsHtml("<span class=\"nattributevalue\">" + aValue + "</span>");
+            return sce.trustAsHtml("<span class=\"nattributevalue\">" + _safeText(aValue) + "</span>");
     }
 }
 

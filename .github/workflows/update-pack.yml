@@ -24,10 +24,16 @@ jobs:
         key : oaf-t8
         path: /tmp/oaf
 
+    - name: Run hermetic tests
+      uses: openaf/ojob-action@v7
+      with:
+        script: load("tests/autoTestAll.js")
+        dist  : 't8'
+
     - name: Generate oPack
       uses: openaf/ojob-action@v7
       with:
-        script: oPack("genpack . --exclude .github")
+        script: oPack("genpack . --exclude .github,tests")
         dist  : 't8'
         
     - name: Update version badge

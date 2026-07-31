@@ -17,102 +17,20 @@ var nOutput_HTTP_HealthZ = function (aMap) {
 		aMap = {};
 	}
 
-    var hauth_perms, hauth_func;
-	var hauth_type = _$(aMap.authType, "hauthType").isString().default("none");
-	if (isDef(aMap.auth)) hauth_perms = aMap.auth;
-	if (isDef(aMap.authLocal)) hauth_perms = aMap.authLocal;
-	if (isDef(aMap.authCustom)) hauth_func = aMap.authCustom;
+	var _route = nattrmon.getHttpRouteHelpers(aMap, aPort);
+	var relativePath = _route.relativePath;
 
 	// Set server if doesn't exist
 	var hS = "httpd";
 
 	if (isDef(aMap.httpSession)) hS = aMap.httpSession;
 
-    if (nattrmon.hasSessionData(hS)) {
-        if (isNumber(aPort) && aPort != nattrmon.getSessionData(hS).getPort()) {
-            nattrmon.setSessionData(hS,
-                ow.server.httpd.start(aPort, aMap.host, aMap.keyStore, aMap.keyPassword));
-        }
-    } else {
-        nattrmon.setSessionData(hS,
-            ow.server.httpd.start(isUnDef(aPort) ? 8090 : aPort, aMap.host, aMap.keyStore, aMap.keyPassword));
-    }
-
 	// Get server
-	var httpd = nattrmon.getSessionData(hS);
+	var httpd = nattrmon.ensureHttpSession(hS, aPort, aMap.host, aMap.keyStore, aMap.keyPassword);
 	var parent = this;
 
-    var fnAuth = function(u, p, s, r) { 
-		u = String(u);
-	    p = String(p);
-
-		if (isDef(hauth_func) && isString(hauth_func)) {
-		  return (new Function('u', 'p', 's', 'r', hauth_func))(u, p, s, r);
-		} else {
-		  if (isDef(hauth_perms) && isDef(hauth_perms[u])) {
-			if (p == Packages.openaf.AFCmdBase.afc.dIP(hauth_perms[u].p)) {
-			  r.channelPermission = (isDef(hauth_perms[u].m) ? hauth_perms[u].m : "r");
-			  return true;
-			} else {
-			  return false;
-			}
-		  } else {
-			return false;
-		  }
-		}
-	};
-    
-	var preProcess = (aReq, aReply) => {
-		var res = aReply, user = "";
-		res.header = _$(res.header).default({});
-		if (isDef(hauth_perms) && hauth_type != "none") {
-			if (hauth_type == "basic") {
-				res = ow.server.httpd.authBasic("nattrmon", httpd, aReq, (u, p, s, r) => {
-					if (!isString(u) || !isString(p)) return false;
-					user = String(u);
-					return fnAuth(user, p, s, r); 
-				}, () => { try {
-					var data = merge(aReq, { 
-						reply: {
-							status  : aReply.status,
-							mimetype: aReply.mimetype
-						},
-						user: "'" + user + "'"
-					});
-					try { 
-						tlog(parent.auditTemplate, data);
-					} catch(e) {
-						logErr("nOutput_HTTP_HealthZ | Error on auditing access: " + String(e));
-					}
-					return aReply; } catch(e) { sprintErr("nOutput_HTTP_HealthZ | " + e); if (isDef(e.javaException)) e.javaException.printStackTrace(); }
-				}, hss => {
-					if (user != "") tlogWarn(parent.auditTemplate, merge(aReq, {
-						method: "AUTH_FAILED",
-						user  : "'" + user + "'",
-						reply : { status: 401, mimetype: "text/plain" }
-					}));
-					return hss.reply("Not authorized.", "text/plain", ow.server.httpd.codes.UNAUTHORIZED);
-				});
-			}
-			res.header["Set-Cookie"] = "nattrmon_auth=1";
-		} else {
-			res.header["Set-Cookie"] = "nattrmon_auth=0";
-			var data = merge(aReq, { 
-				reply: {
-					status  : aReply.status,
-					mimetype: aReply.mimetype
-				}, 
-				user : ""
-			});
-			try { 
-				tlog(parent.auditTemplate, data);
-			} catch(e) {
-				logErr("nOutput_HTTP_HealthZ | Error on auditing access: " + String(e));
-			}
-		}
-
-		return res;
-	}
+	var preProcess = nattrmon.getHttpPreProcessFn(aMap, httpd, parent, "nOutput_HTTP_HealthZ");
+    var routePath = _route.routePath;
 
     var _parse = (e, n) => {
         return ow.obj.fromObj2Array(e).map(r => {
@@ -128,7 +46,7 @@ var nOutput_HTTP_HealthZ = function (aMap) {
     var parent = this;
     var routes = {};
     if (parent.includeHealthZ) {
-        routes["/healthz"] = function(req) {
+		routes[routePath("/healthz")] = function(req) {
 			try {
 				var hres = ow.server.httpd.reply("OK", 200, "text/plain", {});
 				return preProcess(req, hres);
@@ -140,7 +58,7 @@ var nOutput_HTTP_HealthZ = function (aMap) {
         }
     }
     if (parent.includeLiveZ) {
-        routes["/livez"] = function(req) {
+		routes[routePath("/livez")] = function(req) {
             var hres;
 			try {
 				try {
@@ -158,7 +76,7 @@ var nOutput_HTTP_HealthZ = function (aMap) {
         }
     }
     if (parent.includeReadyZ) {
-        routes["/readyz"] = function(req) {
+		routes[routePath("/readyz")] = function(req) {
 			try {
 				if (nattrmon.alive) {
 					var hres = ow.server.httpd.reply("OK", 200, "text/plain", {});
@@ -184,6 +102,8 @@ var nOutput_HTTP_HealthZ = function (aMap) {
 			return ow.server.httpd.reply("Error (check logs)", 500)
 		}
 	});
+
+	log("Output_HTTP_HealthZ | Output HTTP HealthZ created on " + aPort + " with relativePath '" + relativePath + "'");
 
 	nOutput.call(this, this.output);
 };

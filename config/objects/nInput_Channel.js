@@ -20,34 +20,24 @@ var nInput_Channel = function (aMap) {
     if (isDef(aMap.local)) cauth_perms = aMap.local;
     if (isDef(aMap.custom)) cauth_func = aMap.custom;
 
+    var fnAuth = nattrmon.getPrecompiledAuthFn(cauth_perms, cauth_func);
+
     // Channel authentication
     var chAuth = function (u, p, s, r) {
-        if (isDef(cauth_func) && isString(cauth_func)) {
-            return (new Function('u', 'p', 's', 'r', cauth_func))(u, p, s, r);
-        } else {
-            if (isDef(cauth_perms) && isDef(cauth_perms[u])) {
-                if (p == cauth_perms[u].p) {
-                    r.channelPermission = (isDef(cauth_perms[u].m) ? cauth_perms[u].m : "r");
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
-                return false;
-            }
-        }
+        return fnAuth(u, p, s, r);
     };
 
     $ch(this.ch).create(1, "dummy");
+    var hS = "httpd";
+    if (isDef(aMap.httpSession)) hS = aMap.httpSession;
     if (isDef(aMap.port)) {
-        if (isDef(aMap.host) || isDef(aMap.keyStore) || isDef(aMap.keyPassword)) {
-            $ch(this.ch).expose(ow.server.httpd.start(aMap.port, aMap.host, aMap.keyStore, aMap.keyPassword), aMap.path, chAuth);
+        if (isDef(aMap.host) || isDef(aMap.keyStore) || isDef(aMap.keyPassword) || isDef(aMap.httpSession)) {
+            var _httpd = nattrmon.ensureHttpSession(hS, Number(aMap.port), aMap.host, aMap.keyStore, aMap.keyPassword);
+            $ch(this.ch).expose(_httpd, aMap.path, chAuth);
         } else {
             $ch(this.ch).expose(aMap.port, aMap.path, chAuth);
         }
     } else {
-        var hS = "httpd";
-        if (isDef(aMap.httpSession)) hS = aMap.httpSession;
         if (nattrmon.hasSessionData(hS)) {
             $ch(this.ch).expose(nattrmon.getSessionData(hS), aMap.path);
         } else {

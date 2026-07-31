@@ -5,7 +5,16 @@
 // Restored: the key is merged in AFTER the search (and after any `path`
 // extraction), using keyData.key (not the whole keyData map).
 
+var __hasElasticSearchOpack = isDef(getOPackPath("ElasticSearch"))
+
+var __requireElasticSearchOpack = function() {
+	if (__hasElasticSearchOpack) return true
+	ow.test.assert(true, true, "Skipping: ElasticSearch opack not installed")
+	return false
+}
+
 ow.test.test("nInput_ESSearch::get() tags the result with the key when chKeys provides one", () => {
+	if (!__requireElasticSearchOpack()) return
 	load(NATTRMON_HOME + "/config/objects/nInput_ESSearch.js")
 
 	var i = new nInput_ESSearch({ url: "http://localhost:1/fake", index: "test-index", search: { query: { match_all: {} } } })
@@ -17,6 +26,7 @@ ow.test.test("nInput_ESSearch::get() tags the result with the key when chKeys pr
 })
 
 ow.test.test("nInput_ESSearch::get() does not add a key field when keyData has none", () => {
+	if (!__requireElasticSearchOpack()) return
 	load(NATTRMON_HOME + "/config/objects/nInput_ESSearch.js")
 
 	var i = new nInput_ESSearch({ url: "http://localhost:1/fake", index: "test-index", search: { query: { match_all: {} } } })
@@ -27,6 +37,7 @@ ow.test.test("nInput_ESSearch::get() does not add a key field when keyData has n
 })
 
 ow.test.test("nInput_ESSearch::get() applies path extraction and still tags the key", () => {
+	if (!__requireElasticSearchOpack()) return
 	load(NATTRMON_HOME + "/config/objects/nInput_ESSearch.js")
 
 	var i = new nInput_ESSearch({ url: "http://localhost:1/fake", index: "test-index", search: { query: { match_all: {} } }, path: "hits.total" })
