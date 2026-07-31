@@ -16,5 +16,5 @@ ow.test.test("nattrmon startup script includes watchdog override and warning coo
 ow.test.test("nmain includes MAIN_WATCHDOG_WARN_COOLDOWN configuration wiring", () => {
 	var src = io.readFileString(NATTRMON_HOME + "/lib/nmain.js")
 	ow.test.assert(src.indexOf("__NAM_MAIN_WATCHDOG_WARN_COOLDOWN") >= 0, true, "watchdog warn cooldown global should exist")
-	ow.test.assert(src.indexOf("pms.MAIN_WATCHDOG_WARN_COOLDOWN") >= 0, true, "watchdog warn cooldown should be parsed from nattrmon.yaml/env")
+	ow.test.assert(src.indexOf("__nam_cfgNum(pms, \"MAIN_WATCHDOG_WARN_COOLDOWN\"") >= 0, true, "watchdog warn cooldown should be parsed from nattrmon.yaml/env")
 })
