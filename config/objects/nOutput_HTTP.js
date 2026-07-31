@@ -6,25 +6,11 @@ var nOutput_HTTP = function (aMap) {
 	var aPort = isDef(aMap.port) ? aMap.port : 8090;
 	var aRefreshTime = isDef(aMap.refreshTime) ? aMap.refreshTime : 2500;
 	var path = isDef(aMap.path) ? aMap.path : io.fileInfo(nattrmon.getConfigPath("objects.assets/noutputhttp")).canonicalPath;
-	var relativePath = _$(aMap.relativePath, "relativePath").isString().default(
-		isDef(__flags.HTTPD_PREFIX) && isDef(ow.server.httpd.stripPrefix)
-			? (ow.server.httpd.getPrefix(aPort) || "/")
-			: "/"
-	);
-	relativePath = templify(relativePath);
-
-	if (!relativePath.startsWith("/")) relativePath = "/" + relativePath;
-	relativePath = relativePath.replace(/\/+$/, "");
-	if (relativePath == "") relativePath = "/";
+	var _route = nattrmon.getHttpRouteHelpers(aMap, aPort);
+	var relativePath = _route.relativePath;
 
 	this.audit = (isDef(aMap.audit) ? aMap.audit : true);
 	this.auditTemplate = (isDef(aMap.auditTemplate) ? aMap.auditTemplate : AUDIT_TEMPLATE);
-
-	var hauth_perms, hauth_func;
-	var hauth_type = _$(aMap.authType, "hauthType").isString().default("none");
-	if (isDef(aMap.auth)) hauth_perms = aMap.auth;
-	if (isDef(aMap.authLocal)) hauth_perms = aMap.authLocal;
-	if (isDef(aMap.authCustom)) hauth_func = aMap.authCustom;
 
 	// Set server if doesn't exist
 	var hS = "httpd";
@@ -38,83 +24,15 @@ var nOutput_HTTP = function (aMap) {
 	var parent = this;
 	this.title = aTitle;
 
-	var fnAuth = nattrmon.getPrecompiledAuthFn(hauth_perms, hauth_func, { decodePermPasswords: true });
-
 	// Set session data
 	nattrmon.setSessionData("httpd.summary.custom", {
 		"title": aTitle,
 		"refresh": aRefreshTime
 	});
 
-	var preProcess = (aReq, aReply) => {
-		var res = aReply, user = "";
-		res.header = _$(res.header).default({});
-		if (isDef(hauth_perms) && hauth_type != "none") {
-			if (hauth_type == "basic") {
-				res = ow.server.httpd.authBasic("nattrmon", httpd, aReq, (u, p, s, r) => {
-					if (isString(u)) user = u;
-					if (!isString(u) || !isString(p)) return false;
-					return fnAuth(user, p, s, r); 
-				}, () => { try {
-					var data = merge(aReq, { 
-						reply: {
-							status  : aReply.status,
-							mimetype: aReply.mimetype
-						},
-						user: "'" + user + "'"
-					});
-					try { 
-						tlog(parent.auditTemplate, data);
-					} catch(e) {
-						logErr("nOutput_HTTP | Error on auditing access: " + String(e));
-					}
-					return aReply; } catch(e) { sprintErr("nOutput_HTTP | " + e); if (isDef(e.javaException)) e.javaException.printStackTrace(); }
-				}, hss => {
-					if (user != "") tlogWarn(parent.auditTemplate, merge(aReq, {
-						method: "AUTH_FAILED",
-						user  : "'" + user + "'",
-						reply : { status: 401, mimetype: "text/plain" }
-					}));
-					return hss.reply("Not authorized.", "text/plain", ow.server.httpd.codes.UNAUTHORIZED);
-				});
-			}
-			res.header["Set-Cookie"] = "nattrmon_auth=1";
-		} else {
-			res.header["Set-Cookie"] = "nattrmon_auth=0";
-			var data = merge(aReq, { 
-				reply: {
-					status  : aReply.status,
-					mimetype: aReply.mimetype
-				}, 
-				user : ""
-			});
-			try { 
-				tlog(parent.auditTemplate, data);
-			} catch(e) {
-				logErr("nOutput_HTTP | Error on auditing access: " + String(e));
-			}
-		}
-
-		return res;
-	}
-
-	var useNativePrefix = isDef(__flags.HTTPD_PREFIX) && isDef(ow.server.httpd.stripPrefix);
-	if (useNativePrefix && relativePath !== "/") __flags.HTTPD_PREFIX[String(aPort)] = relativePath;
-
-	var routePath = (!useNativePrefix && relativePath !== "/")
-		? (aSuffix) => { if (aSuffix == "/") return relativePath; return relativePath + aSuffix; }
-		: (aSuffix) => aSuffix;
-
-	var stripBasePath = (!useNativePrefix && relativePath !== "/")
-		? (aUri) => {
-			if (isUnDef(aUri)) return "/";
-			if (aUri === relativePath || aUri.startsWith(relativePath + "/")) {
-				var localUri = aUri.substring(relativePath.length);
-				return (localUri == "") ? "/" : localUri;
-			}
-			return aUri;
-		  }
-		: (aUri) => isUnDef(aUri) ? "/" : aUri;
+	var preProcess = nattrmon.getHttpPreProcessFn(aMap, httpd, parent, "nOutput_HTTP");
+	var routePath = _route.routePath;
+	var stripBasePath = _route.stripBasePath;
 
 	var routes = {};
 
@@ -158,7 +76,7 @@ var nOutput_HTTP = function (aMap) {
 			}
 		};
 
-	if (!useNativePrefix && relativePath !== "/") routes[relativePath + "/"] = routes[routePath("/")];
+	if (!_route.useNativePrefix && relativePath !== "/") routes[relativePath + "/"] = routes[routePath("/")];
 
 	// Add function to server
 	ow.server.httpd.route(httpd, ow.server.httpd.mapWithExistingRoutes(httpd, ow.server.httpd.mapRoutesWithLibs(httpd, routes), function (r) {

@@ -28,15 +28,16 @@ var nInput_Channel = function (aMap) {
     };
 
     $ch(this.ch).create(1, "dummy");
+    var hS = "httpd";
+    if (isDef(aMap.httpSession)) hS = aMap.httpSession;
     if (isDef(aMap.port)) {
-        if (isDef(aMap.host) || isDef(aMap.keyStore) || isDef(aMap.keyPassword)) {
-            $ch(this.ch).expose(ow.server.httpd.start(aMap.port, aMap.host, aMap.keyStore, aMap.keyPassword), aMap.path, chAuth);
+        if (isDef(aMap.host) || isDef(aMap.keyStore) || isDef(aMap.keyPassword) || isDef(aMap.httpSession)) {
+            var _httpd = nattrmon.ensureHttpSession(hS, Number(aMap.port), aMap.host, aMap.keyStore, aMap.keyPassword);
+            $ch(this.ch).expose(_httpd, aMap.path, chAuth);
         } else {
             $ch(this.ch).expose(aMap.port, aMap.path, chAuth);
         }
     } else {
-        var hS = "httpd";
-        if (isDef(aMap.httpSession)) hS = aMap.httpSession;
         if (nattrmon.hasSessionData(hS)) {
             $ch(this.ch).expose(nattrmon.getSessionData(hS), aMap.path);
         } else {

@@ -7,13 +7,21 @@ ow.test.test("nOutput_HTTP_Metrics::the custom-auth handler is compiled once, no
 	var src = io.readFileString(NATTRMON_HOME + "/config/objects/nOutput_HTTP_Metrics.js")
 
 	ow.test.assert(/var fnAuth = function[\s\S]{0,300}new Function/.test(src), false, "fnAuth's body must not contain a `new Function` call")
-	ow.test.assert(src.indexOf("nattrmon.getPrecompiledAuthFn(") >= 0, true, "custom auth should be provided by nattrmon.getPrecompiledAuthFn")
+	ow.test.assert(
+		src.indexOf("nattrmon.getPrecompiledAuthFn(") >= 0 || src.indexOf("nattrmon.getHttpPreProcessFn(") >= 0,
+		true,
+		"custom auth should be provided by getPrecompiledAuthFn directly or via the shared getHttpPreProcessFn helper"
+	)
 })
 
 var __assertCustomAuthPrecompiled = function(filePath, fnAuthName) {
 	var src = io.readFileString(filePath)
 	ow.test.assert(new RegExp("var " + fnAuthName + " = function[\\s\\S]{0,300}new Function").test(src), false, fnAuthName + " body must not contain a `new Function` call")
-	ow.test.assert(src.indexOf("nattrmon.getPrecompiledAuthFn(") >= 0, true, "custom auth should come from nattrmon.getPrecompiledAuthFn")
+	ow.test.assert(
+		src.indexOf("nattrmon.getPrecompiledAuthFn(") >= 0 || src.indexOf("nattrmon.getHttpPreProcessFn(") >= 0,
+		true,
+		"custom auth should come from getPrecompiledAuthFn directly or from the shared getHttpPreProcessFn helper"
+	)
 }
 
 ow.test.test("nOutput_HTTP_JSON::the custom-auth handler is compiled once, not per request", () => {

@@ -33,7 +33,7 @@ jobs:
     - name: Generate oPack
       uses: openaf/ojob-action@v7
       with:
-        script: oPack("genpack . --exclude .github")
+        script: oPack("genpack . --exclude .github,tests")
         dist  : 't8'
         
     - name: Update version badge
