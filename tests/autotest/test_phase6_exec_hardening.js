@@ -98,3 +98,10 @@ ow.test.test("nmain::resolveExecFromCtor cache is bounded", () => {
 	}
 	harness.stopEngine(nm)
 })
+
+ow.test.test("nmain::execPlugs timeout guard is centralized in __nam_execWithKillAfter", () => {
+	var src = io.readFileString(NATTRMON_HOME + "/lib/nmain.js")
+	ow.test.assert(src.indexOf("const __nam_execWithKillAfter") >= 0, true, "shared timeout wrapper should exist")
+	var _hits = (src.match(/Stopping " \+ etry\.getName\(\) \+ " due to timeout/g) || []).length
+	ow.test.assert(_hits, 1, "timeout log/guard should be defined once and reused across trigger paths")
+})
