@@ -46,6 +46,7 @@ var __watchdogStats = {
 var __watchdogSync = function() {
 	try {
 		if (isDef(nattrmon) && isFunction(nattrmon.setSessionData)) nattrmon.setSessionData("watchdog.stats", clone(__watchdogStats))
+		if (isDef(nattrmon) && isFunction(nattrmon.publishRuntimeMetrics)) nattrmon.publishRuntimeMetrics("watchdog-sync")
 	} catch(e) {}
 }
 
@@ -70,9 +71,11 @@ var __watchdogWarn = function(aKey, aMsg) {
 		__watchdogSet("lastWarningKey", aKey)
 		logWarn(aMsg)
 		__watchdogLastWarn[aKey] = _n
+		if (isDef(nattrmon) && isFunction(nattrmon.recordWatchdogEvent)) nattrmon.recordWatchdogEvent("warning", { key: aKey, message: aMsg, suppressed: false })
 		__watchdogSync()
 	} else {
 		__watchdogBump("warningsSuppressed")
+		if (isDef(nattrmon) && isFunction(nattrmon.recordWatchdogEvent)) nattrmon.recordWatchdogEvent("warning", { key: aKey, message: aMsg, suppressed: true })
 		__watchdogSync()
 	}
 }
@@ -122,9 +125,23 @@ if (isDef(params.status)) {
    exit(0);
 }
 
+if (isDef(params.preflight)) {
+	log("Running nAttrMon preflight checks...")
+	var _pf = nattrmon.preflight()
+	if (_pf.ok) {
+		log("nAttrMon preflight passed with no issues.")
+		exit(0)
+	} else {
+		logErr("nAttrMon preflight failed with " + _pf.totalIssues + " issue(s):")
+		_pf.issues.forEach(i => logErr(" - " + i))
+		exit(2)
+	}
+}
+
 nattrmon.start();
 __watchdogSet("startedAt", now())
 __watchdogSync()
+if (isFunction(nattrmon.recordWatchdogEvent)) nattrmon.recordWatchdogEvent("started", { main: NATTRMON_HOME, home: NATTRMON_SUBHOME })
 log("nAttrMon started (main=" + NATTRMON_HOME + "; home=" + NATTRMON_SUBHOME + ").");
 log("nAttrMon watchdog configuration (sleep=" + __sleepperiod + "ms; stuckFactor=" + __stuckfactor + "; warnCooldown=" + __warnCooldown + "ms).");
 
@@ -139,6 +156,7 @@ ow.server.daemon(__sleepperiod, function() {
 		__watchdogSet("lastRestartReason", "main")
 		__watchdogSync()
 		__watchdogWarn("main", "nAttrMon watchdog(main) threshold reached (elapsed=" + _mainElapsed + "ms; threshold=" + _mainThreshold + "ms; countCheck=" + nattrmon.countCheck + "; stuckFactor=" + __stuckfactor + ").")
+		if (isFunction(nattrmon.recordWatchdogEvent)) nattrmon.recordWatchdogEvent("restart", { reason: "main", elapsedMs: _mainElapsed, thresholdMs: _mainThreshold })
 		log("nAttrMon restarting process!!");
 		nattrmon.stop();
 		restartOpenAF();
@@ -158,6 +176,15 @@ ow.server.daemon(__sleepperiod, function() {
 			__watchdogSet("lastRestartReason", "thread:" + uuid + ":" + _ts.entry.getName())
 			__watchdogSync()
 			__watchdogWarn("thread:" + uuid, "nAttrMon watchdog(thread) threshold reached (uuid=" + uuid + "; name='" + _ts.entry.getName() + "'; elapsed=" + _thElapsed + "ms; threshold=" + _thThreshold + "ms; aTime=" + _ts.entry.aTime + "; stuckFactor=" + __stuckfactor + ").")
+			if (isFunction(nattrmon.recordWatchdogEvent)) nattrmon.recordWatchdogEvent("restart", {
+				reason: "thread",
+				uuid: uuid,
+				name: _ts.entry.getName(),
+				plugType: _ts.entry.type,
+				plugCategory: _ts.entry.getCategory(),
+				elapsedMs: _thElapsed,
+				thresholdMs: _thThreshold
+			})
 			log("nAttrMon restarting process!!");
 			nattrmon.stop();
 			restartOpenAF();

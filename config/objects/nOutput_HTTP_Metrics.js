@@ -364,6 +364,39 @@ var nOutput_HTTP_Metrics = function (aMap) {
 		return lines
 	}
 
+	var _diagOpenMetrics = aDiag => {
+		aDiag = _$(aDiag).isMap().default({ total: 0, degraded: [], thresholds: {} })
+		var _nowTs = parent.useCurrentTime ? Date.now() : undefined
+		var _parts = []
+
+		_parts.push(_filterIds(__ow_metrics_fromObj2OpenMetrics({
+			totalDegraded: _$(aDiag.total).default(0),
+			errorRateThreshold: _$(aDiag.thresholds.errorRateThreshold).default(__NAM_DEGRADED_ERROR_RATE_THRESHOLD),
+			minExecs: _$(aDiag.thresholds.minExecs).default(__NAM_DEGRADED_MIN_EXECS),
+			timeoutHitsThreshold: _$(aDiag.thresholds.timeoutHits).default(__NAM_DEGRADED_TIMEOUT_HITS),
+			watchdogHitsThreshold: _$(aDiag.thresholds.watchdogHits).default(__NAM_DEGRADED_WATCHDOG_HITS)
+		}, "nattrmon_diagnostics", _nowTs)))
+
+		var _esc = v => String(_$(v).default("-")).replace(/\\/g, "\\\\").replace(/\"/g, "\\\"")
+		_$(aDiag.degraded).isArray().default([]).forEach(p => {
+			var _labels = "{type=\"" + _esc(p.type) + "\",category=\"" + _esc(p.category) + "\",name=\"" + _esc(p.name) + "\"}"
+			_parts.push("nattrmon_diagnostics_plug_degraded" + _labels + " 1" + (isDef(_nowTs) ? " " + _nowTs : ""))
+			_parts.push("nattrmon_diagnostics_plug_error_rate" + _labels + " " + Number(_$(p.errorRate).default(0)) + (isDef(_nowTs) ? " " + _nowTs : ""))
+			_parts.push("nattrmon_diagnostics_plug_timeout_hits" + _labels + " " + Number(_$(p.timeoutHits).default(0)) + (isDef(_nowTs) ? " " + _nowTs : ""))
+			_parts.push("nattrmon_diagnostics_plug_watchdog_hits" + _labels + " " + Number(_$(p.watchdogHits).default(0)) + (isDef(_nowTs) ? " " + _nowTs : ""))
+
+			if (isArray(p.reasons)) {
+				p.reasons.forEach(r => {
+					var _rule = _esc(_$(r.rule).default("unknown"))
+					var _rl = "{type=\"" + _esc(p.type) + "\",category=\"" + _esc(p.category) + "\",name=\"" + _esc(p.name) + "\",rule=\"" + _rule + "\"}"
+					_parts.push("nattrmon_diagnostics_plug_reason" + _rl + " 1" + (isDef(_nowTs) ? " " + _nowTs : ""))
+				})
+			}
+		})
+
+		return _parts.join("\n") + "\n"
+	}
+
 	var useNativePrefix = isDef(__flags.HTTPD_PREFIX) && isDef(ow.server.httpd.stripPrefix);
 	if (useNativePrefix && relativePath !== "/") __flags.HTTPD_PREFIX[String(aPort)] = relativePath;
 
@@ -400,12 +433,14 @@ var nOutput_HTTP_Metrics = function (aMap) {
 						case "cvals": _res = _filter(nattrmon.getCurrentValues()); break
 						case "lvals": _res = _filter(nattrmon.getLastValues()); break
 						case "warns": _res = nattrmon.getWarnings(); break
+						case "diagnostics": _res = nattrmon.getDegradedPlugs(); break
 						}
 					} else {
 						if (parent.includeSelf)  _res[parent.nameSelf] = ow.metrics.getAll()
 						if (parent.includeCVals) _res[parent.nameCVals] = _filter(nattrmon.getCurrentValues())
 						if (parent.includeLVals) _res[parent.nameLVals] = _filter(nattrmon.getLastValues())
 						if (parent.includeWarns) _res[parent.nameWarns] = nattrmon.getWarnings()
+						_res["nattrmon_diagnostics"] = nattrmon.getDegradedPlugs()
 					}
 					res = stringify(_res, __, "")
 					break;
@@ -416,12 +451,19 @@ var nOutput_HTTP_Metrics = function (aMap) {
 						case "cvals": res += _filterIds(_parse(_filter(nattrmon.getCurrentValues()), parent.nameCVals)); break
 						case "lvals": res += _filterIds(_parse(_filter(nattrmon.getLastValues()), parent.nameLVals)); break
 						case "warns": res += _filterIds(_parsew(nattrmon.getWarnings(), parent.nameWarns)); break
+						case "diagnostics": {
+							var _d = nattrmon.getDegradedPlugs()
+							res += _diagOpenMetrics(_d)
+							break
+						}
 						}
 					} else {
 						if (parent.includeSelf)  res += _filterIds(__ow_metrics_fromObj2OpenMetrics(ow.metrics.getAll(), parent.nameSelf, parent.useCurrentTime ? Date.now() : undefined));
 						if (parent.includeCVals) res += _filterIds(_parse(_filter(nattrmon.getCurrentValues()), parent.nameCVals));
 						if (parent.includeLVals) res += _filterIds(_parse(_filter(nattrmon.getLastValues()), parent.nameLVals));
 						if (parent.includeWarns) res += _filterIds(_parsew(nattrmon.getWarnings(), parent.nameWarns));
+						var _dx = nattrmon.getDegradedPlugs()
+						res += _diagOpenMetrics(_dx)
 					}
 					break;
 				}
@@ -440,6 +482,41 @@ var nOutput_HTTP_Metrics = function (aMap) {
 				return ow.server.httpd.reply("Error (check logs)", 500)
 			}
 		};
+
+	routes[routePath("/diagnostics")] = function(req) {
+		try {
+			var _opts = {}
+			if (isDef(req.params.errorRateThreshold)) _opts.errorRateThreshold = Number(req.params.errorRateThreshold)
+			if (isDef(req.params.minExecs)) _opts.minExecs = Number(req.params.minExecs)
+			if (isDef(req.params.timeoutHits)) _opts.timeoutHits = Number(req.params.timeoutHits)
+			if (isDef(req.params.watchdogHits)) _opts.watchdogHits = Number(req.params.watchdogHits)
+
+			Object.keys(_opts).forEach(k => {
+				if (!isNumber(_opts[k]) || isNaN(_opts[k]) || !isFinite(_opts[k])) delete _opts[k]
+			})
+
+			var _diag = nattrmon.getDegradedPlugs(_opts)
+			var fmt = _$(req.params.format).isString().default("json")
+			var _res
+			var _mime
+
+			switch(fmt) {
+			case "openmetrics":
+				_res = _diagOpenMetrics(_diag)
+				_mime = "text/plain"
+				break
+			default:
+				_res = stringify(_diag, __, "")
+				_mime = "application/json"
+			}
+
+			return preProcess(req, ow.server.httpd.reply(_res, 200, _mime, {}))
+		} catch(e) {
+			logErr("Error in HTTP diagnostics request: " + stringify(req, __, "") + "; exception: " + String(e))
+			if (isJavaException(e)) e.javaException.printStackTrace()
+			return ow.server.httpd.reply("Error (check logs)", 500)
+		}
+	}
 
 	ow.server.httpd.route(httpd, ow.server.httpd.mapWithExistingRoutes(httpd, ow.server.httpd.mapRoutesWithLibs(httpd, routes), function (r) {
 		try {

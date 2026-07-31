@@ -68,12 +68,55 @@
 # set to false to restrict execFrom to resolvable constructor names.
 #ALLOW_EVAL_EXECFROM: false
 
+# Optional integrity checks for plug/object files
+# INTEGRITY:
+#   warn: true      # if true mismatches are warnings and loading continues
+#   strict: false   # if true files without configured hashes fail integrity checks
+#   list:
+#     - config/inputs/00.nattrmon.yaml: sha256-<hash>
+#     - config/objects/nOutput_HTTP.js: sha256-<hash>
+# You can also provide a direct map with INTEGRITY_HASHES:
+# INTEGRITY_HASHES:
+#   config/inputs/00.nattrmon.yaml: sha256-<hash>
+#INTEGRITY_WARN: true
+#INTEGRITY_STRICT: false
+
 # Watchdog tuning for nattrmon.js main loop
 #MAIN_WATCHDOG_SLEEP: 60000
 #MAIN_WATCHDOG_STUCKFACTOR: 500
 #MAIN_WATCHDOG_WARN_COOLDOWN: 300000
 # Runtime overrides are also available via startup args:
 #   --watchdogSleep=30000 --watchdogStuckFactor=300 --watchdogWarnCooldown=60000
+# Startup preflight mode (CLI):
+#   openaf nattrmon.js --preflight=true
+
+# Runtime metrics snapshots/events (phase 5)
+#RUNTIME_METRICS: true
+#RUNTIME_METRICS_PERIOD: 5000
+#RUNTIME_METRICS_CH: nattrmon::runtime::metrics
+#RUNTIME_EVENTS_CH: nattrmon::runtime::events
+#RUNTIME_OWMETRICS: false
+#RUNTIME_OWMETRICS_NAME: nattrmon_runtime
+# Or use map form:
+#RUNTIME_METRICS:
+#  enabled: true
+#  period: 5000
+#  channel: nattrmon::runtime::metrics
+#  eventsChannel: nattrmon::runtime::events
+#  owMetrics: false
+#  owMetricsName: nattrmon_runtime
+
+# Degraded-plug diagnostics thresholds (phase 5.3)
+#DEGRADED_ERROR_RATE_THRESHOLD: 0.25
+#DEGRADED_MIN_EXECS: 5
+#DEGRADED_TIMEOUT_HITS: 2
+#DEGRADED_WATCHDOG_HITS: 1
+# Or use map form:
+#RUNTIME_DIAGNOSTICS:
+#  errorRateThreshold: 0.25
+#  minExecs: 5
+#  timeoutHits: 2
+#  watchdogHits: 1
 
 # Pre-loading of external OpenAF libraries (useful for adding OpenAF channel types)
 #LIBS: "aws.js,s3.js"
