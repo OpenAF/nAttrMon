@@ -34,44 +34,11 @@ var nOutput_HTTP_JSON = function (aMap) {
 
 	if (isDef(aMap.httpSession)) hS = aMap.httpSession;
 
-    if (nattrmon.hasSessionData(hS)) {
-        if (isNumber(aPort) && aPort != nattrmon.getSessionData(hS).getPort()) {
-            nattrmon.setSessionData(hS,
-                ow.server.httpd.start(aPort, aMap.host, aMap.keyStore, aMap.keyPassword));
-        }
-    } else {
-        nattrmon.setSessionData(hS,
-            ow.server.httpd.start(isUnDef(aPort) ? 8090 : aPort, aMap.host, aMap.keyStore, aMap.keyPassword));
-    }
-
 	// Get server
-	var httpd = nattrmon.getSessionData(hS);
+	var httpd = nattrmon.ensureHttpSession(hS, aPort, aMap.host, aMap.keyStore, aMap.keyPassword);
 	var parent = this;
 
-	// Compile the custom-auth handler once (was: `new Function` on every request)
-	var fnCustomAuth = (isDef(hauth_func) && isString(hauth_func))
-		? new Function('u', 'p', 's', 'r', hauth_func)
-		: __;
-
-    var fnAuth = function(u, p, s, r) { 
-		u = String(u);
-	    p = String(p);
-
-		if (isDef(fnCustomAuth)) {
-		  return fnCustomAuth(u, p, s, r);
-		} else {
-		  if (isDef(hauth_perms) && isDef(hauth_perms[u])) {
-			if (p == Packages.openaf.AFCmdBase.afc.dIP(hauth_perms[u].p)) {
-			  r.channelPermission = (isDef(hauth_perms[u].m) ? hauth_perms[u].m : "r");
-			  return true;
-			} else {
-			  return false;
-			}
-		  } else {
-			return false;
-		  }
-		}
-	};
+	var fnAuth = nattrmon.getPrecompiledAuthFn(hauth_perms, hauth_func, { decodePermPasswords: true });
 
 	var preProcess = (aReq, aReply) => {
 		var res = aReply, user = "";

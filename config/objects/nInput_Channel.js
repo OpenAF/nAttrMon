@@ -20,27 +20,11 @@ var nInput_Channel = function (aMap) {
     if (isDef(aMap.local)) cauth_perms = aMap.local;
     if (isDef(aMap.custom)) cauth_func = aMap.custom;
 
-    // Compile the custom-auth handler once (was: `new Function` on every auth check)
-    var fnCustomAuth = (isDef(cauth_func) && isString(cauth_func))
-        ? new Function('u', 'p', 's', 'r', cauth_func)
-        : __;
+    var fnAuth = nattrmon.getPrecompiledAuthFn(cauth_perms, cauth_func);
 
     // Channel authentication
     var chAuth = function (u, p, s, r) {
-        if (isDef(fnCustomAuth)) {
-            return fnCustomAuth(u, p, s, r);
-        } else {
-            if (isDef(cauth_perms) && isDef(cauth_perms[u])) {
-                if (p == cauth_perms[u].p) {
-                    r.channelPermission = (isDef(cauth_perms[u].m) ? cauth_perms[u].m : "r");
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
-                return false;
-            }
-        }
+        return fnAuth(u, p, s, r);
     };
 
     $ch(this.ch).create(1, "dummy");
