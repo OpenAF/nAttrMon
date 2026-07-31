@@ -63,6 +63,18 @@
 # Custom order of loading plugs
 #PLUGSORDER: "outputs,inputs,validations"
 
+# Compatibility fallback for execFrom resolution:
+# when true (default), unresolved execFrom values can still use eval fallback.
+# set to false to restrict execFrom to resolvable constructor names.
+#ALLOW_EVAL_EXECFROM: false
+
+# Watchdog tuning for nattrmon.js main loop
+#MAIN_WATCHDOG_SLEEP: 60000
+#MAIN_WATCHDOG_STUCKFACTOR: 500
+#MAIN_WATCHDOG_WARN_COOLDOWN: 300000
+# Runtime overrides are also available via startup args:
+#   --watchdogSleep=30000 --watchdogStuckFactor=300 --watchdogWarnCooldown=60000
+
 # Pre-loading of external OpenAF libraries (useful for adding OpenAF channel types)
 #LIBS: "aws.js,s3.js"
 

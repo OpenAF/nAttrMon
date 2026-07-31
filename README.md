@@ -38,6 +38,23 @@ For a single execution without daemon mode:
 ojob nAttrmon_single.yaml.sample
 ```
 
+## Runtime Hardening And Tuning
+
+You can tune runtime behavior in `nattrmon.yaml`:
+
+- `ALLOW_EVAL_EXECFROM` (default: `true`): keeps compatibility for `execFrom` expressions by allowing eval fallback. Set to `false` to restrict `execFrom` to resolvable constructor names.
+- `MAIN_WATCHDOG_SLEEP` (default: `60000`): watchdog loop period in milliseconds.
+- `MAIN_WATCHDOG_STUCKFACTOR` (default: `500`): multiplier used in stuck-thread/process detection.
+- `MAIN_WATCHDOG_WARN_COOLDOWN` (default: `300000`): minimum interval in milliseconds between repeated watchdog warnings for the same key.
+
+You can also override watchdog values at startup:
+
+```bash
+openaf nattrmon.js --watchdogSleep=30000 --watchdogStuckFactor=300 --watchdogWarnCooldown=60000
+```
+
+Runtime watchdog counters are exposed in session data under `watchdog.stats` (threshold hits, warnings emitted/suppressed, and restart metadata).
+
 ## Installation
 
 ### Install from opack repository
