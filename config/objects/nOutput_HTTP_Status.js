@@ -54,12 +54,17 @@ var nOutput_HTTP_Status = function (aMap) {
 	var httpd = nattrmon.getSessionData(hS);
 	var parent = this;
 
+	// Compile the custom-auth handler once (was: `new Function` on every request)
+	var fnCustomAuth = (isDef(hauth_func) && isString(hauth_func))
+		? new Function('u', 'p', 's', 'r', hauth_func)
+		: __;
+
     var fnAuth = function(u, p, s, r) { 
 		u = String(u);
 	    p = String(p);
 
-		if (isDef(hauth_func) && isString(hauth_func)) {
-		  return (new Function('u', 'p', 's', 'r', hauth_func))(u, p, s, r);
+		if (isDef(fnCustomAuth)) {
+		  return fnCustomAuth(u, p, s, r);
 		} else {
 		  if (isDef(hauth_perms) && isDef(hauth_perms[u])) {
 			if (p == Packages.openaf.AFCmdBase.afc.dIP(hauth_perms[u].p)) {
