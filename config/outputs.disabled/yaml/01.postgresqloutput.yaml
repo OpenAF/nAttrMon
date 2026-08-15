@@ -1,0 +1,12 @@
+output:
+   name         : PostgreSQL history
+   description  : Provides to nOutput_HTTP a history service to access the previous values for each attribute, backed by PostgreSQL.
+   chSubscribe  : nattrmon::cvals
+   waitForFinish: true
+   onlyOnEvent  : true
+   execFrom     : nOutput_PostgreSQL
+   execArgs     :
+      host    : "localhost"
+      database: "nattrmon"
+      user    : "nattrmon"
+      pass    : "nattrmon"

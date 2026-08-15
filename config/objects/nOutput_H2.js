@@ -21,6 +21,7 @@ var nOutput_H2 = function(aMap) {
 	this.firstTime = {};
 
 	nattrmon.setSessionData("attribute.history", this);
+	nattrmon.addHistoryProvider("h2", this);
 	nOutput.call(this, this.output);
 };
 inherit(nOutput_H2, nOutput);

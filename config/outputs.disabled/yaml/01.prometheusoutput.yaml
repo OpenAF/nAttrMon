@@ -1,0 +1,7 @@
+output:
+   name        : Prometheus history
+   description : Provides to nOutput_HTTP a history service to access previous NUMERIC attribute values from an external Prometheus, backed by its /api/v1/query_range API. Non-numeric attribute values are not recoverable this way.
+   execFrom    : nOutput_Prometheus
+   execArgs    :
+      url         : "http://localhost:9090"
+      metricPrefix: "nattrmon"

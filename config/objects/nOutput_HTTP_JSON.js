@@ -37,12 +37,17 @@ var nOutput_HTTP_JSON = function (aMap) {
 				switch (req.params.op) {
 					case "histtime":
 						res = {
-							"history": nattrmon.getHistoryValuesByTime(req.params.attr, req.params.seconds)
+							"history": nattrmon.getHistoryValuesByTime(req.params.attr, req.params.seconds, req.params.source)
 						};
 						break;
 					case "histevent":
 						res = {
-							"history": nattrmon.getHistoryValuesByEvents(req.params.attr, req.params.events)
+							"history": nattrmon.getHistoryValuesByEvents(req.params.attr, req.params.events, req.params.source)
+						};
+						break;
+					case "histsources":
+						res = {
+							"sources": nattrmon.getHistoryProviderNames()
 						};
 						break;
 					case "plugs":

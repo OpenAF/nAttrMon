@@ -1,0 +1,44 @@
+kind: output
+constructor: nOutput_PostgreSQL
+title: nOutput_PostgreSQL
+description: Stores attribute values in a PostgreSQL database and provides them back as a history provider (see nOutput_HTTP_JSON's histtime/histevent ops, source=postgresql by default).
+examples:
+  - config/outputs.disabled/yaml/01.postgresqloutput.yaml
+arguments:
+  - name: host
+    type: string
+    description: PostgreSQL server hostname. Defaults to "localhost".
+    example: "localhost"
+  - name: port
+    type: number
+    description: PostgreSQL server port. Defaults to 5432.
+    example: 5432
+  - name: database
+    type: string
+    description: Database name to connect to. Defaults to "nattrmon".
+    example: "nattrmon"
+  - name: user
+    type: string
+    description: Database user. Defaults to "nattrmon".
+    example: "nattrmon"
+  - name: pass
+    type: string
+    secret: true
+    description: Database password. Defaults to "nattrmon".
+    example: "$SECRET"
+  - name: options
+    type: string
+    description: Raw JDBC query-string suffix appended to the connection URL (e.g. "sslmode=require").
+    example: "sslmode=require"
+  - name: rollData
+    type: number
+    description: How many seconds of history to retain before rows are pruned. Defaults to 172800 (48h).
+    example: 172800
+  - name: source
+    type: string
+    description: Name this provider registers under for history queries (the "source" selector). Defaults to "postgresql".
+    example: "postgresql"
+  - name: poolKey
+    type: string
+    description: Key used to pool/share the underlying DB connection across instances. Defaults to the "source" value.
+    example: "postgresql"

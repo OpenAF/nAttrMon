@@ -18,6 +18,7 @@ var nOutput_Oracle = function(anMonitoredAFObjectKey, tableNames, attrToInclude,
 	} : tableNames;
 
 	nattrmon.setSessionData("attribute.history", this);
+	nattrmon.addHistoryProvider("oracle", this);
 	nOutput.call(this, this.output);
 }
 inherit(nOutput_Oracle, nOutput);

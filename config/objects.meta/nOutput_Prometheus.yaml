@@ -1,0 +1,44 @@
+kind: output
+constructor: nOutput_Prometheus
+title: nOutput_Prometheus
+description: Retrieve-only history provider (source=prometheus by default) that queries an external Prometheus server's /api/v1/query_range for samples previously scraped from a paired nOutput_HTTP_Metrics instance. Only numeric/boolean attribute values are recoverable; getValuesByEvents approximates "last N events" as the last N scrape samples within eventsLookbackSeconds, not value-change events.
+examples:
+  - config/outputs.disabled/yaml/01.prometheusoutput.yaml
+arguments:
+  - name: url
+    type: string
+    description: Base URL of the Prometheus server, e.g. "http://prometheus:9090". Required.
+    example: "http://localhost:9090"
+  - name: source
+    type: string
+    description: Name this provider registers under for history queries (the "source" selector). Defaults to "prometheus".
+    example: "prometheus"
+  - name: metricPrefix
+    type: string
+    description: Metric name prefix used to translate attribute names into Prometheus metric names. Must match the paired nOutput_HTTP_Metrics instance's nameCVals (defaults to "nattrmon" on both sides).
+    example: "nattrmon"
+  - name: step
+    type: number
+    description: Minimum query_range step resolution, in seconds. Defaults to 15.
+    example: 15
+  - name: maxPoints
+    type: number
+    description: Upper bound on points per range query; step is widened automatically to stay under this when a wide time window is requested. Defaults to 10000.
+    example: 10000
+  - name: eventsLookbackSeconds
+    type: number
+    description: Bounded time window used to approximate getValuesByEvents' "last N events" as the last N scrape samples. Defaults to 86400 (24h).
+    example: 86400
+  - name: timeout
+    type: number
+    description: Optional connection timeout (ms) passed to the underlying HTTP client.
+    example: 5000
+  - name: login
+    type: string
+    description: Optional HTTP basic-auth username, for a Prometheus fronted by an authenticating reverse proxy.
+    example: "prometheus"
+  - name: pass
+    type: string
+    secret: true
+    description: Optional HTTP basic-auth password.
+    example: "$SECRET"
