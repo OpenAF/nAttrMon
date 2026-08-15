@@ -8,7 +8,7 @@ validation:
    execArgs     : 
       checks: 
          - attrPattern      : "Server status/Ping "
-           expr             : {{value.result}} == false
+           expr             : "{{value.result}} == false"
            warnLevel        : HIGH 
            warnTitleTemplate: "{{name}} fail"
            warnDescTemplate : "{{name}} failed with message {{value.errorMessage}}"

@@ -9,9 +9,11 @@ arguments:
     description: Configuration option read by nOutput_Slack.
     example: {}
   - name: filter
-    type: any
-    description: Configuration option read by nOutput_Slack.
-    example: {}
+    type: object
+    description: nLinq query applied to the warnings before notifying (executed with nattrmon.filter).
+    example: { where: [ { cond: equals, args: [ level, High ] } ] }
+    query:
+      ".": nlinq
   - name: notifications
     type: any
     description: Configuration option read by nOutput_Slack.

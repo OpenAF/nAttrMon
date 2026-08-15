@@ -34,9 +34,11 @@ arguments:
     description: Configuration option read by nInput_Shell.
     example: [example-key]
   - name: kube
-    type: any
-    description: Configuration option read by nInput_Shell.
-    example: {}
+    type: object
+    description: Kubernetes target; 'selector' narrows the listed items with an nLinq query, written either as a query map or as nLinq text.
+    example: { kind: FPO, namespace: default, selector: "equals('metadata.namespace','default')" }
+    query:
+      selector: nlinqAny
   - name: name
     type: any
     description: Configuration option read by nInput_Shell.

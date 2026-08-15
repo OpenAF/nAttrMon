@@ -34,9 +34,11 @@ arguments:
     description: Configuration option read by nInput_JavaGC.
     example: {}
   - name: kube
-    type: any
-    description: Configuration option read by nInput_JavaGC.
-    example: {}
+    type: object
+    description: Kubernetes target; 'selector' narrows the listed items with an nLinq query map.
+    example: { kind: FPO, namespace: default, selector: { where: [ { cond: equals, args: [ kind, Pod ] } ] } }
+    query:
+      selector: nlinq
   - name: nameCollectors
     type: any
     description: Configuration option read by nInput_JavaGC.

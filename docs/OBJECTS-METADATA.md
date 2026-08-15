@@ -28,7 +28,42 @@ arguments:
     example: "$SERVICE_TOKEN"
 ```
 
-Every entry requires `kind`, `constructor`, `title`, `description`, and an `arguments` array. Every argument requires `name`, `type`, `description`, and `example`. Optional argument fields are `required`, `default`, `secret`, `unit`, `enum`, `deprecated`, and `visibleWhen`.
+Every entry requires `kind`, `constructor`, `title`, `description`, and an `arguments` array. Every argument requires `name`, `type`, `description`, and `example`. Optional argument fields are `required`, `default`, `secret`, `unit`, `enum`, `deprecated`, `visibleWhen`, and `query`.
+
+## Declaring query arguments
+
+Some constructors read a query out of their `execArgs` and execute it. Which query language they expect is not visible from the value itself -- `path`, for instance, means JMESPath in `nInput_JMX` but a simple dot-path in `nInput_HTTPJson`. Use `query` to say which:
+
+```yaml
+  - name: objects
+    type: array<object>
+    description: JMX objects to collect.
+    example: [ { object: "java.lang:type=Runtime", path: "{VmName:VmName}" } ]
+    query:
+      "[].selector": nlinq       # executed with ow.obj.filter
+      "[].path": jmespath        # executed with $path
+```
+
+Each key is a path relative to the argument's value, and each value is the dialect:
+
+| Key form | Means |
+|---|---|
+| `"."` | the argument value itself |
+| `"name"` | the `name` field of the argument value |
+| `"[].name"` | the `name` field of every array element |
+| `"{}.name"` | the `name` field of every map value |
+
+| Dialect | Language | Executed by |
+|---|---|---|
+| `nlinq` | nLinq query map | `ow.obj.filter`, `nattrmon.filter`, `$from().query()` |
+| `nlinqText` | nLinq text DSL string | `af.fromNLinq` then `ow.obj.filter` |
+| `nlinqAny` | either of the above | as above, chosen by type |
+| `jmespath` | JMESPath string | `$path` |
+| `dotpath` | simple dot-path string | `ow.obj.getPath`, `$$().get` |
+
+Keys containing brackets must be quoted -- unquoted, `[].selector` starts a YAML flow sequence.
+
+The config engine (`lib/nconfigengine.js`) uses these declarations to validate the queries inside a configuration and to let editors build them structurally. See `docs/CONFIG-ENGINE.md`.
 
 Use `secret: true` for passwords, tokens, private keys, and credential maps. Examples must contain placeholders rather than real credentials.
 

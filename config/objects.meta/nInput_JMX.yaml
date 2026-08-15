@@ -14,6 +14,9 @@ arguments:
     description: Configuration option read by nInput_JMX.
     example: nattrmon::keys
   - name: objects
-    type: any
-    description: Configuration option read by nInput_JMX.
-    example: {}
+    type: array<object>
+    description: JMX objects to collect; each entry may narrow the result with an nLinq selector and a JMESPath path.
+    example: [ { object: "java.lang:type=Runtime", path: "{VmName:VmName,Uptime:Uptime}" } ]
+    query:
+      "[].selector": nlinq
+      "[].path": jmespath

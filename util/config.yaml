@@ -1,0 +1,131 @@
+# nAttrMon configuration engine CLI
+# Copyright 2023 Nuno Aguiar and other nAttrMon authors
+#
+# A thin wrapper over lib/nconfigengine.js and lib/nquery.js so the engine can be exercised from
+# a shell. The API is the product; this is only a way to drive it.
+#
+#   ojob util/config.yaml op=components [kind=input] [search=kube]
+#   ojob util/config.yaml op=describe name=nInput_Shell
+#   ojob util/config.yaml op=skeleton kind=input name=nInput_JMX
+#   ojob util/config.yaml op=validate [dir=./config] [mode=strict]
+#   ojob util/config.yaml op=explain [dir=./config] [id="input:Directory Name"]
+#   ojob util/config.yaml op=query expr="equals('t','db').sort('-v')" [sample=data.json] [via=nattrmon.filter]
+#   ojob util/config.yaml op=path expr="services[?status == 'up'].name" [sample=data.json] [dialect=jmespath]
+#
+# Add format=json for machine-readable output (the default is YAML).
+
+help:
+  text   : Inspect nAttrMon components and configurations through the configuration engine.
+  expects:
+  - name     : op
+    desc     : One of components, describe, skeleton, validate, explain, query or path
+    example  : components
+    mandatory: true
+  - name   : kind
+    desc   : Component kind (input, output or validation)
+    example: input
+  - name   : name
+    desc   : Component constructor name
+    example: nInput_Shell
+  - name   : dir
+    desc   : Configuration directory (defaults to the installation's config)
+    example: ./config
+  - name   : id
+    desc   : Configuration entry id to explain
+    example: "input:Directory Name"
+  - name   : expr
+    desc   : Query expression to build/validate/test
+    example: equals('t','db')
+  - name   : sample
+    desc   : JSON or YAML file with sample data to run the query against
+    example: data.json
+  - name   : mode
+    desc   : Validation mode, warn (default) or strict
+    example: strict
+  - name   : format
+    desc   : Output format, yaml (default) or json
+    example: json
+
+jobs:
+# ------------------
+- name: Init
+  exec: |
+    global.NATTRMON_HOME = getEnv("NATTRMON_HOME") || getOPackPath("nAttrMon") || "."
+    global.NATTRMON_SUBHOME = args.dir || global.NATTRMON_HOME
+
+    loadLib(global.NATTRMON_HOME + "/lib/nmain.js")
+    loadLib(global.NATTRMON_HOME + "/lib/nconfigengine.js")
+
+    global.nce = new nConfigEngine({
+      home      : global.NATTRMON_HOME,
+      configPath: args.dir || (global.NATTRMON_HOME + "/config"),
+      mode      : args.mode || "warn"
+    })
+
+    global.nceOut = r => {
+      if (args.format == "json") print(stringify(r, __, "  "))
+      else print(af.toYAML(r))
+    }
+
+    global.nceSample = () => {
+      if (isUnDef(args.sample)) return __
+      if (String(args.sample).match(/\.json$/)) return io.readFileJSON(args.sample)
+      return io.readFileYAML(args.sample, true)
+    }
+
+# ------------------------
+- name: nAttrMon Config
+  exec: |
+    switch(args.op) {
+    case "components":
+      var _l = isDef(args.search) ? nce.searchComponents(args.search, args.kind) : nce.listComponents(args.kind)
+      nceOut(_l.map(c => ({ type: c.type, name: c.name, title: c.title, coverage: c.metadata.coverage, parameters: c.parameters.length })))
+      break
+
+    case "describe":
+      var _c = nce.getComponent(args.kind, args.name)
+      if (isUnDef(_c)) { logErr("Unknown component '" + args.name + "'."); exit(2) }
+      nceOut(_c)
+      break
+
+    case "skeleton":
+      nceOut(nce.createSkeleton(args.kind, args.name))
+      break
+
+    case "validate":
+      var _v = nce.validate(nce.load(args.dir), { mode: args.mode })
+      nceOut(_v)
+      if (!_v.valid) exit(2)
+      break
+
+    case "explain":
+      var _cfg = nce.load(args.dir)
+      nceOut(isDef(args.id) ? nce.explainComponent(_cfg, args.id) : nce.explain(_cfg))
+      break
+
+    case "query":
+      var _q = nQuery.parse(args.expr)
+      if (isDef(_q.mode)) { nceOut(_q); exit(2) }
+      var _r = { compiled: _q.compile(), validation: _q.validate() }
+      var _s = nceSample()
+      if (isDef(_s)) _r.test = _q.test(_s, { via: args.via })
+      nceOut(_r)
+      break
+
+    case "path":
+      var _d = args.dialect || "jmespath"
+      var _pr = { dialect: _d, expression: args.expr, parsed: nQuery.parsePath(args.expr, _d), validation: nQuery.validatePath(args.expr, _d) }
+      var _ps = nceSample()
+      if (isDef(_ps)) _pr.test = nQuery.execPath(_ps, args.expr, _d)
+      nceOut(_pr)
+      if (!_pr.validation.valid) exit(2)
+      break
+
+    default:
+      logErr("Unknown op '" + args.op + "'. Use one of: components, describe, skeleton, validate, explain, query, path.")
+      exit(1)
+    }
+
+todo:
+- Init
+- nAttrMon Config

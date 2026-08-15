@@ -14,9 +14,11 @@ arguments:
     description: Configuration option read by nInput_ChVals.
     example: {}
   - name: filter
-    type: any
-    description: Configuration option read by nInput_ChVals.
-    example: {}
+    type: object
+    description: nLinq query applied to the channel values (executed with nattrmon.filter).
+    example: { where: [ { cond: equals, args: [ isFile, true ] } ] }
+    query:
+      ".": nlinq
   - name: full
     type: any
     description: Configuration option read by nInput_ChVals.

@@ -6,6 +6,8 @@ examples:
   - config/inputs.disabled/yaml/10.httpjson.yaml
 arguments:
   - name: requests
-    type: any
-    description: Configuration option read by nInput_HTTPJson.
-    example: {}
+    type: object
+    description: Map of attribute name to request; each request may narrow the JSON response with a dot-path (resolved with ow.obj.getPath, not JMESPath).
+    example: { "service/Public IP": { url: "https://ifconfig.com/json", path: ip } }
+    query:
+      "{}.path": dotpath

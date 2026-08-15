@@ -35,9 +35,11 @@ arguments:
     description: Configuration option read by nInput_ESSearch.
     example: "$SECRET"
   - name: path
-    type: any
-    description: Configuration option read by nInput_ESSearch.
-    example: {}
+    type: string
+    description: Dot-path applied to the search result (not JMESPath -- resolved with $$().get).
+    example: hits.hits[0]._source
+    query:
+      ".": dotpath
   - name: search
     type: any
     description: Configuration option read by nInput_ESSearch.
