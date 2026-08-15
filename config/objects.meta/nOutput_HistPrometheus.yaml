@@ -1,6 +1,6 @@
 kind: output
-constructor: nOutput_Prometheus
-title: nOutput_Prometheus
+constructor: nOutput_HistPrometheus
+title: nOutput_HistPrometheus
 description: Retrieve-only history provider (source=prometheus by default) that queries an external Prometheus server's /api/v1/query_range for samples previously scraped from a paired nOutput_HTTP_Metrics instance. Only numeric/boolean attribute values are recoverable; getValuesByEvents approximates "last N events" as the last N scrape samples within eventsLookbackSeconds, not value-change events.
 examples:
   - config/outputs.disabled/yaml/01.prometheusoutput.yaml

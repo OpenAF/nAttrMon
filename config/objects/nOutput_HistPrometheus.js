@@ -1,5 +1,5 @@
 /**
- * [nOutput_Prometheus description]
+ * [nOutput_HistPrometheus description]
  *
  * Retrieve-only history provider: answers getValuesByTime/getValuesByEvents by
  * querying an external Prometheus server's HTTP API (/api/v1/query_range) for
@@ -21,10 +21,10 @@
  * unlike the DB-backed history providers (H2/Oracle/PostgreSQL), which only
  * insert a row when the value actually changed.
  */
-var nOutput_Prometheus = function(aMap) {
+var nOutput_HistPrometheus = function(aMap) {
 	aMap = isMap(aMap) ? aMap : {};
 
-	if (isUnDef(aMap.url)) throw "nOutput_Prometheus needs a 'url' pointing at the Prometheus server.";
+	if (isUnDef(aMap.url)) throw "nOutput_HistPrometheus needs a 'url' pointing at the Prometheus server.";
 
 	this.url                   = String(aMap.url).replace(/\/+$/, "");
 	this.source                = isDef(aMap.source) ? aMap.source : "prometheus";
@@ -39,7 +39,7 @@ var nOutput_Prometheus = function(aMap) {
 	nattrmon.addHistoryProvider(this.source, this);
 	nOutput.call(this, this.output);
 };
-inherit(nOutput_Prometheus, nOutput);
+inherit(nOutput_HistPrometheus, nOutput);
 
 /**
  * Translates an attribute name into the metric name nOutput_HTTP_Metrics would
@@ -47,7 +47,7 @@ inherit(nOutput_Prometheus, nOutput);
  * @param  {[type]} anAttributeName [description]
  * @return {[type]}                 [description]
  */
-nOutput_Prometheus.prototype._metricName = function(anAttributeName) {
+nOutput_HistPrometheus.prototype._metricName = function(anAttributeName) {
 	return this.metricPrefix + "_" + String(anAttributeName).replace(/[^a-zA-Z0-9]/g, "_");
 };
 
@@ -58,7 +58,7 @@ nOutput_Prometheus.prototype._metricName = function(anAttributeName) {
  * @param  {[type]} aString [description]
  * @return {[type]}         [description]
  */
-nOutput_Prometheus.prototype._escapeRE = function(aString) {
+nOutput_HistPrometheus.prototype._escapeRE = function(aString) {
 	return String(aString).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 };
 
@@ -70,7 +70,7 @@ nOutput_Prometheus.prototype._escapeRE = function(aString) {
  * @param  {[type]} end   [description]
  * @return {[type]}       [description]
  */
-nOutput_Prometheus.prototype._adaptiveStep = function(start, end) {
+nOutput_HistPrometheus.prototype._adaptiveStep = function(start, end) {
 	var span = Math.max(end - start, 1);
 	var minStep = Math.ceil(span / this.maxPoints);
 	return Math.max(this.step, minStep);
@@ -84,7 +84,7 @@ nOutput_Prometheus.prototype._adaptiveStep = function(start, end) {
  * @param  {[type]} step    [description]
  * @return {[type]}         [description]
  */
-nOutput_Prometheus.prototype._queryRange = function(aPromQL, start, end, step) {
+nOutput_HistPrometheus.prototype._queryRange = function(aPromQL, start, end, step) {
 	var opts = { urlEncode: true };
 	if (isDef(this.timeout)) opts.connectionTimeout = this.timeout;
 	if (isDef(this.login))   opts.login = this.login;
@@ -105,7 +105,7 @@ nOutput_Prometheus.prototype._queryRange = function(aPromQL, start, end, step) {
  * @param  {[type]} type [description]
  * @return {[type]}      [description]
  */
-nOutput_Prometheus.prototype._parseRangeResponse = function(raw, type) {
+nOutput_HistPrometheus.prototype._parseRangeResponse = function(raw, type) {
 	var ret = [];
 	if (!isMap(raw)) return ret;
 	if (raw.status != "success") {
@@ -137,7 +137,7 @@ nOutput_Prometheus.prototype._parseRangeResponse = function(raw, type) {
  * @param  {[type]} type       [description]
  * @return {[type]}            [description]
  */
-nOutput_Prometheus.prototype._parseMapRangeResponse = function(raw, metricName, type) {
+nOutput_HistPrometheus.prototype._parseMapRangeResponse = function(raw, metricName, type) {
 	var ret = [];
 	if (!isMap(raw)) return ret;
 	if (raw.status != "success") {
@@ -180,7 +180,7 @@ nOutput_Prometheus.prototype._parseMapRangeResponse = function(raw, metricName, 
  * @param  {[type]} type      [description]
  * @return {[type]}           [description]
  */
-nOutput_Prometheus.prototype._coerceValue = function(aStrValue, type) {
+nOutput_HistPrometheus.prototype._coerceValue = function(aStrValue, type) {
 	if (type == nAttribute.TYPE_SEMAPHORE) return Number(aStrValue) != 0;
 	return Number(aStrValue);
 };
@@ -191,7 +191,7 @@ nOutput_Prometheus.prototype._coerceValue = function(aStrValue, type) {
  * @param  {[type]} howManySecondsAgo [description]
  * @return {[type]}                   [description]
  */
-nOutput_Prometheus.prototype.getValuesByTime = function(anAttributeName, howManySecondsAgo) {
+nOutput_HistPrometheus.prototype.getValuesByTime = function(anAttributeName, howManySecondsAgo) {
 	howManySecondsAgo = Number(howManySecondsAgo);
 	var type;
 	try { type = nattrmon.getAttributes().getAttributeByName(anAttributeName).getType(); } catch(e) {}
@@ -221,7 +221,7 @@ nOutput_Prometheus.prototype.getValuesByTime = function(anAttributeName, howMany
  * @param  {[type]} howManyEventsAgo [description]
  * @return {[type]}                  [description]
  */
-nOutput_Prometheus.prototype.getValuesByEvents = function(anAttributeName, howManyEventsAgo) {
+nOutput_HistPrometheus.prototype.getValuesByEvents = function(anAttributeName, howManyEventsAgo) {
 	howManyEventsAgo = Number(howManyEventsAgo);
 
 	var all = this.getValuesByTime(anAttributeName, this.eventsLookbackSeconds);
@@ -240,6 +240,6 @@ nOutput_Prometheus.prototype.getValuesByEvents = function(anAttributeName, howMa
  * @param  {[type]} args  [description]
  * @return {[type]}       [description]
  */
-nOutput_Prometheus.prototype.output = function(scope, args) {
+nOutput_HistPrometheus.prototype.output = function(scope, args) {
 	// Retrieve-only: nothing to write.
 };
