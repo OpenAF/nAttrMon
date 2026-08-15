@@ -1,0 +1,47 @@
+kind: output
+constructor: nOutput_HTTP
+title: nOutput_HTTP
+description: Configuration metadata for nOutput_HTTP.
+examples:
+  - config/outputs/00.httpAll.yaml
+arguments:
+  - name: audit
+    type: any
+    description: Configuration option read by nOutput_HTTP.
+    example: {}
+  - name: auditTemplate
+    type: any
+    description: Configuration option read by nOutput_HTTP.
+    example: {}
+  - name: host
+    type: any
+    description: Configuration option read by nOutput_HTTP.
+    example: {}
+  - name: httpSession
+    type: any
+    description: Configuration option read by nOutput_HTTP.
+    example: {}
+  - name: keyPassword
+    type: any
+    description: Configuration option read by nOutput_HTTP.
+    example: {}
+  - name: keyStore
+    type: any
+    description: Configuration option read by nOutput_HTTP.
+    example: {}
+  - name: path
+    type: any
+    description: Configuration option read by nOutput_HTTP.
+    example: {}
+  - name: port
+    type: any
+    description: Configuration option read by nOutput_HTTP.
+    example: {}
+  - name: refreshTime
+    type: any
+    description: Configuration option read by nOutput_HTTP.
+    example: {}
+  - name: title
+    type: any
+    description: Configuration option read by nOutput_HTTP.
+    example: {}

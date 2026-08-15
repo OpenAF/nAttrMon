@@ -1,0 +1,31 @@
+kind: input
+constructor: nInput_EndPoints
+title: EndPoints
+description: Configuration metadata for nInput_EndPoints.
+examples:
+  - config/inputs.disabled/yaml/26.endpoints.yaml
+arguments:
+  - name: attrTemplate
+    type: any
+    description: Configuration option read by nInput_EndPoints.
+    example: Category/Name
+  - name: attribute
+    type: any
+    description: Configuration option read by nInput_EndPoints.
+    example: {}
+  - name: chPorts
+    type: any
+    description: Configuration option read by nInput_EndPoints.
+    example: {}
+  - name: chUrls
+    type: any
+    description: Configuration option read by nInput_EndPoints.
+    example: {}
+  - name: ports
+    type: any
+    description: Configuration option read by nInput_EndPoints.
+    example: {}
+  - name: urls
+    type: any
+    description: Configuration option read by nInput_EndPoints.
+    example: {}

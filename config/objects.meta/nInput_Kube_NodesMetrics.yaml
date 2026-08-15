@@ -1,0 +1,27 @@
+kind: input
+constructor: nInput_Kube_NodesMetrics
+title: Kube_NodesMetrics
+description: Configuration metadata for nInput_Kube_NodesMetrics.
+examples:
+  - config/inputs.disabled/yaml/10.kubeNodesMetrics.yaml
+arguments:
+  - name: attrTemplate
+    type: any
+    description: Configuration option read by nInput_Kube_NodesMetrics.
+    example: Category/Name
+  - name: kubePass
+    type: any
+    description: Configuration option read by nInput_Kube_NodesMetrics.
+    example: {}
+  - name: kubeToken
+    type: any
+    description: Configuration option read by nInput_Kube_NodesMetrics.
+    example: {}
+  - name: kubeURL
+    type: any
+    description: Configuration option read by nInput_Kube_NodesMetrics.
+    example: {}
+  - name: kubeUser
+    type: any
+    description: Configuration option read by nInput_Kube_NodesMetrics.
+    example: {}

@@ -1,0 +1,72 @@
+kind: output
+constructor: nOutput_ES
+title: nOutput_ES
+description: Configuration metadata for nOutput_ES.
+examples:
+  - config/outputs.disabled/yaml/05.es.values.yaml
+arguments:
+  - name: considerSetAll
+    type: any
+    description: Configuration option read by nOutput_ES.
+    example: {}
+  - name: dontUseStampMapTemplating
+    type: any
+    description: Configuration option read by nOutput_ES.
+    example: {}
+  - name: exclude
+    type: any
+    description: Configuration option read by nOutput_ES.
+    example: {}
+  - name: excludeRE
+    type: any
+    description: Configuration option read by nOutput_ES.
+    example: {}
+  - name: format
+    type: any
+    description: Configuration option read by nOutput_ES.
+    example: {}
+  - name: funcIndex
+    type: any
+    description: Configuration option read by nOutput_ES.
+    example: {}
+  - name: include
+    type: any
+    description: Configuration option read by nOutput_ES.
+    example: {}
+  - name: includeRE
+    type: any
+    description: Configuration option read by nOutput_ES.
+    example: {}
+  - name: index
+    type: any
+    description: Configuration option read by nOutput_ES.
+    example: {}
+  - name: keyMap
+    type: any
+    description: Configuration option read by nOutput_ES.
+    example: {}
+  - name: noDateDocId
+    type: any
+    description: Configuration option read by nOutput_ES.
+    example: {}
+  - name: pass
+    type: any
+    secret: true
+    description: Configuration option read by nOutput_ES.
+    example: "$SECRET"
+  - name: stampMap
+    type: any
+    description: Configuration option read by nOutput_ES.
+    example: {}
+  - name: unique
+    type: any
+    description: Configuration option read by nOutput_ES.
+    example: {}
+  - name: url
+    type: any
+    description: Configuration option read by nOutput_ES.
+    example: {}
+  - name: user
+    type: any
+    description: Configuration option read by nOutput_ES.
+    example: {}

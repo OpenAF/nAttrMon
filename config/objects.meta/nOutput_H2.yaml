@@ -1,0 +1,28 @@
+kind: output
+constructor: nOutput_H2
+title: nOutput_H2
+description: Configuration metadata for nOutput_H2.
+examples:
+  - config/outputs.disabled/yaml/01.h2output.yaml
+arguments:
+  - name: db
+    type: any
+    description: Configuration option read by nOutput_H2.
+    example: {}
+  - name: pass
+    type: any
+    secret: true
+    description: Configuration option read by nOutput_H2.
+    example: "$SECRET"
+  - name: port
+    type: any
+    description: Configuration option read by nOutput_H2.
+    example: {}
+  - name: rollData
+    type: any
+    description: Configuration option read by nOutput_H2.
+    example: {}
+  - name: user
+    type: any
+    description: Configuration option read by nOutput_H2.
+    example: {}

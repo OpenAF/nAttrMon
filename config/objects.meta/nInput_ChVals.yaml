@@ -1,0 +1,23 @@
+kind: input
+constructor: nInput_ChVals
+title: ChVals
+description: Configuration metadata for nInput_ChVals.
+examples:
+  - config/inputs.disabled/yaml/20.chvals.yaml
+arguments:
+  - name: attrTemplate
+    type: any
+    description: Configuration option read by nInput_ChVals.
+    example: Category/Name
+  - name: chName
+    type: any
+    description: Configuration option read by nInput_ChVals.
+    example: {}
+  - name: filter
+    type: any
+    description: Configuration option read by nInput_ChVals.
+    example: {}
+  - name: full
+    type: any
+    description: Configuration option read by nInput_ChVals.
+    example: {}

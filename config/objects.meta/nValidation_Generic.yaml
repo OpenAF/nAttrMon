@@ -1,0 +1,17 @@
+kind: validation
+constructor: nValidation_Generic
+title: Generic attribute validation
+description: Evaluates configurable checks against current attributes and emits or closes warnings.
+examples:
+  - config/validations.disabled/yaml/03.validateSemaphores.yaml
+arguments:
+  - name: checks
+    type: array<object>
+    required: true
+    description: Validation rules containing attribute matching, expression, and warning templates.
+    example:
+      - attrPattern: Semaphores
+        expr: "'{{value}}' == 'red'"
+        warnLevel: HIGH
+        warnTitleTemplate: "RED {{name}}"
+        warnDescTemplate: "A red semaphore was detected."

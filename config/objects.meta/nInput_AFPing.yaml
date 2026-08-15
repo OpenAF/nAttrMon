@@ -1,0 +1,35 @@
+kind: input
+constructor: nInput_AFPing
+title: AFPing
+description: Configuration metadata for nInput_AFPing.
+examples:
+  - config/inputs.disabled/yaml/01.ping.yaml
+arguments:
+  - name: attrTemplate
+    type: any
+    description: Configuration option read by nInput_AFPing.
+    example: Category/Name
+  - name: chKeys
+    type: any
+    description: Configuration option read by nInput_AFPing.
+    example: nattrmon::keys
+  - name: keys
+    type: any
+    description: Configuration option read by nInput_AFPing.
+    example: [example-key]
+  - name: param
+    type: any
+    description: Configuration option read by nInput_AFPing.
+    example: {}
+  - name: single
+    type: any
+    description: Configuration option read by nInput_AFPing.
+    example: {}
+  - name: timeout
+    type: any
+    description: Configuration option read by nInput_AFPing.
+    example: 30000
+  - name: url
+    type: any
+    description: Configuration option read by nInput_AFPing.
+    example: {}

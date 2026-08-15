@@ -1,0 +1,68 @@
+kind: input
+constructor: nInput_OpenMetrics
+title: OpenMetrics
+description: Configuration metadata for nInput_OpenMetrics.
+examples:
+  - config/inputs.disabled/yaml/30.openmetrics.yaml
+arguments:
+  - name: attrTemplate
+    type: any
+    description: Configuration option read by nInput_OpenMetrics.
+    example: Category/Name
+  - name: chKeys
+    type: any
+    description: Configuration option read by nInput_OpenMetrics.
+    example: nattrmon::keys
+  - name: connectionTimeout
+    type: any
+    description: Configuration option read by nInput_OpenMetrics.
+    example: 30000
+  - name: excludePrefix
+    type: any
+    description: Configuration option read by nInput_OpenMetrics.
+    example: {}
+  - name: excludeRE
+    type: any
+    description: Configuration option read by nInput_OpenMetrics.
+    example: {}
+  - name: headers
+    type: any
+    description: Configuration option read by nInput_OpenMetrics.
+    example: {}
+  - name: includePrefix
+    type: any
+    description: Configuration option read by nInput_OpenMetrics.
+    example: {}
+  - name: includeRE
+    type: any
+    description: Configuration option read by nInput_OpenMetrics.
+    example: {}
+  - name: key
+    type: any
+    description: Configuration option read by nInput_OpenMetrics.
+    example: {}
+  - name: keys
+    type: any
+    description: Configuration option read by nInput_OpenMetrics.
+    example: [example-key]
+  - name: login
+    type: any
+    description: Configuration option read by nInput_OpenMetrics.
+    example: {}
+  - name: metricsURI
+    type: any
+    description: Configuration option read by nInput_OpenMetrics.
+    example: {}
+  - name: pass
+    type: any
+    secret: true
+    description: Configuration option read by nInput_OpenMetrics.
+    example: "$SECRET"
+  - name: replace
+    type: any
+    description: Configuration option read by nInput_OpenMetrics.
+    example: {}
+  - name: url
+    type: any
+    description: Configuration option read by nInput_OpenMetrics.
+    example: {}

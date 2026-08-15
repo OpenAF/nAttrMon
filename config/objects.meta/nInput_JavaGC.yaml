@@ -1,0 +1,63 @@
+kind: input
+constructor: nInput_JavaGC
+title: JavaGC
+description: Configuration metadata for nInput_JavaGC.
+examples:
+  - config/inputs.disabled/yaml/15.javagc.yaml
+arguments:
+  - name: attrTemplate
+    type: any
+    description: Configuration option read by nInput_JavaGC.
+    example: Category/Name
+  - name: chKeys
+    type: any
+    description: Configuration option read by nInput_JavaGC.
+    example: nattrmon::keys
+  - name: includeCollectors
+    type: any
+    description: Configuration option read by nInput_JavaGC.
+    example: {}
+  - name: includeMem
+    type: any
+    description: Configuration option read by nInput_JavaGC.
+    example: {}
+  - name: includeSpaces
+    type: any
+    description: Configuration option read by nInput_JavaGC.
+    example: {}
+  - name: includeSummary
+    type: any
+    description: Configuration option read by nInput_JavaGC.
+    example: {}
+  - name: includeThreads
+    type: any
+    description: Configuration option read by nInput_JavaGC.
+    example: {}
+  - name: kube
+    type: any
+    description: Configuration option read by nInput_JavaGC.
+    example: {}
+  - name: nameCollectors
+    type: any
+    description: Configuration option read by nInput_JavaGC.
+    example: {}
+  - name: nameMem
+    type: any
+    description: Configuration option read by nInput_JavaGC.
+    example: {}
+  - name: nameSpaces
+    type: any
+    description: Configuration option read by nInput_JavaGC.
+    example: {}
+  - name: nameSummary
+    type: any
+    description: Configuration option read by nInput_JavaGC.
+    example: {}
+  - name: nameThreads
+    type: any
+    description: Configuration option read by nInput_JavaGC.
+    example: {}
+  - name: type
+    type: any
+    description: Configuration option read by nInput_JavaGC.
+    example: {}

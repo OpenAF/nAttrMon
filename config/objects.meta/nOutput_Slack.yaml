@@ -1,0 +1,18 @@
+kind: output
+constructor: nOutput_Slack
+title: nOutput_Slack
+description: Configuration metadata for nOutput_Slack.
+examples: []
+arguments:
+  - name: __notifyID
+    type: any
+    description: Configuration option read by nOutput_Slack.
+    example: {}
+  - name: filter
+    type: any
+    description: Configuration option read by nOutput_Slack.
+    example: {}
+  - name: notifications
+    type: any
+    description: Configuration option read by nOutput_Slack.
+    example: {}

@@ -1,0 +1,30 @@
+kind: output
+constructor: nOutput_HK
+title: nOutput_HK
+description: Configuration metadata for nOutput_HK.
+examples: []
+arguments:
+  - name: attributeDeleteAfter
+    type: any
+    description: Configuration option read by nOutput_HK.
+    example: {}
+  - name: attributeUpdateDeleteAfter
+    type: any
+    description: Configuration option read by nOutput_HK.
+    example: {}
+  - name: exclude
+    type: any
+    description: Configuration option read by nOutput_HK.
+    example: {}
+  - name: include
+    type: any
+    description: Configuration option read by nOutput_HK.
+    example: {}
+  - name: warningDeleteAfter
+    type: any
+    description: Configuration option read by nOutput_HK.
+    example: {}
+  - name: warningUpdateDeleteAfter
+    type: any
+    description: Configuration option read by nOutput_HK.
+    example: {}

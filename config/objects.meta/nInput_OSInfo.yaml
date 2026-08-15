@@ -1,0 +1,11 @@
+kind: input
+constructor: nInput_OSInfo
+title: OSInfo
+description: Configuration metadata for nInput_OSInfo.
+examples:
+  - config/inputs.disabled/yaml/10.osinfo.yaml
+arguments:
+  - name: attrTemplate
+    type: any
+    description: Configuration option read by nInput_OSInfo.
+    example: Category/Name

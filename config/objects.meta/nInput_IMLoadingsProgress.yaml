@@ -1,0 +1,35 @@
+kind: input
+constructor: nInput_IMLoadingsProgress
+title: IMLoadingsProgress
+description: Configuration metadata for nInput_IMLoadingsProgress.
+examples:
+  - config/inputs.disabled/yaml/03.LoadingProgress.yaml
+arguments:
+  - name: attrTemplate
+    type: any
+    description: Configuration option read by nInput_IMLoadingsProgress.
+    example: Category/Name
+  - name: chKeys
+    type: any
+    description: Configuration option read by nInput_IMLoadingsProgress.
+    example: nattrmon::keys
+  - name: days
+    type: any
+    description: Configuration option read by nInput_IMLoadingsProgress.
+    example: {}
+  - name: defaultThreshold
+    type: any
+    description: Configuration option read by nInput_IMLoadingsProgress.
+    example: {}
+  - name: exclude
+    type: any
+    description: Configuration option read by nInput_IMLoadingsProgress.
+    example: {}
+  - name: include
+    type: any
+    description: Configuration option read by nInput_IMLoadingsProgress.
+    example: {}
+  - name: keys
+    type: any
+    description: Configuration option read by nInput_IMLoadingsProgress.
+    example: [example-key]

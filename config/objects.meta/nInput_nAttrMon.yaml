@@ -1,0 +1,10 @@
+kind: input
+constructor: nInput_nAttrMon
+title: nAttrMon
+description: Configuration metadata for nInput_nAttrMon.
+examples: []
+arguments:
+  - name: attrTemplate
+    type: any
+    description: Configuration option read by nInput_nAttrMon.
+    example: Category/Name

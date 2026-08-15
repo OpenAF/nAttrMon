@@ -1,0 +1,11 @@
+kind: input
+constructor: nInput_Init
+title: Init
+description: Configuration metadata for nInput_Init.
+examples:
+  - config/inputs.disabled/yaml/15.jmx.yaml
+arguments:
+  - name: _retriesBeforeDestroy
+    type: any
+    description: Configuration option read by nInput_Init.
+    example: {}

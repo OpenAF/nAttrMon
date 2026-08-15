@@ -1,0 +1,39 @@
+kind: output
+constructor: nOutput_WarnsHistory
+title: nOutput_WarnsHistory
+description: Configuration metadata for nOutput_WarnsHistory.
+examples:
+  - config/outputs.disabled/yaml/08.warnsHistory.yaml
+arguments:
+  - name: chName
+    type: any
+    description: Configuration option read by nOutput_WarnsHistory.
+    example: {}
+  - name: chParams
+    type: any
+    description: Configuration option read by nOutput_WarnsHistory.
+    example: {}
+  - name: chType
+    type: any
+    description: Configuration option read by nOutput_WarnsHistory.
+    example: {}
+  - name: considerSetAll
+    type: any
+    description: Configuration option read by nOutput_WarnsHistory.
+    example: {}
+  - name: exclude
+    type: any
+    description: Configuration option read by nOutput_WarnsHistory.
+    example: {}
+  - name: historyMax
+    type: any
+    description: Configuration option read by nOutput_WarnsHistory.
+    example: {}
+  - name: include
+    type: any
+    description: Configuration option read by nOutput_WarnsHistory.
+    example: {}
+  - name: maxEntries
+    type: any
+    description: Configuration option read by nOutput_WarnsHistory.
+    example: {}

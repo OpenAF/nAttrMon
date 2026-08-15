@@ -1,0 +1,55 @@
+kind: output
+constructor: nOutput_HTTP_JSON
+title: nOutput_HTTP_JSON
+description: Configuration metadata for nOutput_HTTP_JSON.
+examples:
+  - config/outputs/00.httpAll.yaml
+arguments:
+  - name: attr
+    type: any
+    description: Configuration option read by nOutput_HTTP_JSON.
+    example: {}
+  - name: audit
+    type: any
+    description: Configuration option read by nOutput_HTTP_JSON.
+    example: {}
+  - name: auditTemplate
+    type: any
+    description: Configuration option read by nOutput_HTTP_JSON.
+    example: {}
+  - name: ct
+    type: any
+    description: Configuration option read by nOutput_HTTP_JSON.
+    example: {}
+  - name: events
+    type: any
+    description: Configuration option read by nOutput_HTTP_JSON.
+    example: {}
+  - name: host
+    type: any
+    description: Configuration option read by nOutput_HTTP_JSON.
+    example: {}
+  - name: httpSession
+    type: any
+    description: Configuration option read by nOutput_HTTP_JSON.
+    example: {}
+  - name: keyPassword
+    type: any
+    description: Configuration option read by nOutput_HTTP_JSON.
+    example: {}
+  - name: keyStore
+    type: any
+    description: Configuration option read by nOutput_HTTP_JSON.
+    example: {}
+  - name: op
+    type: any
+    description: Configuration option read by nOutput_HTTP_JSON.
+    example: {}
+  - name: port
+    type: any
+    description: Configuration option read by nOutput_HTTP_JSON.
+    example: {}
+  - name: seconds
+    type: any
+    description: Configuration option read by nOutput_HTTP_JSON.
+    example: {}

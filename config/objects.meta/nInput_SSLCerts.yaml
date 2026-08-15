@@ -1,0 +1,34 @@
+kind: input
+constructor: nInput_SSLCerts
+title: SSLCerts
+description: Configuration metadata for nInput_SSLCerts.
+examples: []
+arguments:
+  - name: address
+    type: any
+    description: Configuration option read by nInput_SSLCerts.
+    example: {}
+  - name: attrTemplate
+    type: any
+    description: Configuration option read by nInput_SSLCerts.
+    example: Category/Name
+  - name: attribute
+    type: any
+    description: Configuration option read by nInput_SSLCerts.
+    example: {}
+  - name: chKeys
+    type: any
+    description: Configuration option read by nInput_SSLCerts.
+    example: nattrmon::keys
+  - name: port
+    type: any
+    description: Configuration option read by nInput_SSLCerts.
+    example: {}
+  - name: url
+    type: any
+    description: Configuration option read by nInput_SSLCerts.
+    example: {}
+  - name: urls
+    type: any
+    description: Configuration option read by nInput_SSLCerts.
+    example: {}

@@ -1,0 +1,52 @@
+kind: input
+constructor: nInput_ESSearch
+title: ESSearch
+description: Configuration metadata for nInput_ESSearch.
+examples:
+  - config/inputs.disabled/yaml/12.elastic.yaml
+arguments:
+  - name: attrTemplate
+    type: any
+    description: Configuration option read by nInput_ESSearch.
+    example: Category/Name
+  - name: chKeys
+    type: any
+    description: Configuration option read by nInput_ESSearch.
+    example: nattrmon::keys
+  - name: extra
+    type: any
+    description: Configuration option read by nInput_ESSearch.
+    example: {}
+  - name: format
+    type: any
+    description: Configuration option read by nInput_ESSearch.
+    example: {}
+  - name: funcIndex
+    type: any
+    description: Configuration option read by nInput_ESSearch.
+    example: {}
+  - name: index
+    type: any
+    description: Configuration option read by nInput_ESSearch.
+    example: {}
+  - name: pass
+    type: any
+    secret: true
+    description: Configuration option read by nInput_ESSearch.
+    example: "$SECRET"
+  - name: path
+    type: any
+    description: Configuration option read by nInput_ESSearch.
+    example: {}
+  - name: search
+    type: any
+    description: Configuration option read by nInput_ESSearch.
+    example: {}
+  - name: url
+    type: any
+    description: Configuration option read by nInput_ESSearch.
+    example: {}
+  - name: user
+    type: any
+    description: Configuration option read by nInput_ESSearch.
+    example: {}

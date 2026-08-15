@@ -1,0 +1,14 @@
+kind: output
+constructor: nOutput_Log
+title: nOutput_Log
+description: Configuration metadata for nOutput_Log.
+examples: []
+arguments:
+  - name: filename
+    type: any
+    description: Configuration option read by nOutput_Log.
+    example: {}
+  - name: outputTemplate
+    type: any
+    description: Configuration option read by nOutput_Log.
+    example: {}

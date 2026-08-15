@@ -1,0 +1,10 @@
+kind: output
+constructor: nOutput_Stdout
+title: nOutput_Stdout
+description: Configuration metadata for nOutput_Stdout.
+examples: []
+arguments:
+  - name: options
+    type: any
+    description: Configuration option read by nOutput_Stdout.
+    example: {}

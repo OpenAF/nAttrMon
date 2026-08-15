@@ -1,0 +1,22 @@
+kind: input
+constructor: nInput_RAIDStatus_DB
+title: RAIDStatus_DB
+description: Configuration metadata for nInput_RAIDStatus_DB.
+examples: []
+arguments:
+  - name: attrTemplate
+    type: any
+    description: Configuration option read by nInput_RAIDStatus_DB.
+    example: Category/Name
+  - name: chKeys
+    type: any
+    description: Configuration option read by nInput_RAIDStatus_DB.
+    example: nattrmon::keys
+  - name: keys
+    type: any
+    description: Configuration option read by nInput_RAIDStatus_DB.
+    example: [example-key]
+  - name: useCache
+    type: any
+    description: Configuration option read by nInput_RAIDStatus_DB.
+    example: {}

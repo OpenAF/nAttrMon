@@ -1,0 +1,10 @@
+kind: output
+constructor: nOutput_ChMirror
+title: nOutput_ChMirror
+description: Configuration metadata for nOutput_ChMirror.
+examples: []
+arguments:
+  - name: channels
+    type: any
+    description: Configuration option read by nOutput_ChMirror.
+    example: {}

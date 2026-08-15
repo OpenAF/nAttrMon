@@ -1,0 +1,59 @@
+kind: output
+constructor: nOutput_Channels
+title: nOutput_Channels
+description: Configuration metadata for nOutput_Channels.
+examples:
+  - config/outputs/00.httpAll.yaml
+arguments:
+  - name: auth
+    type: any
+    description: Configuration option read by nOutput_Channels.
+    example: {}
+  - name: authCustom
+    type: any
+    description: Configuration option read by nOutput_Channels.
+    example: {}
+  - name: authLocal
+    type: any
+    description: Configuration option read by nOutput_Channels.
+    example: {}
+  - name: cAuth
+    type: any
+    description: Configuration option read by nOutput_Channels.
+    example: {}
+  - name: channels
+    type: any
+    description: Configuration option read by nOutput_Channels.
+    example: {}
+  - name: custom
+    type: any
+    description: Configuration option read by nOutput_Channels.
+    example: {}
+  - name: host
+    type: any
+    description: Configuration option read by nOutput_Channels.
+    example: {}
+  - name: httpSession
+    type: any
+    description: Configuration option read by nOutput_Channels.
+    example: {}
+  - name: keyPassword
+    type: any
+    description: Configuration option read by nOutput_Channels.
+    example: {}
+  - name: keyStore
+    type: any
+    description: Configuration option read by nOutput_Channels.
+    example: {}
+  - name: local
+    type: any
+    description: Configuration option read by nOutput_Channels.
+    example: {}
+  - name: peers
+    type: any
+    description: Configuration option read by nOutput_Channels.
+    example: {}
+  - name: port
+    type: any
+    description: Configuration option read by nOutput_Channels.
+    example: {}

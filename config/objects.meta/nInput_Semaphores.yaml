@@ -1,0 +1,18 @@
+kind: input
+constructor: nInput_Semaphores
+title: Semaphores
+description: Configuration metadata for nInput_Semaphores.
+examples: []
+arguments:
+  - name: attrTemplate
+    type: any
+    description: Configuration option read by nInput_Semaphores.
+    example: Category/Name
+  - name: chKeys
+    type: any
+    description: Configuration option read by nInput_Semaphores.
+    example: nattrmon::keys
+  - name: keys
+    type: any
+    description: Configuration option read by nInput_Semaphores.
+    example: [example-key]

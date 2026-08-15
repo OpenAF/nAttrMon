@@ -1,0 +1,127 @@
+kind: output
+constructor: nOutput_HTTP_Metrics
+title: nOutput_HTTP_Metrics
+description: Configuration metadata for nOutput_HTTP_Metrics.
+examples:
+  - config/outputs/00.httpAll.yaml
+arguments:
+  - name: attrExclude
+    type: any
+    description: Configuration option read by nOutput_HTTP_Metrics.
+    example: {}
+  - name: attrInclude
+    type: any
+    description: Configuration option read by nOutput_HTTP_Metrics.
+    example: {}
+  - name: audit
+    type: any
+    description: Configuration option read by nOutput_HTTP_Metrics.
+    example: {}
+  - name: auditTemplate
+    type: any
+    description: Configuration option read by nOutput_HTTP_Metrics.
+    example: {}
+  - name: chName
+    type: any
+    description: Configuration option read by nOutput_HTTP_Metrics.
+    example: {}
+  - name: chParams
+    type: any
+    description: Configuration option read by nOutput_HTTP_Metrics.
+    example: {}
+  - name: chPeriod
+    type: any
+    description: Configuration option read by nOutput_HTTP_Metrics.
+    example: {}
+  - name: chType
+    type: any
+    description: Configuration option read by nOutput_HTTP_Metrics.
+    example: {}
+  - name: errorRateThreshold
+    type: any
+    description: Configuration option read by nOutput_HTTP_Metrics.
+    example: {}
+  - name: findAndReplace
+    type: any
+    description: Configuration option read by nOutput_HTTP_Metrics.
+    example: {}
+  - name: format
+    type: any
+    description: Configuration option read by nOutput_HTTP_Metrics.
+    example: {}
+  - name: host
+    type: any
+    description: Configuration option read by nOutput_HTTP_Metrics.
+    example: {}
+  - name: httpSession
+    type: any
+    description: Configuration option read by nOutput_HTTP_Metrics.
+    example: {}
+  - name: includeCVals
+    type: any
+    description: Configuration option read by nOutput_HTTP_Metrics.
+    example: {}
+  - name: includeLVals
+    type: any
+    description: Configuration option read by nOutput_HTTP_Metrics.
+    example: {}
+  - name: includeSelf
+    type: any
+    description: Configuration option read by nOutput_HTTP_Metrics.
+    example: {}
+  - name: includeWarns
+    type: any
+    description: Configuration option read by nOutput_HTTP_Metrics.
+    example: {}
+  - name: keyPassword
+    type: any
+    description: Configuration option read by nOutput_HTTP_Metrics.
+    example: {}
+  - name: keyStore
+    type: any
+    description: Configuration option read by nOutput_HTTP_Metrics.
+    example: {}
+  - name: minExecs
+    type: any
+    description: Configuration option read by nOutput_HTTP_Metrics.
+    example: {}
+  - name: nameCVals
+    type: any
+    description: Configuration option read by nOutput_HTTP_Metrics.
+    example: {}
+  - name: nameLVals
+    type: any
+    description: Configuration option read by nOutput_HTTP_Metrics.
+    example: {}
+  - name: nameSelf
+    type: any
+    description: Configuration option read by nOutput_HTTP_Metrics.
+    example: {}
+  - name: nameWarns
+    type: any
+    description: Configuration option read by nOutput_HTTP_Metrics.
+    example: {}
+  - name: port
+    type: any
+    description: Configuration option read by nOutput_HTTP_Metrics.
+    example: {}
+  - name: removeIds
+    type: any
+    description: Configuration option read by nOutput_HTTP_Metrics.
+    example: {}
+  - name: timeoutHits
+    type: any
+    description: Configuration option read by nOutput_HTTP_Metrics.
+    example: 30000
+  - name: type
+    type: any
+    description: Configuration option read by nOutput_HTTP_Metrics.
+    example: {}
+  - name: useCurrentTime
+    type: any
+    description: Configuration option read by nOutput_HTTP_Metrics.
+    example: {}
+  - name: watchdogHits
+    type: any
+    description: Configuration option read by nOutput_HTTP_Metrics.
+    example: {}

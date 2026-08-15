@@ -1,0 +1,36 @@
+kind: input
+constructor: nInput_Filesystem
+title: Filesystem volumes
+description: Collects disk space and inode usage from local, SSH, or Kubernetes targets.
+examples:
+  - config/inputs.disabled/yaml/10.filesystem.yaml
+arguments:
+  - name: volumeNames
+    type: array<string>
+    required: true
+    description: Device names or mount points to collect.
+    example: ["/some/path/1", "/some/path/2"]
+  - name: attrTemplate
+    type: string
+    default: Server status/Filesystem
+    description: Template used to name the generated attribute.
+    example: Filesystem/Volumes
+  - name: useMountPoint
+    type: boolean
+    default: false
+    description: Match volumeNames against mount points instead of device names.
+    example: true
+  - name: keys
+    type: array<object>
+    description: SSH or Kubernetes target keys; omit to run locally.
+    example: ["my-server"]
+  - name: chKeys
+    type: string
+    description: Channel containing target-key records, used instead of keys.
+    example: nattrmon::servers
+  - name: execTimeout
+    type: integer
+    default: 120000
+    unit: milliseconds
+    description: Timeout applied to each filesystem command.
+    example: 120000

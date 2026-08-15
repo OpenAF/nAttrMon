@@ -1,0 +1,34 @@
+kind: input
+constructor: nInput_BPMNRunningFlows
+title: BPMNRunningFlows
+description: Configuration metadata for nInput_BPMNRunningFlows.
+examples: []
+arguments:
+  - name: attrTemplate
+    type: any
+    description: Configuration option read by nInput_BPMNRunningFlows.
+    example: Category/Name
+  - name: chKeys
+    type: any
+    description: Configuration option read by nInput_BPMNRunningFlows.
+    example: nattrmon::keys
+  - name: hoursToCheck
+    type: any
+    description: Configuration option read by nInput_BPMNRunningFlows.
+    example: {}
+  - name: keys
+    type: any
+    description: Configuration option read by nInput_BPMNRunningFlows.
+    example: [example-key]
+  - name: limit
+    type: any
+    description: Configuration option read by nInput_BPMNRunningFlows.
+    example: {}
+  - name: status
+    type: any
+    description: Configuration option read by nInput_BPMNRunningFlows.
+    example: {}
+  - name: useDatabase
+    type: any
+    description: Configuration option read by nInput_BPMNRunningFlows.
+    example: {}

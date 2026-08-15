@@ -1,0 +1,10 @@
+kind: validation
+constructor: nValidation_Yellows
+title: nValidation_Yellows
+description: Configuration metadata for nValidation_Yellows.
+examples: []
+arguments:
+  - name: options
+    type: any
+    description: Configuration option read by nValidation_Yellows.
+    example: {}

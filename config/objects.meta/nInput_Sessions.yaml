@@ -1,0 +1,23 @@
+kind: input
+constructor: nInput_Sessions
+title: Sessions
+description: Configuration metadata for nInput_Sessions.
+examples:
+  - config/inputs.disabled/yaml/10.sessions.yaml
+arguments:
+  - name: attrTemplate
+    type: any
+    description: Configuration option read by nInput_Sessions.
+    example: Category/Name
+  - name: chKeys
+    type: any
+    description: Configuration option read by nInput_Sessions.
+    example: nattrmon::keys
+  - name: keys
+    type: any
+    description: Configuration option read by nInput_Sessions.
+    example: [example-key]
+  - name: useCache
+    type: any
+    description: Configuration option read by nInput_Sessions.
+    example: {}

@@ -1,0 +1,39 @@
+kind: output
+constructor: nOutput_Log2ES
+title: nOutput_Log2ES
+description: Configuration metadata for nOutput_Log2ES.
+examples: []
+arguments:
+  - name: format
+    type: any
+    description: Configuration option read by nOutput_Log2ES.
+    example: {}
+  - name: funcIndex
+    type: any
+    description: Configuration option read by nOutput_Log2ES.
+    example: {}
+  - name: index
+    type: any
+    description: Configuration option read by nOutput_Log2ES.
+    example: {}
+  - name: name
+    type: any
+    description: Configuration option read by nOutput_Log2ES.
+    example: {}
+  - name: pass
+    type: any
+    secret: true
+    description: Configuration option read by nOutput_Log2ES.
+    example: "$SECRET"
+  - name: stampMap
+    type: any
+    description: Configuration option read by nOutput_Log2ES.
+    example: {}
+  - name: url
+    type: any
+    description: Configuration option read by nOutput_Log2ES.
+    example: {}
+  - name: user
+    type: any
+    description: Configuration option read by nOutput_Log2ES.
+    example: {}

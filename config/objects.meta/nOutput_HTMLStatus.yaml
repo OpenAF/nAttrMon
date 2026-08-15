@@ -1,0 +1,50 @@
+kind: output
+constructor: nOutput_HTMLStatus
+title: nOutput_HTMLStatus
+description: Configuration metadata for nOutput_HTMLStatus.
+examples: []
+arguments:
+  - name: controls
+    type: any
+    description: Configuration option read by nOutput_HTMLStatus.
+    example: {}
+  - name: file
+    type: any
+    description: Configuration option read by nOutput_HTMLStatus.
+    example: {}
+  - name: format
+    type: any
+    description: Configuration option read by nOutput_HTMLStatus.
+    example: {}
+  - name: greenLevels
+    type: any
+    description: Configuration option read by nOutput_HTMLStatus.
+    example: {}
+  - name: greenText
+    type: any
+    description: Configuration option read by nOutput_HTMLStatus.
+    example: {}
+  - name: levelsIncluded
+    type: any
+    description: Configuration option read by nOutput_HTMLStatus.
+    example: {}
+  - name: path
+    type: any
+    description: Configuration option read by nOutput_HTMLStatus.
+    example: {}
+  - name: redLevels
+    type: any
+    description: Configuration option read by nOutput_HTMLStatus.
+    example: {}
+  - name: redText
+    type: any
+    description: Configuration option read by nOutput_HTMLStatus.
+    example: {}
+  - name: yellowLevels
+    type: any
+    description: Configuration option read by nOutput_HTMLStatus.
+    example: {}
+  - name: yellowText
+    type: any
+    description: Configuration option read by nOutput_HTMLStatus.
+    example: {}

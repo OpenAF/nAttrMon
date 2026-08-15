@@ -1,0 +1,18 @@
+kind: validation
+constructor: nValidation_AFPing
+title: nValidation_AFPing
+description: Configuration metadata for nValidation_AFPing.
+examples: []
+arguments:
+  - name: attrPattern
+    type: any
+    description: Configuration option read by nValidation_AFPing.
+    example: {}
+  - name: warnDescTemplate
+    type: any
+    description: Configuration option read by nValidation_AFPing.
+    example: {}
+  - name: warnTitleTemplate
+    type: any
+    description: Configuration option read by nValidation_AFPing.
+    example: {}

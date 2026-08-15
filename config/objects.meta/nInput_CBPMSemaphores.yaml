@@ -1,0 +1,19 @@
+kind: input
+constructor: nInput_CBPMSemaphores
+title: CBPMSemaphores
+description: Configuration metadata for nInput_CBPMSemaphores.
+examples:
+  - config/inputs.disabled/yaml/03.semaphores.yaml
+arguments:
+  - name: attrTemplate
+    type: any
+    description: Configuration option read by nInput_CBPMSemaphores.
+    example: Category/Name
+  - name: chKeys
+    type: any
+    description: Configuration option read by nInput_CBPMSemaphores.
+    example: nattrmon::keys
+  - name: keys
+    type: any
+    description: Configuration option read by nInput_CBPMSemaphores.
+    example: [example-key]

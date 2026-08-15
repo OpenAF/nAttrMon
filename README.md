@@ -154,6 +154,8 @@ For comprehensive documentation, tutorials, and plugin references, visit:
 
 [https://openaf.github.io/nattrmon-docs/](https://openaf.github.io/nattrmon-docs/)
 
+Object constructor arguments, descriptions, and linked disabled-config examples are declared in [`config/objects.meta/`](config/objects.meta/). See [Object metadata](docs/OBJECTS-METADATA.md) for the format and the runtime discovery API.
+
 ## Building from Source
 
 1. Clone this repository:

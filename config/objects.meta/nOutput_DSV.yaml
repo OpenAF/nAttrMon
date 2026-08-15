@@ -1,0 +1,55 @@
+kind: output
+constructor: nOutput_DSV
+title: nOutput_DSV
+description: Configuration metadata for nOutput_DSV.
+examples:
+  - config/outputs.disabled/yaml/04.csvFile.yaml
+arguments:
+  - name: backupFilenameTemplate
+    type: any
+    description: Configuration option read by nOutput_DSV.
+    example: {}
+  - name: dontCompress
+    type: any
+    description: Configuration option read by nOutput_DSV.
+    example: {}
+  - name: exclude
+    type: any
+    description: Configuration option read by nOutput_DSV.
+    example: {}
+  - name: fileDateFormat
+    type: any
+    description: Configuration option read by nOutput_DSV.
+    example: {}
+  - name: filename
+    type: any
+    description: Configuration option read by nOutput_DSV.
+    example: {}
+  - name: filenameTemplate
+    type: any
+    description: Configuration option read by nOutput_DSV.
+    example: {}
+  - name: folder
+    type: any
+    description: Configuration option read by nOutput_DSV.
+    example: {}
+  - name: headerTemplate
+    type: any
+    description: Configuration option read by nOutput_DSV.
+    example: {}
+  - name: howLongAgoInMinutes
+    type: any
+    description: Configuration option read by nOutput_DSV.
+    example: {}
+  - name: idKey
+    type: any
+    description: Configuration option read by nOutput_DSV.
+    example: {}
+  - name: include
+    type: any
+    description: Configuration option read by nOutput_DSV.
+    example: {}
+  - name: outputTemplate
+    type: any
+    description: Configuration option read by nOutput_DSV.
+    example: {}

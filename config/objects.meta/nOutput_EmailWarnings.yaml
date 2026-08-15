@@ -1,0 +1,45 @@
+kind: output
+constructor: nOutput_EmailWarnings
+title: Warning email notifications
+description: Sends warning notifications by email when subscribed warning records change.
+examples:
+  - config/outputs.disabled/yaml/04.emailWarnings.yaml
+arguments:
+  - name: to
+    type: string | array<string>
+    required: true
+    description: Recipient address or addresses.
+    example: ["ops@example.com"]
+  - name: subject
+    type: string
+    default: nAttrMon
+    description: Subject line for outgoing messages.
+    example: "[nattrmon] Warning"
+  - name: from
+    type: string
+    default: nattrmon@openaf.io
+    description: Sender address.
+    example: nattrmon@example.com
+  - name: server
+    type: string
+    required: true
+    description: SMTP server hostname.
+    example: smtp.example.com
+  - name: port
+    type: integer
+    description: SMTP server port.
+    example: 465
+  - name: credentials
+    type: object
+    secret: true
+    description: SMTP credentials with user and password fields.
+    example: { user: "$SMTP_USER", password: "$SMTP_PASSWORD" }
+  - name: warnTypes
+    type: array<string>
+    default: [High]
+    description: Warning levels that trigger email delivery.
+    example: [High, Medium]
+  - name: groupBySimilarity
+    type: integer
+    description: Groups similar warning descriptions when the value is positive.
+    example: 10

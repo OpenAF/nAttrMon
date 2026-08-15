@@ -1,0 +1,31 @@
+kind: input
+constructor: nInput_DB
+title: DB
+description: Configuration metadata for nInput_DB.
+examples:
+  - tests/inputDBTest.yml
+arguments:
+  - name: attrTemplate
+    type: any
+    description: Configuration option read by nInput_DB.
+    example: Category/Name
+  - name: chKeys
+    type: any
+    description: Configuration option read by nInput_DB.
+    example: nattrmon::keys
+  - name: dontUseKey
+    type: any
+    description: Configuration option read by nInput_DB.
+    example: {}
+  - name: key
+    type: any
+    description: Configuration option read by nInput_DB.
+    example: {}
+  - name: sqls
+    type: any
+    description: Configuration option read by nInput_DB.
+    example: {}
+  - name: sqlsByType
+    type: any
+    description: Configuration option read by nInput_DB.
+    example: {}

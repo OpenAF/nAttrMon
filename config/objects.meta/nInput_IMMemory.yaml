@@ -1,0 +1,10 @@
+kind: input
+constructor: nInput_IMMemory
+title: IMMemory
+description: Configuration metadata for nInput_IMMemory.
+examples: []
+arguments:
+  - name: options
+    type: any
+    description: Configuration option read by nInput_IMMemory.
+    example: {}

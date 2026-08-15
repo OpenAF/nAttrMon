@@ -1,0 +1,75 @@
+kind: output
+constructor: nOutput_SNMPServer
+title: nOutput_SNMPServer
+description: Configuration metadata for nOutput_SNMPServer.
+examples:
+  - config/outputs.disabled/yaml/10.SNMPServer_Output.yaml
+arguments:
+  - name: baseOID
+    type: any
+    description: Configuration option read by nOutput_SNMPServer.
+    example: {}
+  - name: enabled
+    type: any
+    description: Configuration option read by nOutput_SNMPServer.
+    example: {}
+  - name: numOfRetries
+    type: any
+    description: Configuration option read by nOutput_SNMPServer.
+    example: {}
+  - name: oidMapping
+    type: any
+    description: Configuration option read by nOutput_SNMPServer.
+    example: {}
+  - name: snmpAddress
+    type: any
+    description: Configuration option read by nOutput_SNMPServer.
+    example: {}
+  - name: snmpAuthPassPhrase
+    type: any
+    description: Configuration option read by nOutput_SNMPServer.
+    example: {}
+  - name: snmpAuthProtocol
+    type: any
+    description: Configuration option read by nOutput_SNMPServer.
+    example: {}
+  - name: snmpBaseOID
+    type: any
+    description: Configuration option read by nOutput_SNMPServer.
+    example: {}
+  - name: snmpCommunity
+    type: any
+    description: Configuration option read by nOutput_SNMPServer.
+    example: {}
+  - name: snmpEngineID
+    type: any
+    description: Configuration option read by nOutput_SNMPServer.
+    example: {}
+  - name: snmpIPAddress
+    type: any
+    description: Configuration option read by nOutput_SNMPServer.
+    example: {}
+  - name: snmpPrivPassPhrase
+    type: any
+    description: Configuration option read by nOutput_SNMPServer.
+    example: {}
+  - name: snmpPrivProtocol
+    type: any
+    description: Configuration option read by nOutput_SNMPServer.
+    example: {}
+  - name: snmpSecurityName
+    type: any
+    description: Configuration option read by nOutput_SNMPServer.
+    example: {}
+  - name: snmpTimeout
+    type: any
+    description: Configuration option read by nOutput_SNMPServer.
+    example: 30000
+  - name: snmpVersion
+    type: any
+    description: Configuration option read by nOutput_SNMPServer.
+    example: {}
+  - name: timeOut
+    type: any
+    description: Configuration option read by nOutput_SNMPServer.
+    example: {}

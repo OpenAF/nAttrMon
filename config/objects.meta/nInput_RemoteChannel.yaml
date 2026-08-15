@@ -1,0 +1,31 @@
+kind: input
+constructor: nInput_RemoteChannel
+title: RemoteChannel
+description: Configuration metadata for nInput_RemoteChannel.
+examples:
+  - config/inputs.disabled/yaml/15.remote_nAttrMon.yaml
+arguments:
+  - name: attrTemplate
+    type: any
+    description: Configuration option read by nInput_RemoteChannel.
+    example: Category/Name
+  - name: exclude
+    type: any
+    description: Configuration option read by nInput_RemoteChannel.
+    example: {}
+  - name: idKey
+    type: any
+    description: Configuration option read by nInput_RemoteChannel.
+    example: {}
+  - name: include
+    type: any
+    description: Configuration option read by nInput_RemoteChannel.
+    example: {}
+  - name: url
+    type: any
+    description: Configuration option read by nInput_RemoteChannel.
+    example: {}
+  - name: valueKey
+    type: any
+    description: Configuration option read by nInput_RemoteChannel.
+    example: {}

@@ -1,0 +1,11 @@
+kind: input
+constructor: nInput_HTTPJson
+title: HTTPJson
+description: Configuration metadata for nInput_HTTPJson.
+examples:
+  - config/inputs.disabled/yaml/10.httpjson.yaml
+arguments:
+  - name: requests
+    type: any
+    description: Configuration option read by nInput_HTTPJson.
+    example: {}

@@ -1,0 +1,10 @@
+kind: validation
+constructor: nValidation_Semaphores
+title: nValidation_Semaphores
+description: Configuration metadata for nValidation_Semaphores.
+examples: []
+arguments:
+  - name: options
+    type: any
+    description: Configuration option read by nValidation_Semaphores.
+    example: {}

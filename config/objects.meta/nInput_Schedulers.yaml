@@ -1,0 +1,35 @@
+kind: input
+constructor: nInput_Schedulers
+title: Schedulers
+description: Configuration metadata for nInput_Schedulers.
+examples:
+  - config/inputs.disabled/yaml/13.RAIDSchedulers.yaml
+arguments:
+  - name: attrTemplate
+    type: any
+    description: Configuration option read by nInput_Schedulers.
+    example: Category/Name
+  - name: chKeys
+    type: any
+    description: Configuration option read by nInput_Schedulers.
+    example: nattrmon::keys
+  - name: excludeLongAgo
+    type: any
+    description: Configuration option read by nInput_Schedulers.
+    example: {}
+  - name: keys
+    type: any
+    description: Configuration option read by nInput_Schedulers.
+    example: [example-key]
+  - name: namesExclude
+    type: any
+    description: Configuration option read by nInput_Schedulers.
+    example: {}
+  - name: statusExclude
+    type: any
+    description: Configuration option read by nInput_Schedulers.
+    example: {}
+  - name: statusInclude
+    type: any
+    description: Configuration option read by nInput_Schedulers.
+    example: {}

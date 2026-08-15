@@ -1,0 +1,27 @@
+kind: input
+constructor: nInput_FilesystemCount
+title: FilesystemCount
+description: Configuration metadata for nInput_FilesystemCount.
+examples:
+  - config/inputs.disabled/yaml/10.filesystemcount.fixed.yaml
+arguments:
+  - name: attrTemplate
+    type: any
+    description: Configuration option read by nInput_FilesystemCount.
+    example: Category/Name
+  - name: chFolders
+    type: any
+    description: Configuration option read by nInput_FilesystemCount.
+    example: {}
+  - name: chKeys
+    type: any
+    description: Configuration option read by nInput_FilesystemCount.
+    example: nattrmon::keys
+  - name: folders
+    type: any
+    description: Configuration option read by nInput_FilesystemCount.
+    example: {}
+  - name: keys
+    type: any
+    description: Configuration option read by nInput_FilesystemCount.
+    example: [example-key]

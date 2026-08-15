@@ -1,0 +1,31 @@
+kind: input
+constructor: nInput_FilesProcessed
+title: FilesProcessed
+description: Configuration metadata for nInput_FilesProcessed.
+examples:
+  - config/inputs.disabled/yaml/05.files.processederror.day.yaml
+arguments:
+  - name: attrName
+    type: any
+    description: Configuration option read by nInput_FilesProcessed.
+    example: {}
+  - name: attrTemplate
+    type: any
+    description: Configuration option read by nInput_FilesProcessed.
+    example: Category/Name
+  - name: chKeys
+    type: any
+    description: Configuration option read by nInput_FilesProcessed.
+    example: nattrmon::keys
+  - name: dontUseKey
+    type: any
+    description: Configuration option read by nInput_FilesProcessed.
+    example: {}
+  - name: key
+    type: any
+    description: Configuration option read by nInput_FilesProcessed.
+    example: {}
+  - name: number
+    type: any
+    description: Configuration option read by nInput_FilesProcessed.
+    example: {}

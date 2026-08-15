@@ -1,0 +1,31 @@
+kind: input
+constructor: nInput_DMPerformance
+title: DMPerformance
+description: Configuration metadata for nInput_DMPerformance.
+examples:
+  - config/inputs.disabled/yaml/20.dmPerformance.yaml
+arguments:
+  - name: attrTemplate
+    type: any
+    description: Configuration option read by nInput_DMPerformance.
+    example: Category/Name
+  - name: bestOf
+    type: any
+    description: Configuration option read by nInput_DMPerformance.
+    example: {}
+  - name: chKeys
+    type: any
+    description: Configuration option read by nInput_DMPerformance.
+    example: nattrmon::keys
+  - name: keys
+    type: any
+    description: Configuration option read by nInput_DMPerformance.
+    example: [example-key]
+  - name: queries
+    type: any
+    description: Configuration option read by nInput_DMPerformance.
+    example: {}
+  - name: withAssociatedDB
+    type: any
+    description: Configuration option read by nInput_DMPerformance.
+    example: {}

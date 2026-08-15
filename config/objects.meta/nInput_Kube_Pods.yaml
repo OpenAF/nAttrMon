@@ -1,0 +1,34 @@
+kind: input
+constructor: nInput_Kube_Pods
+title: Kube_Pods
+description: Configuration metadata for nInput_Kube_Pods.
+examples: []
+arguments:
+  - name: attrTemplate
+    type: any
+    description: Configuration option read by nInput_Kube_Pods.
+    example: Category/Name
+  - name: kubeNamespace
+    type: any
+    description: Configuration option read by nInput_Kube_Pods.
+    example: {}
+  - name: kubePass
+    type: any
+    description: Configuration option read by nInput_Kube_Pods.
+    example: {}
+  - name: kubeToken
+    type: any
+    description: Configuration option read by nInput_Kube_Pods.
+    example: {}
+  - name: kubeURL
+    type: any
+    description: Configuration option read by nInput_Kube_Pods.
+    example: {}
+  - name: kubeUser
+    type: any
+    description: Configuration option read by nInput_Kube_Pods.
+    example: {}
+  - name: podName
+    type: any
+    description: Configuration option read by nInput_Kube_Pods.
+    example: {}

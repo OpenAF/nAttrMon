@@ -1,0 +1,70 @@
+kind: output
+constructor: nOutput_AWSCloudWatch
+title: nOutput_AWSCloudWatch
+description: Configuration metadata for nOutput_AWSCloudWatch.
+examples:
+  - config/outputs.disabled/yaml/01.awscloudwatch.yaml
+arguments:
+  - name: accessKey
+    type: any
+    description: Configuration option read by nOutput_AWSCloudWatch.
+    example: {}
+  - name: accesskey
+    type: any
+    description: Configuration option read by nOutput_AWSCloudWatch.
+    example: {}
+  - name: considerSetAll
+    type: any
+    description: Configuration option read by nOutput_AWSCloudWatch.
+    example: {}
+  - name: debug
+    type: any
+    description: Configuration option read by nOutput_AWSCloudWatch.
+    example: {}
+  - name: exclude
+    type: any
+    description: Configuration option read by nOutput_AWSCloudWatch.
+    example: {}
+  - name: excludeDim
+    type: any
+    description: Configuration option read by nOutput_AWSCloudWatch.
+    example: {}
+  - name: include
+    type: any
+    description: Configuration option read by nOutput_AWSCloudWatch.
+    example: {}
+  - name: includeDim
+    type: any
+    description: Configuration option read by nOutput_AWSCloudWatch.
+    example: {}
+  - name: logGroup
+    type: any
+    description: Configuration option read by nOutput_AWSCloudWatch.
+    example: {}
+  - name: region
+    type: any
+    description: Configuration option read by nOutput_AWSCloudWatch.
+    example: {}
+  - name: secretKey
+    type: any
+    secret: true
+    description: Configuration option read by nOutput_AWSCloudWatch.
+    example: "$SECRET"
+  - name: secretkey
+    type: any
+    secret: true
+    description: Configuration option read by nOutput_AWSCloudWatch.
+    example: "$SECRET"
+  - name: sessionToken
+    type: any
+    description: Configuration option read by nOutput_AWSCloudWatch.
+    example: {}
+  - name: sessiontoken
+    type: any
+    secret: true
+    description: Configuration option read by nOutput_AWSCloudWatch.
+    example: "$SECRET"
+  - name: unitByMetric
+    type: any
+    description: Configuration option read by nOutput_AWSCloudWatch.
+    example: {}

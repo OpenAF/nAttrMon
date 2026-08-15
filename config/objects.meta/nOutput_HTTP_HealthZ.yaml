@@ -1,0 +1,47 @@
+kind: output
+constructor: nOutput_HTTP_HealthZ
+title: nOutput_HTTP_HealthZ
+description: Configuration metadata for nOutput_HTTP_HealthZ.
+examples:
+  - config/outputs/00.httpAll.yaml
+arguments:
+  - name: audit
+    type: any
+    description: Configuration option read by nOutput_HTTP_HealthZ.
+    example: {}
+  - name: auditTemplate
+    type: any
+    description: Configuration option read by nOutput_HTTP_HealthZ.
+    example: {}
+  - name: host
+    type: any
+    description: Configuration option read by nOutput_HTTP_HealthZ.
+    example: {}
+  - name: httpSession
+    type: any
+    description: Configuration option read by nOutput_HTTP_HealthZ.
+    example: {}
+  - name: includeHealthZ
+    type: any
+    description: Configuration option read by nOutput_HTTP_HealthZ.
+    example: {}
+  - name: includeLiveZ
+    type: any
+    description: Configuration option read by nOutput_HTTP_HealthZ.
+    example: {}
+  - name: includeReadyZ
+    type: any
+    description: Configuration option read by nOutput_HTTP_HealthZ.
+    example: {}
+  - name: keyPassword
+    type: any
+    description: Configuration option read by nOutput_HTTP_HealthZ.
+    example: {}
+  - name: keyStore
+    type: any
+    description: Configuration option read by nOutput_HTTP_HealthZ.
+    example: {}
+  - name: port
+    type: any
+    description: Configuration option read by nOutput_HTTP_HealthZ.
+    example: {}

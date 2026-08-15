@@ -1,0 +1,70 @@
+kind: output
+constructor: nOutput_HTTP_Status
+title: nOutput_HTTP_Status
+description: Configuration metadata for nOutput_HTTP_Status.
+examples: []
+arguments:
+  - name: audit
+    type: any
+    description: Configuration option read by nOutput_HTTP_Status.
+    example: {}
+  - name: auditTemplate
+    type: any
+    description: Configuration option read by nOutput_HTTP_Status.
+    example: {}
+  - name: controls
+    type: any
+    description: Configuration option read by nOutput_HTTP_Status.
+    example: {}
+  - name: greenLevels
+    type: any
+    description: Configuration option read by nOutput_HTTP_Status.
+    example: {}
+  - name: greenText
+    type: any
+    description: Configuration option read by nOutput_HTTP_Status.
+    example: {}
+  - name: host
+    type: any
+    description: Configuration option read by nOutput_HTTP_Status.
+    example: {}
+  - name: httpSession
+    type: any
+    description: Configuration option read by nOutput_HTTP_Status.
+    example: {}
+  - name: keyPassword
+    type: any
+    description: Configuration option read by nOutput_HTTP_Status.
+    example: {}
+  - name: keyStore
+    type: any
+    description: Configuration option read by nOutput_HTTP_Status.
+    example: {}
+  - name: levelsIncluded
+    type: any
+    description: Configuration option read by nOutput_HTTP_Status.
+    example: {}
+  - name: path
+    type: any
+    description: Configuration option read by nOutput_HTTP_Status.
+    example: {}
+  - name: port
+    type: any
+    description: Configuration option read by nOutput_HTTP_Status.
+    example: {}
+  - name: redLevels
+    type: any
+    description: Configuration option read by nOutput_HTTP_Status.
+    example: {}
+  - name: redText
+    type: any
+    description: Configuration option read by nOutput_HTTP_Status.
+    example: {}
+  - name: yellowLevels
+    type: any
+    description: Configuration option read by nOutput_HTTP_Status.
+    example: {}
+  - name: yellowText
+    type: any
+    description: Configuration option read by nOutput_HTTP_Status.
+    example: {}

@@ -1,0 +1,63 @@
+kind: output
+constructor: nOutput_NDJson
+title: nOutput_NDJson
+description: Configuration metadata for nOutput_NDJson.
+examples:
+  - config/outputs.disabled/yaml/10.ndjson.yaml
+arguments:
+  - name: backupFilenameTemplate
+    type: any
+    description: Configuration option read by nOutput_NDJson.
+    example: {}
+  - name: considerSetAll
+    type: any
+    description: Configuration option read by nOutput_NDJson.
+    example: {}
+  - name: dontCompress
+    type: any
+    description: Configuration option read by nOutput_NDJson.
+    example: {}
+  - name: exclude
+    type: any
+    description: Configuration option read by nOutput_NDJson.
+    example: {}
+  - name: fileDateFormat
+    type: any
+    description: Configuration option read by nOutput_NDJson.
+    example: {}
+  - name: filenameTemplate
+    type: any
+    description: Configuration option read by nOutput_NDJson.
+    example: {}
+  - name: folder
+    type: any
+    description: Configuration option read by nOutput_NDJson.
+    example: {}
+  - name: howLongAgoInMinutes
+    type: any
+    description: Configuration option read by nOutput_NDJson.
+    example: {}
+  - name: include
+    type: any
+    description: Configuration option read by nOutput_NDJson.
+    example: {}
+  - name: includeAttrs
+    type: any
+    description: Configuration option read by nOutput_NDJson.
+    example: {}
+  - name: includeLValues
+    type: any
+    description: Configuration option read by nOutput_NDJson.
+    example: {}
+  - name: includeValues
+    type: any
+    description: Configuration option read by nOutput_NDJson.
+    example: {}
+  - name: includeWarns
+    type: any
+    description: Configuration option read by nOutput_NDJson.
+    example: {}
+  - name: s3sync
+    type: any
+    description: Configuration option read by nOutput_NDJson.
+    example: {}

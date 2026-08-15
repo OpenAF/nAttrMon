@@ -1,0 +1,10 @@
+kind: output
+constructor: nOutput_Oracle
+title: nOutput_Oracle
+description: Configuration metadata for nOutput_Oracle.
+examples: []
+arguments:
+  - name: options
+    type: any
+    description: Configuration option read by nOutput_Oracle.
+    example: {}

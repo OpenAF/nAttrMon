@@ -1,0 +1,63 @@
+kind: input
+constructor: nInput_Channel
+title: Channel
+description: Configuration metadata for nInput_Channel.
+examples:
+  - config/inputs.disabled/yaml/15.endpoint_nAttrMon.yaml
+arguments:
+  - name: attrTemplate
+    type: any
+    description: Configuration option read by nInput_Channel.
+    example: Category/Name
+  - name: ch
+    type: any
+    description: Configuration option read by nInput_Channel.
+    example: {}
+  - name: custom
+    type: any
+    description: Configuration option read by nInput_Channel.
+    example: {}
+  - name: exclude
+    type: any
+    description: Configuration option read by nInput_Channel.
+    example: {}
+  - name: host
+    type: any
+    description: Configuration option read by nInput_Channel.
+    example: {}
+  - name: httpSession
+    type: any
+    description: Configuration option read by nInput_Channel.
+    example: {}
+  - name: idKey
+    type: any
+    description: Configuration option read by nInput_Channel.
+    example: {}
+  - name: include
+    type: any
+    description: Configuration option read by nInput_Channel.
+    example: {}
+  - name: keyPassword
+    type: any
+    description: Configuration option read by nInput_Channel.
+    example: {}
+  - name: keyStore
+    type: any
+    description: Configuration option read by nInput_Channel.
+    example: {}
+  - name: local
+    type: any
+    description: Configuration option read by nInput_Channel.
+    example: {}
+  - name: path
+    type: any
+    description: Configuration option read by nInput_Channel.
+    example: {}
+  - name: port
+    type: any
+    description: Configuration option read by nInput_Channel.
+    example: {}
+  - name: valueKey
+    type: any
+    description: Configuration option read by nInput_Channel.
+    example: {}

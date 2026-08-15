@@ -1,0 +1,18 @@
+kind: output
+constructor: nOutput_Notifications
+title: nOutput_Notifications
+description: Configuration metadata for nOutput_Notifications.
+examples: []
+arguments:
+  - name: APIToken
+    type: any
+    description: Configuration option read by nOutput_Notifications.
+    example: {}
+  - name: __notifyID
+    type: any
+    description: Configuration option read by nOutput_Notifications.
+    example: {}
+  - name: notifications
+    type: any
+    description: Configuration option read by nOutput_Notifications.
+    example: {}

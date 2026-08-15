@@ -1,0 +1,35 @@
+kind: input
+constructor: nInput_IMAbnormalLoadings
+title: IMAbnormalLoadings
+description: Configuration metadata for nInput_IMAbnormalLoadings.
+examples:
+  - config/inputs.disabled/yaml/03.AbnormalLoads.yaml
+arguments:
+  - name: attrTemplate
+    type: any
+    description: Configuration option read by nInput_IMAbnormalLoadings.
+    example: Category/Name
+  - name: chKeys
+    type: any
+    description: Configuration option read by nInput_IMAbnormalLoadings.
+    example: nattrmon::keys
+  - name: days
+    type: any
+    description: Configuration option read by nInput_IMAbnormalLoadings.
+    example: {}
+  - name: defaultThreshold
+    type: any
+    description: Configuration option read by nInput_IMAbnormalLoadings.
+    example: {}
+  - name: exclude
+    type: any
+    description: Configuration option read by nInput_IMAbnormalLoadings.
+    example: {}
+  - name: include
+    type: any
+    description: Configuration option read by nInput_IMAbnormalLoadings.
+    example: {}
+  - name: keys
+    type: any
+    description: Configuration option read by nInput_IMAbnormalLoadings.
+    example: [example-key]

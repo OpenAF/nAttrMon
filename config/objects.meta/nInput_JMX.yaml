@@ -1,0 +1,19 @@
+kind: input
+constructor: nInput_JMX
+title: JMX
+description: Configuration metadata for nInput_JMX.
+examples:
+  - config/inputs.disabled/yaml/15.jmx.yaml
+arguments:
+  - name: attrTemplate
+    type: any
+    description: Configuration option read by nInput_JMX.
+    example: Category/Name
+  - name: chKeys
+    type: any
+    description: Configuration option read by nInput_JMX.
+    example: nattrmon::keys
+  - name: objects
+    type: any
+    description: Configuration option read by nInput_JMX.
+    example: {}
