@@ -32,7 +32,6 @@ files:
 - LICENSE
 - PLAN.md
 - README.md
-- a.yaml
 - config/inputs.disabled/js/00.kube.init.js
 - config/inputs.disabled/js/00.raid.init.js
 - config/inputs.disabled/js/05.filesystemCount.js
@@ -516,7 +515,6 @@ filesHash:
   LICENSE: 7df059597099bb7dcf25d2a9aedfaf4465f72d8d
   PLAN.md: 08301b3dc1ede58d285cb2745bf4e6a55758f912
   README.md: be090719f5e0edc746010f39c7d4a6ba92711142
-  a.yaml: 1cd9d69f46e49a7bb7acd0deb71b56a815558e33
   config/inputs.disabled/js/00.kube.init.js: 0be5054088e13053ffd86c7a7f3a710120330337
   config/inputs.disabled/js/00.raid.init.js: d6c7847577ab7a88cf84e2d6ce24b2d0258213ef
   config/inputs.disabled/js/05.filesystemCount.js: e8d4d119ec2d022033309bc18de8a2dc3a9d66aa
@@ -971,7 +969,7 @@ filesHash:
   lib/nattributes.js: e2910b06665d819507ebcc0dd929dc14658277d0
   lib/nattributevalue.js: 722772c991655e06eb7289bc408b58158ca2655d
   lib/ninput.js: e4df8ce41b22dc402f7f1244f141f3097fb8ace4
-  lib/nmain.js: e77e42449fd915213db1597435b51755af46c0aa
+  lib/nmain.js: 907d071cc9590792fe3f91aa598d0eb24270003d
   lib/nmonitoredobject.js: f983f1df596dc86154e9b3556318fb8c12cabbd0
   lib/noutput.js: 391a56d9d21e7687dd11ef89b296b9e1e2aa2009
   lib/nplug.js: 7865a927354d033cd9d684e00e58a505a1e635dd
