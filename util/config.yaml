@@ -17,10 +17,10 @@
 help:
   text   : Inspect nAttrMon components and configurations through the configuration engine.
   expects:
-  - name     : op
-    desc     : One of components, describe, skeleton, validate, explain, query or path
-    example  : components
-    mandatory: true
+  - name   : op
+    desc   : One of components, describe, skeleton, validate, explain, query or path (prompted interactively if omitted)
+    example: components
+    options: [components, describe, skeleton, validate, explain, query, path]
   - name   : kind
     desc   : Component kind (input, output or validation)
     example: input
@@ -64,7 +64,13 @@ jobs:
 
     global.nceOut = r => {
       if (args.format == "json") print(stringify(r, __, "  "))
-      else print(af.toYAML(r))
+      else {
+        if (isUnDef(args.__format)) {
+          print(af.toYAML(r))
+        } else {
+          ow.oJob.output(r, args)
+        }
+      }
     }
 
     global.nceSample = () => {
@@ -73,9 +79,23 @@ jobs:
       return io.readFileYAML(args.sample, true)
     }
 
+    // Interactive fallback for a mandatory argument that wasn't provided on the command line.
+    // Falls back to a plain askDef question if the terminal doesn't support askChoose (e.g. non-interactive).
+    global.nceAskChoose = (aPrompt, anArray) => {
+      try {
+        var _i = askChoose(aPrompt, anArray)
+        return isDef(_i) ? anArray[_i] : __
+      } catch(e) {
+        return askDef(__, aPrompt + " (" + anArray.join("/") + "): ")
+      }
+    }
+
 # ------------------------
 - name: nAttrMon Config
   exec: |
+    args.op = isDef(args.op) ? args.op : nceAskChoose("Operation to perform: ", ["components", "describe", "skeleton", "validate", "explain", "query", "path"])
+    if (isUnDef(args.op)) { logErr("No op provided. Use one of: components, describe, skeleton, validate, explain, query, path."); exit(1) }
+
     switch(args.op) {
     case "components":
       var _l = isDef(args.search) ? nce.searchComponents(args.search, args.kind) : nce.listComponents(args.kind)
@@ -83,12 +103,15 @@ jobs:
       break
 
     case "describe":
+      args.name = askDef(args.name, "Component constructor name: ")
       var _c = nce.getComponent(args.kind, args.name)
       if (isUnDef(_c)) { logErr("Unknown component '" + args.name + "'."); exit(2) }
       nceOut(_c)
       break
 
     case "skeleton":
+      args.kind = isDef(args.kind) ? args.kind : nceAskChoose("Component kind: ", ["input", "output", "validation"])
+      args.name = askDef(args.name, "Component constructor name: ")
       nceOut(nce.createSkeleton(args.kind, args.name))
       break
 
@@ -104,6 +127,7 @@ jobs:
       break
 
     case "query":
+      args.expr = askDef(args.expr, "Query expression: ")
       var _q = nQuery.parse(args.expr)
       if (isDef(_q.mode)) { nceOut(_q); exit(2) }
       var _r = { compiled: _q.compile(), validation: _q.validate() }
@@ -113,6 +137,7 @@ jobs:
       break
 
     case "path":
+      args.expr = askDef(args.expr, "Path expression: ")
       var _d = args.dialect || "jmespath"
       var _pr = { dialect: _d, expression: args.expr, parsed: nQuery.parsePath(args.expr, _d), validation: nQuery.validatePath(args.expr, _d) }
       var _ps = nceSample()
