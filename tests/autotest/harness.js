@@ -32,7 +32,8 @@ var harness = {}
 // Standard channel names nAttrMon's core classes create under fixed names
 var __TEST_STD_CHANNELS = [
 	"nattrmon::cvals", "nattrmon::lvals", "nattrmon::warnings", "nattrmon::wnotf",
-	"nattrmon::ps", "nattrmon::plugs", "nattrmon::attributes"
+	"nattrmon::ps", "nattrmon::plugs", "nattrmon::attributes",
+	"nattrmon::runtime::metrics", "nattrmon::runtime::events", "nattrmon::runtime::history"
 ]
 
 // Create a fresh, uniquely named temp directory (with a config/ subfolder) under tests/.tmp

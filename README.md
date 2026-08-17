@@ -103,6 +103,19 @@ OpenMetrics diagnostics now include both summary and per-plug lines:
 - `nattrmon_diagnostics_plug_watchdog_hits{type,category,name}`
 - `nattrmon_diagnostics_plug_reason{type,category,name,rule}`
 
+### Terminal metrics & dashboard
+
+Inspect a running (or `kubectl exec`'d into) nAttrMon from a plain shell, no Grafana/Prometheus required:
+
+```bash
+openaf nattrmon.js --metrics=list
+openaf nattrmon.js --metrics=snapshot --select="Java/*" --format=json
+openaf nattrmon.js --metrics=watch --select="Java/Memory/Used"
+openaf nattrmon.js --dashboard=runtime
+```
+
+See [Terminal metrics & dashboard](docs/TERMINAL-DASHBOARD.md) for the full command reference.
+
 ## Installation
 
 ### Install from opack repository
@@ -155,6 +168,8 @@ For comprehensive documentation, tutorials, and plugin references, visit:
 [https://openaf.github.io/nattrmon-docs/](https://openaf.github.io/nattrmon-docs/)
 
 Object constructor arguments, descriptions, and linked disabled-config examples are declared in [`config/objects.meta/`](config/objects.meta/). See [Object metadata](docs/OBJECTS-METADATA.md) for the format and the runtime discovery API.
+
+See [Terminal metrics & dashboard](docs/TERMINAL-DASHBOARD.md) for `nattrmon metrics`/`nattrmon dashboard` — a Grafana/Prometheus-free way to inspect a running nAttrMon from a shell (including `kubectl exec`).
 
 ## Building from Source
 

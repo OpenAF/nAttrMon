@@ -19,7 +19,7 @@ name: nAttrMon
 main: nattrmon.js
 mainJob: ''
 license: Apache 2.0 license
-version: '20260814'
+version: '20260815'
 dependencies:
   openaf: '>=20241117'
 files:
@@ -328,10 +328,11 @@ files:
 - docs/CONFIG-ENGINE.md
 - docs/OBJECTS-METADATA.md
 - docs/QUERY-BUILDER.md
+- docs/TERMINAL-DASHBOARD.md
 - docs/images/logo.png
 - docs/images/nAttrMon.png
 - docs/images/nAttrMon.xcf
-- lib/.openaf_precompiled/.t8-20260815
+- lib/.openaf_precompiled/.t8-20260816
 - lib/.openaf_precompiled/nattribute_js.class
 - lib/.openaf_precompiled/nattribute_jsMain.class
 - lib/.openaf_precompiled/nattribute_jsojsc0.class
@@ -381,10 +382,6 @@ files:
 - lib/.openaf_precompiled/nconfigengine_jsojsc10.class
 - lib/.openaf_precompiled/nconfigengine_jsojsc100.class
 - lib/.openaf_precompiled/nconfigengine_jsojsc101.class
-- lib/.openaf_precompiled/nconfigengine_jsojsc102.class
-- lib/.openaf_precompiled/nconfigengine_jsojsc103.class
-- lib/.openaf_precompiled/nconfigengine_jsojsc104.class
-- lib/.openaf_precompiled/nconfigengine_jsojsc105.class
 - lib/.openaf_precompiled/nconfigengine_jsojsc11.class
 - lib/.openaf_precompiled/nconfigengine_jsojsc12.class
 - lib/.openaf_precompiled/nconfigengine_jsojsc13.class
@@ -482,11 +479,92 @@ files:
 - lib/.openaf_precompiled/nconfigengine_jsojsc97.class
 - lib/.openaf_precompiled/nconfigengine_jsojsc98.class
 - lib/.openaf_precompiled/nconfigengine_jsojsc99.class
+- lib/.openaf_precompiled/ndashboards_js.class
+- lib/.openaf_precompiled/ndashboards_jsMain.class
+- lib/.openaf_precompiled/ndashboards_jsojsc0.class
+- lib/.openaf_precompiled/ndashboards_jsojsc1.class
+- lib/.openaf_precompiled/ndashboards_jsojsc10.class
+- lib/.openaf_precompiled/ndashboards_jsojsc11.class
+- lib/.openaf_precompiled/ndashboards_jsojsc12.class
+- lib/.openaf_precompiled/ndashboards_jsojsc13.class
+- lib/.openaf_precompiled/ndashboards_jsojsc14.class
+- lib/.openaf_precompiled/ndashboards_jsojsc15.class
+- lib/.openaf_precompiled/ndashboards_jsojsc16.class
+- lib/.openaf_precompiled/ndashboards_jsojsc17.class
+- lib/.openaf_precompiled/ndashboards_jsojsc18.class
+- lib/.openaf_precompiled/ndashboards_jsojsc19.class
+- lib/.openaf_precompiled/ndashboards_jsojsc2.class
+- lib/.openaf_precompiled/ndashboards_jsojsc20.class
+- lib/.openaf_precompiled/ndashboards_jsojsc21.class
+- lib/.openaf_precompiled/ndashboards_jsojsc22.class
+- lib/.openaf_precompiled/ndashboards_jsojsc23.class
+- lib/.openaf_precompiled/ndashboards_jsojsc3.class
+- lib/.openaf_precompiled/ndashboards_jsojsc4.class
+- lib/.openaf_precompiled/ndashboards_jsojsc5.class
+- lib/.openaf_precompiled/ndashboards_jsojsc6.class
+- lib/.openaf_precompiled/ndashboards_jsojsc7.class
+- lib/.openaf_precompiled/ndashboards_jsojsc8.class
+- lib/.openaf_precompiled/ndashboards_jsojsc9.class
 - lib/.openaf_precompiled/ninput_js.class
 - lib/.openaf_precompiled/ninput_jsMain.class
 - lib/.openaf_precompiled/ninput_jsojsc0.class
 - lib/.openaf_precompiled/ninput_jsojsc1.class
 - lib/.openaf_precompiled/ninput_jsojsc2.class
+- lib/.openaf_precompiled/nmetrics_js.class
+- lib/.openaf_precompiled/nmetrics_jsMain.class
+- lib/.openaf_precompiled/nmetrics_jsojsc0.class
+- lib/.openaf_precompiled/nmetrics_jsojsc1.class
+- lib/.openaf_precompiled/nmetrics_jsojsc10.class
+- lib/.openaf_precompiled/nmetrics_jsojsc11.class
+- lib/.openaf_precompiled/nmetrics_jsojsc12.class
+- lib/.openaf_precompiled/nmetrics_jsojsc13.class
+- lib/.openaf_precompiled/nmetrics_jsojsc14.class
+- lib/.openaf_precompiled/nmetrics_jsojsc15.class
+- lib/.openaf_precompiled/nmetrics_jsojsc16.class
+- lib/.openaf_precompiled/nmetrics_jsojsc17.class
+- lib/.openaf_precompiled/nmetrics_jsojsc18.class
+- lib/.openaf_precompiled/nmetrics_jsojsc19.class
+- lib/.openaf_precompiled/nmetrics_jsojsc2.class
+- lib/.openaf_precompiled/nmetrics_jsojsc20.class
+- lib/.openaf_precompiled/nmetrics_jsojsc21.class
+- lib/.openaf_precompiled/nmetrics_jsojsc22.class
+- lib/.openaf_precompiled/nmetrics_jsojsc23.class
+- lib/.openaf_precompiled/nmetrics_jsojsc24.class
+- lib/.openaf_precompiled/nmetrics_jsojsc25.class
+- lib/.openaf_precompiled/nmetrics_jsojsc26.class
+- lib/.openaf_precompiled/nmetrics_jsojsc3.class
+- lib/.openaf_precompiled/nmetrics_jsojsc4.class
+- lib/.openaf_precompiled/nmetrics_jsojsc5.class
+- lib/.openaf_precompiled/nmetrics_jsojsc6.class
+- lib/.openaf_precompiled/nmetrics_jsojsc7.class
+- lib/.openaf_precompiled/nmetrics_jsojsc8.class
+- lib/.openaf_precompiled/nmetrics_jsojsc9.class
+- lib/.openaf_precompiled/nmetricsview_js.class
+- lib/.openaf_precompiled/nmetricsview_jsMain.class
+- lib/.openaf_precompiled/nmetricsview_jsojsc0.class
+- lib/.openaf_precompiled/nmetricsview_jsojsc1.class
+- lib/.openaf_precompiled/nmetricsview_jsojsc10.class
+- lib/.openaf_precompiled/nmetricsview_jsojsc11.class
+- lib/.openaf_precompiled/nmetricsview_jsojsc12.class
+- lib/.openaf_precompiled/nmetricsview_jsojsc13.class
+- lib/.openaf_precompiled/nmetricsview_jsojsc14.class
+- lib/.openaf_precompiled/nmetricsview_jsojsc15.class
+- lib/.openaf_precompiled/nmetricsview_jsojsc16.class
+- lib/.openaf_precompiled/nmetricsview_jsojsc17.class
+- lib/.openaf_precompiled/nmetricsview_jsojsc18.class
+- lib/.openaf_precompiled/nmetricsview_jsojsc19.class
+- lib/.openaf_precompiled/nmetricsview_jsojsc2.class
+- lib/.openaf_precompiled/nmetricsview_jsojsc20.class
+- lib/.openaf_precompiled/nmetricsview_jsojsc21.class
+- lib/.openaf_precompiled/nmetricsview_jsojsc22.class
+- lib/.openaf_precompiled/nmetricsview_jsojsc23.class
+- lib/.openaf_precompiled/nmetricsview_jsojsc3.class
+- lib/.openaf_precompiled/nmetricsview_jsojsc4.class
+- lib/.openaf_precompiled/nmetricsview_jsojsc5.class
+- lib/.openaf_precompiled/nmetricsview_jsojsc6.class
+- lib/.openaf_precompiled/nmetricsview_jsojsc7.class
+- lib/.openaf_precompiled/nmetricsview_jsojsc8.class
+- lib/.openaf_precompiled/nmetricsview_jsojsc9.class
 - lib/.openaf_precompiled/nmonitoredobject_js.class
 - lib/.openaf_precompiled/nmonitoredobject_jsMain.class
 - lib/.openaf_precompiled/nmonitoredobject_jsojsc0.class
@@ -672,8 +750,11 @@ files:
 - lib/nattributes.js
 - lib/nattributevalue.js
 - lib/nconfigengine.js
+- lib/ndashboards.js
 - lib/ninput.js
 - lib/nmain.js
+- lib/nmetrics.js
+- lib/nmetricsview.js
 - lib/nmonitoredobject.js
 - lib/noutput.js
 - lib/nplug.js
@@ -703,7 +784,7 @@ filesHash:
   IMPROVE-PLAN.md: 258f125318f74ac95ebb0f76e98aae2f2610346e
   LICENSE: 7df059597099bb7dcf25d2a9aedfaf4465f72d8d
   PLAN.md: 08301b3dc1ede58d285cb2745bf4e6a55758f912
-  README.md: be090719f5e0edc746010f39c7d4a6ba92711142
+  README.md: ee0bef43040e92739fe68941fa53bdcbadeeb8ce
   config/inputs.disabled/js/00.kube.init.js: 0be5054088e13053ffd86c7a7f3a710120330337
   config/inputs.disabled/js/00.raid.init.js: d6c7847577ab7a88cf84e2d6ce24b2d0258213ef
   config/inputs.disabled/js/05.filesystemCount.js: e8d4d119ec2d022033309bc18de8a2dc3a9d66aa
@@ -1000,10 +1081,11 @@ filesHash:
   docs/CONFIG-ENGINE.md: fcc42b0af257846c6a7951ff8dc2aa9d8aef5e35
   docs/OBJECTS-METADATA.md: 1927174416b9d3fbebb073bf1757ca54bc3d534b
   docs/QUERY-BUILDER.md: 96399ecd4fda46d8ae2580fbc3fb1497fb0297e0
+  docs/TERMINAL-DASHBOARD.md: 1f8f73b19c147bfce46db666284b6911d2ffbcea
   docs/images/logo.png: ee5366a3aa207c69d5139e04e7a4523078b974ba
   docs/images/nAttrMon.png: 298fb1bb1e7c004b6204069d2a3319fbdebedea0
   docs/images/nAttrMon.xcf: ae00e462f4b6c18adc55b6ddc4900ab3e0ffac35
-  lib/.openaf_precompiled/.t8-20260815: da39a3ee5e6b4b0d3255bfef95601890afd80709
+  lib/.openaf_precompiled/.t8-20260816: da39a3ee5e6b4b0d3255bfef95601890afd80709
   lib/.openaf_precompiled/nattribute_js.class: d2f2714e8b5ec489050dec868a38e7842eec23a7
   lib/.openaf_precompiled/nattribute_jsMain.class: 3770bf8e36c4a4a46366f3c77f48f4600fc8ae11
   lib/.openaf_precompiled/nattribute_jsojsc0.class: 6ffab03b07e3d97f4df2a84e4c27f8ab9280f463
@@ -1053,10 +1135,6 @@ filesHash:
   lib/.openaf_precompiled/nconfigengine_jsojsc10.class: 4751c07cc8e8e6ccc7a062b9d191840a10fab7ae
   lib/.openaf_precompiled/nconfigengine_jsojsc100.class: 9ed43a0978156b927851535b8018003ee8b8fcf1
   lib/.openaf_precompiled/nconfigengine_jsojsc101.class: 1fbaf520216f6043438ccb55e5e026fcb293e20d
-  lib/.openaf_precompiled/nconfigengine_jsojsc102.class: a03e9a02ae8781e02744a81281b89996623ec570
-  lib/.openaf_precompiled/nconfigengine_jsojsc103.class: ce5063e312427d7f4c86937fbed4f7af48c341d9
-  lib/.openaf_precompiled/nconfigengine_jsojsc104.class: 49cdf31d7f80e7524257b3f190d76d061bd54c7a
-  lib/.openaf_precompiled/nconfigengine_jsojsc105.class: e4242ba36e69e5da71890bf113c55d6737b4e937
   lib/.openaf_precompiled/nconfigengine_jsojsc11.class: 4a806c8321e4cb96baf12aa53b43e1da2a85e7c7
   lib/.openaf_precompiled/nconfigengine_jsojsc12.class: 0b3940372dc3a8a742b70b1af3cb1414d7070765
   lib/.openaf_precompiled/nconfigengine_jsojsc13.class: 4b87b6a8a9c1e4aa9a437b4e6448859227ce4f1e
@@ -1154,11 +1232,92 @@ filesHash:
   lib/.openaf_precompiled/nconfigengine_jsojsc97.class: c03fe9faf0798088cb2e258b1342782c11a3abb9
   lib/.openaf_precompiled/nconfigengine_jsojsc98.class: 197abbb103167f202c082b8dc98eae5c7f1314b3
   lib/.openaf_precompiled/nconfigengine_jsojsc99.class: d7de77c5760205672cff21dc09531468e744a61d
+  lib/.openaf_precompiled/ndashboards_js.class: 4869e1c752b94cdd690384694057862373878d1f
+  lib/.openaf_precompiled/ndashboards_jsMain.class: ccc2df1cb848870e99cdbaf3b519fa9e253272a0
+  lib/.openaf_precompiled/ndashboards_jsojsc0.class: e7bc31da62fe2a331f73193ae9caf3b8b3ee97ef
+  lib/.openaf_precompiled/ndashboards_jsojsc1.class: 7661e1cb0977358e46e03be0709855989ba750b4
+  lib/.openaf_precompiled/ndashboards_jsojsc10.class: 3296e9b452006b4cbcebb16ac7381c9dde67432b
+  lib/.openaf_precompiled/ndashboards_jsojsc11.class: c0e9ec61be93b94fba2bebd487763864f6cfdf2c
+  lib/.openaf_precompiled/ndashboards_jsojsc12.class: 99a40753732573e9ec565f2af3f5eb6a98e834d1
+  lib/.openaf_precompiled/ndashboards_jsojsc13.class: 03daee91bcf19b59d0d20be4af023f77ea1dfca7
+  lib/.openaf_precompiled/ndashboards_jsojsc14.class: 04adf1d759876411e87f483a581b1657615a8647
+  lib/.openaf_precompiled/ndashboards_jsojsc15.class: d91ebfab332d85f607967419e05f8a7555139752
+  lib/.openaf_precompiled/ndashboards_jsojsc16.class: c8403cee37303b9661e9bb47b2a999a1bc889d79
+  lib/.openaf_precompiled/ndashboards_jsojsc17.class: cb0053163d548d3db7c163836f5fab4123dd3bc7
+  lib/.openaf_precompiled/ndashboards_jsojsc18.class: 2975199c01cbb4facb9cb051b66feba96f403119
+  lib/.openaf_precompiled/ndashboards_jsojsc19.class: 2c373514aa3a0b955b398fa33e4dcaf53bce7ec3
+  lib/.openaf_precompiled/ndashboards_jsojsc2.class: 64a41b0b006996653da32ef59efaaf7f61b336de
+  lib/.openaf_precompiled/ndashboards_jsojsc20.class: 06ff9e6f2add8c7963184a7bbee2873011d8fa2f
+  lib/.openaf_precompiled/ndashboards_jsojsc21.class: ef86d55a55ddfd939089b181e855e25c9619f72d
+  lib/.openaf_precompiled/ndashboards_jsojsc22.class: 7aaa141fd896a619ce6025e2898d1c4fb1c3af14
+  lib/.openaf_precompiled/ndashboards_jsojsc23.class: 4efc882f9d61fc0b4eee4e5dd21f039ec66e4188
+  lib/.openaf_precompiled/ndashboards_jsojsc3.class: dc28036e8c93dd0c1a85bf096c8efb922bb697ba
+  lib/.openaf_precompiled/ndashboards_jsojsc4.class: d2d16b1213c36489d5febab17f6f1568ec3e85ad
+  lib/.openaf_precompiled/ndashboards_jsojsc5.class: bf2e3025a8f4deb8a90a03a0fe95e90d70f349fb
+  lib/.openaf_precompiled/ndashboards_jsojsc6.class: 8967c2e1b1ecdfa222fe2b718547c2752af6b4ae
+  lib/.openaf_precompiled/ndashboards_jsojsc7.class: ce404a05ad811cba71961def660e290534c1e5f5
+  lib/.openaf_precompiled/ndashboards_jsojsc8.class: 80796f1b071770b31434ac18d189f548280827f3
+  lib/.openaf_precompiled/ndashboards_jsojsc9.class: 690cb4d2c48f53d30069836bdd30c11cc591b4a0
   lib/.openaf_precompiled/ninput_js.class: c87f137fc8aaeded31d3562ff51d90ccbf50e349
   lib/.openaf_precompiled/ninput_jsMain.class: ffa0c290eebc81a5f26dad5eda89d3dae2c17b74
   lib/.openaf_precompiled/ninput_jsojsc0.class: dae2e5294275b94409f92625e1ba49998966ae7a
   lib/.openaf_precompiled/ninput_jsojsc1.class: 8c3b44e5c59a5757a4f107f00c26f84fd27728ea
   lib/.openaf_precompiled/ninput_jsojsc2.class: 52a278599918d40c342d0113b497a7df144ebf4a
+  lib/.openaf_precompiled/nmetrics_js.class: c09df1c16f6e896dd8898543adb0cc7cd9150443
+  lib/.openaf_precompiled/nmetrics_jsMain.class: e03bffb23244fea47cb9c0dffc208609ddd7fe18
+  lib/.openaf_precompiled/nmetrics_jsojsc0.class: 205d7f481b32ad91485d0d99e64b90d124015ad4
+  lib/.openaf_precompiled/nmetrics_jsojsc1.class: c4d08c47a353e0691a6f4501e1bfab20f19d5cb5
+  lib/.openaf_precompiled/nmetrics_jsojsc10.class: f6380dd7b6a2baac49a4f8a1800f0aabf5f7f06e
+  lib/.openaf_precompiled/nmetrics_jsojsc11.class: f2cf7e36ec98c56a48dfc7dc74357536ade27de4
+  lib/.openaf_precompiled/nmetrics_jsojsc12.class: c0ba185c8c8defbd153d344696538b04f9a9a00d
+  lib/.openaf_precompiled/nmetrics_jsojsc13.class: 08cfc31602521ab720da2b492037de04f3465b83
+  lib/.openaf_precompiled/nmetrics_jsojsc14.class: b5979b8eb0649e75ce69e68e78bf9627669d33d1
+  lib/.openaf_precompiled/nmetrics_jsojsc15.class: 1f2e83b92975f9bc766597d4d7db2ee66ae1c21b
+  lib/.openaf_precompiled/nmetrics_jsojsc16.class: 1aa71b4a1b8da272d2833b60c6c903c0e2286d06
+  lib/.openaf_precompiled/nmetrics_jsojsc17.class: 75fe8e16725ecde853dfb38663b1148691e847e6
+  lib/.openaf_precompiled/nmetrics_jsojsc18.class: b55750f50e95afeaea83640797fb281cd5c1a110
+  lib/.openaf_precompiled/nmetrics_jsojsc19.class: 1836a2900e1306706a3bba90e0822fb8b6a7b14a
+  lib/.openaf_precompiled/nmetrics_jsojsc2.class: c62967f4200260b8ca7b5223cdbf1286bb13a756
+  lib/.openaf_precompiled/nmetrics_jsojsc20.class: 6665a80b5a8addf5bb377b4f94e5ba41b82e37fd
+  lib/.openaf_precompiled/nmetrics_jsojsc21.class: c555d675d763b7777174551d93095cf0a3dbdcd0
+  lib/.openaf_precompiled/nmetrics_jsojsc22.class: 7b26f17daed75cf700287577f47179ba00f52261
+  lib/.openaf_precompiled/nmetrics_jsojsc23.class: eee22254e13d3f76f5e41b6a50dbbd61fe3042dc
+  lib/.openaf_precompiled/nmetrics_jsojsc24.class: 9aedd5653231ca6d77f607d51e31ca65d47961ff
+  lib/.openaf_precompiled/nmetrics_jsojsc25.class: 812473f54e803c9ffec76868a32f2f4b331ca5ae
+  lib/.openaf_precompiled/nmetrics_jsojsc26.class: 0a5cbf6bf214b4362027a2a8f5f9b5aa7971f017
+  lib/.openaf_precompiled/nmetrics_jsojsc3.class: 21073764009b113e23925a24bb276c5142d0ead0
+  lib/.openaf_precompiled/nmetrics_jsojsc4.class: f29d8ac5107208b9bf9de52bf068ba483be9ac04
+  lib/.openaf_precompiled/nmetrics_jsojsc5.class: e5e4fdd2f256af15f911b51756ccc85815434f7a
+  lib/.openaf_precompiled/nmetrics_jsojsc6.class: a0facc52066dd47b19be0d7ba27bbcee2aabecc0
+  lib/.openaf_precompiled/nmetrics_jsojsc7.class: 6872262c28fefe6ec14006234f0f5895e2741934
+  lib/.openaf_precompiled/nmetrics_jsojsc8.class: e0ed5dc44b8157139f6b91f5bc04c7320483a3af
+  lib/.openaf_precompiled/nmetrics_jsojsc9.class: 11fd1abafcd78888ef9d05d36ec72d100d91416c
+  lib/.openaf_precompiled/nmetricsview_js.class: 63053f34c49f80cb2d9a7ea6beb0e1d30c086391
+  lib/.openaf_precompiled/nmetricsview_jsMain.class: ed5442756ea515476814b2de8dbdf741854a1d9d
+  lib/.openaf_precompiled/nmetricsview_jsojsc0.class: 6f228a5d69b4b355214c8076715d40d9ab029cd2
+  lib/.openaf_precompiled/nmetricsview_jsojsc1.class: 6d13fb1e191fce3f1975ab43b29f677aeb4a8f24
+  lib/.openaf_precompiled/nmetricsview_jsojsc10.class: 9a1ebee7b27396caf3f03d37304c5597932cf6dd
+  lib/.openaf_precompiled/nmetricsview_jsojsc11.class: 2f4fd1957a3f6ac11a7400df28faefccfcd68d62
+  lib/.openaf_precompiled/nmetricsview_jsojsc12.class: a50f7efe1f2a2c338c98552e5fe096582571141b
+  lib/.openaf_precompiled/nmetricsview_jsojsc13.class: 5cacd5488000fcc55a42a154882c7da6392f8310
+  lib/.openaf_precompiled/nmetricsview_jsojsc14.class: 0faa3afeb3704a664e4e99de8752427d72f94cff
+  lib/.openaf_precompiled/nmetricsview_jsojsc15.class: 0ce3e42b9207106335c1a788f604602b0db23592
+  lib/.openaf_precompiled/nmetricsview_jsojsc16.class: b51fce4f7409639fa249bac828882766b78a61b0
+  lib/.openaf_precompiled/nmetricsview_jsojsc17.class: 43c69cbbaed43eadc9b7f178a6173324b00ebb8b
+  lib/.openaf_precompiled/nmetricsview_jsojsc18.class: 42ba1f6a35e655e7099ce7495ae1f3ad064f0229
+  lib/.openaf_precompiled/nmetricsview_jsojsc19.class: 06afc748b57a0b2877b43be95e9adda21693cee0
+  lib/.openaf_precompiled/nmetricsview_jsojsc2.class: 259b98d5ce7c175978816f2475ae19963cffd35a
+  lib/.openaf_precompiled/nmetricsview_jsojsc20.class: 22d16cf19dade6296c083a868565b40581e5a6b0
+  lib/.openaf_precompiled/nmetricsview_jsojsc21.class: 27047bb1bfb34adc4ab2574baece0eb6a62631dc
+  lib/.openaf_precompiled/nmetricsview_jsojsc22.class: 250271e57934765c82fba3ef3d1e8eb46de85396
+  lib/.openaf_precompiled/nmetricsview_jsojsc23.class: 1f577354dcbcdf984941c9709ed50fde19633407
+  lib/.openaf_precompiled/nmetricsview_jsojsc3.class: 530727bdd0f9b3c8c6fb55513ac7bfe687506249
+  lib/.openaf_precompiled/nmetricsview_jsojsc4.class: 8d7555d5b3002192043ba787fd5e5a4c2dafd42c
+  lib/.openaf_precompiled/nmetricsview_jsojsc5.class: 5d77f09341ba8a5865f7efd0ced4114a836ac923
+  lib/.openaf_precompiled/nmetricsview_jsojsc6.class: b1774d234515c8289f3e7f05ac0d8ad686eb1439
+  lib/.openaf_precompiled/nmetricsview_jsojsc7.class: 0935b7eda8fb7d1efeb39a083af63806015091de
+  lib/.openaf_precompiled/nmetricsview_jsojsc8.class: 0be816d542361385f417fe90d21c77b08d5c2ca3
+  lib/.openaf_precompiled/nmetricsview_jsojsc9.class: d175ac0a4f6abf9a4c26df4600fdbc5261a6622b
   lib/.openaf_precompiled/nmonitoredobject_js.class: aee5deea19b2901c3e96a40e238638acf11d1381
   lib/.openaf_precompiled/nmonitoredobject_jsMain.class: e271fcfd568eac0b7f50ff665fc4cf6a5556e047
   lib/.openaf_precompiled/nmonitoredobject_jsojsc0.class: 7d876e2d23b9dd503a712fa8a343172689c59371
@@ -1344,8 +1503,11 @@ filesHash:
   lib/nattributes.js: e2910b06665d819507ebcc0dd929dc14658277d0
   lib/nattributevalue.js: 722772c991655e06eb7289bc408b58158ca2655d
   lib/nconfigengine.js: 426ab6bb73e115413f0ef6ae4ea50ae91f730592
+  lib/ndashboards.js: e7c71b201b4d67ebed12722b3f34403f408e753d
   lib/ninput.js: e4df8ce41b22dc402f7f1244f141f3097fb8ace4
-  lib/nmain.js: 907d071cc9590792fe3f91aa598d0eb24270003d
+  lib/nmain.js: 0f691f5d6954bf57e58fad3f79fe06624296f785
+  lib/nmetrics.js: 0cd184332b034ebdcbee80bffa0104b7dffba1f8
+  lib/nmetricsview.js: fb6cbb71e02e8fc6de3bbbf37eb5030f5b9ea160
   lib/nmonitoredobject.js: f983f1df596dc86154e9b3556318fb8c12cabbd0
   lib/noutput.js: 391a56d9d21e7687dd11ef89b296b9e1e2aa2009
   lib/nplug.js: 7865a927354d033cd9d684e00e58a505a1e635dd
@@ -1355,7 +1517,7 @@ filesHash:
   lib/nwarning.js: a3e9afcda2cfb62b8d88461c12ac7cb99d11ffb8
   lib/nwarnings.js: 4b9268ff27d4cef6ac82026882c5b8faadbcb4e1
   nAttrmon_single.yaml.sample: 5b5cd4971d3582ea328f2f83dc0a610ea43a4be4
-  nattrmon.js: a180836410e059074d6ff748f772f9764de0102f
+  nattrmon.js: 86bc9b3c94b55a275099c203a7eefbddc80c6ec3
   nattrmon.yaml.sample: 33c821281f32d5a8c9e54b293f649cf4b05d0dfb
   oJob_nAttrMon.yaml: 55aa4809661c306a2db9ea2a33c6a4f542835ebd
   util/backupConfig.yaml: 5eec368c37f05a6a7028f88b641882c8686e0f0b
