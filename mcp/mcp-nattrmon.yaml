@@ -1,0 +1,598 @@
+# Author: Claude Code Assistant
+help:
+  text   : A STDIO/HTTP MCP server exposing nAttrMon's read-only metrics, dashboard, configuration engine and query/path builder APIs.
+  expects:
+  - name     : withDirectory
+    desc     : Overrides the nAttrMon installation/config home (same as nattrmon.js --withDirectory / NATTRMON_DIR)
+    example  : /opt/nattrmon
+    mandatory: false
+  - name     : libs
+    desc     : Optional comma separated libraries or @oPack/library.js references to preload
+    example  : "@mini-a/utils.js,lib/custom.js"
+    mandatory: false
+  - name     : onport
+    desc     : If defined starts a MCP server on the provided port
+    example  : "8888"
+    mandatory: false
+
+todo:
+- Init nAttrMon
+- (if    ): "isDef(args.onport)"
+  ((then)):
+  - (httpdStart   ): "${onport:-8080}"
+  - (httpdHealthz ): "${onport:-8080}"
+  - (httpdMetrics ): "${onport:-8080}"
+  - (httpdMCP     ): "${onport:-8080}"
+    ((description)): &MCPSERVER
+      serverInfo:
+        name   : nattrmon-mcp
+        title  : OpenAF nAttrMon MCP monitoring server
+        version: 1.0.0
+    ((fnsMeta)): &MCPFNSMETA
+      metrics:
+        name       : metrics
+        description: Lists resolved attribute metrics (name, value, type, category, tags, description, date, age) matching optional name/glob patterns. With no select, returns every known attribute.
+        inputSchema:
+          type      : object
+          properties:
+            select:
+              type        : array
+              description : Exact attribute names or globs (using * and ?) to match. Omit to return every known attribute.
+              items       :
+                type: string
+              example     : ["CPU/*", "Disk/Root Usage"]
+        annotations:
+          title         : metrics
+          readOnlyHint  : true
+          idempotentHint: true
+
+      metrics-watch:
+        name       : metrics-watch
+        description: Runs a bounded live sampling session against the matched metrics and returns the collected sample buffers. Blocks for up to samples*periodMs (capped at 120s).
+        inputSchema:
+          type      : object
+          properties:
+            select:
+              type        : array
+              description : Exact attribute names or globs (using * and ?) to sample. Required, must match at least one metric.
+              items       :
+                type: string
+              example     : ["CPU/*"]
+            samples:
+              type        : integer
+              description : Number of sample points to keep per metric (default 20, max 300).
+              example     : 20
+              default     : 20
+            periodMs:
+              type        : integer
+              description : Milliseconds between samples (default 2000, minimum 250).
+              example     : 2000
+              default     : 2000
+          required: [ select ]
+        annotations:
+          title         : metrics-watch
+          readOnlyHint  : true
+          idempotentHint: false
+
+      dashboard:
+        name       : dashboard
+        description: One-shot structured dump of a dashboard's panels (equivalent to nattrmon.js --dashboard=... --format=json).
+        inputSchema:
+          type      : object
+          properties:
+            selectors:
+              type        : string
+              description : "\"runtime\" for the built-in runtime dashboard, or a comma separated list of metric name/glob patterns."
+              example     : "runtime"
+              default     : "runtime"
+        annotations:
+          title         : dashboard
+          readOnlyHint  : true
+          idempotentHint: true
+
+      daemon-status:
+        name       : daemon-status
+        description: Side-effect-free check of whether the nAttrMon daemon this instance targets appears to be running, based on its pid file.
+        inputSchema:
+          type      : object
+          properties: {}
+        annotations:
+          title         : daemon-status
+          readOnlyHint  : true
+          idempotentHint: true
+
+      preflight:
+        name       : preflight
+        description: Runs nAttrMon's startup preflight checks (loads plugs without executing them) and reports unresolved execFrom/integrity issues.
+        inputSchema:
+          type      : object
+          properties:
+            dir:
+              type        : string
+              description : Configuration directory to preflight. Defaults to the server's own config directory.
+              example     : ./config
+        annotations:
+          title         : preflight
+          readOnlyHint  : true
+          idempotentHint: true
+
+      config-components:
+        name       : config-components
+        description: Lists or searches known nAttrMon component constructors (inputs, outputs, validations) discovered from config/objects.meta and config/objects.
+        inputSchema:
+          type      : object
+          properties:
+            kind:
+              type        : string
+              description : Restrict to one component kind.
+              enum        : [ input, output, validation ]
+              example     : input
+            search:
+              type        : string
+              description : Search components by name, description or parameter.
+              example     : kube
+        annotations:
+          title         : config-components
+          readOnlyHint  : true
+          idempotentHint: true
+
+      config-describe:
+        name       : config-describe
+        description: Describes one component constructor, including its documented parameters.
+        inputSchema:
+          type      : object
+          properties:
+            kind:
+              type        : string
+              description : Component kind.
+              enum        : [ input, output, validation ]
+              example     : input
+            name:
+              type        : string
+              description : Component constructor name.
+              example     : nInput_Shell
+          required: [ kind, name ]
+        annotations:
+          title         : config-describe
+          readOnlyHint  : true
+          idempotentHint: true
+
+      config-skeleton:
+        name       : config-skeleton
+        description: Builds a skeleton descriptor for a component (with missing required parameters flagged), without writing anything to disk.
+        inputSchema:
+          type      : object
+          properties:
+            kind:
+              type        : string
+              description : Component kind.
+              enum        : [ input, output, validation ]
+              example     : input
+            name:
+              type        : string
+              description : Component constructor name.
+              example     : nInput_JMX
+          required: [ kind, name ]
+        annotations:
+          title         : config-skeleton
+          readOnlyHint  : true
+          idempotentHint: true
+
+      config-validate:
+        name       : config-validate
+        description: Loads and validates a configuration directory, reporting errors/warnings/info per entry.
+        inputSchema:
+          type      : object
+          properties:
+            dir:
+              type        : string
+              description : Configuration directory to validate. Defaults to the server's own config directory.
+              example     : ./config
+            mode:
+              type        : string
+              description : Validation mode. strict turns warnings into errors.
+              enum        : [ warn, strict ]
+              default     : warn
+              example     : warn
+        annotations:
+          title         : config-validate
+          readOnlyHint  : true
+          idempotentHint: true
+
+      config-explain:
+        name       : config-explain
+        description: Explains a configuration entry (or the whole configuration) by combining it with component metadata. Parameter values are redacted to "(secret)" both when metadata declares secret:true and, as a name-based safety net, when the parameter name looks like a password/token/key/credential even if undocumented.
+        inputSchema:
+          type      : object
+          properties:
+            dir:
+              type        : string
+              description : Configuration directory to explain. Defaults to the server's own config directory.
+              example     : ./config
+            id:
+              type        : string
+              description : Configuration entry id to explain (kind:Name). Omit to explain the whole configuration.
+              example     : "input:Directory Name"
+        annotations:
+          title         : config-explain
+          readOnlyHint  : true
+          idempotentHint: true
+
+      query-check:
+        name       : query-check
+        description: Parses, compiles and validates an nLinq query expression (AST or text DSL), optionally testing it against inline sample data.
+        inputSchema:
+          type      : object
+          properties:
+            expr:
+              type        : string
+              description : nLinq text DSL query expression to check.
+              example     : "equals('t','db').sort('-v')"
+            sample:
+              type        : [ array, object ]
+              description : Optional inline sample data (array or object) to test the query against.
+              example     : [ { "n": "a", "t": "db", "v": 5 } ]
+            via:
+              type        : string
+              description : Optional plug function name to preview against (e.g. nattrmon.filter, ow.obj.filter).
+              example     : nattrmon.filter
+          required: [ expr ]
+        annotations:
+          title         : query-check
+          readOnlyHint  : true
+          idempotentHint: true
+
+      path-check:
+        name       : path-check
+        description: Parses and validates a JMESPath or dot-path expression, optionally testing it against inline sample data.
+        inputSchema:
+          type      : object
+          properties:
+            expr:
+              type        : string
+              description : Path expression to check.
+              example     : "services[?status == 'up'].name"
+            dialect:
+              type        : string
+              description : Path dialect.
+              enum        : [ jmespath, dotpath ]
+              default     : jmespath
+              example     : jmespath
+            sample:
+              type        : [ array, object ]
+              description : Optional inline sample data (array or object) to test the path against.
+              example     : { "services": [ { "name": "a", "status": "up" } ] }
+          required: [ expr ]
+        annotations:
+          title         : path-check
+          readOnlyHint  : true
+          idempotentHint: true
+
+    ((fns    )): &MCPFNS
+      metrics          : Get metrics
+      metrics-watch    : Watch metrics
+      dashboard        : Get dashboard
+      daemon-status    : Get daemon status
+      preflight        : Run preflight checks
+      config-components: List config components
+      config-describe  : Describe config component
+      config-skeleton  : Create config skeleton
+      config-validate  : Validate config
+      config-explain   : Explain config
+      query-check      : Check query expression
+      path-check       : Check path expression
+  ((else)):
+  - (stdioMCP ): *MCPSERVER
+    ((fnsMeta)): *MCPFNSMETA
+    ((fns    )): *MCPFNS
+
+ojob:
+  opacks      :
+  - openaf     : 20250915
+  - oJob-common: 20250914
+  catch       : printErrnl("[" + job.name + "] "); $err(exception, __, __, job.exec)
+  logToConsole: false   # to change when finished
+  argsFromEnvs: true
+  daemon      : true
+  unique      :
+    pidFile     : .mcp-nattrmon.pid
+    killPrevious: true
+
+include:
+- oJobMCP.yaml
+
+jobs:
+# --------------
+- name : Init nAttrMon
+  check:
+    in:
+      withDirectory: isString.default(__)
+      libs         : isString.default("")
+  exec : | #js
+    if (isDef(args.libs) && args.libs.length > 0) {
+      args.libs.split(",")
+        .map(function(lib) { return lib.trim() })
+        .filter(function(lib) { return lib.length > 0 })
+        .forEach(function(lib) {
+          log("[mcp-nattrmon] Loading library: " + lib + "...")
+          try {
+            if (lib.startsWith("@")) {
+              if (/^\@([^\/]+)\/(.+)\.js$/.test(lib)) {
+                var match = lib.match(/^\@([^\/]+)\/(.+)\.js$/)
+                var packPath = getOPackPath(match[1])
+                var filePath = packPath + "/" + match[2] + ".js"
+                if (io.fileExists(filePath)) {
+                  loadLib(filePath)
+                } else {
+                  logErr("[ERROR] Library '" + lib + "' not found.")
+                }
+              } else {
+                logErr("[ERROR] Library '" + lib + "' does not have the correct format (@oPack/library.js).")
+              }
+            } else {
+              loadLib(lib)
+            }
+          } catch(e) {
+            logErr("[ERROR] Failed to load library " + lib + ": " + e.message)
+          }
+        })
+    }
+
+    global.NATTRMON_HOME = getEnv("NATTRMON_HOME") || getOPackPath("nAttrMon") || "."
+    global.NATTRMON_SUBHOME = getEnv("NATTRMON_DIR") || args.withDirectory || global.NATTRMON_HOME
+
+    loadLib(global.NATTRMON_HOME + "/lib/nmain.js")
+    loadLib(global.NATTRMON_HOME + "/lib/nmetrics.js")
+    loadLib(global.NATTRMON_HOME + "/lib/ndashboards.js")
+    loadLib(global.NATTRMON_HOME + "/lib/nconfigengine.js")
+
+    global.configDir = global.NATTRMON_SUBHOME + "/config"
+    global.pidFile = global.NATTRMON_SUBHOME + "/nattrmon.pid"
+
+    // Read-only inspection instance -- constructed, never .start()'d, so no plug ever executes.
+    global.nattrmon = new nAttrMon(global.configDir, false)
+    global.nm = new nMetrics(global.nattrmon, global.pidFile)
+    global.nce = new nConfigEngine({
+      home      : global.NATTRMON_HOME,
+      configPath: global.configDir,
+      mode      : "warn"
+    })
+
+    // Defense in depth for "Explain config": the engine only redacts a parameter value when
+    // its metadata explicitly declares secret: true, but most of config/objects.meta/ is
+    // generated boilerplate (type: any, no secret flags -- see docs/CONFIG-ENGINE.md's
+    // "Metadata coverage" section) even for real credential-shaped arguments like keyPassword,
+    // kubeToken or APIToken. Belt-and-braces: also redact by parameter name, on top of whatever
+    // the engine already redacted, so an under-documented component can never leak a live
+    // password/token/key value through this MCP server.
+    global.__nam_secretNameRe = /pass|pwd|secret|token|apikey|api[_-]?key|credential|privatekey|private[_-]?key|authkey|auth[_-]?key|clientsecret|client[_-]?secret/i
+
+    global.__nam_redactParams = function(aParams) {
+      if (!isMap(aParams)) return aParams
+      Object.keys(aParams).forEach(function(k) {
+        var _p = aParams[k]
+        if (isMap(_p) && _p.secret !== true && global.__nam_secretNameRe.test(k)) {
+          _p.value = "(secret)"
+          _p.secret = true
+          _p.redactedBy = "mcp-nattrmon (name heuristic)"
+        }
+      })
+      return aParams
+    }
+
+    global.__nam_redactExplain = function(aResult) {
+      if (isMap(aResult) && isMap(aResult.parameters)) global.__nam_redactParams(aResult.parameters)
+      if (isMap(aResult) && isArray(aResult.components)) {
+        aResult.components.forEach(function(c) {
+          if (isMap(c) && isMap(c.parameters)) global.__nam_redactParams(c.parameters)
+        })
+      }
+      return aResult
+    }
+
+# ------------
+- name : Get metrics
+  check:
+    in:
+      select: isArray.default(__)
+  exec : | #js
+    try {
+      return global.nm.list(isDef(args.select) ? args.select : [])
+    } catch(e) {
+      return "[ERROR] " + e.message
+    }
+
+# --------------
+- name : Watch metrics
+  check:
+    in:
+      select  : isArray
+      samples : toNumber.isNumber.default(20)
+      periodMs: toNumber.isNumber.default(2000)
+  exec : | #js
+    if (!isArray(args.select) || args.select.length == 0) {
+      return "[ERROR] 'select' must be a non-empty array of metric names or globs"
+    }
+
+    var _samples = Math.max(1, Math.min(300, Math.floor(args.samples)))
+    var _periodMs = Math.max(250, Math.floor(args.periodMs))
+    var _maxWaitMs = 120000
+    var _waitMs = Math.min(_maxWaitMs, _samples * _periodMs)
+
+    try {
+      var _resolved = global.nm.match(args.select)
+      if (_resolved.length == 0) {
+        return "[ERROR] No metrics matched: " + args.select.join(", ")
+      }
+      var _session = global.nm.watchSession(_resolved, { samples: _samples, periodMs: _periodMs })
+      sleep(_waitMs)
+      var _buffers = _session.tick()
+      _session.stop()
+      return { names: _session.names, waitedMs: _waitMs, buffers: _buffers }
+    } catch(e) {
+      return "[ERROR] " + e.message
+    }
+
+# --------------
+- name : Get dashboard
+  check:
+    in:
+      selectors: isString.default("runtime")
+  exec : | #js
+    var _name = String(args.selectors).trim()
+    var _isRuntime = (_name.toLowerCase() == "runtime")
+    var _arg = _isRuntime ? "runtime" : _name.split(",").map(function(s) { return s.trim() }).filter(function(s) { return s.length > 0 })
+
+    if (!_isRuntime && _arg.length == 0) {
+      return "[ERROR] 'selectors' must be 'runtime' or a comma separated list of metric name/glob patterns"
+    }
+
+    try {
+      var _dash = nDashboards.build(_arg, global.nm, { samples: 60, periodMs: 5000 })
+      var _data = _dash.panels.map(function(p) { return merge({ title: p.title, type: p.type }, p.pull()) })
+      _dash.stop()
+      return _data
+    } catch(e) {
+      return "[ERROR] " + e.message
+    }
+
+# ------------------
+- name : Get daemon status
+  exec : | #js
+    try {
+      return {
+        running: global.nm.daemonRunning(),
+        pidFile: global.nm.pidFilePath()
+      }
+    } catch(e) {
+      return "[ERROR] " + e.message
+    }
+
+# --------------------------
+- name : Run preflight checks
+  check:
+    in:
+      dir: isString.default(__)
+  exec : | #js
+    try {
+      var _dir = isDef(args.dir) ? args.dir : global.configDir
+      var _n = new nAttrMon(_dir, false)
+      return _n.preflight()
+    } catch(e) {
+      return "[ERROR] " + e.message
+    }
+
+# ----------------------------
+- name : List config components
+  check:
+    in:
+      kind  : isString.default(__)
+      search: isString.default(__)
+  exec : | #js
+    try {
+      var _l = isDef(args.search) ? global.nce.searchComponents(args.search, args.kind) : global.nce.listComponents(args.kind)
+      return _l
+    } catch(e) {
+      return "[ERROR] " + e.message
+    }
+
+# ------------------------------
+- name : Describe config component
+  check:
+    in:
+      kind: isString
+      name: isString
+  exec : | #js
+    try {
+      var _c = global.nce.getComponent(args.kind, args.name)
+      if (isUnDef(_c)) return "[ERROR] Unknown component '" + args.name + "' (kind=" + args.kind + ")"
+      return _c
+    } catch(e) {
+      return "[ERROR] " + e.message
+    }
+
+# ----------------------------
+- name : Create config skeleton
+  check:
+    in:
+      kind: isString
+      name: isString
+  exec : | #js
+    try {
+      return global.nce.createSkeleton(args.kind, args.name)
+    } catch(e) {
+      return "[ERROR] " + e.message
+    }
+
+# ----------------
+- name : Validate config
+  check:
+    in:
+      dir : isString.default(__)
+      mode: isString.default(__)
+  exec : | #js
+    try {
+      var _dir = isDef(args.dir) ? args.dir : global.configDir
+      var _engine = (isDef(args.dir) && args.dir != global.configDir)
+        ? new nConfigEngine({ home: global.NATTRMON_HOME, configPath: _dir, mode: args.mode || "warn" })
+        : global.nce
+      return _engine.validate(_engine.load(_dir), { mode: args.mode })
+    } catch(e) {
+      return "[ERROR] " + e.message
+    }
+
+# ---------------
+- name : Explain config
+  check:
+    in:
+      dir: isString.default(__)
+      id : isString.default(__)
+  exec : | #js
+    try {
+      var _dir = isDef(args.dir) ? args.dir : global.configDir
+      var _engine = (isDef(args.dir) && args.dir != global.configDir)
+        ? new nConfigEngine({ home: global.NATTRMON_HOME, configPath: _dir, mode: "warn" })
+        : global.nce
+      var _cfg = _engine.load(_dir)
+      var _res = isDef(args.id) ? _engine.explainComponent(_cfg, args.id) : _engine.explain(_cfg)
+      return global.__nam_redactExplain(_res)
+    } catch(e) {
+      return "[ERROR] " + e.message
+    }
+
+# --------------------------
+- name : Check query expression
+  check:
+    in:
+      expr: isString
+  exec : | #js
+    try {
+      var _q = nQuery.parse(args.expr)
+      if (isDef(_q.mode)) return _q
+      var _res = { compiled: _q.compile(), validation: _q.validate() }
+      if (isDef(args.sample)) _res.test = _q.test(args.sample, { via: args.via })
+      return _res
+    } catch(e) {
+      return "[ERROR] " + e.message
+    }
+
+# -------------------------
+- name : Check path expression
+  check:
+    in:
+      expr   : isString
+      dialect: isString.default("jmespath")
+  exec : | #js
+    try {
+      var _dialect = args.dialect || "jmespath"
+      var _res = {
+        dialect   : _dialect,
+        expression: args.expr,
+        parsed    : nQuery.parsePath(args.expr, _dialect),
+        validation: nQuery.validatePath(args.expr, _dialect)
+      }
+      if (isDef(args.sample)) _res.test = nQuery.execPath(args.sample, args.expr, _dialect)
+      return _res
+    } catch(e) {
+      return "[ERROR] " + e.message
+    }
