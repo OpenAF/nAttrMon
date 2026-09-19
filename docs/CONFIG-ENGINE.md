@@ -102,7 +102,7 @@ A file:
   dirty: false, docShape: "map" }
 ```
 
-`id` is derived from the descriptor name and disambiguated with `#2`, `#3`… when names collide. Ids are recomputed after every change, so an id always means what a fresh `load()` of the same configuration would mean.
+`id` is derived from the descriptor name and disambiguated with `#2`, `#3`… when names collide. Generated suffixes skip IDs reserved by literal names (for example, a plug named `Same#2`). Ids are recomputed in file/document order after every change, so an id always means what a fresh `load()` of the same configuration would mean. Adding, removing or renaming a duplicate can change existing IDs; retrieve them again after editing.
 
 Every shipped descriptor form is handled: a document that is a map or an array; `input`/`output`/`validation` as a single map or a list; several kinds in one file; inline `exec`; and `execFrom`. `.js` plug files are tracked and re-emitted verbatim but contribute no editable descriptors.
 
@@ -133,6 +133,8 @@ engine.remove(cfg, "input:Disks")
 ```
 
 `patch` merges `execArgs` rather than replacing them. `add` appends to a list, converts a single descriptor into a list when a second is added, and creates the target file in the model when it does not exist. Nothing touches disk until `save()`, and only the files you changed are marked dirty.
+
+A successful save to the source directory clears each written file's dirty flag and updates its raw-text baseline. Later saves write only new edits. Skipped or failed writes remain pending, as do source edits exported to a different directory. This does not detect concurrent disk changes to files that are still dirty; reload before editing files changed by another writer.
 
 ## Validating
 
