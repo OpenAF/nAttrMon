@@ -15,6 +15,13 @@
 - **Single-run Mode**: Execute monitoring tasks once or run as a daemon
 - **Easy Updates**: Simple package-based update mechanism
 
+## GenAI assistant skills
+
+The [skills directory](skills/README.md) provides reusable instructions for
+building inputs, validations, and outputs, and for configuring plugs and runtime
+settings. Give your assistant the relevant `SKILL.md` and access to this checkout;
+the guide includes example prompts and skill registration guidance.
+
 ## Prerequisites
 
 - [OpenAF](https://openaf.io/) >= 20241117
