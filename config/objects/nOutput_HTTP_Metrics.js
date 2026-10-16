@@ -203,7 +203,13 @@ var nOutput_HTTP_Metrics = function (aMap) {
 
 	var preProcess = nattrmon.getHttpPreProcessFn(aMap, httpd, parent, "nOutput_HTTP_Metrics");
 
-    var _parse = (e, n) => {
+    var _serialize = (m, n, d, strict) => {
+		if (!strict) return __ow_metrics_fromObj2OpenMetrics(m, n, d);
+		if (!isFunction(ow.metrics._fromObj2OpenMetricsStrict)) throw new Error("Strict OpenMetrics requires an OpenAF runtime with strict metrics serialization support");
+		return ow.metrics.fromObj2OpenMetrics(m, n, isDef(d) ? d / 1000 : undefined, undefined, undefined, true);
+	};
+
+	var _parse = (e, n, strict) => {
         return ow.obj.fromObj2Array(e).map(r => {
             var d = parent.useCurrentTime ? Date.now() : (new Date(r.date)).getTime();
             delete r.date;
@@ -211,11 +217,11 @@ var nOutput_HTTP_Metrics = function (aMap) {
 			traverse(m, (k, v, p, o) => {
 				if (isNull(v)) delete o[k]
 			})
-            return __ow_metrics_fromObj2OpenMetrics(m, n, d);
+            return _serialize(m, n, d, strict);
         }).join("");
     }
 
-	var _parsew = (e, n) => {
+	var _parsew = (e, n, strict) => {
 		var _e = []
 		Object.keys(e).forEach(k => {
 			_e = _e.concat(e[k].map(w => {
@@ -224,7 +230,7 @@ var nOutput_HTTP_Metrics = function (aMap) {
 				delete m[w.title].lastupdate
 				delete m[w.title].notifications
 				m[w.title].num = 1
-				return __ow_metrics_fromObj2OpenMetrics(m, n, d)
+				return _serialize(m, n, d, strict)
 			}))
 		})
 		return _e.join("")
@@ -299,20 +305,21 @@ var nOutput_HTTP_Metrics = function (aMap) {
 		return lines
 	}
 
-	var _diagOpenMetrics = aDiag => {
+	var _diagOpenMetrics = (aDiag, strict) => {
 		aDiag = _$(aDiag).isMap().default({ total: 0, degraded: [], thresholds: {} })
 		var _nowTs = parent.useCurrentTime ? Date.now() : undefined
 		var _parts = []
 
-		_parts.push(_filterIds(__ow_metrics_fromObj2OpenMetrics({
+		_parts.push(_serialize({
 			totalDegraded: _$(aDiag.total).default(0),
 			errorRateThreshold: _$(aDiag.thresholds.errorRateThreshold).default(__NAM_DEGRADED_ERROR_RATE_THRESHOLD),
 			minExecs: _$(aDiag.thresholds.minExecs).default(__NAM_DEGRADED_MIN_EXECS),
 			timeoutHitsThreshold: _$(aDiag.thresholds.timeoutHits).default(__NAM_DEGRADED_TIMEOUT_HITS),
 			watchdogHitsThreshold: _$(aDiag.thresholds.watchdogHits).default(__NAM_DEGRADED_WATCHDOG_HITS)
-		}, "nattrmon_diagnostics", _nowTs)))
+		}, "nattrmon_diagnostics", _nowTs, strict))
 
-		var _esc = v => String(_$(v).default("-")).replace(/\\/g, "\\\\").replace(/\"/g, "\\\"")
+		if (strict && isDef(_nowTs)) _nowTs /= 1000
+		var _esc = v => String(_$(v).default("-")).replace(/\\/g, "\\\\").replace(/\n/g, "\\n").replace(/\"/g, "\\\"")
 		_$(aDiag.degraded).isArray().default([]).forEach(p => {
 			var _labels = "{type=\"" + _esc(p.type) + "\",category=\"" + _esc(p.category) + "\",name=\"" + _esc(p.name) + "\"}"
 			_parts.push("nattrmon_diagnostics_plug_degraded" + _labels + " 1" + (isDef(_nowTs) ? " " + _nowTs : ""))
@@ -344,6 +351,16 @@ var nOutput_HTTP_Metrics = function (aMap) {
 			try {
 				var res = "";
 				var fmt = _$(req.params.format).default(parent.format)
+				if (fmt == "openmetrics") {
+					if (parent.findAndReplace.length) throw new Error("findAndReplace is incompatible with strict OpenMetrics");
+					var parts = [], type = req.params.type;
+					if (type == "self" || (isUnDef(type) && parent.includeSelf)) parts.push(_serialize(ow.metrics.getAll(), parent.nameSelf, parent.useCurrentTime ? Date.now() : undefined, true));
+					if (type == "cvals" || (isUnDef(type) && parent.includeCVals)) parts.push(_parse(_filter(nattrmon.getCurrentValues()), parent.nameCVals, true));
+					if (type == "lvals" || (isUnDef(type) && parent.includeLVals)) parts.push(_parse(_filter(nattrmon.getLastValues()), parent.nameLVals, true));
+					if (type == "warns" || (isUnDef(type) && parent.includeWarns)) parts.push(_parsew(nattrmon.getWarnings(), parent.nameWarns, true));
+					if (type == "diagnostics" || isUnDef(type)) parts.push(_diagOpenMetrics(nattrmon.getDegradedPlugs(), true));
+					return preProcess(req, ow.server.httpd.reply(parent.__strictExposition(parts), 200, "application/openmetrics-text; version=1.0.0; charset=utf-8", {}));
+				}
 				switch (fmt) {
 				case "json":
 					var _res = {}
@@ -422,8 +439,8 @@ var nOutput_HTTP_Metrics = function (aMap) {
 
 			switch(fmt) {
 			case "openmetrics":
-				_res = _diagOpenMetrics(_diag)
-				_mime = "text/plain"
+				_res = parent.__strictExposition([_diagOpenMetrics(_diag, true)])
+				_mime = "application/openmetrics-text; version=1.0.0; charset=utf-8"
 				break
 			default:
 				_res = stringify(_diag, __, "")
@@ -485,4 +502,37 @@ nOutput_HTTP_Metrics.prototype.__filter = function (m) {
 
 nOutput_HTTP_Metrics.prototype.output = function (scope, args) {
 	//this.refresh(scope);
+};
+
+// Merge complete serializer results and diagnostic samples into one MetricSet.
+// Strict responses retain array IDs; removing them can collapse distinct series.
+nOutput_HTTP_Metrics.prototype.__strictExposition = function(parts) {
+	var families = Object.create(null);
+	var fail = message => { throw new Error("Invalid strict OpenMetrics exposition: " + message); };
+	parts.join("\n").split("\n").forEach(line => {
+		if (!line || line == "# EOF") return;
+		if (line.indexOf("\r") >= 0) fail("carriage return");
+		var meta = line.match(/^# TYPE ([a-zA-Z][a-zA-Z0-9_]*) (unknown|gauge)$/);
+		if (meta) {
+			var f = families[meta[1]] || (families[meta[1]] = { type: meta[2], samples: [], series: Object.create(null) });
+			if (f.type != meta[2]) fail("conflicting type: " + meta[1]);
+			return;
+		}
+		var sample = line.match(/^([a-zA-Z][a-zA-Z0-9_]*)(\{(?:[a-zA-Z][a-zA-Z0-9_]*="(?:[^"\\\n]|\\[\\"n])*"(?:,[a-zA-Z][a-zA-Z0-9_]*="(?:[^"\\\n]|\\[\\"n])*")*)?\})? ([+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?|NaN|[+-]?Inf)(?: ([+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?))?$/);
+		if (!sample) fail("invalid sample or metadata");
+		if (isDef(sample[4]) && !isFinite(Number(sample[4]))) fail("invalid timestamp");
+		var labels = (sample[2] || "").match(/[a-zA-Z][a-zA-Z0-9_]*="(?:[^"\\\n]|\\[\\"n])*"/g) || [];
+		var names = Object.create(null);
+		labels.forEach(label => {
+			var name = label.substring(0, label.indexOf("="));
+			if (names[name]) fail("duplicate label: " + name);
+			names[name] = true;
+		});
+		var key = labels.sort().join(",");
+		var family = families[sample[1]] || (families[sample[1]] = { type: "unknown", samples: [], series: Object.create(null) });
+		if (family.series[key]) fail("duplicate series: " + sample[1]);
+		family.series[key] = true;
+		family.samples.push(line);
+	});
+	return Object.keys(families).map(name => "# TYPE " + name + " " + families[name].type + "\n" + families[name].samples.join("\n") + "\n").join("") + "# EOF\n";
 };

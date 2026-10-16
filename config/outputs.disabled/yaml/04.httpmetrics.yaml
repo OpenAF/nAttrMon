@@ -3,6 +3,7 @@ output:
    description  : Outputs attributes, warnings, current and previous values in a JSON representation through HTTP.
    execFrom     : nOutput_HTTP_Metrics
    execArgs     :
+   #   format      : openmetrics # Strict OpenMetrics 1.0; requires OpenAF strict serializer support
    #   includeSelf : false
    #   includeCVals: true
    #   includeLVals: false

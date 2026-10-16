@@ -1,9 +1,10 @@
 kind: output
 constructor: nOutput_HTTP_Metrics
 title: nOutput_HTTP_Metrics
-description: Configuration metadata for nOutput_HTTP_Metrics.
+description: Exposes current values, warnings, runtime metrics and diagnostics over HTTP.
 examples:
   - config/outputs/00.httpAll.yaml
+  - config/outputs.disabled/yaml/04.httpmetrics.yaml
 arguments:
   - name: attrExclude
     type: any
@@ -42,13 +43,13 @@ arguments:
     description: Configuration option read by nOutput_HTTP_Metrics.
     example: {}
   - name: findAndReplace
-    type: any
-    description: Configuration option read by nOutput_HTTP_Metrics.
-    example: {}
+    type: array
+    description: Text replacements for legacy metrics and JSON. Must be empty for strict OpenMetrics metrics responses.
+    example: []
   - name: format
-    type: any
-    description: Configuration option read by nOutput_HTTP_Metrics.
-    example: {}
+    type: string
+    description: "Default metrics format: openmetrics for strict OpenMetrics 1.0, json for JSON, or omitted for legacy text. Strict mode requires OpenAF strict serialization support, retains array IDs and rejects findAndReplace."
+    example: openmetrics
   - name: host
     type: any
     description: Configuration option read by nOutput_HTTP_Metrics.
@@ -106,9 +107,9 @@ arguments:
     description: Configuration option read by nOutput_HTTP_Metrics.
     example: {}
   - name: removeIds
-    type: any
-    description: Configuration option read by nOutput_HTTP_Metrics.
-    example: {}
+    type: boolean
+    description: Remove legacy array index labels. Strict OpenMetrics always retains array IDs to avoid duplicate series.
+    example: true
   - name: timeoutHits
     type: any
     description: Configuration option read by nOutput_HTTP_Metrics.
@@ -118,9 +119,9 @@ arguments:
     description: Configuration option read by nOutput_HTTP_Metrics.
     example: {}
   - name: useCurrentTime
-    type: any
-    description: Configuration option read by nOutput_HTTP_Metrics.
-    example: {}
+    type: boolean
+    description: Use scrape time instead of recorded timestamps. Strict OpenMetrics timestamps use epoch seconds.
+    example: false
   - name: watchdogHits
     type: any
     description: Configuration option read by nOutput_HTTP_Metrics.
