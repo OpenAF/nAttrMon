@@ -176,6 +176,8 @@ For comprehensive documentation, tutorials, and plugin references, visit:
 
 Object constructor arguments, descriptions, and linked disabled-config examples are declared in [`config/objects.meta/`](config/objects.meta/). See [Object metadata](docs/OBJECTS-METADATA.md) for the format and the runtime discovery API.
 
+See [Connection recovery and warning updates](docs/RUNTIME-LIFECYCLE.md) for monitored-object retry behavior, cleanup failures, and updating or closing existing warnings.
+
 See [Terminal metrics & dashboard](docs/TERMINAL-DASHBOARD.md) for `nattrmon metrics`/`nattrmon dashboard` — a Grafana/Prometheus-free way to inspect a running nAttrMon from a shell (including `kubectl exec`).
 
 ## Building from Source

@@ -1,7 +1,7 @@
 // nAttrMon hermetic test suite runner
 // Copyright 2023 Nuno Aguiar
 //
-// Run: openaf tests/autoTestAll.js
+// Run: openaf -f tests/autoTestAll.js
 // Exits 0 when every test passes, 1 otherwise. Requires no network access and
 // no live nAttrMon server -- all state lives under tests/.tmp for the duration
 // of the run and is removed afterwards.
