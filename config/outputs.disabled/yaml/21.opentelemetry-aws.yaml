@@ -1,0 +1,20 @@
+output:
+  name: OpenTelemetry to AWS
+  description: Send gauges and warning logs directly to CloudWatch using the AWS oPack.
+  chSubscribe:
+    - nattrmon::cvals
+    - nattrmon::warnings
+  waitForFinish: false
+  execFrom: nOutput_OpenTelemetry
+  execArgs:
+    aws:
+      region: eu-west-1
+      logGroup: /nattrmon/warnings
+      logStream: monitoring-01
+    resourceAttributes:
+      service.name: nattrmon
+      service.instance.id: monitoring-01
+    includeValues: true
+    includeWarns: true
+    timeoutMs: 5000
+    maxRetries: 2
