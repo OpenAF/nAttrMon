@@ -1,0 +1,82 @@
+kind: output
+constructor: nOutput_OpenTelemetry
+title: OpenTelemetry metrics and warnings
+description: Push numeric attribute gauges and structured warning logs to a collector or directly to AWS CloudWatch using OTLP/HTTP JSON.
+examples:
+  - config/outputs.disabled/yaml/20.opentelemetry.yaml
+  - config/outputs.disabled/yaml/21.opentelemetry-aws.yaml
+arguments:
+  - name: endpoint
+    type: string
+    description: Required unless aws is supplied. Mutually exclusive with aws. Collector HTTP(S) base URL, without a signal suffix, credentials, query or fragment.
+    example: http://localhost:4318
+  - name: aws
+    type: object
+    description: Direct commercial AWS delivery, mutually exclusive with endpoint. Requires string region; string logGroup and logStream are required when includeWarns is true. Uses AWS oPack credential discovery; no credential fields are accepted.
+    example: { region: eu-west-1, logGroup: /nattrmon/warnings, logStream: monitoring-01 }
+  - name: headers
+    type: object
+    secret: true
+    description: Authentication and other HTTP headers. In AWS mode authentication, signature, host and log routing headers are reserved. Content-Type and Accept are always application/json.
+    example: { Authorization: "Bearer <token>" }
+  - name: resourceAttributes
+    type: object
+    description: OpenTelemetry resource attributes. Values may be strings, finite numbers, booleans, arrays or maps.
+    example: { service.name: nattrmon, service.instance.id: monitoring-01 }
+    default: { service.name: nattrmon }
+  - name: includeValues
+    type: boolean
+    description: Export current-value channel updates as gauge metrics.
+    example: true
+    default: true
+  - name: includeWarns
+    type: boolean
+    description: Export warning channel updates, including Closed, as structured logs.
+    example: true
+    default: true
+  - name: include
+    type: array<string>
+    description: Regex allowlist matching original attribute names or warning titles. Omit to include all.
+    example: [ '^Service/' ]
+  - name: exclude
+    type: array<string>
+    description: Regex denylist matching original attribute names or warning titles. Exclusions override inclusions.
+    example: [ '^Internal/' ]
+    default: []
+  - name: metricPrefix
+    type: string
+    description: Prefix prepended to automatically generated metric names before underscore normalization.
+    example: nattrmon
+    default: nattrmon
+  - name: metricOverrides
+    type: object
+    description: Map keyed by generated metric name. Entries accept string name, unit and description fields; names must be distinct.
+    example: { nattrmon_Service_Memory_bytes: { name: nattrmon.memory.bytes, unit: By, description: Used memory } }
+    default: {}
+  - name: labelFields
+    type: array<string>
+    description: String fields on array rows to include as point attributes. The nattrmon. prefix is reserved for array indices.
+    example: [ host, region ]
+    default: []
+  - name: timeoutMs
+    type: number
+    unit: ms
+    description: Positive integer per-attempt signing, credential acquisition and HTTP timeout, capped by the remaining 20-second batch budget.
+    example: 5000
+    default: 5000
+  - name: maxRetries
+    type: number
+    description: Nonnegative integer number of retries after the initial request, within the batch time budget.
+    example: 2
+    default: 2
+  - name: maxBatchSize
+    type: number
+    description: Positive integer maximum gauge points or log records per HTTP request.
+    example: 500
+    default: 500
+  - name: maxPayloadBytes
+    type: number
+    unit: bytes
+    description: Positive integer maximum encoded UTF-8 request size, including resource and scope envelopes.
+    example: 1048576
+    default: 1048576

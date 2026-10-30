@@ -1,0 +1,32 @@
+output:
+  name: OpenTelemetry metrics and warnings
+  description: Push gauges and warning updates to a local OpenTelemetry Collector.
+  chSubscribe:
+    - nattrmon::cvals
+    - nattrmon::warnings
+  # Keep later channel updates eligible while an HTTP export is in progress.
+  waitForFinish: false
+  execFrom: nOutput_OpenTelemetry
+  execArgs:
+    endpoint: http://localhost:4318
+    resourceAttributes:
+      service.name: nattrmon
+      service.instance.id: monitoring-01
+    # Obtain headers through the standard execArgs secKey/secOut mechanism;
+    # never put live tokens in a checked-in configuration.
+    # headers:
+    #   Authorization: "Bearer <token>"
+    # include: [ '^Service/' ]
+    # exclude: [ '^Internal/' ]
+    # labelFields: [ host, region ]
+    # metricOverrides:
+    #   nattrmon_Service_Memory_bytes:
+    #     name: nattrmon.memory.bytes
+    #     unit: By
+    #     description: Used memory
+    includeValues: true
+    includeWarns: true
+    timeoutMs: 5000
+    maxRetries: 2
+    maxBatchSize: 500
+    maxPayloadBytes: 1048576
