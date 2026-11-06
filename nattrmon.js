@@ -27,9 +27,9 @@ if (isDef(params.metrics) || isDef(params.dashboard)) __NAM_LOGCONSOLE = true;
 var nattrmon;
 
 if (isUnDef(params.withDirectory)) {
-	nattrmon = new nAttrMon(NATTRMON_SUBHOME + "/config", params.__NAM_DEBUG || __NAM_DEBUG);
+	nattrmon = new nAttrMon(NATTRMON_SUBHOME + "/config", params.__NAM_DEBUG || __NAM_DEBUG, { inspection: isDef(params.metrics) || isDef(params.dashboard) });
 } else {
-	nattrmon = new nAttrMon(params.withDirectory, params.__NAM_DEBUG || __NAM_DEBUG);
+	nattrmon = new nAttrMon(params.withDirectory, params.__NAM_DEBUG || __NAM_DEBUG, { inspection: isDef(params.metrics) || isDef(params.dashboard) });
 }
 
 // ----------------------------------------------------------------------------------------------
@@ -64,15 +64,24 @@ if (isDef(params.metrics) || isDef(params.dashboard)) {
 
 	var __nm = new nMetrics(nattrmon, NATTRMON_SUBHOME + "/nattrmon.pid");
 	var __nam_caps = nMetricsView.getCaps();
+	var __nam_reportMetricAvailability = function() {
+		var status = __nm.inspectionStatus();
+		if (!status.available) {
+			printErr("Metric data unavailable: no valid " + status.missing.map(k => "nattrmon." + k + ".snapshot").join(", ") + " read from " + status.path + ".");
+		}
+		return status.available;
+	};
 
 	if (isDef(params.metrics)) {
 		switch (String(params.metrics).toLowerCase()) {
 		case "list":
 			print(nMetricsView.output(__nm.list(__nam_select), { format: __nam_format, caps: __nam_caps }));
+			__nam_reportMetricAvailability();
 			exit(0);
 			break;
 		case "snapshot":
 			print(nMetricsView.output(__nm.snapshot(__nam_select), { format: __nam_format, caps: __nam_caps }));
+			__nam_reportMetricAvailability();
 			exit(0);
 			break;
 		case "watch":
@@ -81,8 +90,9 @@ if (isDef(params.metrics) || isDef(params.dashboard)) {
 				exit(2);
 			}
 			var __nam_resolved = __nm.match(__nam_select);
+			var __nam_metricDataAvailable = __nam_reportMetricAvailability();
 			if (__nam_resolved.length == 0) {
-				printErr("No metrics matched: " + __nam_select.join(", "));
+				if (__nam_metricDataAvailable) printErr("No metrics matched: " + __nam_select.join(", "));
 				exit(1);
 			}
 			var __nam_watchSession = __nm.watchSession(__nam_resolved, { samples: __nam_samples, periodMs: __nam_refreshMs });
@@ -103,8 +113,9 @@ if (isDef(params.metrics) || isDef(params.dashboard)) {
 
 		if (!__nam_dashIsRuntime) {
 			var __nam_dashResolved = __nm.match(__nam_dashArg);
+			var __nam_dashDataAvailable = __nam_reportMetricAvailability();
 			if (__nam_dashResolved.length == 0) {
-				printErr("No metrics matched: " + __nam_dashArg.join(", "));
+				if (__nam_dashDataAvailable) printErr("No metrics matched: " + __nam_dashArg.join(", "));
 				exit(1);
 			}
 		}
@@ -116,6 +127,7 @@ if (isDef(params.metrics) || isDef(params.dashboard)) {
 		// view -- makes `kubectl exec <pod> -- ... --dashboard=runtime --format=json` scriptable
 		// even without a TTY, instead of silently falling back to a bordered ANSI dashboard.
 		if (__nam_format == "json" || __nam_format == "yaml") {
+			if (isFunction(__nam_dash.panels.refresh)) __nam_dash.panels.refresh();
 			var __nam_dashData = __nam_dash.panels.map(p => merge({ title: p.title, type: p.type }, p.pull()));
 			print(__nam_format == "json" ? stringify(__nam_dashData, __, "  ") : af.toYAML(__nam_dashData));
 			__nam_dash.stop();

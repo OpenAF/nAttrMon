@@ -5,9 +5,9 @@ built for the moment you have nothing but a shell:
 
 ```bash
 kubectl exec -it <nattrmon-pod> -- sh
-openaf nattrmon.js --metrics=list
-openaf nattrmon.js --metrics=watch --select="Java/Memory/Used"
-openaf nattrmon.js --dashboard=runtime
+openaf -f nattrmon.js -e 'metrics=list'
+openaf -f nattrmon.js -e 'metrics=watch;select=Java/Memory/Used'
+openaf -f nattrmon.js -e 'dashboard=runtime'
 ```
 
 No Grafana, no Prometheus, no listening port, and no separate metrics-collection path: it reads
@@ -18,53 +18,73 @@ providers (`getHistoryValuesByTime`/`addHistoryProvider`) are for.
 
 ## Why this is safe to run against an already-running daemon
 
-`--metrics=`/`--dashboard=` construct a second `nAttrMon` instance against the same `config/`
-directory but **never call `.start()`** — no input/output/validation plug runs a second time, no
-port gets bound twice. Current/last attribute values come back immediately because the
-constructor restores them from the daemon's own on-disk snapshot files
-(`config/nattrmon.{cvals,lvals,attrs}.snapshot`), which nAttrMon keeps continuously up to date
-whenever `NEED_CH_PERSISTENCE` is enabled (the default). Runtime metrics (JVM/plug/watchdog
-health) work the same way via `config/nattrmon.runtimehistory.snapshot`, gated by
-`RUNTIME_METRICS.persist` (also on by default when runtime metrics are enabled) — see
-[Runtime dashboard](#runtime-dashboard) below for what that means for a daemon that predates this
-feature.
+`metrics=`/`dashboard=` use `new nAttrMon(configPath, debugFlag, { inspection: true })`.
+This mode creates no daemon scheduler, persistence subscribers, housekeeping, logging writers or
+runtime collector, and it refuses `.start()`. Input/output/validation plugs and configured
+external libraries are not loaded by this constructor. Normal daemon construction is unchanged.
+
+The viewer reads the daemon's `nattrmon.attrs.snapshot`, `nattrmon.cvals.snapshot` and
+`nattrmon.runtimehistory.snapshot` files directly. It uses `CH_PERSISTENCE_PATH` when configured,
+otherwise the selected configuration directory. Each sampling cycle or runtime-dashboard frame
+refreshes those files once and shares the result across its metric getters or panels. One-shot
+`list` and `snapshot` commands refresh before resolving their selection. Configured external
+current-value channels continue to be read live instead of being replaced by local snapshots.
+
+The daemon writes attribute/value snapshots when `NEED_CH_PERSISTENCE` is enabled (the default);
+runtime history also requires `RUNTIME_METRICS.persist` (enabled by default). An incomplete,
+missing or unreadable file leaves the viewer's last valid snapshot and its original timestamps
+intact. The next cycle retries the read. Before any valid data has arrived, attributes are
+unavailable and runtime panels report `source: unavailable` rather than inventing zero values.
+The attribute CLI prints `Metric data unavailable` on stderr when no valid attribute or default
+current-value snapshot has been read, while keeping `list`/`snapshot` JSON output as an array.
+A valid empty snapshot is distinct from missing data and can still produce `No metrics matched`.
+Watch reports missing data at startup; if attributes are available it can keep sampling while
+waiting for the first value snapshot. Configured external value channels do not require a local
+`cvals` file. API callers can inspect `nMetrics.inspectionStatus()` after a read without causing
+another refresh. See [Runtime dashboard](#runtime-dashboard) for runtime availability details.
+
+OpenAF's `processExpr()` reads named parameters from `-e`, separated by semicolons, as in the
+commands below. The option names used in this guide (`metrics`, `select`, `refresh`, and so on)
+refer to those named parameters.
 
 ## Discovery
 
 ```bash
-openaf nattrmon.js --metrics=list
-openaf nattrmon.js --metrics=list --select="Java/*"
-openaf nattrmon.js --metrics=list --select="Java/Memory/*,Database/*"
-openaf nattrmon.js --metrics=list --format=json
-openaf nattrmon.js --metrics=list --format=yaml
+openaf -f nattrmon.js -e 'metrics=list'
+openaf -f nattrmon.js -e 'metrics=list;select=Java/*'
+openaf -f nattrmon.js -e 'metrics=list;select=Java/Memory/*,Database/*'
+openaf -f nattrmon.js -e 'metrics=list;format=json'
+openaf -f nattrmon.js -e 'metrics=list;format=yaml'
 ```
 
-`--select` takes one or more comma-separated patterns — an exact attribute name, or a glob using
-`*`/`?` — matched against every known attribute name. No `--select` lists everything.
+`select` takes one or more comma-separated patterns — an exact attribute name, or a glob using
+`*`/`?` — matched against every known attribute name. No `select` lists everything.
 
 ## Snapshot (scripting-friendly)
 
 ```bash
-openaf nattrmon.js --metrics=snapshot --select="Java/*" --format=json
-kubectl exec <pod> -- openaf nattrmon.js --metrics=snapshot --select="Database/*"
+openaf -f nattrmon.js -e 'metrics=snapshot;select=Java/*;format=json'
+kubectl exec <pod> -- openaf -f nattrmon.js -e 'metrics=snapshot;select=Database/*'
 ```
 
-`snapshot` is `list`'s current-values sibling — same selector syntax, same `--format`
+`snapshot` is `list`'s current-values sibling — same selector syntax, same `format`
 (`table`/`json`/`yaml`), meant for one-shot inspection or piping into other tooling. Non-TTY
-output (redirected/piped, or `--format=json|yaml`) never emits ANSI color codes.
+output (redirected/piped, or `format=json|yaml`) never emits ANSI color codes.
 
 ## Watch a metric live
 
 ```bash
-openaf nattrmon.js --metrics=watch --select="Java/Memory/Used"
-openaf nattrmon.js --metrics=watch --select="Java/Memory/Used,Java/GC/Collections" --refresh=5s --samples=60
+openaf -f nattrmon.js -e 'metrics=watch;select=Java/Memory/Used'
+openaf -f nattrmon.js -e 'metrics=watch;select=Java/Memory/Used,Java/GC/Collections;refresh=5s;samples=60'
 ```
 
 Numeric metrics render as a chart with current/min/max/avg over the retained window; non-numeric
 metrics (strings, tables, status flags) fall back to a small value table instead of erroring out.
-`--samples` bounds memory use regardless of how long you leave it running — old samples are
-dropped as new ones arrive. `--refresh` accepts `5s`/`500ms`/`1m`/a bare number (seconds);
-defaults to nAttrMon's own runtime-metrics publish period.
+`samples` bounds memory use regardless of how long you leave it running — old samples are
+dropped as new ones arrive. `refresh` accepts `5s`/`500ms`/`1m`/a bare number (seconds);
+defaults to nAttrMon's own runtime-metrics publish period. The first sample is synchronous;
+subsequent samples start after the configured period. An active watch keeps the metric names
+selected at startup, while a new selection can discover attributes added since it began.
 
 Ctrl-C restores the terminal and stops the sampling thread cleanly. Run it with redirected output
 and you get exactly one snapshot frame plus a note that live refresh needs a TTY — never a hang,
@@ -73,8 +93,8 @@ never raw escape codes in a file.
 ## Runtime dashboard
 
 ```bash
-openaf nattrmon.js --dashboard=runtime
-kubectl exec -it <nattrmon-pod> -- openaf nattrmon.js --dashboard=runtime
+openaf -f nattrmon.js -e 'dashboard=runtime'
+kubectl exec -it <nattrmon-pod> -- openaf -f nattrmon.js -e 'dashboard=runtime'
 ```
 
 The one command for "is this nAttrMon instance OK": an Overview panel (threads, plug
@@ -82,8 +102,8 @@ executions/errors, degraded-plug count, watchdog restarts), a plug-error trend c
 error-rate table, and a degraded-plugs list — all built from
 `nAttrMon.prototype.getRuntimeMetricsSnapshot()`/`getDegradedPlugs()`, no new instrumentation.
 
-Because the CLI's own instance never `.start()`s, its *current* runtime numbers come from the
-persisted history file, not a live read — so the very first line of the Overview panel always
+The CLI refreshes its runtime numbers from persisted history on every frame. The first line
+of the Overview panel always
 tells you where the data is from and whether the daemon looks alive:
 
 - `source: restored` — normal case, reading the daemon's last few published points.
@@ -93,19 +113,18 @@ tells you where the data is from and whether the daemon looks alive:
 - Per-plug detail (the "Plugs" panel) needs a live, same-process view — it isn't persisted, to
   keep the history file small and cheap to write on every tick.
 
-`--dashboard=runtime --format=json` (or `yaml`) skips the live view entirely and dumps every
+`dashboard=runtime;format=json` (or `yaml`) skips the live view entirely and dumps every
 panel's current data as a one-shot structured document instead — the same idea as
-`--metrics=snapshot --format=json`, and what makes `kubectl exec <pod> -- ... --dashboard=runtime
---format=json` (no `-it`, so no TTY) scriptable:
+`metrics=snapshot;format=json`, and what makes `kubectl exec <pod> -- openaf -f nattrmon.js -e 'dashboard=runtime;format=json'` (no `-it`, so no TTY) scriptable:
 
 ```bash
-kubectl exec <nattrmon-pod> -- openaf nattrmon.js --dashboard=runtime --format=json
+kubectl exec <nattrmon-pod> -- openaf -f nattrmon.js -e 'dashboard=runtime;format=json'
 ```
 
 ## Ad-hoc dashboard
 
 ```bash
-openaf nattrmon.js --dashboard="Java/Memory/*,Java/GC/*"
+openaf -f nattrmon.js -e 'dashboard=Java/Memory/*,Java/GC/*'
 ```
 
 One panel per resolved metric — chart for numeric, value table otherwise — deterministically, no
@@ -113,14 +132,14 @@ GenAI involved anywhere in this feature.
 
 ## Options
 
-| Flag | Applies to | Default |
+| Parameter | Applies to | Default |
 | --- | --- | --- |
-| `--select=<pattern>[,<pattern>...]` | `list`, `snapshot`, `watch` | none (all metrics for `list`/`snapshot`; required for `watch`) |
-| `--refresh=<Ns\|Nms\|Nm\|N>` | `watch`, `dashboard` | nAttrMon's runtime-metrics publish period (default 5s) |
-| `--samples=<N>` | `watch`, ad-hoc `dashboard` | `60` |
-| `--format=table\|json\|yaml` | `list`, `snapshot`, `dashboard` | `table` (`dashboard` ignores it and stays live) |
+| `select=<pattern>[,<pattern>...]` | `list`, `snapshot`, `watch` | none (all metrics for `list`/`snapshot`; required for `watch`) |
+| `refresh=<Ns\|Nms\|Nm\|N>` | `watch`, `dashboard` | nAttrMon's runtime-metrics publish period (default 5s) |
+| `samples=<N>` | `watch`, ad-hoc `dashboard` | `60` |
+| `format=table\|json\|yaml` | `list`, `snapshot`, `dashboard` | `table` (`dashboard` ignores it and stays live) |
 
-`watch` doesn't support `--format` — it's a chart/live view by design; use `snapshot` if you want
+`watch` doesn't support `format` — it's a chart/live view by design; use `snapshot` if you want
 a single metric's current value as JSON/YAML instead.
 
 ## Terminal capabilities

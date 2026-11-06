@@ -111,7 +111,10 @@ Requests are split by point/record count and actual encoded byte size. An
 individually oversized record is dropped with a diagnostic. Empty updates send
 no requests. Each batch has a 20-second total retry budget; each attempt uses the
 smaller of `timeoutMs` and the remaining budget. A large update can span multiple
-batches and therefore take longer than 20 seconds in total.
+batches and therefore take longer than 20 seconds in total. Record fragments are
+serialized once and their UTF-8 byte sizes are accumulated before each batch is
+assembled. Metric grouping, first-occurrence order, exact size boundaries and
+retry bodies stay the same as the full-envelope serializer.
 
 Connection failures and HTTP 429, 502, 503 and 504 are retried with exponential
 backoff and jitter. A valid `Retry-After` header is honored if the delay fits the

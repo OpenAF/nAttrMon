@@ -1,3 +1,5 @@
+# Repeated metric names produce ordered arrays of series; singleton shapes stay unchanged.
+# See docs/COLLECTION-CONTRACTS.md.
 input:
   name         : Openmetrics input
   cron         : "*/15 * * * *"

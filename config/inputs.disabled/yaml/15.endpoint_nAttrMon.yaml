@@ -1,3 +1,6 @@
+# Set NATTRMON_CHANNEL_PASSWORD before enabling this example.
+# To reuse an existing listener, omit port and set httpSession: httpd.
+# Both forms use the same authentication callback.
 input:
    name       : Test channel input
    chSubscribe: test
@@ -7,3 +10,10 @@ input:
       port        : 7878
       valueKey    : val
       attrTemplate: Remote/{{id}}
+      custom      : |
+         var expected = getEnv("NATTRMON_CHANNEL_PASSWORD");
+         if (isDef(expected) && u == "nattrmon" && p == expected) {
+            r.channelPermission = "rw";
+            return true;
+         }
+         return false;

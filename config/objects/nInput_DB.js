@@ -73,7 +73,7 @@ nInput_DB.prototype.get = function(aKey, parent, ret, scope) {
 	
 				var data = {
 					attribute: scope.getAttributes().getAttributeByName(naAttr),
-					lastValue: scope.getLastValues()[naAttr]
+					lastValue: clone(scope.getLastValues(true).get({ name: naAttr }))
 				}
 	
 				// Get result for monitoredObject or object pool

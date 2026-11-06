@@ -83,6 +83,39 @@ Inside a validation, `this.closeWarning(title)` closes an existing warning and
 commits that change immediately. Returning an empty warnings array does not close
 previous warnings, and `setWarnings` does not replace or clear the collection.
 
+## Plug failures, counters and channel batches
+
+Input, output and validation wrappers propagate the original exception to the shared
+execution boundary, which logs it once with source context. A failed validation does
+not commit its returned warnings. Explicit side effects performed by a plug before
+it throws are not rolled back.
+
+`numberOfExecs` counts successes and `numberOfExecsInError` counts failures. Error
+rates and the diagnostics `minExecs` threshold use their sum (all attempts). Average
+and last execution latency continue to describe successful executions. Timeout and
+watchdog thresholds retain their configured meanings.
+
+For subscribed `setall` events, `attrPattern` matches the names derived from each
+record and the batch key fields. Without `chHandleSetAll`, any matching record
+triggers one execution with the complete original batch payload. With
+`chHandleSetAll: true`, matching records execute sequentially in source order as
+`set` events. Each result passes through the normal `onlyOnEvent`, stamp, array,
+merge and sort processing before the next record runs. Repeated names therefore
+rotate current/last values as individual events do.
+
+The first exception or timeout stops the batch. Earlier commits remain; later
+records do not execute. All records share the trigger's original timeout deadline.
+There is no rollback or automatic retry queue. Process-status cleanup runs even
+when execution fails.
+
+## Bounded output bookkeeping
+
+Outputs retain the plain `lastSeen` timestamp map and its existing change signals.
+Occupancy is maintained under the instance lock; enumeration and sorting occur
+only when eviction is needed. Eviction keeps the same cap, timestamp comparator
+and oldest-quarter rule. Replacing `lastSeen` with another map triggers a recount.
+Directly adding or deleting its properties outside the output API is unsupported.
+
 ## Regression tests
 
 Run `openaf -f tests/autoTestAll.js` from the repository root. Recovery and

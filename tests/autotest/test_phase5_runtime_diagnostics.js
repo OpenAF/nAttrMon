@@ -44,7 +44,7 @@ ow.test.test("nmain::getDegradedPlugs flags plugs by error-rate/timeout/watchdog
 		})
 
 		var d = nm.getDegradedPlugs({
-			errorRateThreshold: 0.4,
+			errorRateThreshold: 0.3,
 			minExecs: 5,
 			timeoutHits: 2,
 			watchdogHits: 1

@@ -278,28 +278,53 @@ nOutput_OpenTelemetry.prototype._send = function(signal, body, count) {
 }
 
 nOutput_OpenTelemetry.prototype._export = function(signal, records) {
-	var batch = [], body, result = { sent: 0, dropped: 0 }
+	// Keep fragments and exact UTF-8 sizes; assembling each growing candidate made
+	// large batches quadratic. The envelope and metric order match _envelope().
+	var isLogs = signal == "logs", result = { sent: 0, dropped: 0 }
+	var envelope = JSON.stringify(this._envelope(signal, []))
+	var field = isLogs ? '"logRecords":[' : '"metrics":['
+	var split = envelope.indexOf(field) + field.length
+	var prefix = envelope.substring(0, split), suffix = envelope.substring(split)
+	var baseBytes = this._bytes(envelope), bytes = baseBytes, count = 0
+	var fragments = [], groups = [], byName = Object.create(null)
 	var flush = () => {
-		if (!batch.length) return
-		var accepted = this._send(signal, body, batch.length)
+		if (!count) return
+		var content = isLogs ? fragments.join(",") : groups.map(g => g.prefix + g.points.join(",") + "]}}").join(",")
+		var accepted = this._send(signal, prefix + content + suffix, count)
 		result.sent += accepted
-		result.dropped += batch.length - accepted
-		batch = []
+		result.dropped += count - accepted
+		fragments = []; groups = []; byName = Object.create(null)
+		bytes = baseBytes; count = 0
 	}
 	records.forEach(record => {
-		if (batch.length >= this.maxBatchSize) flush()
-		var candidate = JSON.stringify(this._envelope(signal, batch.concat([record])))
-		if (this._bytes(candidate) > this.maxPayloadBytes && batch.length) {
-			flush()
-			candidate = JSON.stringify(this._envelope(signal, [record]))
+		// Each record is serialized once, even when a byte boundary moves it to
+		// the next batch. Metric headers omit undefined fields just as JSON does.
+		var fragment = JSON.stringify(isLogs ? record : record.point)
+		var fragmentBytes = this._bytes(fragment), header, headerBytes
+		if (!isLogs) {
+			header = JSON.stringify({ name: record.name, unit: record.unit, description: record.description, gauge: { dataPoints: [] } }).slice(0, -3)
+			headerBytes = this._bytes(header) + 3
 		}
-		if (this._bytes(candidate) > this.maxPayloadBytes) {
+		var addition = () => isLogs ? fragmentBytes + (count ? 1 : 0) :
+			fragmentBytes + (isDef(byName[record.name]) ? 1 : headerBytes + (groups.length ? 1 : 0))
+		if (count >= this.maxBatchSize) flush()
+		if (bytes + addition() > this.maxPayloadBytes && count) flush()
+		var extra = addition()
+		if (bytes + extra > this.maxPayloadBytes) {
 			result.dropped++
 			this._diagnostic(signal + ": dropped one oversized record")
-		} else {
-			batch.push(record)
-			body = candidate
+			return
 		}
+		if (isLogs) fragments.push(fragment)
+		else {
+			if (isUnDef(byName[record.name])) {
+				byName[record.name] = { prefix: header, points: [] }
+				groups.push(byName[record.name])
+			}
+			byName[record.name].points.push(fragment)
+		}
+		bytes += extra
+		count++
 	})
 	flush()
 	return result

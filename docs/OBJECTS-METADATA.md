@@ -1,6 +1,6 @@
 # Object metadata
 
-`config/objects.meta/` contains declarative documentation for object constructors. It is read when nAttrMon starts, independently of `config/objects/`; loading metadata never evaluates or instantiates a plug object.
+`config/objects.meta/` contains declarative documentation for object constructors. It is read when nAttrMon starts, independently of `config/objects/`; loading metadata never evaluates or instantiates a plug object. Executable YAML tags such as `!!js/eval` are rejected by both the daemon and configuration engine.
 
 This lets documentation tools and configuration UIs discover inputs, outputs, and validations while preserving lazy object loading.
 

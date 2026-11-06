@@ -4,11 +4,12 @@ title: Generic attribute validation
 description: Evaluates configurable checks against current attributes and emits or closes warnings.
 examples:
   - config/validations.disabled/yaml/03.validateSemaphores.yaml
+  - config/validations.disabled/yaml/16.validateTimed.yaml
 arguments:
   - name: checks
     type: array<object>
     required: true
-    description: Validation rules containing attribute matching, expression, and warning templates.
+    description: Validation rules containing attribute matching, expression, and warning templates. Optional for durations (for example 5m) group failing rows by source channel, check, and rendered title; timers reset on reload.
     example:
       - attrPattern: Semaphores
         expr: "'{{value}}' == 'red'"

@@ -242,7 +242,17 @@ ow.test.test("nOutput_OpenTelemetry::concurrent signal exports do not share resp
 	try {
 		var o = new nOutput_OpenTelemetry({ endpoint: "http://localhost:4318", maxRetries: 0 })
 		o._diagnostic = () => {}
-		var results = pForEach(["metrics", "logs"], signal => ({ signal: signal, accepted: o._send(signal, "{}", 1) }), e => { throw e })
+		// pForEach may deliberately run a small workload sequentially under load.
+		// Dedicated workers make this an overlap test regardless of pool heuristics.
+		plugin("Threads")
+		var workers = new Threads(), results = new java.util.concurrent.ConcurrentLinkedQueue(), failures = new java.util.concurrent.ConcurrentLinkedQueue()
+		;["metrics", "logs"].forEach(signal => workers.addThread(() => {
+			try { results.add({ signal: signal, accepted: o._send(signal, "{}", 1) }) }
+			catch(e) { failures.add(String(e)) }
+		}))
+		try { workers.start() } finally { workers.stop() }
+		ow.test.assert(failures.size(), 0, "workers complete without errors")
+		results = af.fromJavaArray(results.toArray())
 		ow.test.assert(overlap.get(), true, "requests overlap")
 		ow.test.assert(results.filter(r => r.signal == "metrics")[0].accepted, 1, "metrics response accepted independently")
 		ow.test.assert(results.filter(r => r.signal == "logs")[0].accepted, 0, "logs rejection remains independent")

@@ -16,7 +16,7 @@ var nInput_Channel = function (aMap) {
     if (isDef(this.include) && !isArray(this.include)) throw "The include entry should be an array.";
     if (isDef(this.exclude) && !isArray(this.exclude)) throw "The exclude entry should be an array.";
 
-    var cauth_func = void 0;
+    var cauth_func = void 0, cauth_perms = void 0;
     if (isDef(aMap.local)) cauth_perms = aMap.local;
     if (isDef(aMap.custom)) cauth_func = aMap.custom;
 
@@ -39,7 +39,7 @@ var nInput_Channel = function (aMap) {
         }
     } else {
         if (nattrmon.hasSessionData(hS)) {
-            $ch(this.ch).expose(nattrmon.getSessionData(hS), aMap.path);
+            $ch(this.ch).expose(nattrmon.getSessionData(hS), aMap.path, chAuth);
         } else {
             throw "Need a port or a default HTTP (e.g. nOutput_HTTP_JSON, nOutput_HTTP).";
         }

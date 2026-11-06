@@ -25,18 +25,20 @@ var testFiles = $from(listFilesRecursive(testDir))
 
 print("Running " + testFiles.length + " hermetic test file(s) from " + testDir + "...")
 
+var loadFailures = 0
 testFiles.forEach(f => {
 	print("--- " + f.filename + " ---")
 	try {
 		load(f.filepath)
 	} catch(e) {
+		loadFailures++
 		logErr("Error loading test file " + f.filename + ": " + __nam_err(e, false, true))
 	}
 })
 
 print("")
-print("Tests: " + ow.test.getCountTest() + " | Pass: " + ow.test.getCountPass() + " | Fail: " + ow.test.getCountFail())
+print("Tests: " + ow.test.getCountTest() + " | Pass: " + ow.test.getCountPass() + " | Fail: " + ow.test.getCountFail() + " | Load failures: " + loadFailures)
 
 try { io.rm(NATTRMON_HOME + "/tests/.tmp", true) } catch(e) {}
 
-exit(ow.test.getCountFail() > 0 ? 1 : 0)
+exit(ow.test.getCountFail() > 0 || loadFailures > 0 ? 1 : 0)

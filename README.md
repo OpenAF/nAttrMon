@@ -80,13 +80,13 @@ INTEGRITY:
 You can also override watchdog values at startup:
 
 ```bash
-openaf nattrmon.js --watchdogSleep=30000 --watchdogStuckFactor=300 --watchdogWarnCooldown=60000
+openaf -f nattrmon.js -e 'watchdogSleep=30000;watchdogStuckFactor=300;watchdogWarnCooldown=60000'
 ```
 
 Run startup preflight checks (without starting daemon execution):
 
 ```bash
-openaf nattrmon.js --preflight=true
+openaf -f nattrmon.js -e 'preflight=true'
 ```
 
 Preflight loads plugs and reports unresolved `execFrom` constructors and integrity issues early.
@@ -115,10 +115,10 @@ OpenMetrics diagnostics now include both summary and per-plug lines:
 Inspect a running (or `kubectl exec`'d into) nAttrMon from a plain shell, no Grafana/Prometheus required:
 
 ```bash
-openaf nattrmon.js --metrics=list
-openaf nattrmon.js --metrics=snapshot --select="Java/*" --format=json
-openaf nattrmon.js --metrics=watch --select="Java/Memory/Used"
-openaf nattrmon.js --dashboard=runtime
+openaf -f nattrmon.js -e 'metrics=list'
+openaf -f nattrmon.js -e 'metrics=snapshot;select=Java/*;format=json'
+openaf -f nattrmon.js -e 'metrics=watch;select=Java/Memory/Used'
+openaf -f nattrmon.js -e 'dashboard=runtime'
 ```
 
 See [Terminal metrics & dashboard](docs/TERMINAL-DASHBOARD.md) for the full command reference.
@@ -177,6 +177,12 @@ For comprehensive documentation, tutorials, and plugin references, visit:
 Object constructor arguments, descriptions, and linked disabled-config examples are declared in [`config/objects.meta/`](config/objects.meta/). See [Object metadata](docs/OBJECTS-METADATA.md) for the format and the runtime discovery API.
 
 See [OpenTelemetry output](docs/OPENTELEMETRY.md) to push attribute gauges and warning logs to an OpenTelemetry Collector or directly to AWS CloudWatch using OTLP/HTTP JSON.
+
+See [Alert delivery, timed checks and history](docs/ALERTS-HISTORY.md) for delivery acknowledgement, grouped timers and transaction retry behavior.
+
+See [Collection and forwarding contracts](docs/COLLECTION-CONTRACTS.md) for OpenMetrics/JMX multi-result shapes, forwarding filters and retention.
+
+See [Remediation verification](docs/REMEDIATION-VERIFICATION.md) for regression coverage and reproducible performance checks.
 
 See [Connection recovery and warning updates](docs/RUNTIME-LIFECYCLE.md) for monitored-object retry behavior, cleanup failures, and updating or closing existing warnings.
 

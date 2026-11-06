@@ -1,63 +1,69 @@
 kind: input
 constructor: nInput_Channel
-title: Channel
-description: Configuration metadata for nInput_Channel.
+title: Channel input
+description: Receives values through an authenticated HTTP channel and maps them to attributes. Authentication applies to new HTTP listeners and reused sessions alike.
 examples:
   - config/inputs.disabled/yaml/15.endpoint_nAttrMon.yaml
 arguments:
   - name: attrTemplate
-    type: any
-    description: Configuration option read by nInput_Channel.
-    example: Category/Name
+    type: string
+    description: Attribute name template with id, value and originalValue variables. Defaults to '{{id}}'.
+    example: Remote/{{id}}
   - name: ch
-    type: any
-    description: Configuration option read by nInput_Channel.
-    example: {}
+    type: string
+    required: true
+    description: Exposed channel name; the plug's chSubscribe must reference the same channel.
+    example: remote-input
   - name: custom
-    type: any
-    description: Configuration option read by nInput_Channel.
-    example: {}
+    type: string
+    description: Authentication function body receiving u, p, s and r. Overrides local credentials when supplied; return true only for authorized requests and set r.channelPermission as needed.
+    example: "var expected = getEnv('NATTRMON_CHANNEL_PASSWORD'); if (isDef(expected) && u == 'nattrmon' && p == expected) { r.channelPermission = 'rw'; return true } return false"
   - name: exclude
-    type: any
-    description: Configuration option read by nInput_Channel.
-    example: {}
+    type: array<string>
+    description: Attribute identifiers to exclude.
+    example: [Internal/Debug]
   - name: host
-    type: any
-    description: Configuration option read by nInput_Channel.
-    example: {}
+    type: string
+    description: Optional listener bind address when creating an HTTP session with port.
+    example: 127.0.0.1
   - name: httpSession
-    type: any
-    description: Configuration option read by nInput_Channel.
-    example: {}
+    type: string
+    description: HTTP session name to create or reuse. Defaults to httpd; omit port to require an existing session.
+    example: httpd
   - name: idKey
-    type: any
-    description: Configuration option read by nInput_Channel.
-    example: {}
+    type: string
+    description: Dot path identifying each received value. Defaults to name.
+    example: name
   - name: include
-    type: any
-    description: Configuration option read by nInput_Channel.
-    example: {}
+    type: array<string>
+    description: Restrict received values to these identifiers.
+    example: [System/CPU]
   - name: keyPassword
-    type: any
-    description: Configuration option read by nInput_Channel.
-    example: {}
+    type: string
+    secret: true
+    description: Password for the optional HTTPS keystore.
+    example: replace-through-secret-store
   - name: keyStore
-    type: any
-    description: Configuration option read by nInput_Channel.
-    example: {}
+    type: string
+    description: Optional HTTPS keystore path.
+    example: config/channel.jks
   - name: local
-    type: any
-    description: Configuration option read by nInput_Channel.
-    example: {}
+    type: object
+    secret: true
+    description: Per-instance user map with p (password) and m (channel permission, default r). Without local or custom authentication all requests are denied.
+    example:
+      nattrmon:
+        p: replace-through-secret-store
+        m: rw
   - name: path
-    type: any
-    description: Configuration option read by nInput_Channel.
-    example: {}
+    type: string
+    description: HTTP path exposing the channel; defaults to the channel name prefixed by a slash.
+    example: /remote-input
   - name: port
-    type: any
-    description: Configuration option read by nInput_Channel.
-    example: {}
+    type: number
+    description: Port to expose the channel. If omitted, the selected HTTP session must already exist.
+    example: 7878
   - name: valueKey
-    type: any
-    description: Configuration option read by nInput_Channel.
-    example: {}
+    type: string
+    description: Optional dot path selecting the received record's value. By default the whole record becomes the attribute value.
+    example: val

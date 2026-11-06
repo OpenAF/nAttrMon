@@ -1,68 +1,68 @@
 kind: input
 constructor: nInput_OpenMetrics
 title: OpenMetrics
-description: Configuration metadata for nInput_OpenMetrics.
+description: Collects OpenMetrics series. Singleton metric values keep their object shape; repeated names after filtering and renaming produce ordered arrays retaining labels and values.
 examples:
   - config/inputs.disabled/yaml/30.openmetrics.yaml
 arguments:
   - name: attrTemplate
-    type: any
-    description: Configuration option read by nInput_OpenMetrics.
+    type: string
+    description: Attribute name for the collected metric map or target maps.
     example: Category/Name
   - name: chKeys
-    type: any
-    description: Configuration option read by nInput_OpenMetrics.
+    type: string
+    description: Channel containing target keys and connection parameters.
     example: nattrmon::keys
   - name: connectionTimeout
-    type: any
-    description: Configuration option read by nInput_OpenMetrics.
+    type: number
+    description: HTTP connection timeout in milliseconds.
     example: 30000
   - name: excludePrefix
-    type: any
-    description: Configuration option read by nInput_OpenMetrics.
-    example: {}
+    type: array<string>
+    description: Metric name prefixes to exclude.
+    example: [process_]
   - name: excludeRE
-    type: any
-    description: Configuration option read by nInput_OpenMetrics.
-    example: {}
+    type: array<string>
+    description: Regular expressions selecting metric names to exclude.
+    example: ["_total$"]
   - name: headers
-    type: any
-    description: Configuration option read by nInput_OpenMetrics.
-    example: {}
+    type: object
+    description: Additional HTTP request headers.
+    example: { Accept: text/plain }
   - name: includePrefix
-    type: any
-    description: Configuration option read by nInput_OpenMetrics.
-    example: {}
+    type: array<string>
+    description: Metric name prefixes to include.
+    example: [http_]
   - name: includeRE
-    type: any
-    description: Configuration option read by nInput_OpenMetrics.
-    example: {}
+    type: array<string>
+    description: Regular expressions selecting metric names to include.
+    example: ["_bytes$"]
   - name: key
-    type: any
-    description: Configuration option read by nInput_OpenMetrics.
-    example: {}
+    type: string
+    description: Target identity retained in each collected series.
+    example: frontend
   - name: keys
-    type: any
-    description: Configuration option read by nInput_OpenMetrics.
+    type: array<string>
+    description: Target keys discovered from chKeys.
     example: [example-key]
   - name: login
-    type: any
-    description: Configuration option read by nInput_OpenMetrics.
-    example: {}
+    type: string
+    description: HTTP authentication login.
+    example: metrics-reader
   - name: metricsURI
-    type: any
-    description: Configuration option read by nInput_OpenMetrics.
-    example: {}
+    type: string
+    description: Metrics endpoint path appended to url.
+    example: /metrics
   - name: pass
-    type: any
+    type: string
     secret: true
-    description: Configuration option read by nInput_OpenMetrics.
+    description: HTTP authentication password.
     example: "$SECRET"
   - name: replace
-    type: any
-    description: Configuration option read by nInput_OpenMetrics.
-    example: {}
+    type: array<object>
+    description: Ordered metric name replacements with pattern and replacement fields.
+    example: [{ pattern: "^http_", replacement: "" }]
   - name: url
-    type: any
-    description: Configuration option read by nInput_OpenMetrics.
-    example: {}
+    type: string
+    description: Target HTTP or HTTPS base URL.
+    example: http://127.0.0.1:9090

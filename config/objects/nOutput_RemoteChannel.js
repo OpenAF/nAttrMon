@@ -40,40 +40,32 @@ nOutput_RemoteChannel.prototype.output = function(scope, args, meta) {
 
 	if (args.op != "set" && args.op != "setall" && args.op != "unset") return;
 
-	var argsk, argsv;
-	if (args.op == "setall") {
-		argsk = args.k;
-		argsv = args.v;
-	}
+	var isBatch = args.op == "setall";
+	var values = isBatch ? args.v : [args.v];
+	if (!isArray(values)) return;
+	var selected = [], selectedKeys = [];
+	values.forEach((value, index) => {
+		// Bulk keys are field names, not record keys. Read each id from its value.
+		var originalKey = isBatch ? {} : args.k;
+		if (isBatch) (args.k || []).forEach(field => {
+			ow.obj.setPath(originalKey, field, ow.obj.getPath(value, field));
+		});
+		var id = ow.obj.getPath(isBatch ? value : originalKey, this.idKey);
+		if (isDef(this.include) && this.include.indexOf(id) < 0) return;
+		if (isDef(this.exclude) && this.exclude.indexOf(id) >= 0) return;
 
-	if (args.op == "set" || args.op == "unset") {
-		argsk = [ args.k ];
-		argsv = [ args.v ];
-	}
+		var targetValue = {}, targetKey = clone(originalKey);
+		if (isDef(this.valueKey)) ow.obj.setPath(targetValue, this.valueKey, clone(value));
+		else if (isDef(value)) targetValue = clone(value);
+		var name = templify(this.attrTemplate, { id: id, value: targetValue, originalValue: value });
+		ow.obj.setPath(targetValue, this.idKey, name);
+		ow.obj.setPath(targetKey, this.idKey, name);
+		selected.push(targetValue);
+		selectedKeys.push(targetKey);
+	});
 
-	var res = true;
-	for(var i in argsk) {
-		var k = ow.obj.getPath(argsk[i], this.idKey);
-		if (isDef(this.include) && !this.include.indexOf(k)) res = false;
-		if (isDef(this.exclude) && this.exclude.indexOf(k)) res = false;
-	
-		var aV = {};
-		if (isDef(this.valueKey)) {
-			ow.obj.setPath(aV, this.valueKey, argsv[i]);
-		} else {
-			aV = argsv[i];
-		}
-	
-		var aK = argsk[i];
-		var tpl = templify(this.attrTemplate, { id: k, value: aV, originalValue: argsv[i] });
-		ow.obj.setPath(aV, this.idKey, tpl);
-		ow.obj.setPath(aK, this.idKey, tpl);
-	}
-	
-	if (res) {
-		if (args.op == "set")    $ch(this.channelId).set(argsk[0], argsv[0]);
-		if (args.op == "setall") $ch(this.channelId).setAll(argsk, argsv);
-		if (args.op == "unset")  $ch(this.channelId).unset(argsk[0]);
-	}
-	
+	if (!selected.length) return;
+	if (args.op == "set")    $ch(this.channelId).set(selectedKeys[0], selected[0]);
+	if (args.op == "setall") $ch(this.channelId).setAll(args.k, selected);
+	if (args.op == "unset")  $ch(this.channelId).unset(selectedKeys[0]);
 };

@@ -577,7 +577,8 @@ var nInput_Init = function(aMap) {
                 
             if (init.type == "array") {
                 // If the entry retries are not defined, define them
-                if (isUnDef(parent._entryRetries)) parent._entryRetries = []
+                if (isUnDef(parent._entryRetries)) parent._entryRetries = {}
+                if (isUnDef(parent._entryRetries[init.name])) parent._entryRetries[init.name] = []
 
                 params[init.name] = _$(params[init.name], init.name).isArray().default([]);
                 params[init.name].forEach((content, i) => {

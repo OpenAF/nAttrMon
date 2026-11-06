@@ -1,7 +1,7 @@
 kind: output
 constructor: nOutput_EmailWarnings
 title: Warning email notifications
-description: Sends warning notifications by email when subscribed warning records change.
+description: Sends warning notifications by email when subscribed warning records change. Acknowledges notifications only after successful delivery; failed sends remain eligible on the next invocation.
 examples:
   - config/outputs.disabled/yaml/04.emailWarnings.yaml
 arguments:
