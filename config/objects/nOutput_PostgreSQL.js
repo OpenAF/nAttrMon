@@ -141,6 +141,7 @@ nOutput_PostgreSQL.prototype.output = function(scope, args) {
 	try {
 		var parent = this;
 		sync(function() {
+			var committedValue;
 			db.u("create table if not exists attributes (name varchar(255) primary key, description varchar(4000), last_seen timestamptz)");
 			db.u("create table if not exists attribute_values (name varchar(255), val text, date_modified timestamptz, date_checked timestamptz)");
 			db.u("create index if not exists idx_attribute_values on attribute_values (name, date_modified, date_checked)");
@@ -154,22 +155,26 @@ nOutput_PostgreSQL.prototype.output = function(scope, args) {
 			      [ String(attr.name), String(attr.description), dchk ]);
 
 			var attrval = scope.getCurrentValues(true).get({ name: args.k.name });
-			var lastval = nattrmon.getLastValues(true).get({ name: args.k.name });
 
 			if (isDef(attrval) && isDef(attrval.date)) {
-				if (isUnDef(parent.firstTime[args.k.name]) || (args.onlyOnEvent && parent.see(args.k.name, attrval))) {
+				if (isUnDef(parent.firstTime[args.k.name]) || !args.onlyOnEvent || parent.lastSeen[args.k.name] != (new Date(attrval.date)).getTime()) {
 					var dmod = stringify(attrval.date).replace(/"/g, "");
 
 					if (isDef(dchk)) {
 						var val = stringify(attrval.val);
-						if (isDef(val))
+						if (isDef(val)) {
 							db.us("insert into attribute_values (name, val, date_modified, date_checked) values (?, ?, CAST(? AS timestamptz), CAST(? AS timestamptz))",
 							      [ String(args.k.name), String(val), dmod, dchk ]);
-						parent.firstTime[args.k.name] = 1;
+							committedValue = { date: attrval.date };
+						}
 					}
 				}
 			}
 			db.commit();
+			if (isDef(committedValue)) {
+				parent.see(args.k.name, committedValue);
+				parent.firstTime[args.k.name] = 1;
+			}
 
 			parent.rolldata(db, parent.rdata);
 		}, this);

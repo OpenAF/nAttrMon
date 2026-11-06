@@ -1,17 +1,17 @@
 kind: input
 constructor: nInput_JMX
 title: JMX
-description: Configuration metadata for nInput_JMX.
+description: Collects JMX MBean attributes. A single result keeps its object shape; repeated rendered attribute names produce ordered arrays retaining each target key.
 examples:
   - config/inputs.disabled/yaml/15.jmx.yaml
 arguments:
   - name: attrTemplate
-    type: any
-    description: Configuration option read by nInput_JMX.
-    example: Category/Name
+    type: string
+    description: Attribute name template, with type and name from each MBean object name.
+    example: "Java/JMX {{type}}"
   - name: chKeys
-    type: any
-    description: Configuration option read by nInput_JMX.
+    type: string
+    description: Channel containing JMX target keys and connection parameters.
     example: nattrmon::keys
   - name: objects
     type: array<object>

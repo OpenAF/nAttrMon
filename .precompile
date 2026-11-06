@@ -1,3 +1,4 @@
+- lib/nconfigschema.js
 - lib/nwarnings.js
 - lib/ninput.js
 - lib/noutput.js

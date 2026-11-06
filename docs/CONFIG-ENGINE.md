@@ -3,8 +3,7 @@
 `lib/nconfigengine.js` is a programmatic API to discover nAttrMon components and to load, validate, create, modify, explain and serialize nAttrMon configurations. It is deterministic and works offline — there is no GenAI dependency, and no terminal or browser concepts leak into it. It is the model a Configurator CLI/UI, MCP server, gallery or generator builds on.
 
 ```javascript
-loadLib(NATTRMON_HOME + "/lib/nmain.js")            // required: the engine reuses its helpers
-loadLib(NATTRMON_HOME + "/lib/nconfigengine.js")    // pulls in lib/nquery.js
+loadLib(NATTRMON_HOME + "/lib/nconfigengine.js")    // loads pure schema and query helpers
 
 var engine = new nConfigEngine({
     home      : NATTRMON_HOME,        // installation path
@@ -13,12 +12,14 @@ var engine = new nConfigEngine({
 })
 ```
 
-`lib/nmain.js` reads `NATTRMON_SUBHOME` when it loads, so set that (or `NATTRMON_HOME`) before loading it, exactly as `tests/autotest/harness.js` does.
+Set `NATTRMON_HOME` to the installation path when loading from another working directory. The engine loads `lib/nconfigschema.js` and `lib/nquery.js` directly; it does not load daemon bootstrap configuration or construct a daemon.
 
 Two properties are load-bearing:
 
 - **It never evaluates plug code.** Unlike `nAttrMon.prototype.loadObject`, it does not resolve `execFrom`, `af.load()` an object file or run a constructor. Validating a configuration has no side effects.
 - **It is not a lossy parser.** Every loaded file keeps its original text; files you never modify are re-emitted byte for byte.
+
+YAML `!!js/eval` expressions stay inert during inspection, validation and editing. Each expression produces an `UNRESOLVED_EXPRESSION` diagnostic; only checks requiring its evaluated value are skipped. Strict mode treats these diagnostics as errors. Edited YAML retains the tags and their expression text; untouched files remain byte-for-byte unchanged. JSON conversion refuses unresolved expressions explicitly because JSON cannot preserve their meaning. OpenAF’s global YAML settings and intentional runtime plug evaluation are unchanged. Executable tags in declarative object metadata are rejected.
 
 ## Discovering components
 
@@ -153,9 +154,9 @@ var v = engine.validate(cfg, { mode: "strict" })  // warnings become errors
   stats:    { files: 2, entries: 6, withMetadata: 5, withoutMetadata: 1, queriesChecked: 3 } }
 ```
 
-Codes: `REQUIRED_PARAMETER`, `PARAMETER_TYPE`, `PARAMETER_ENUM`, `UNKNOWN_PARAMETER`, `UNKNOWN_COMPONENT`, `MALFORMED_DESCRIPTOR`, `LEGACY_KEY`, `INVALID_QUERY`, `UNSUPPORTED_QUERY_EXPRESSION`, `STRUCTURAL_ERROR`, `METADATA_ISSUE`, `LOW_METADATA_COVERAGE`, `FORMATTING_LOSS`.
+Codes: `REQUIRED_PARAMETER`, `PARAMETER_TYPE`, `PARAMETER_ENUM`, `UNKNOWN_PARAMETER`, `UNKNOWN_COMPONENT`, `MALFORMED_DESCRIPTOR`, `LEGACY_KEY`, `INVALID_QUERY`, `UNSUPPORTED_QUERY_EXPRESSION`, `UNRESOLVED_EXPRESSION`, `STRUCTURAL_ERROR`, `METADATA_ISSUE`, `LOW_METADATA_COVERAGE`, `FORMATTING_LOSS`.
 
-Descriptor shape is checked by the same helpers nAttrMon itself uses (`normalizeDescriptorLegacyKeys`, `validateDescriptorSchema` in `lib/nmain.js`), called on a lightweight shim so there is one definition of a valid descriptor and no engine instance is needed. Legacy keys are reported as `LEGACY_KEY` diagnostics rather than written to the daemon log.
+Descriptor shape is checked by the pure helpers in `lib/nconfigschema.js`; the daemon methods delegate to those same helpers, so there is one definition of a valid descriptor. Legacy keys are reported as `LEGACY_KEY` diagnostics rather than written to the daemon log.
 
 Two behaviours worth stating explicitly:
 

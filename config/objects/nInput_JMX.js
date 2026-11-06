@@ -164,7 +164,7 @@ nInput_JMX.prototype.input = function(scope, args) {
 
 	if (isDef(this.params.chKeys)) {
         $ch(this.params.chKeys).forEach((k, v) => {
-            arr.push(this.get(merge(k, v)))
+            arr = arr.concat(this.get(merge(k, v)))
         })
     } else {
         arr = this.get(this.params)
@@ -173,7 +173,9 @@ nInput_JMX.prototype.input = function(scope, args) {
     arr.forEach(r => {
         var aT = r._attrTemplate
         delete r._attrTemplate
-        ret[aT] = r
+        if (!Object.prototype.hasOwnProperty.call(ret, aT)) Object.defineProperty(ret, aT, { value: r, enumerable: true, writable: true, configurable: true })
+        else if (isArray(ret[aT])) ret[aT].push(r)
+        else ret[aT] = [ret[aT], r]
     })
 
     return ret

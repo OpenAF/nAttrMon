@@ -1,3 +1,5 @@
+# Repeated attribute names produce ordered arrays retaining each target key.
+# See docs/COLLECTION-CONTRACTS.md.
 input:
 # --------------------
 - name    : Input init

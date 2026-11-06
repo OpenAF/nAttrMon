@@ -53,7 +53,6 @@ jobs:
     global.NATTRMON_HOME = getEnv("NATTRMON_HOME") || getOPackPath("nAttrMon") || "."
     global.NATTRMON_SUBHOME = args.dir || global.NATTRMON_HOME
 
-    loadLib(global.NATTRMON_HOME + "/lib/nmain.js")
     loadLib(global.NATTRMON_HOME + "/lib/nconfigengine.js")
 
     global.nce = new nConfigEngine({
@@ -63,10 +62,10 @@ jobs:
     })
 
     global.nceOut = r => {
-      if (args.format == "json") print(stringify(r, __, "  "))
+      if (args.format == "json") print(nConfigSchema.toJSON(r))
       else {
         if (isUnDef(args.__format)) {
-          print(af.toYAML(r))
+          print(nConfigSchema.toYAML(r))
         } else {
           ow.oJob.output(r, args)
         }
@@ -76,7 +75,7 @@ jobs:
     global.nceSample = () => {
       if (isUnDef(args.sample)) return __
       if (String(args.sample).match(/\.json$/)) return io.readFileJSON(args.sample)
-      return io.readFileYAML(args.sample, true)
+      return nConfigSchema.parseYAML(io.readFileString(args.sample))
     }
 
     // Interactive fallback for a mandatory argument that wasn't provided on the command line.

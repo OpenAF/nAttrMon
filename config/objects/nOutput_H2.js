@@ -144,6 +144,7 @@ nOutput_H2.prototype.output = function(scope, args) {
 		// Create if doesn't exist
 		var parent = this;
 		sync(function() {
+			var committedValue;
 			db.u("create table if not exists ATTRIBUTES(name varchar(255) primary key, description varchar(4000), last_seen timestamp)");
 			db.u("create table if not exists ATTRIBUTE_VALUES(name varchar(255), val clob, date_modified datetime, date_checked timestamp)");
 			db.u("create index if not exists IDX_ATTRIBUTE_VALUES on ATTRIBUTE_VALUES (NAME, DATE_MODIFIED, DATE_CHECKED)");
@@ -164,23 +165,27 @@ nOutput_H2.prototype.output = function(scope, args) {
 
 			//for(var args.k.name in scope.getCurrentValues()) {
 				var attrval = scope.getCurrentValues(true).get({ name: args.k.name });
-				var lastval = nattrmon.getLastValues(true).get({ name: args.k.name });
 
 				if (isDef(attrval) && isDef(attrval.date)) {
-					if (isUnDef(parent.firstTime[args.k.name]) || (args.onlyOnEvent && parent.see(args.k.name, attrval))) {
+					if (isUnDef(parent.firstTime[args.k.name]) || !args.onlyOnEvent || parent.lastSeen[args.k.name] != (new Date(attrval.date)).getTime()) {
 						var dmod = stringify(attrval.date).replace(/"/g, "");
 
 						if (isDef(dchk)) {
 							//var dchk = (isDef(dchk.lastcheck) ? stringify(dchk.lastcheck).replace(/"/g, "") : null);
 							var val = stringify(attrval.val);
-							if (isDef(val))
+							if (isDef(val)) {
 								db.us("insert into attribute_values (name, val, date_modified, date_checked) values (?, ?, parsedatetime(?, 'yyyy-MM-dd\'\'T\'\'HH:mm:ss.SSS\'\'Z\'\'','en','GMT'), parsedatetime(?, 'yyyy-MM-dd\'\'T\'\'HH:mm:ss.SSS\'\'Z\'\'','en','GMT'))", [ String(args.k.name), String(val), dmod, dchk ]);
-							parent.firstTime[args.k.name] = 1;
+								committedValue = { date: attrval.date };
+							}
 						}
 					}
 				}
 			//}
 			db.commit();
+			if (isDef(committedValue)) {
+				parent.see(args.k.name, committedValue);
+				parent.firstTime[args.k.name] = 1;
+			}
 
 			parent.rolldata(db, parent.rdata);
 		}, this);

@@ -1,0 +1,17 @@
+validation:
+  name: Sustained red semaphores
+  description: Alerts when any semaphore in a named attribute stays red for five minutes.
+  chSubscribe: nattrmon::cvals
+  waitForFinish: true
+  execFrom: nValidation_Generic
+  execArgs:
+    checks:
+      - attrPattern: Semaphores
+        expr: "'{{value}}' == 'red'"
+        for: 5m
+        warnLevel: HIGH
+        warnTitleTemplate: "Sustained red semaphore: {{name}}"
+        warnDescTemplate: "A semaphore in {{name}} has remained red for at least five minutes."
+# Timed checks read the source channel on each trigger. Healthy sibling rows do
+# not reset a failing group; a title shared across attributes groups them too.
+# The next trigger after five minutes emits the warning. Timers reset on reload.

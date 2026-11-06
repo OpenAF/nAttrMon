@@ -98,7 +98,7 @@ nInput_Filesystem.prototype.input = function (scope, args) {
 			for (var i in this.params.keys) {
 				var v
 				if (isDef(this.params.chKeys)) 
-					$ch(this.params.chKeys).get({ key: this.params.keys[i] })
+					v = $ch(this.params.chKeys).get({ key: this.params.keys[i] })
 				else
 					v = this.params.keys[i]
 				v = __nam_getSec(v);

@@ -122,7 +122,9 @@ nInput_OpenMetrics.prototype._get = function(aMap) {
                     _r = m.value
 
                 // Ready to store
-                ret[m.metric] = _r
+                if (!Object.prototype.hasOwnProperty.call(ret, m.metric)) Object.defineProperty(ret, m.metric, { value: _r, enumerable: true, writable: true, configurable: true })
+                else if (isArray(ret[m.metric])) ret[m.metric].push(_r)
+                else ret[m.metric] = [ret[m.metric], _r]
             })
         } else {
             throw "Can't parse metrics from " + aMap.url + metricsURI

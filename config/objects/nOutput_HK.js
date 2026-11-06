@@ -62,6 +62,7 @@ nOutput_HK.prototype.output = function(scope, args) {
                 var shouldDelete = false;
                 // Get current value for current attribute
                 var cval = nattrmon.currentValues.get({ name: attr.name });
+                var attrMetadata = nattrmon.listOfAttributes.getCh().get({ name: attr.name });
 
                 // Mark to delete if current value date older than
                 if (isDef(cval) && this.attributeUpdateDeleteAfter > -1 && 
@@ -70,10 +71,10 @@ nOutput_HK.prototype.output = function(scope, args) {
                         logWarn("nOutput_HK | Attribute '" + cval.name + "' being deleted after check " + ow.format.timeago(new Date(cval.date)));
                 }
                 // Mark to delete if last check date older than
-                if (this.attributeDeleteAfter > -1 && 
-                    ow.format.dateDiff.inMinutes(new Date(attr.lastcheck)) >= this.attributeDeleteAfter) {
+                if (isDef(attrMetadata) && isDef(attrMetadata.lastcheck) && this.attributeDeleteAfter > -1 &&
+                    ow.format.dateDiff.inMinutes(new Date(attrMetadata.lastcheck)) >= this.attributeDeleteAfter) {
                         shouldDelete = true;
-                        logWarn("nOutput_HK | Attribute '" + attr.name + "' being deleted after check " + ow.format.timeago(new Date(attr.lastcheck)));
+                        logWarn("nOutput_HK | Attribute '" + attr.name + "' being deleted after check " + ow.format.timeago(new Date(attrMetadata.lastcheck)));
                 }
                 // Properly delete the attribute from all channels if needed
                 if (shouldDelete) {
@@ -96,7 +97,8 @@ nOutput_HK.prototype.output = function(scope, args) {
         var warns = nattrmon.listOfWarnings.getCh().getAll();
 
         // Process include/exclude arguments
-        for (var warn in warns) {
+        for (var wi in warns) {
+            var warn = warns[wi];
             var isok = isDef(this.include) ? false : true;
             var kk = warn.title;
 
@@ -108,22 +110,22 @@ nOutput_HK.prototype.output = function(scope, args) {
                 var shouldDelete = false;
                 // Mark to delete if current warning last update older than
                 if (this.warningUpdateDeleteAfter > -1 && 
-                    ow.format.dateDiff.inMinutes(new Date(warns[warn].lastupdate)) >= this.warningUpdateDeleteAfter) {
+                    ow.format.dateDiff.inMinutes(new Date(warn.lastupdate)) >= this.warningUpdateDeleteAfter) {
                         shouldDelete = true;
-                        logWarn("nOutput_HK | Warning '" + warns[warn].title + "' being deleted after update " + ow.format.timeago(new Date(warns[warn].lastupdate)));
+                        logWarn("nOutput_HK | Warning '" + warn.title + "' being deleted after update " + ow.format.timeago(new Date(warn.lastupdate)));
                 }
                 // Mark to delete if current warning creation date older than
                 if (this.warningDeleteAfter > -1 && 
-                    ow.format.dateDiff.inMinutes(new Date(warns[warn].createdate)) >= this.warningDeleteAfter) {
+                    ow.format.dateDiff.inMinutes(new Date(warn.createdate)) >= this.warningDeleteAfter) {
                         shouldDelete = true;
-                        logWarn("nOutput_HK | Warning '" + warns[warn].title + "' being deleted after creation " + ow.format.timeago(new Date(warns[warn].createdate)));
+                        logWarn("nOutput_HK | Warning '" + warn.title + "' being deleted after creation " + ow.format.timeago(new Date(warn.createdate)));
                 }
                 // Properly delete the warning if needed
                 if (shouldDelete) {
                     nattrmon.listOfWarnings.getCh().unset({
-                        title: warns[warn].title
+                        title: warn.title
                     });
-                    if (isDef(__NAM_CHANNEL_WNOTS)) $ch(nattrmon.chNotifications).unset({ title: warns[warn].title })
+                    if (isDef(__NAM_CHANNEL_WNOTS)) $ch(nattrmon.chNotifications).unset({ title: warn.title })
                 }
             }
         }

@@ -125,7 +125,8 @@ nOutput_Oracle.prototype.output = function(scope, args) {
 	try {
 		// Create if doesn't exist
 		var parent = this;
-		scope.thread.sync(function() {
+		sync(function() {
+			var committedValues = [];
 			// TODO
 			try {
 				var res = db.qs("select table_name from tabs where table_name in (?, ?)", 
@@ -143,13 +144,14 @@ nOutput_Oracle.prototype.output = function(scope, args) {
 				logErr(e);
 			}
 
-			// Get attributes
-			//var resNames = db.q("select name from attributes").results;
+			// Use the public metadata API; nAttributes no longer exposes an attributes map.
+			var attributes = {}, currentValues = scope.getCurrentValues();
+			scope.getAttributes(true).forEach(attr => { attributes[attr.name] = attr; });
 
-			for(attrid in scope.getAttributes().attributes) {
+			for(var attrid in attributes) {
 				if ( (isDefined(parent.attrToInclude) && (parent.attrToInclude.indexOf(attrid) >= 0) ||
 				     (isUndefined(parent.attrToInclude)) ) ) {
-					var attr = scope.getAttributes().attributes[attrid];
+					var attr = attributes[attrid];
 					var dchk = (isUndefined(attr.lastcheck)) ? null : ow.format.fromDate(new Date(af.js2s(attr.lastcheck).replace(/"/g, "")), 'yyyy-MM-dd HH:mm:ss');
 					try {
 					db.us("merge into " + parent.tablesNames.attribute + " s using (select ? name, ? description, to_date(?, 'YYYY-MM-DD HH24:MI:SS') last_seen from dual) d\
@@ -166,28 +168,31 @@ nOutput_Oracle.prototype.output = function(scope, args) {
 				}
 			}
 
-			for(attrid in scope.getCurrentValues()) {
+			for(var attrid in currentValues) {
 				if ( (isDefined(parent.attrToInclude) && (parent.attrToInclude.indexOf(attrid) >= 0) ||
 				     (isUndefined(parent.attrToInclude)) ) ) {
-					var attrval = scope.getCurrentValues()[attrid];
-					var lastval = scope.getLastValues()[attrid];
+					var attrval = currentValues[attrid];
+					if (isUnDef(attributes[attrid])) continue;
 
-					//if (isUndefined(parent.firstTime[attrid]) || !(args.onlyOnEvent && isDefined(lastval.val) && compare(attrval.val, lastval.val))) {
-					if (isUndefined(parent.firstTime[attrid]) || (args.onlyOnEvent && parent.see(attrid, attrval))) {
+					if (isUndefined(parent.firstTime[attrid]) || !args.onlyOnEvent || parent.lastSeen[attrid] != (new Date(attrval.date)).getTime()) {
 						var dmod = af.js2s(attrval.date).replace(/"/g, "");
-						var dchk = af.js2s(scope.getAttributes().attributes[attrid].lastcheck).replace(/"/g, "");
+						var dchk = af.js2s(attributes[attrid].lastcheck).replace(/"/g, "");
 						var val = (isDefined(attrval.val)) ? stringify(attrval.val) : "";
 						db.us("insert into " + parent.tablesNames.values + " (name, val, date_modified, date_checked)\
 						       values (?, ?, to_date(?, 'YYYY-MM-DD HH24:MI:SS'), to_date(?, 'YYYY-MM-DD HH24:MI:SS'))",
 							[ attrid, val, ow.format.fromDate(new Date(dmod), 'yyyy-MM-dd HH:mm:ss'), ow.format.fromDate(new Date(dchk), 'yyyy-MM-dd HH:mm:ss') ], true);
-						parent.firstTime[attrid] = 1;
+						committedValues.push({ name: attrid, date: attrval.date });
 					}
 				}
 			}
 			db.commit();
+			committedValues.forEach(value => {
+				parent.see(value.name, value);
+				parent.firstTime[value.name] = 1;
+			});
 
 			parent.rolldata(db, parent.rdata);
-		});
+		}, this);
 
 		if (isDefined(this.objectPoolKey)) nattrmon.returnObject(this.monitoredObjectKey, db, true);
 	} catch (e) {
